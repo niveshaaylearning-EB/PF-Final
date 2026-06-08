@@ -1,8 +1,8 @@
 export const TOKEN_KEY = 'nia_auth_token';
 
-export const getToken   = () => sessionStorage.getItem(TOKEN_KEY);
-export const setToken   = (t) => sessionStorage.setItem(TOKEN_KEY, t);
-export const clearToken = () => sessionStorage.removeItem(TOKEN_KEY);
+export const getToken   = () => localStorage.getItem(TOKEN_KEY);
+export const setToken   = (t) => localStorage.setItem(TOKEN_KEY, t);
+export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
 
 const _decodePayload = (t) => {
   try { return JSON.parse(atob(t.split('.')[1])); } catch { return null; }
