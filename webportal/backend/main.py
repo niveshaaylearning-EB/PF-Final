@@ -821,6 +821,32 @@ async def fetch_live_batch() -> dict:
         except Exception:
             yahoo_data = {}
 
+        # If Yahoo Finance is blocked (cloud IP → 401), fall back to NSE India
+        valid_cmps = sum(1 for v in yahoo_data.values() if isinstance(v, dict) and v.get("cmp"))
+        if valid_cmps == 0 and codes:
+            loop = asyncio.get_running_loop()
+            def _nse_batch():
+                results = {}
+                try:
+                    from nsepython import nse_quote_ltp
+                    for code in codes:
+                        try:
+                            ltp = nse_quote_ltp(code)
+                            if ltp:
+                                results[code] = {"cmp": float(ltp), "close1M": float(ltp),
+                                                 "open1M": None, "high1M": None, "low1M": None}
+                        except Exception:
+                            pass
+                except Exception:
+                    pass
+                return results
+            try:
+                yahoo_data = await asyncio.wait_for(
+                    loop.run_in_executor(None, _nse_batch), timeout=30.0
+                )
+            except Exception:
+                yahoo_data = {}
+
         if mc_pe_cold and not _mc_pe_task_running:
             asyncio.create_task(_mc_pe_background_refresh())
 
