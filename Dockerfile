@@ -42,9 +42,9 @@ COPY --from=build-frontend /build/frontend/dist           ./frontend/dist
 COPY --from=build-frontend /build/webportal/frontend/dist ./webportal/frontend/dist
 
 COPY supervisord.conf /etc/supervisor/conf.d/nia.conf
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
 
-# Render routes external traffic to port 8000 (main backend)
-# Webportal runs internally on 8001, proxied by main backend at /wp/
 EXPOSE 8000
 
-CMD ["supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
+CMD ["/app/start.sh"]

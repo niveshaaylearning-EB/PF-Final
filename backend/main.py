@@ -1593,43 +1593,72 @@ def get_network_info(request: Request):
     return {"ip": ip, "share_url": f"http://{ip}:8000"}
 
 
+def _fetch_nse_index_csv() -> dict:
+    """Fetch NSE index close prices from daily index CSV — works on any cloud IP."""
+    import requests as _req
+    from datetime import date, timedelta
+    TARGET = {"Nifty 50": "NIFTY 50", "Nifty 200": "NIFTY 200"}
+    for i in range(1, 7):
+        d = (date.today() - timedelta(days=i)).strftime("%d%m%Y")
+        url = f"https://archives.nseindia.com/content/indices/ind_close_all_{d}.csv"
+        try:
+            r = _req.get(url, timeout=10,
+                         headers={"User-Agent": "Mozilla/5.0"})
+            if r.status_code != 200:
+                continue
+            lines = r.text.strip().split("\n")
+            rows = {}
+            for line in lines[1:]:
+                parts = line.split(",")
+                if len(parts) >= 3:
+                    name = parts[0].strip().strip('"')
+                    try:
+                        close = float(parts[1].strip())
+                        prev  = float(parts[2].strip())
+                        rows[name] = (close, prev)
+                    except Exception:
+                        pass
+            if rows:
+                return rows
+        except Exception:
+            continue
+    return {}
+
+
 @app.get("/api/market")
 def get_market_data():
     """Fetch current price + day change for key Indian market indices."""
-    # NSE index codes for nsepython
-    indices = {
+    result = {}
+
+    # Primary: NSE index CSV archive (no IP blocking)
+    idx_csv = _fetch_nse_index_csv()
+
+    INDEX_MAP = {
         "Nifty 50":  ("NIFTY 50",  "^NSEI"),
         "Sensex":    ("SENSEX",    "^BSESN"),
         "Nifty 200": ("NIFTY 200", "^CNX200"),
     }
-    result = {}
-    for name, (nse_idx, yf_symbol) in indices.items():
-        try:
-            from nsepython import nse_get_index_quote, index_info
-            idx_data = nse_get_index_quote(nse_idx)
-            curr = round(float(idx_data.get("last", 0) or 0), 2)
-            prev = round(float(idx_data.get("previousClose", curr) or curr), 2)
-            if curr == 0:
-                raise ValueError("zero price")
-            pct  = round((curr - prev) / prev * 100, 2) if prev > 0 else 0.0
-            result[name] = {"price": curr, "change_pct": pct}
-        except Exception:
-            # Fallback to yfinance
+
+    for name, (nse_key, yf_symbol) in INDEX_MAP.items():
+        if nse_key in idx_csv:
+            curr, prev = idx_csv[nse_key]
+            pct = round((curr - prev) / prev * 100, 2) if prev > 0 else 0.0
+            result[name] = {"price": round(curr, 2), "change_pct": pct}
+        else:
+            # Fallback: nsepython
             try:
-                hist = yf.Ticker(yf_symbol).history(period="5d")
-                if len(hist) >= 2:
-                    curr = round(float(hist["Close"].iloc[-1]), 2)
-                    prev = round(float(hist["Close"].iloc[-2]), 2)
-                    pct  = round((curr - prev) / prev * 100, 2) if prev > 0 else 0.0
-                elif len(hist) == 1:
-                    curr = round(float(hist["Close"].iloc[-1]), 2)
-                    prev = curr; pct = 0.0
-                else:
-                    curr = prev = pct = 0.0
-                result[name] = {"price": curr, "change_pct": pct}
-            except Exception as e:
-                print(f"Market data error for {name}: {e}")
-                result[name] = {"price": 0.0, "change_pct": 0.0}
+                from nsepython import nse_get_index_quote
+                d = nse_get_index_quote(nse_key)
+                curr = float(d.get("last", 0) or 0)
+                prev = float(d.get("previousClose", curr) or curr)
+                if curr > 0:
+                    result[name] = {"price": round(curr, 2),
+                                    "change_pct": round((curr - prev)/prev*100, 2) if prev else 0.0}
+                    continue
+            except Exception:
+                pass
+            result[name] = {"price": 0.0, "change_pct": 0.0}
+
     return result
 
 
