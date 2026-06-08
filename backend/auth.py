@@ -128,11 +128,12 @@ def _now_iso() -> str:
     return datetime.utcnow().isoformat()
 
 def send_otp_email(email: str, code: str):
+    # Always print to console for backup/debugging/fallback
+    print(f"\n{'='*50}")
+    print(f"[OTP] Code generated for {email} -> {code}")
+    print(f"{'='*50}\n")
+
     if not SMTP_USER or not SMTP_PASS or SMTP_PASS == "YOUR_EMAIL_PASSWORD_HERE":
-        # Dev fallback: print to console when SMTP is not configured
-        print(f"\n{'='*50}")
-        print(f"[OTP - DEV MODE] To: {email}  Code: {code}")
-        print(f"{'='*50}\n")
         return
 
     body = (
@@ -238,7 +239,8 @@ def request_otp(body: OtpRequest, db: Session = Depends(lambda: __import__('data
     try:
         send_otp_email(email, code)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to send email: {e}")
+        print(f"[SMTP ERROR] Failed to send email to {email}: {e}")
+        return {"status": "sent", "message": f"OTP generated. (Warning: Email delivery failed, check server console logs)"}
 
     return {"status": "sent", "message": f"OTP sent to {email}"}
 

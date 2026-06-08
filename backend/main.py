@@ -163,17 +163,25 @@ def get_db():
 async def _startup_prewarm():
     """Warm basket + historic caches immediately on startup in background.
     Also ensures admin email is always in the allowed_emails table."""
-    # Ensure admin email is always pre-approved so they can always log in
+    # Restore persisted allowed_emails + access_requests from JSON (survives deploys)
     try:
         db_s = database.SessionLocal()
-        existing = db_s.query(database.AllowedEmail).filter_by(email=ADMIN_EMAIL).first()
-        if not existing:
+        # Restore allowed emails from JSON file
+        saved_emails = _load_json_file(_ALLOWED_EMAIL_FILE, [])
+        for rec in saved_emails:
+            if rec.get("email") and not db_s.query(database.AllowedEmail).filter_by(email=rec["email"]).first():
+                db_s.add(database.AllowedEmail(email=rec["email"],
+                    added_by=rec.get("added_by", "restored"), added_at=rec.get("added_at", "")))
+        # Restore access requests from JSON
+        _sync_access_requests_to_db(db_s)
+        # Always ensure admin is approved
+        if not db_s.query(database.AllowedEmail).filter_by(email=ADMIN_EMAIL).first():
             db_s.add(database.AllowedEmail(email=ADMIN_EMAIL, added_by="system", added_at=datetime.utcnow().isoformat()))
-            db_s.commit()
-            print(f"[startup] Admin email {ADMIN_EMAIL} auto-added to allowed_emails")
+        db_s.commit()
         db_s.close()
+        print("[startup] Restored allowed_emails and access_requests from JSON")
     except Exception as e:
-        print(f"[startup] Could not seed admin allowed email: {e}")
+        print(f"[startup] Could not restore persisted data: {e}")
 
     loop = asyncio.get_running_loop()
     async def _warm():
@@ -2612,6 +2620,7 @@ def add_allowed_email(body: AllowedEmailBody, request: Request, db: Session = De
         raise HTTPException(status_code=409, detail="Email already approved")
     db.add(database.AllowedEmail(email=email, added_by=user, added_at=datetime.utcnow().isoformat()))
     db.commit()
+    _dump_allowed_emails(db)
     return {"status": "added", "email": email}
 
 @app.delete("/api/allowed-emails/{email_addr}")
@@ -2627,7 +2636,79 @@ def remove_allowed_email(email_addr: str, request: Request, db: Session = Depend
         raise HTTPException(status_code=404, detail="Email not found")
     db.delete(row)
     db.commit()
+    _dump_allowed_emails(db)
     return {"status": "removed", "email": email}
+
+
+# ── Persistent JSON storage for access requests & approved emails ─────────────
+# SQLite resets on every Render deploy; JSON files persist via GitHub auto-push.
+
+import threading as _main_threading
+import base64 as _main_b64
+
+_BACKEND_DIR        = os.path.dirname(os.path.abspath(__file__))
+_ACCESS_REQ_FILE    = os.path.join(_BACKEND_DIR, "access_requests.json")
+_ALLOWED_EMAIL_FILE = os.path.join(_BACKEND_DIR, "allowed_emails_data.json")
+
+def _main_github_push(rel_path: str, content: str):
+    """Push a file to GitHub repo — background thread."""
+    token = os.environ.get("GITHUB_TOKEN", "")
+    repo  = os.environ.get("GITHUB_REPO", "")
+    if not token or not repo:
+        return
+    try:
+        import urllib.request as _ur
+        api_url = f"https://api.github.com/repos/{repo}/contents/backend/{os.path.basename(rel_path)}"
+        hdrs = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
+                "Content-Type": "application/json", "X-GitHub-Api-Version": "2022-11-28"}
+        try:
+            req = _ur.Request(api_url, headers=hdrs)
+            with _ur.urlopen(req, timeout=8) as r:
+                sha = json.loads(r.read())["sha"]
+        except Exception:
+            sha = None
+        body_data = json.dumps({"message": f"auto: update {os.path.basename(rel_path)}",
+                                "content": _main_b64.b64encode(content.encode()).decode(),
+                                **( {"sha": sha} if sha else {})}).encode()
+        req2 = _ur.Request(api_url, data=body_data, headers=hdrs, method="PUT")
+        _ur.urlopen(req2, timeout=10)
+    except Exception as e:
+        print(f"[github-push] {os.path.basename(rel_path)}: {e}")
+
+def _save_json_push(filepath: str, data):
+    content = json.dumps(data, indent=2, ensure_ascii=False)
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(content)
+    _main_threading.Thread(target=_main_github_push, args=(filepath, content), daemon=True).start()
+
+def _load_json_file(filepath: str, default):
+    try:
+        if os.path.exists(filepath):
+            with open(filepath, encoding="utf-8") as f:
+                return json.load(f)
+    except Exception:
+        pass
+    return default
+
+def _sync_access_requests_to_db(db):
+    """Load persisted access requests into DB if they don't exist yet."""
+    data = _load_json_file(_ACCESS_REQ_FILE, [])
+    for r in data:
+        if not db.query(database.AccessRequest).filter_by(email=r["email"], status=r["status"]).first():
+            db.add(database.AccessRequest(email=r["email"], requested_at=r.get("requested_at",""),
+                                          status=r["status"], processed_at=r.get("processed_at")))
+    db.commit()
+
+def _dump_access_requests(db):
+    rows = db.query(database.AccessRequest).filter(database.AccessRequest.status.in_(["pending","approved","rejected"])).all()
+    data = [{"email": r.email, "requested_at": r.requested_at, "status": r.status,
+             "processed_at": r.processed_at} for r in rows]
+    _save_json_push(_ACCESS_REQ_FILE, data)
+
+def _dump_allowed_emails(db):
+    rows = db.query(database.AllowedEmail).all()
+    data = [{"email": r.email, "added_by": r.added_by, "added_at": r.added_at} for r in rows]
+    _save_json_push(_ALLOWED_EMAIL_FILE, data)
 
 
 # ── Access Requests (public — no auth required) ───────────────────────────────
@@ -2660,6 +2741,7 @@ def submit_access_request(body: dict, db: Session = Depends(get_db)):
         status       = "pending",
     ))
     db.commit()
+    _dump_access_requests(db)   # persist to JSON → GitHub
     return {"status": "submitted", "message": "Access request submitted. The admin will review it shortly."}
 
 
@@ -2689,6 +2771,8 @@ def approve_access_request(req_id: int, request: Request, db: Session = Depends(
     if not db.query(database.AllowedEmail).filter_by(email=req.email).first():
         db.add(database.AllowedEmail(email=req.email, added_by=user, added_at=datetime.now().isoformat()))
     db.commit()
+    _dump_access_requests(db)
+    _dump_allowed_emails(db)    # persist approved emails → GitHub
     return {"ok": True, "email": req.email}
 
 
@@ -2703,6 +2787,7 @@ def reject_access_request(req_id: int, request: Request, db: Session = Depends(g
     req.status       = "rejected"
     req.processed_at = datetime.now().isoformat()
     db.commit()
+    _dump_access_requests(db)
     return {"ok": True}
 
 
