@@ -53,7 +53,7 @@ BASKET_DISPLAY_NAMES = {
     "IPO_Recommendations": "IPO Recommendations",
 }
 
-LIVE_TTL = 15 * 60  # 15 minutes
+LIVE_TTL = 60 * 60  # 60 minutes — longer cache reduces Stooq calls on cloud
 
 YF_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
@@ -244,19 +244,20 @@ async def _fetch_stooq_prices(codes: list) -> dict:
                     lines = resp.text.strip().split('\n')
                     if len(lines) >= 2:
                         parts = lines[1].split(',')
-                        # Stooq CSV: Date,Time,Open,High,Low,Close,Volume
-                        if len(parts) >= 6:
+                        # Stooq CSV with f=sd2t2ohlcv:
+                        # 0=Symbol, 1=Date, 2=Time, 3=Open, 4=High, 5=Low, 6=Close, 7=Volume
+                        if len(parts) >= 7:
                             def _f(x):
-                                try: v = float(x); return v if v > 0 else None
+                                try: v = float(x.strip()); return v if v > 0 else None
                                 except: return None
-                            close = _f(parts[5])
+                            close = _f(parts[6])   # Close
                             if close:
                                 return code, {
                                     "cmp":     close,
                                     "close1M": close,
-                                    "open1M":  _f(parts[2]),
-                                    "high1M":  _f(parts[3]),
-                                    "low1M":   _f(parts[4]),
+                                    "open1M":  _f(parts[3]),   # Open
+                                    "high1M":  _f(parts[4]),   # High
+                                    "low1M":   _f(parts[5]),   # Low
                                 }
             except Exception:
                 pass

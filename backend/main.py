@@ -2391,7 +2391,7 @@ def remove_simulation_sip(basket_id: str, sip_id: int, db: Session = Depends(get
 
 _WEBPORTAL = "http://127.0.0.1:8001"
 _wp_all_cache: dict = {"data": None, "ts": 0.0}
-_WP_ALL_TTL = 30 * 60  # 30 min
+_WP_ALL_TTL = 60 * 60  # 60 min — cache basket+live data longer on cloud
 
 _wp_index_cache: dict = {"data": None, "ts": 0.0}
 
