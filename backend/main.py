@@ -2600,6 +2600,76 @@ def remove_allowed_email(email_addr: str, request: Request, db: Session = Depend
     return {"status": "removed", "email": email}
 
 
+# ── Access Requests (public — no auth required) ───────────────────────────────
+
+@app.post("/api/access-requests")
+def submit_access_request(body: dict, db: Session = Depends(get_db)):
+    """Anyone can request access. No auth needed — they don't have a token yet."""
+    email = (body.get("email") or "").lower().strip()
+    if not email or not email.endswith("@niveshaay.com"):
+        raise HTTPException(status_code=400, detail="Only @niveshaay.com email addresses are allowed.")
+
+    # Already approved?
+    if db.query(database.AllowedEmail).filter_by(email=email).first():
+        return {"status": "already_approved", "message": "Your email is already approved. You can log in directly."}
+
+    # Already has a pending request?
+    existing = db.query(database.AccessRequest).filter_by(email=email, status="pending").first()
+    if existing:
+        return {"status": "already_requested", "message": "You have already requested access. Please wait for admin approval."}
+
+    db.add(database.AccessRequest(
+        email        = email,
+        requested_at = datetime.now().isoformat(),
+        status       = "pending",
+    ))
+    db.commit()
+    return {"status": "submitted", "message": "Access request submitted. The admin will review it shortly."}
+
+
+@app.get("/api/access-requests")
+def list_access_requests(request: Request, db: Session = Depends(get_db)):
+    """List pending access requests — admin only."""
+    user = getattr(request.state, "user", None)
+    if user != ADMIN_EMAIL:
+        raise HTTPException(status_code=403, detail="Admin only")
+    reqs = (db.query(database.AccessRequest)
+              .filter_by(status="pending")
+              .order_by(database.AccessRequest.requested_at.desc())
+              .all())
+    return [{"id": r.id, "email": r.email, "requested_at": r.requested_at} for r in reqs]
+
+
+@app.post("/api/access-requests/{req_id}/approve")
+def approve_access_request(req_id: int, request: Request, db: Session = Depends(get_db)):
+    user = getattr(request.state, "user", None)
+    if user != ADMIN_EMAIL:
+        raise HTTPException(status_code=403, detail="Admin only")
+    req = db.query(database.AccessRequest).filter_by(id=req_id).first()
+    if not req:
+        raise HTTPException(status_code=404)
+    req.status       = "approved"
+    req.processed_at = datetime.now().isoformat()
+    if not db.query(database.AllowedEmail).filter_by(email=req.email).first():
+        db.add(database.AllowedEmail(email=req.email, added_by=user, added_at=datetime.now().isoformat()))
+    db.commit()
+    return {"ok": True, "email": req.email}
+
+
+@app.post("/api/access-requests/{req_id}/reject")
+def reject_access_request(req_id: int, request: Request, db: Session = Depends(get_db)):
+    user = getattr(request.state, "user", None)
+    if user != ADMIN_EMAIL:
+        raise HTTPException(status_code=403, detail="Admin only")
+    req = db.query(database.AccessRequest).filter_by(id=req_id).first()
+    if not req:
+        raise HTTPException(status_code=404)
+    req.status       = "rejected"
+    req.processed_at = datetime.now().isoformat()
+    db.commit()
+    return {"ok": True}
+
+
 @app.get("/api/actual-portfolio-all")
 def get_actual_portfolio_all():
     """All webportal baskets with holdings, shaped like /api/baskets. Cached 5 min."""

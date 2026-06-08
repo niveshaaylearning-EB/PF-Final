@@ -219,6 +219,15 @@ class AllowedEmail(Base):
     added_at = Column(String)   # ISO datetime
 
 
+class AccessRequest(Base):
+    __tablename__ = "access_requests"
+    id           = Column(Integer, primary_key=True, index=True)
+    email        = Column(String, nullable=False, index=True)
+    requested_at = Column(String, nullable=False)
+    status       = Column(String, default="pending")   # pending / approved / rejected
+    processed_at = Column(String, nullable=True)
+
+
 class RebalanceAck(Base):
     __tablename__ = "rebalance_ack"
     id              = Column(Integer, primary_key=True, index=True)

@@ -1,18 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, Users, UserPlus, Trash2, User } from 'lucide-react';
+import { ArrowLeft, Users, UserPlus, Trash2, User, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { API_BASE as API } from '../config.js';
 
 export default function ApprovedEmailsPage() {
   const navigate = useNavigate();
-  const [emails,   setEmails]   = useState([]);
-  const [loading,  setLoading]  = useState(true);
-  const [newEmail, setNewEmail] = useState('');
-  const [adding,   setAdding]   = useState(false);
-  const [removing, setRemoving] = useState('');
-  const [error,    setError]    = useState('');
-  const [success,  setSuccess]  = useState('');
+  const [emails,    setEmails]    = useState([]);
+  const [loading,   setLoading]   = useState(true);
+  const [newEmail,  setNewEmail]  = useState('');
+  const [adding,    setAdding]    = useState(false);
+  const [removing,  setRemoving]  = useState('');
+  const [error,     setError]     = useState('');
+  const [success,   setSuccess]   = useState('');
+
+  // Pending requests
+  const [requests,      setRequests]      = useState([]);
+  const [reqLoading,    setReqLoading]    = useState(true);
+  const [processingId,  setProcessingId]  = useState(null);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -22,7 +27,37 @@ export default function ApprovedEmailsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  const loadRequests = useCallback(() => {
+    setReqLoading(true);
+    axios.get(`${API}/access-requests`)
+      .then(r => setRequests(r.data || []))
+      .catch(() => setRequests([]))
+      .finally(() => setReqLoading(false));
+  }, []);
+
+  useEffect(() => { load(); loadRequests(); }, [load, loadRequests]);
+
+  const handleApprove = async (id, email) => {
+    setProcessingId(id);
+    try {
+      await axios.post(`${API}/access-requests/${id}/approve`);
+      setSuccess(`${email} approved and added.`);
+      loadRequests(); load();
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to approve.');
+    } finally { setProcessingId(null); }
+  };
+
+  const handleReject = async (id, email) => {
+    setProcessingId(id);
+    try {
+      await axios.post(`${API}/access-requests/${id}/reject`);
+      setSuccess(`${email} request rejected.`);
+      loadRequests();
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to reject.');
+    } finally { setProcessingId(null); }
+  };
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -109,7 +144,56 @@ export default function ApprovedEmailsPage() {
         {success && <div style={{ marginTop: '10px', padding: '8px 12px', borderRadius: '8px', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: 'var(--positive)', fontSize: '0.83rem' }}>{success}</div>}
       </div>
 
-      {/* Email list */}
+      {/* ── Pending Access Requests ── */}
+      {(requests.length > 0 || reqLoading) && (
+        <div className="glass-panel" style={{ padding: 0, overflow: 'hidden', marginBottom: '20px', border: '1px solid rgba(251,191,36,0.25)' }}>
+          <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(251,191,36,0.06)' }}>
+            <Clock size={15} color="#fbbf24" />
+            <span style={{ fontWeight: 700, color: '#fbbf24', fontSize: '0.88rem' }}>Pending Access Requests</span>
+            <span style={{ fontSize: '0.72rem', background: 'rgba(251,191,36,0.2)', color: '#fbbf24', borderRadius: '10px', padding: '2px 8px', fontWeight: 700 }}>
+              {requests.length}
+            </span>
+          </div>
+          {reqLoading ? (
+            <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Loading…</div>
+          ) : requests.map((req, i) => (
+            <div key={req.id} style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '12px 20px',
+              background: i % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent',
+              borderBottom: i < requests.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <User size={14} color="#fbbf24" />
+                <div>
+                  <div style={{ color: 'var(--text-main)', fontSize: '0.88rem' }}>{req.email}</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>
+                    Requested {new Date(req.requested_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })} IST
+                  </div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={() => handleApprove(req.id, req.email)}
+                  disabled={processingId === req.id}
+                  style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 14px', borderRadius: '7px', border: '1px solid rgba(16,185,129,0.35)', background: 'rgba(16,185,129,0.1)', color: 'var(--positive)', fontSize: '0.78rem', cursor: processingId === req.id ? 'not-allowed' : 'pointer', opacity: processingId === req.id ? 0.5 : 1 }}
+                >
+                  <CheckCircle size={12} /> Approve
+                </button>
+                <button
+                  onClick={() => handleReject(req.id, req.email)}
+                  disabled={processingId === req.id}
+                  style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 14px', borderRadius: '7px', border: '1px solid rgba(239,68,68,0.28)', background: 'rgba(239,68,68,0.08)', color: '#f87171', fontSize: '0.78rem', cursor: processingId === req.id ? 'not-allowed' : 'pointer', opacity: processingId === req.id ? 0.5 : 1 }}
+                >
+                  <XCircle size={12} /> Reject
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ── Approved Emails list ── */}
       <div className="glass-panel" style={{ padding: 0, overflow: 'hidden' }}>
         <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.88rem' }}>Approved users</span>
