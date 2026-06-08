@@ -2776,26 +2776,43 @@ async def proxy_webportal(wp_path: str, request: Request):
     qs  = request.url.query
     if qs:
         url = f"{url}?{qs}"
+
+    # Strip hop-by-hop headers that must not be forwarded
+    _SKIP = {"host", "content-length", "transfer-encoding",
+             "connection", "keep-alive", "upgrade", "te", "trailers"}
     headers = {k: v for k, v in request.headers.items()
-               if k.lower() not in ("host", "content-length")}
+               if k.lower() not in _SKIP}
     body = await request.body()
-    try:
-        async with _httpx.AsyncClient(timeout=60) as client:
-            resp = await client.request(
-                method  = request.method,
-                url     = url,
-                headers = headers,
-                content = body,
+
+    last_err = None
+    # Retry up to 3 times (webportal may still be starting)
+    for attempt in range(3):
+        try:
+            async with _httpx.AsyncClient(timeout=30, follow_redirects=True) as client:
+                resp = await client.request(
+                    method  = request.method,
+                    url     = url,
+                    headers = headers,
+                    content = body,
+                )
+            # Strip hop-by-hop response headers
+            resp_headers = {k: v for k, v in resp.headers.items()
+                            if k.lower() not in _SKIP}
+            return _Response(
+                content     = resp.content,
+                status_code = resp.status_code,
+                headers     = resp_headers,
+                media_type  = resp.headers.get("content-type"),
             )
-        return _Response(
-            content    = resp.content,
-            status_code= resp.status_code,
-            headers    = dict(resp.headers),
-            media_type = resp.headers.get("content-type"),
-        )
-    except Exception as e:
-        return _Response(content=f"Webportal unavailable: {e}",
-                         status_code=503, media_type="text/plain")
+        except (_httpx.ConnectError, _httpx.ConnectTimeout) as e:
+            last_err = e
+            await asyncio.sleep(2)  # wait for webportal to start
+        except Exception as e:
+            last_err = e
+            break
+
+    return _Response(content=f"Webportal unavailable: {last_err}",
+                     status_code=503, media_type="text/plain")
 
 
 # ── Serve built frontend (production / internal hosting) ─────────────────────
