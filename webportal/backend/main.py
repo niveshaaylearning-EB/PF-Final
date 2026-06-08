@@ -229,6 +229,50 @@ app.add_middleware(
 # (No auth required; v7/quote returns 401 so we skip it)
 # ─────────────────────────────────────────────────────────────────────────────
 
+async def _fetch_stooq_prices(codes: list) -> dict:
+    """Fetch latest prices from Stooq.com — no IP blocking, works on cloud."""
+    results: dict = {}
+    sem = asyncio.Semaphore(15)
+
+    async def _one(code: str, client: httpx.AsyncClient):
+        async with sem:
+            sym = f"{code.lower()}.ns"
+            url = f"https://stooq.com/q/l/?s={sym}&f=sd2t2ohlcv&h&e=csv"
+            try:
+                resp = await client.get(url, timeout=12.0)
+                if resp.status_code == 200:
+                    lines = resp.text.strip().split('\n')
+                    if len(lines) >= 2:
+                        parts = lines[1].split(',')
+                        # Stooq CSV: Date,Time,Open,High,Low,Close,Volume
+                        if len(parts) >= 6:
+                            def _f(x):
+                                try: v = float(x); return v if v > 0 else None
+                                except: return None
+                            close = _f(parts[5])
+                            if close:
+                                return code, {
+                                    "cmp":     close,
+                                    "close1M": close,
+                                    "open1M":  _f(parts[2]),
+                                    "high1M":  _f(parts[3]),
+                                    "low1M":   _f(parts[4]),
+                                }
+            except Exception:
+                pass
+            return code, None
+
+    async with httpx.AsyncClient(follow_redirects=True, timeout=15.0,
+                                  headers={"User-Agent": "Mozilla/5.0"}) as client:
+        responses = await asyncio.gather(*[_one(c, client) for c in codes],
+                                         return_exceptions=True)
+
+    for item in responses:
+        if isinstance(item, tuple) and item[1]:
+            results[item[0]] = item[1]
+    return results
+
+
 async def _fetch_yahoo_charts(codes: list) -> dict:
     """Fetch CMP and 1M OHLC for all codes via Yahoo Finance chart API.
 
@@ -816,34 +860,21 @@ async def fetch_live_batch() -> dict:
         # Always fetch Yahoo Finance (fast ~5-10s) and return immediately.
         # Screener batch (MC/PE) always runs in background — 307 stocks via proxy
         # takes ~5-10 min; background task patches _live_cache when done.
+        # Try Stooq first (works on cloud — no IP blocking)
+        # Fall back to Yahoo Finance if Stooq returns nothing
         try:
-            yahoo_data = await _fetch_yahoo_charts(codes)
+            stooq_data = await _fetch_stooq_prices(codes)
         except Exception:
-            yahoo_data = {}
+            stooq_data = {}
 
-        # If Yahoo Finance is blocked (cloud IP → 401), fall back to NSE India
-        valid_cmps = sum(1 for v in yahoo_data.values() if isinstance(v, dict) and v.get("cmp"))
-        if valid_cmps == 0 and codes:
-            loop = asyncio.get_running_loop()
-            def _nse_batch():
-                results = {}
-                try:
-                    from nsepython import nse_quote_ltp
-                    for code in codes:
-                        try:
-                            ltp = nse_quote_ltp(code)
-                            if ltp:
-                                results[code] = {"cmp": float(ltp), "close1M": float(ltp),
-                                                 "open1M": None, "high1M": None, "low1M": None}
-                        except Exception:
-                            pass
-                except Exception:
-                    pass
-                return results
+        valid_stooq = sum(1 for v in stooq_data.values() if isinstance(v, dict) and v.get("cmp"))
+
+        if valid_stooq > 0:
+            yahoo_data = stooq_data
+        else:
+            # Stooq unavailable — try Yahoo Finance
             try:
-                yahoo_data = await asyncio.wait_for(
-                    loop.run_in_executor(None, _nse_batch), timeout=30.0
-                )
+                yahoo_data = await _fetch_yahoo_charts(codes)
             except Exception:
                 yahoo_data = {}
 
