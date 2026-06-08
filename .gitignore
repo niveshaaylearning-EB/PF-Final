@@ -1,0 +1,66 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+env/
+*.egg-info/
+dist/
+build/
+*.so
+
+# ── Node / Frontend ───────────────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+webportal/frontend/dist/
+.npm/
+.yarn/
+
+# ── Environment / Secrets ─────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Database ──────────────────────────────────────────────────────────────────
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+*.log.*
+backend_log.txt
+backend_run.log
+frontend_run.log
+
+# ── Cache files ───────────────────────────────────────────────────────────────
+historic_cache.json
+results_calendar_cache.json
+backend/historic_cache.json
+backend/results_calendar_cache.json
+
+# ── Backups / Archives ────────────────────────────────────────────────────────
+*.zip
+*.tar.gz
+*.bak
+_backups/
+*backup*
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Vite ──────────────────────────────────────────────────────────────────────
+.vite/
