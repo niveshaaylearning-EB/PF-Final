@@ -216,7 +216,13 @@ def request_otp(body: OtpRequest, db: Session = Depends(lambda: __import__('data
     if not email.endswith(f"@{ALLOWED_DOMAIN}"):
         raise HTTPException(status_code=403, detail=f"Only @{ALLOWED_DOMAIN} email addresses are allowed.")
 
-    from database import OtpCode
+    from database import OtpCode, AllowedEmail
+    
+    # Check if the email is approved for access
+    allowed = db.query(AllowedEmail).filter_by(email=email).first()
+    if not allowed:
+        raise HTTPException(status_code=403, detail="Your email is not approved for access.")
+
     cutoff = (datetime.utcnow() - timedelta(minutes=OTP_EXPIRE_MINS)).isoformat()
     recent = db.query(OtpCode).filter(
         OtpCode.email == email,
@@ -239,8 +245,14 @@ def request_otp(body: OtpRequest, db: Session = Depends(lambda: __import__('data
 
 @router.post("/verify-otp")
 def verify_otp(body: OtpVerify, request: Request, db: Session = Depends(lambda: __import__('database').SessionLocal())):
-    from database import OtpCode, LoginHistory
+    from database import OtpCode, LoginHistory, AllowedEmail
     email  = body.email.lower().strip()
+
+    # Check if approved
+    allowed = db.query(AllowedEmail).filter_by(email=email).first()
+    if not allowed:
+        raise HTTPException(status_code=403, detail="Your email is not approved for access.")
+
     cutoff = (datetime.utcnow() - timedelta(minutes=OTP_EXPIRE_MINS)).isoformat()
 
     record = db.query(OtpCode).filter(
@@ -253,14 +265,15 @@ def verify_otp(body: OtpVerify, request: Request, db: Session = Depends(lambda: 
     if not record:
         raise HTTPException(status_code=401, detail="Invalid or expired OTP code.")
 
-    # Enforce location validation
-    if body.latitude is None or body.longitude is None:
-        raise HTTPException(status_code=400, detail="Location services must be enabled in your browser to log in.")
-
     record.used = 1
     ip = request.client.host if request.client else None
-    loc = reverse_geocode_location(body.latitude, body.longitude)
-    if not loc or loc == "Unknown Location":
+    
+    # Geolocation fallback if coords are not provided
+    if body.latitude is not None and body.longitude is not None:
+        loc = reverse_geocode_location(body.latitude, body.longitude)
+        if not loc or loc == "Unknown Location":
+            loc = get_location_from_ip(ip)
+    else:
         loc = get_location_from_ip(ip)
 
     db.add(LoginHistory(email=email, logged_at=_now_iso(), ip_address=ip, location=loc))
@@ -276,27 +289,8 @@ def me(current_user: str = Depends(get_current_user)):
 
 @router.post("/direct-login")
 def direct_login(body: OtpRequest, request: Request, db: Session = Depends(lambda: __import__('database').SessionLocal())):
-    """Login with email only — restricted to pre-approved @niveshaay.com addresses."""
-    from database import LoginHistory, AllowedEmail
-    email = body.email.lower().strip()
-    if not email.endswith(f"@{ALLOWED_DOMAIN}"):
-        raise HTTPException(status_code=403, detail=f"Only @{ALLOWED_DOMAIN} email addresses are allowed.")
-
-    allowed = db.query(AllowedEmail).filter_by(email=email).first()
-    if not allowed:
-        raise HTTPException(status_code=403, detail="Your email is not approved for access.")
-    
-    ip = request.client.host if request.client else None
-    if body.latitude is not None and body.longitude is not None:
-        loc = reverse_geocode_location(body.latitude, body.longitude)
-        if not loc or loc == "Unknown Location":
-            loc = get_location_from_ip(ip)
-    else:
-        loc = get_location_from_ip(ip)
-
-    db.add(LoginHistory(email=email, logged_at=_now_iso(), ip_address=ip, location=loc))
-    db.commit()
-    return {"token": create_token(email), "email": email}
+    """Login with email only — DISABLED. OTP login is required."""
+    raise HTTPException(status_code=403, detail="Direct login is disabled. Please use OTP login.")
 
 
 @router.post("/logout")

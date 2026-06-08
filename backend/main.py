@@ -70,7 +70,7 @@ app = FastAPI()
 class JWTMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         path = request.url.path
-        if request.method == "OPTIONS" or path.startswith("/auth/"):
+        if request.method == "OPTIONS" or path.startswith("/auth/") or path == "/api/health":
             return await call_next(request)
         if path.startswith("/api/"):
             header = request.headers.get("Authorization", "")
