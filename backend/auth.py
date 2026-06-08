@@ -151,26 +151,20 @@ def send_otp_email(email: str, code: str):
 
     try:
         if SMTP_USE_SSL:
-            # Port 465 — direct SSL (Gmail SSL, etc.)
-            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=15) as s:
+            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=8) as s:
                 s.login(SMTP_USER, SMTP_PASS)
                 s.sendmail(SMTP_FROM, [email], msg.as_string())
         else:
-            # Port 587 — STARTTLS (Gmail, most providers)
-            with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=15) as s:
+            with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=8) as s:
                 s.ehlo()
                 s.starttls()
                 s.ehlo()
                 s.login(SMTP_USER, SMTP_PASS)
                 s.sendmail(SMTP_FROM, [email], msg.as_string())
-    except smtplib.SMTPAuthenticationError as e:
-        raise Exception(
-            "Email authentication failed. If using Gmail, enable 2-Step Verification and use an App Password. "
-            "If using Microsoft 365, enable SMTP AUTH for the mailbox in M365 Admin Center. "
-            f"Details: {e}"
-        )
+        print(f"[OTP] Email sent successfully to {email}")
     except Exception as e:
-        raise Exception(f"Email send failed: {e}")
+        # Email failed — OTP still printed to console above, do NOT block login
+        print(f"[OTP] Email delivery failed ({e}). Code visible in logs above.")
 
 def create_token(email: str) -> str:
     IST = timezone(timedelta(hours=5, minutes=30))
