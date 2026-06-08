@@ -25,6 +25,7 @@ import re
 import time
 import urllib.parse
 from datetime import date as _date, datetime, timezone
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -97,9 +98,60 @@ def _load_portfolios() -> dict:
     return PORTFOLIOS_DATA
 
 
+import threading as _threading
+import base64 as _base64
+
+def _github_push(file_path: Path, content: str) -> None:
+    """Push a file to GitHub in a background thread — free persistent storage."""
+    token = os.environ.get("GITHUB_TOKEN", "")
+    repo  = os.environ.get("GITHUB_REPO", "")
+    if not token or not repo:
+        return
+    try:
+        import urllib.request, urllib.error
+        # Relative path from repo root
+        rel = str(file_path).replace("\\", "/")
+        for prefix in ["/app/", "app/"]:
+            if rel.startswith(prefix):
+                rel = rel[len(prefix):]
+                break
+
+        api_url = f"https://api.github.com/repos/{repo}/contents/{rel}"
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json",
+            "X-GitHub-Api-Version": "2022-11-28",
+        }
+        # Get current SHA (needed for update)
+        req = urllib.request.Request(api_url, headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=8) as r:
+                sha = json.loads(r.read())["sha"]
+        except Exception:
+            sha = None
+
+        body = json.dumps({
+            "message": f"auto: update {file_path.name}",
+            "content": _base64.b64encode(content.encode()).decode(),
+            **({"sha": sha} if sha else {}),
+        }).encode()
+        req2 = urllib.request.Request(api_url, data=body, headers=headers, method="PUT")
+        urllib.request.urlopen(req2, timeout=10)
+    except Exception as e:
+        print(f"[github-push] Failed to push {file_path.name}: {e}")
+
+
+def _save_and_push(file_path: Path, data: dict) -> None:
+    """Write JSON to disk and push to GitHub in background."""
+    content = json.dumps(data, indent=2, ensure_ascii=False)
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(content)
+    _threading.Thread(target=_github_push, args=(file_path, content), daemon=True).start()
+
+
 def _save_portfolios(data: dict) -> None:
-    with open(_PORTFOLIOS_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    _save_and_push(_PORTFOLIOS_FILE, data)
 
 
 def _load_buy_price_data() -> dict:
@@ -110,8 +162,7 @@ def _load_buy_price_data() -> dict:
 
 
 def _save_buy_price_data(data: dict) -> None:
-    with open(_BUY_PRICE_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    _save_and_push(_BUY_PRICE_FILE, data)
 
 
 def _load_rebalance_history() -> dict:
@@ -122,8 +173,7 @@ def _load_rebalance_history() -> dict:
 
 
 def _save_rebalance_history(data: dict) -> None:
-    with open(_RH_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    _save_and_push(_RH_FILE, data)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
