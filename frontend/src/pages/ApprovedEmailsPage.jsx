@@ -144,8 +144,8 @@ export default function ApprovedEmailsPage() {
         {success && <div style={{ marginTop: '10px', padding: '8px 12px', borderRadius: '8px', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: 'var(--positive)', fontSize: '0.83rem' }}>{success}</div>}
       </div>
 
-      {/* ── Pending Access Requests ── */}
-      {(requests.length > 0 || reqLoading) && (
+      {/* ── Pending Access Requests — always visible to admin ── */}
+      {(
         <div className="glass-panel" style={{ padding: 0, overflow: 'hidden', marginBottom: '20px', border: '1px solid rgba(251,191,36,0.25)' }}>
           <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(251,191,36,0.06)' }}>
             <Clock size={15} color="#fbbf24" />
@@ -156,6 +156,8 @@ export default function ApprovedEmailsPage() {
           </div>
           {reqLoading ? (
             <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Loading…</div>
+          ) : requests.length === 0 ? (
+            <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>No pending requests.</div>
           ) : requests.map((req, i) => (
             <div key={req.id} style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',

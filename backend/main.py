@@ -2610,9 +2610,15 @@ def submit_access_request(body: dict, db: Session = Depends(get_db)):
     if not email or not email.endswith("@niveshaay.com"):
         raise HTTPException(status_code=400, detail="Only @niveshaay.com email addresses are allowed.")
 
-    # Already approved?
+    # Already approved (in AllowedEmail) — can always log in, no need to request
     if db.query(database.AllowedEmail).filter_by(email=email).first():
-        return {"status": "already_approved", "message": "Your email is already approved. You can log in directly."}
+        return {"status": "already_approved", "message": "Your email is already approved. You can sign in directly."}
+
+    # Previously rejected — allow re-request (clear old rejected entry first)
+    rejected = db.query(database.AccessRequest).filter_by(email=email, status="rejected").first()
+    if rejected:
+        db.delete(rejected)
+        db.commit()
 
     # Already has a pending request?
     existing = db.query(database.AccessRequest).filter_by(email=email, status="pending").first()
