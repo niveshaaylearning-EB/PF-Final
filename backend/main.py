@@ -1605,11 +1605,12 @@ def get_market_data():
     result = {}
     for name, (nse_idx, yf_symbol) in indices.items():
         try:
-            # Try NSE India API first (works on cloud without crumb issues)
-            from nsepython import nse_get_index_quote
+            from nsepython import nse_get_index_quote, index_info
             idx_data = nse_get_index_quote(nse_idx)
             curr = round(float(idx_data.get("last", 0) or 0), 2)
             prev = round(float(idx_data.get("previousClose", curr) or curr), 2)
+            if curr == 0:
+                raise ValueError("zero price")
             pct  = round((curr - prev) / prev * 100, 2) if prev > 0 else 0.0
             result[name] = {"price": curr, "change_pct": pct}
         except Exception:

@@ -229,48 +229,47 @@ app.add_middleware(
 # (No auth required; v7/quote returns 401 so we skip it)
 # ─────────────────────────────────────────────────────────────────────────────
 
-async def _fetch_stooq_prices(codes: list) -> dict:
-    """Fetch latest prices from Stooq.com — no IP blocking, works on cloud."""
+def _fetch_bhavcopy_prices(codes: list) -> dict:
+    """Fetch EOD prices from NSE bhavcopy — single download covers all stocks.
+    Works on any cloud server (public NSE archive URL, no auth needed).
+    Tries last 5 trading days to find the most recent available file.
+    """
     results: dict = {}
-    sem = asyncio.Semaphore(15)
-
-    async def _one(code: str, client: httpx.AsyncClient):
-        async with sem:
-            sym = f"{code.lower()}.ns"
-            url = f"https://stooq.com/q/l/?s={sym}&f=sd2t2ohlcv&h&e=csv"
+    code_set = set(c.upper() for c in codes)
+    try:
+        import pandas as pd
+        from datetime import date, timedelta
+        from nsepython import get_bhavcopy
+        for i in range(1, 7):
+            d = (date.today() - timedelta(days=i)).strftime('%d-%m-%Y')
             try:
-                resp = await client.get(url, timeout=12.0)
-                if resp.status_code == 200:
-                    lines = resp.text.strip().split('\n')
-                    if len(lines) >= 2:
-                        parts = lines[1].split(',')
-                        # Stooq CSV with f=sd2t2ohlcv:
-                        # 0=Symbol, 1=Date, 2=Time, 3=Open, 4=High, 5=Low, 6=Close, 7=Volume
-                        if len(parts) >= 7:
-                            def _f(x):
-                                try: v = float(x.strip()); return v if v > 0 else None
-                                except: return None
-                            close = _f(parts[6])   # Close
-                            if close:
-                                return code, {
-                                    "cmp":     close,
-                                    "close1M": close,
-                                    "open1M":  _f(parts[3]),   # Open
-                                    "high1M":  _f(parts[4]),   # High
-                                    "low1M":   _f(parts[5]),   # Low
-                                }
+                df = get_bhavcopy(d)
+                if df is None or df.empty:
+                    continue
+                # Columns have leading spaces: ' CLOSE_PRICE', ' OPEN_PRICE', etc.
+                df.columns = [c.strip() for c in df.columns]
+                df['SYMBOL'] = df['SYMBOL'].str.strip()
+                match = df[df['SYMBOL'].isin(code_set)]
+                for _, row in match.iterrows():
+                    sym = row['SYMBOL']
+                    def _f(col):
+                        try: v = float(row.get(col, 0) or 0); return v if v > 0 else None
+                        except: return None
+                    close = _f('CLOSE_PRICE') or _f('LAST_PRICE')
+                    if close:
+                        results[sym] = {
+                            "cmp":     close,
+                            "close1M": close,
+                            "open1M":  _f('OPEN_PRICE'),
+                            "high1M":  _f('HIGH_PRICE'),
+                            "low1M":   _f('LOW_PRICE'),
+                        }
+                if results:
+                    break
             except Exception:
-                pass
-            return code, None
-
-    async with httpx.AsyncClient(follow_redirects=True, timeout=15.0,
-                                  headers={"User-Agent": "Mozilla/5.0"}) as client:
-        responses = await asyncio.gather(*[_one(c, client) for c in codes],
-                                         return_exceptions=True)
-
-    for item in responses:
-        if isinstance(item, tuple) and item[1]:
-            results[item[0]] = item[1]
+                continue
+    except Exception:
+        pass
     return results
 
 
@@ -861,19 +860,22 @@ async def fetch_live_batch() -> dict:
         # Always fetch Yahoo Finance (fast ~5-10s) and return immediately.
         # Screener batch (MC/PE) always runs in background — 307 stocks via proxy
         # takes ~5-10 min; background task patches _live_cache when done.
-        # Try Stooq first (works on cloud — no IP blocking)
-        # Fall back to Yahoo Finance if Stooq returns nothing
+        # Primary: NSE Bhavcopy — single download, all stocks, works on any cloud IP
+        loop = asyncio.get_running_loop()
         try:
-            stooq_data = await _fetch_stooq_prices(codes)
+            bhav_data = await asyncio.wait_for(
+                loop.run_in_executor(None, _fetch_bhavcopy_prices, codes),
+                timeout=25.0
+            )
         except Exception:
-            stooq_data = {}
+            bhav_data = {}
 
-        valid_stooq = sum(1 for v in stooq_data.values() if isinstance(v, dict) and v.get("cmp"))
+        valid_bhav = sum(1 for v in bhav_data.values() if isinstance(v, dict) and v.get("cmp"))
 
-        if valid_stooq > 0:
-            yahoo_data = stooq_data
+        if valid_bhav > 0:
+            yahoo_data = bhav_data
         else:
-            # Stooq unavailable — try Yahoo Finance
+            # Fallback: Yahoo Finance chart API
             try:
                 yahoo_data = await _fetch_yahoo_charts(codes)
             except Exception:
