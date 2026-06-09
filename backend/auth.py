@@ -285,8 +285,31 @@ def me(current_user: str = Depends(get_current_user)):
 
 @router.post("/direct-login")
 def direct_login(body: OtpRequest, request: Request, db: Session = Depends(lambda: __import__('database').SessionLocal())):
-    """Login with email only — DISABLED. OTP login is required."""
-    raise HTTPException(status_code=403, detail="Direct login is disabled. Please use OTP login.")
+    """Login with email only — restricted to pre-approved @niveshaay.com addresses."""
+    from database import LoginHistory, AllowedEmail
+    email = body.email.lower().strip()
+    if not email.endswith(f"@{ALLOWED_DOMAIN}"):
+        raise HTTPException(status_code=403, detail=f"Only @{ALLOWED_DOMAIN} email addresses are allowed.")
+
+    # Admin email always allowed — never locked out
+    if email != ADMIN_EMAIL:
+        allowed = db.query(AllowedEmail).filter_by(email=email).first()
+        if not allowed:
+            raise HTTPException(status_code=403, detail="Your email is not approved for access. Please request access from the login page.")
+
+    ip = request.client.host if request.client else None
+    try:
+        loc = get_location_from_ip(ip)
+    except Exception:
+        loc = "Unknown"
+
+    try:
+        db.add(LoginHistory(email=email, logged_at=_now_iso(), ip_address=ip, location=loc))
+        db.commit()
+    except Exception:
+        pass
+
+    return {"token": create_token(email), "email": email}
 
 
 @router.post("/logout")
