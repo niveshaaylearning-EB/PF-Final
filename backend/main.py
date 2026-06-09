@@ -2321,6 +2321,44 @@ async def _refresh_results_calendar_data(db: Session) -> list:
     except Exception as nse_err:
         print(f"[Results Calendar] NSE events fetch error: {nse_err}")
 
+    # ── Source 1b: NSE corporate actions via direct HTTP (if nsepython geo-blocked) ──
+    if not upcoming_events:
+        try:
+            import httpx as _hx, urllib.parse as _up
+            from datetime import date as _date, timedelta as _td
+            _today = _date.today()
+            _to    = (_today + _td(days=90)).strftime("%d-%m-%Y")
+            _from  = _today.strftime("%d-%m-%Y")
+            _hdrs  = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+                      "Referer": "https://www.nseindia.com/", "Accept": "*/*"}
+            async with _hx.AsyncClient(headers=_hdrs, timeout=10, follow_redirects=True) as _c:
+                await _c.get("https://www.nseindia.com/")
+                _r = await _c.get(
+                    f"https://www.nseindia.com/api/corporates-corporateActions"
+                    f"?index=equities&from_date={_from}&to_date={_to}&type=boardMeeting"
+                )
+            if _r.status_code == 200:
+                for item in _r.json():
+                    code = str(item.get("symbol","")).strip().upper()
+                    if code not in unique_codes:
+                        continue
+                    subj = str(item.get("subject","")).lower()
+                    if "result" not in subj and "quarterly" not in subj and "financial" not in subj:
+                        continue
+                    raw = str(item.get("exDate","") or item.get("bm_date","")).strip()
+                    try:
+                        ds = datetime.strptime(raw, "%d-%b-%Y").strftime("%Y-%m-%d")
+                    except Exception:
+                        continue
+                    if ds < today_str or (code, ds) in seen_events:
+                        continue
+                    seen_events.add((code, ds))
+                    upcoming_events.append({"stock_code": code, "stock_name": stocks_map[code]["name"],
+                                            "baskets": sorted(list(stocks_map[code]["baskets"])),
+                                            "date": ds, "purpose": "Financial Results"})
+        except Exception as _e:
+            print(f"[Results Calendar] NSE direct fetch error: {_e}")
+
     # ── Source 2: yfinance calendar — covers large caps NSE may not list yet ──
     remaining_codes = [c for c in unique_codes if not any(e['stock_code'] == c for e in upcoming_events)]
 

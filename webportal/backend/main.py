@@ -195,6 +195,21 @@ def _save_undo_snapshots(data: dict) -> None:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
+# ── Persistent Yahoo Finance cookie cache ─────────────────────────────────────
+_YF_COOKIES: dict = {}
+
+async def _refresh_yf_cookies():
+    """Visit Yahoo Finance homepage to get fresh session cookies. Called at startup + on 401."""
+    global _YF_COOKIES
+    try:
+        async with httpx.AsyncClient(follow_redirects=True, headers=YF_HEADERS, timeout=10.0) as c:
+            r = await c.get("https://finance.yahoo.com/")
+            _YF_COOKIES = dict(r.cookies)
+            print(f"[YF] Session cookies refreshed ({len(_YF_COOKIES)} cookies)")
+    except Exception as e:
+        print(f"[YF] Cookie refresh failed: {e}")
+
+
 def _auto_save_rollback() -> None:
     """Auto-save full system state before any write. Overwrites the single rollback point.
     Never raises — snapshot failure must never abort the actual operation."""
@@ -396,20 +411,35 @@ async def _fetch_yahoo_charts(codes: list) -> dict:
         sym_to_code[sym] = c
         primary_syms.append(sym)
 
-    async with httpx.AsyncClient(follow_redirects=True, headers={
-        **YF_HEADERS,
-        "Referer": "https://finance.yahoo.com/",
-        "Origin": "https://finance.yahoo.com",
-    }, timeout=30.0) as client:
-        # Warm up session cookies — critical for Yahoo Finance to return data from cloud IPs
-        try:
-            await client.get("https://finance.yahoo.com/", timeout=8.0)
-        except Exception:
-            pass
+    # Refresh cookies if cache is empty
+    if not _YF_COOKIES:
+        await _refresh_yf_cookies()
+
+    async with httpx.AsyncClient(
+        follow_redirects=True,
+        headers={**YF_HEADERS, "Referer": "https://finance.yahoo.com/", "Origin": "https://finance.yahoo.com"},
+        cookies=_YF_COOKIES,
+        timeout=30.0,
+    ) as client:
         pairs = await asyncio.gather(
             *[_one(sym, client) for sym in primary_syms],
             return_exceptions=True,
         )
+
+    # If all failed (stale cookies), refresh and retry once
+    results_check = [p for p in pairs if isinstance(p, tuple) and p[1] and getattr(p[1], 'status_code', 0) == 200]
+    if not results_check and primary_syms:
+        await _refresh_yf_cookies()
+        async with httpx.AsyncClient(
+            follow_redirects=True,
+            headers={**YF_HEADERS, "Referer": "https://finance.yahoo.com/", "Origin": "https://finance.yahoo.com"},
+            cookies=_YF_COOKIES,
+            timeout=30.0,
+        ) as client:
+            pairs = await asyncio.gather(
+                *[_one(sym, client) for sym in primary_syms],
+                return_exceptions=True,
+            )
 
     data: dict = {}
     retry_codes: list = []
