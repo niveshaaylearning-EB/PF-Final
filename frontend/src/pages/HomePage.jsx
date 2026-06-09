@@ -1,56 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { TrendingUp, Activity, Search, BarChart2, AlertTriangle, Target, ShieldCheck, Calendar, Users, Share2, Copy, Check } from 'lucide-react';
+import { TrendingUp, Activity, Search, BarChart2, AlertTriangle, Target, ShieldCheck, Calendar, Users } from 'lucide-react';
 import axios from 'axios';
 import { isAdmin, getEmail, getFirstName } from '../utils/auth';
 
 import { API_BASE } from '../config.js';
 
-function ShareLinkPanel() {
-  const [shareUrl, setShareUrl] = useState('');
-  const [copied,   setCopied]   = useState(false);
-
-  useEffect(() => {
-    axios.get(`${API_BASE}/network-info`)
-      .then(r => setShareUrl(r.data.share_url || ''))
-      .catch(() => {});
-  }, []);
-
-  const handleCopy = () => {
-    if (!shareUrl) return;
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
-
-  if (!shareUrl || shareUrl.includes('127.0.0.1')) return null;
-
-  return (
-    <div style={{
-      marginBottom: '16px', padding: '12px 16px',
-      background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.25)',
-      borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap',
-    }}>
-      <Share2 size={16} color="var(--positive)" style={{ flexShrink: 0 }} />
-      <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', flexShrink: 0 }}>WiFi share link:</span>
-      <code style={{
-        flex: 1, fontSize: '0.85rem', color: 'var(--positive)', fontFamily: 'monospace',
-        background: 'rgba(16,185,129,0.08)', padding: '3px 10px', borderRadius: '6px',
-        border: '1px solid rgba(16,185,129,0.2)', wordBreak: 'break-all',
-      }}>
-        {shareUrl}
-      </code>
-      <button
-        onClick={handleCopy}
-        className="btn btn-secondary"
-        style={{ padding: '5px 12px', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}
-      >
-        {copied ? <><Check size={13} color="var(--positive)" /> Copied!</> : <><Copy size={13} /> Copy</>}
-      </button>
-    </div>
-  );
-}
 
 function HomePage() {
   const [marketData, setMarketData] = useState(null);
@@ -192,7 +147,6 @@ function HomePage() {
 
       <div style={{ position: 'relative', zIndex: 1 }}>
 
-        {isAdmin() && <ShareLinkPanel />}
 
         {/* ── Welcome greeting ── */}
         {getEmail() && (
