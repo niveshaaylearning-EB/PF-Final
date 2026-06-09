@@ -196,9 +196,6 @@ SMTP_PASS    = os.environ.get("SMTP_PASS",    "")
 SMTP_FROM    = os.environ.get("SMTP_FROM",    "communication@niveshaay.com")
 SMTP_USE_SSL = os.environ.get("SMTP_USE_SSL", "false").lower() == "true"
 
-# In-memory OTP store: {email: {code, expires}}
-_otp_store: dict = {}
-
 def _generate_otp() -> str:
     return str(secrets.randbelow(900000) + 100000)
 
@@ -462,9 +459,13 @@ def request_email_otp(body: EmailOtpRequest,
         if not db.query(AllowedEmail).filter_by(email=email).first():
             raise HTTPException(403, detail="Your email is not approved. Request access from the login page.")
 
-    code    = _generate_otp()
-    expires = datetime.utcnow() + timedelta(minutes=10)
-    _otp_store[email] = {"code": code, "expires": expires}
+    from database import OtpCode
+    code = _generate_otp()
+
+    # Clear old OTPs for this email, then store new one in DB (works across workers)
+    db.query(OtpCode).filter(OtpCode.email == email).delete()
+    db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
+    db.commit()
 
     # Send in background so API responds immediately even if SMTP is slow
     threading.Thread(target=send_email_otp, args=(email, code), daemon=True).start()
@@ -476,20 +477,23 @@ def request_email_otp(body: EmailOtpRequest,
 def verify_email_otp(body: EmailOtpVerify, request: Request,
                       db: Session = Depends(lambda: __import__('database').SessionLocal())):
     """Verify the email OTP and return a JWT token."""
-    from database import LoginHistory
+    from database import LoginHistory, OtpCode
     email = body.email.lower().strip()
     code  = body.code.strip()
 
-    entry = _otp_store.get(email)
-    if not entry:
-        raise HTTPException(401, detail="No OTP was requested for this email.")
-    if datetime.utcnow() > entry["expires"]:
-        del _otp_store[email]
-        raise HTTPException(401, detail="OTP has expired. Please request a new one.")
-    if entry["code"] != code:
-        raise HTTPException(401, detail="Invalid OTP code.")
+    cutoff = (datetime.utcnow() - timedelta(minutes=10)).isoformat()
+    record = db.query(OtpCode).filter(
+        OtpCode.email == email,
+        OtpCode.code  == code,
+        OtpCode.used  == 0,
+        OtpCode.created_at >= cutoff,
+    ).first()
 
-    del _otp_store[email]   # one-time use
+    if not record:
+        raise HTTPException(401, detail="Invalid or expired OTP. Please request a new one.")
+
+    record.used = 1
+    db.commit()
 
     ip  = request.client.host if request.client else None
     loc = get_location_from_ip_safe(ip)
