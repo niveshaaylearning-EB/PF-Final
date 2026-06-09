@@ -237,6 +237,15 @@ async def _startup_prewarm():
     loop = asyncio.get_running_loop()
     async def _warm():
         try:
+            # Wait for webportal (port 8001) to be ready before warming caches
+            import socket as _sock
+            for _ in range(15):
+                try:
+                    s = _sock.create_connection(("127.0.0.1", 8001), timeout=2)
+                    s.close()
+                    break
+                except Exception:
+                    await asyncio.sleep(2)
             print("[prewarm] Warming all caches in parallel...")
             await asyncio.gather(
                 loop.run_in_executor(_io_pool, sheet_service.get_all_baskets),
@@ -2577,7 +2586,14 @@ def _fetch_all_webportal_baskets() -> dict:
             "stats": {"basket_return": round(basket_ret, 2), "stock_count": len(holdings)},
         }
 
-    _wp_all_cache = {"data": result, "ts": now}
+    # Only cache if we got valid CMP data — if all 0, webportal wasn't ready yet
+    # so don't cache (next request will retry and get real prices)
+    total_holdings = sum(len(v.get("holdings", [])) for v in result.values())
+    valid_cmps     = sum(1 for v in result.values()
+                        for h in v.get("holdings", []) if h.get("cmp", 0) > 0)
+    if total_holdings == 0 or valid_cmps > 0:
+        _wp_all_cache = {"data": result, "ts": now}
+
     return result
 
 
