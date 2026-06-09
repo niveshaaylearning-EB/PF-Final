@@ -2876,7 +2876,10 @@ def submit_access_request(body: dict, db: Session = Depends(get_db)):
         status       = "pending",
     ))
     db.commit()
-    _dump_access_requests(db)   # persist to JSON → GitHub
+    try:
+        _dump_access_requests(db)   # persist to JSON → GitHub
+    except Exception as e:
+        print(f"[access-request] dump failed: {e}")
     return {"status": "submitted", "message": "Access request submitted. The admin will review it shortly."}
 
 
