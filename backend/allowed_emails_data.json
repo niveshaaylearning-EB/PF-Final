@@ -2,10 +2,10 @@
   {
     "email": "jay.chaudhari@niveshaay.com",
     "added_by": "system",
-    "added_at": "2026-05-29T09:34:19",
-    "totp_secret": "HKQHKKDR3FQFVDGJLX22UXBTBLACDIMD",
-    "totp_enabled": 1,
-    "backup_codes": "[\"c89b27e83314e962a657339962c7146ed5efec9fe753af9ca9f5ef8c7d9b8742\", \"dcadebd9892b6e86dd69ee8bacaee8e80434ee503d902eb2954684f9f9d0b48d\", \"fdca02004c4b4de63beba56ec93de5ba28247b2b1b0c24328a8033d4a82affc1\", \"6bad907aec7d1f0b2afe926918f2e8bc671f6915bc5069630baf5b6d388f8336\", \"39d698ef44f5067fefb549b662d9d29900f17a6aa3563a6ad1b38f27baa71850\", \"ebca9d58e3a8c37a7d05b7e0253af085605fdd6c9734603fd99b161a7eb1a790\", \"a6df416482fb4785ebd30bf94dd3d219a8c094b4acc02a09d5ab3490f77477a4\"]"
+    "added_at": "2026-05-29T09:34:19.960526",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null
   },
   {
     "email": "monika.bansal@niveshaay.com",
