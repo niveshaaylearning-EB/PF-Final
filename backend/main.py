@@ -2784,11 +2784,14 @@ def _main_github_push(rel_path: str, content: str):
     except Exception as e:
         print(f"[github-push] {os.path.basename(rel_path)}: {e}")
 
-def _save_json_push(filepath: str, data):
+def _save_json_push(filepath: str, data, sync: bool = False):
     content = json.dumps(data, indent=2, ensure_ascii=False)
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(content)
-    _main_threading.Thread(target=_main_github_push, args=(filepath, content), daemon=True).start()
+    if sync:
+        _main_github_push(filepath, content)   # blocking — used for critical data
+    else:
+        _main_threading.Thread(target=_main_github_push, args=(filepath, content), daemon=True).start()
 
 def _load_json_file(filepath: str, default):
     try:
@@ -2812,12 +2815,12 @@ def _dump_access_requests(db):
     rows = db.query(database.AccessRequest).filter(database.AccessRequest.status.in_(["pending","approved","rejected"])).all()
     data = [{"email": r.email, "requested_at": r.requested_at, "status": r.status,
              "processed_at": r.processed_at} for r in rows]
-    _save_json_push(_ACCESS_REQ_FILE, data)
+    _save_json_push(_ACCESS_REQ_FILE, data, sync=True)
 
 def _dump_allowed_emails(db):
     rows = db.query(database.AllowedEmail).all()
     data = [{"email": r.email, "added_by": r.added_by, "added_at": r.added_at} for r in rows]
-    _save_json_push(_ALLOWED_EMAIL_FILE, data)
+    _save_json_push(_ALLOWED_EMAIL_FILE, data, sync=True)
 
 
 def _dump_login_history(db):
