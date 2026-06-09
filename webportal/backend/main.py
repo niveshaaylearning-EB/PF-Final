@@ -280,23 +280,34 @@ app.add_middleware(
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _fetch_bhavcopy_prices(codes: list) -> dict:
-    """Fetch EOD prices from NSE bhavcopy — single download covers all stocks.
-    Works on any cloud server (public NSE archive URL, no auth needed).
-    Tries last 5 trading days to find the most recent available file.
+    """Fetch EOD prices from NSE bhavcopy using requests with browser headers.
+    NSE blocks pandas' urllib on cloud IPs — requests with proper headers works.
     """
     results: dict = {}
     code_set = set(c.upper() for c in codes)
     try:
         import pandas as pd
+        import requests as _req
+        import io
         from datetime import date, timedelta
-        from nsepython import get_bhavcopy
+
+        _headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Referer": "https://www.nseindia.com/",
+        }
+
         for i in range(1, 7):
-            d = (date.today() - timedelta(days=i)).strftime('%d-%m-%Y')
+            d = (date.today() - timedelta(days=i))
+            url = f"https://archives.nseindia.com/products/content/sec_bhavdata_full_{d.strftime('%d%m%Y')}.csv"
             try:
-                df = get_bhavcopy(d)
+                r = _req.get(url, headers=_headers, timeout=15)
+                if r.status_code != 200:
+                    continue
+                df = pd.read_csv(io.StringIO(r.text))
                 if df is None or df.empty:
                     continue
-                # Columns have leading spaces: ' CLOSE_PRICE', ' OPEN_PRICE', etc.
                 df.columns = [c.strip() for c in df.columns]
                 df['SYMBOL'] = df['SYMBOL'].str.strip()
                 match = df[df['SYMBOL'].isin(code_set)]
@@ -315,8 +326,10 @@ def _fetch_bhavcopy_prices(codes: list) -> dict:
                             "low1M":   _f('LOW_PRICE'),
                         }
                 if results:
+                    print(f"[bhavcopy] Loaded {len(results)} prices from {d.strftime('%d-%m-%Y')}")
                     break
-            except Exception:
+            except Exception as e:
+                print(f"[bhavcopy] {d.strftime('%d-%m-%Y')}: {e}")
                 continue
     except Exception:
         pass
