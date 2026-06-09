@@ -70,8 +70,9 @@ app = FastAPI()
 class JWTMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         path = request.url.path
-        # JWT check only for /api/* routes (not auth endpoints)
-        if path.startswith("/api/") and path != "/api/health":
+        # JWT check only for /api/* routes (not auth, not public endpoints)
+        _PUBLIC_API = {"/api/health", "/api/access-requests"}
+        if path.startswith("/api/") and path not in _PUBLIC_API:
             if request.method != "OPTIONS":
                 header = request.headers.get("Authorization", "")
                 if not header.startswith("Bearer "):
@@ -2830,7 +2831,7 @@ def _dump_access_requests(db):
     rows = db.query(database.AccessRequest).filter(database.AccessRequest.status.in_(["pending","approved","rejected"])).all()
     data = [{"email": r.email, "requested_at": r.requested_at, "status": r.status,
              "processed_at": r.processed_at} for r in rows]
-    _save_json_push(_ACCESS_REQ_FILE, data, sync=True)
+    _save_json_push(_ACCESS_REQ_FILE, data)
 
 def _dump_allowed_emails(db):
     rows = db.query(database.AllowedEmail).all()

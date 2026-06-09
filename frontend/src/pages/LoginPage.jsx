@@ -373,8 +373,8 @@ export default function LoginPage() {
       </div>
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
-        .qr-container svg { width: 100% !important; height: 100% !important; }
-        .qr-container svg rect, .qr-container svg path { fill: #000000 !important; }
+        .qr-container svg { width: 180px !important; height: 180px !important; display: block; }
+        .qr-container svg path { fill: #000000 !important; }
       `}</style>
     </div>
   );

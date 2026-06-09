@@ -22,14 +22,19 @@ def generate_totp_qr_svg(email: str, secret: str) -> str:
         issuer_name="NIA Performance Center"
     )
     
-    # Generate SVG QR code
-    factory = qrcode.image.svg.SvgImage
-    img = qrcode.make(uri, image_factory=factory)
-    
-    # Write to a string buffer
+    # Generate SVG QR code using path-based factory (most compatible with browsers)
+    factory = qrcode.image.svg.SvgPathImage
+    img = qrcode.make(uri, image_factory=factory, box_size=10, border=2)
+
     buf = io.BytesIO()
     img.save(buf)
-    return buf.getvalue().decode("utf-8")
+    svg = buf.getvalue().decode("utf-8")
+
+    # Add explicit dimensions so the browser renders it correctly
+    if 'width=' not in svg:
+        svg = svg.replace('<svg ', '<svg width="200" height="200" ', 1)
+
+    return svg
 
 def verify_totp_token(secret: str, token: str) -> bool:
     """
