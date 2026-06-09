@@ -37,27 +37,31 @@ export default function LoginPage() {
     }
     setLoading(true);
     try {
-      const res = await axios.post(`${API}/auth/direct-login`, { email: em });
-      const { status, temp_token } = res.data;
-      setTempToken(temp_token);
-
-      if (status === '2fa_required') {
-        setMode('totp_verify');
-        setOtpCode('');
-      } else if (status === '2fa_setup_required') {
-        // Fetch QR Code and Secret
-        const enrollRes = await axios.post(
-          `${API}/auth/totp/enroll`,
-          {},
-          { headers: { Authorization: `Bearer ${temp_token}` } }
-        );
-        setQrSvg(enrollRes.data.qr_svg);
-        setSetupSecret(enrollRes.data.secret);
-        setMode('totp_setup');
-        setOtpCode('');
-      }
+      // Send email OTP as primary login method
+      await axios.post(`${API}/auth/request-email-otp`, { email: em });
+      setOtpCode('');
+      setMode('email_otp');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Please try again.');
+      setError(err.response?.data?.detail || 'Failed to send OTP. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleVerifyEmailOtp(e) {
+    e.preventDefault();
+    setError('');
+    if (otpCode.trim().length < 6) { setError('Enter the 6-digit code from your email.'); return; }
+    setLoading(true);
+    try {
+      const res = await axios.post(`${API}/auth/verify-email-otp`, {
+        email: email.toLowerCase().trim(),
+        code:  otpCode.trim(),
+      });
+      setToken(res.data.token);
+      navigate('/rebalance-alerts', { replace: true });
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Invalid or expired OTP code.');
     } finally {
       setLoading(false);
     }
@@ -176,6 +180,7 @@ export default function LoginPage() {
             border: '1px solid rgba(99,102,241,0.35)',
           }}>
             {mode === 'login' && <LogIn color="var(--primary)" size={26} />}
+            {mode === 'email_otp'   && <Mail color="var(--primary)" size={26} />}
             {mode === 'totp_verify' && <KeyRound color="var(--primary)" size={26} />}
             {mode === 'totp_setup' && <QrCode color="var(--primary)" size={26} />}
             {mode === 'backup_display' && <ShieldCheck color="var(--positive)" size={26} />}
@@ -184,6 +189,7 @@ export default function LoginPage() {
           <h1 className="text-gradient" style={{ fontSize: '1.7rem', margin: 0 }}>NIA Performance Center</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '6px' }}>
             {mode === 'login' && 'Sign in with your NIA email'}
+            {mode === 'email_otp'   && 'Enter the OTP sent to your email'}
             {mode === 'totp_verify' && 'Enter 2FA Code or Recovery Code'}
             {mode === 'totp_setup' && 'Set up Google Authenticator 2FA'}
             {mode === 'backup_display' && 'Save your backup recovery codes'}
@@ -211,6 +217,42 @@ export default function LoginPage() {
               <button onClick={() => { setMode('request'); setReqEmail(email); setReqMsg(''); setReqError(''); }}
                 style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.82rem', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'inherit' }}>
                 Request Access
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* ── Mode 1b: Email OTP verify ── */}
+        {mode === 'email_otp' && (
+          <>
+            {error && <div style={{ padding: '10px 14px', marginBottom: '16px', borderRadius: '8px', background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.35)', color: '#f87171', fontSize: '0.85rem' }}>{error}</div>}
+            <div style={{ padding: '10px 14px', marginBottom: '16px', borderRadius: '8px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', color: 'var(--positive)', fontSize: '0.85rem' }}>
+              OTP sent to <strong>{email}</strong>. Check your inbox.
+            </div>
+            <form onSubmit={handleVerifyEmailOtp} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ position: 'relative' }}>
+                <KeyRound size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
+                <input type="text" placeholder="6-digit OTP" value={otpCode}
+                  onChange={e => setOtpCode(e.target.value.replace(/\D/g,'').slice(0,6))}
+                  required autoFocus maxLength={6}
+                  style={{ ...inputStyle, letterSpacing: '0.25em', fontSize: '1.1rem', textAlign: 'center', paddingLeft: '16px' }} />
+              </div>
+              <button type="submit" disabled={loading || otpCode.length < 6} className="btn btn-primary"
+                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px', opacity: otpCode.length < 6 ? 0.6 : 1 }}>
+                {loading ? <><RefreshCw size={16} style={{ animation: 'spin 1s linear infinite' }} /><span>Verifying…</span></> : <><LogIn size={16} /><span>Sign In</span></>}
+              </button>
+            </form>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+              <button onClick={() => { setMode('login'); setOtpCode(''); setError(''); }}
+                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.82rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'inherit' }}>
+                <ArrowLeft size={13} /> Change email
+              </button>
+              <button disabled={loading} onClick={async () => {
+                setError('');
+                try { await axios.post(`${API}/auth/request-email-otp`, { email: email.toLowerCase().trim() }); setOtpCode(''); }
+                catch(e) { setError(e.response?.data?.detail || 'Failed to resend.'); }
+              }} style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'inherit' }}>
+                Resend OTP
               </button>
             </div>
           </>

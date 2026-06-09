@@ -184,6 +184,51 @@ def _push_allowed_emails():
     except Exception as e:
         print(f"[allowed-emails-push] {e}")
 
+# ── Email OTP ─────────────────────────────────────────────────────────────────
+import secrets
+import smtplib
+from email.mime.text import MIMEText
+
+SMTP_HOST    = os.environ.get("SMTP_HOST",    "smtp-relay.brevo.com")
+SMTP_PORT    = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_USER    = os.environ.get("SMTP_USER",    "")
+SMTP_PASS    = os.environ.get("SMTP_PASS",    "")
+SMTP_FROM    = os.environ.get("SMTP_FROM",    "communication@niveshaay.com")
+SMTP_USE_SSL = os.environ.get("SMTP_USE_SSL", "false").lower() == "true"
+
+# In-memory OTP store: {email: {code, expires}}
+_otp_store: dict = {}
+
+def _generate_otp() -> str:
+    return str(secrets.randbelow(900000) + 100000)
+
+def send_email_otp(to_email: str, code: str):
+    """Send OTP via Brevo SMTP to the user's email."""
+    print(f"[EMAIL-OTP] Code for {to_email}: {code}")   # always log as fallback
+    if not SMTP_USER or not SMTP_PASS:
+        return
+    msg = MIMEText(
+        f"Hello,\n\nYour NIA Performance Center login code is:\n\n    {code}\n\n"
+        f"This code expires in 10 minutes.\nIf you didn't request this, ignore this email.\n\n— NIA Tech Team"
+    )
+    msg["Subject"] = f"NIA Login Code: {code}"
+    msg["From"]    = SMTP_FROM
+    msg["To"]      = to_email
+    try:
+        if SMTP_USE_SSL:
+            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=10) as s:
+                s.login(SMTP_USER, SMTP_PASS)
+                s.sendmail(SMTP_FROM, [to_email], msg.as_string())
+        else:
+            with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10) as s:
+                s.ehlo(); s.starttls(); s.ehlo()
+                s.login(SMTP_USER, SMTP_PASS)
+                s.sendmail(SMTP_FROM, [to_email], msg.as_string())
+        print(f"[EMAIL-OTP] Email sent successfully to {to_email}")
+    except Exception as e:
+        print(f"[EMAIL-OTP] Email failed: {e} — code still valid via logs")
+
+
 # ── FastAPI dependency ─────────────────────────────────────────────────────────
 _bearer = HTTPBearer(auto_error=False)
 
@@ -390,3 +435,71 @@ def logout(request: Request,
         except Exception:
             pass
     return {"status": "logged_out"}
+
+
+# ── Email OTP Endpoints ────────────────────────────────────────────────────────
+
+class EmailOtpRequest(BaseModel):
+    email: str
+
+class EmailOtpVerify(BaseModel):
+    email: str
+    code:  str
+
+
+@router.post("/request-email-otp")
+def request_email_otp(body: EmailOtpRequest,
+                       db: Session = Depends(lambda: __import__('database').SessionLocal())):
+    """Send a 6-digit OTP to the user's email. Public endpoint — no token needed."""
+    from database import AllowedEmail
+    email = body.email.lower().strip()
+
+    if not email.endswith(f"@{ALLOWED_DOMAIN}"):
+        raise HTTPException(400, detail=f"Only @{ALLOWED_DOMAIN} emails allowed.")
+
+    # Admin always allowed; others must be pre-approved
+    if email != ADMIN_EMAIL:
+        if not db.query(AllowedEmail).filter_by(email=email).first():
+            raise HTTPException(403, detail="Your email is not approved. Request access from the login page.")
+
+    code    = _generate_otp()
+    expires = datetime.utcnow() + timedelta(minutes=10)
+    _otp_store[email] = {"code": code, "expires": expires}
+
+    # Send in background so API responds immediately even if SMTP is slow
+    threading.Thread(target=send_email_otp, args=(email, code), daemon=True).start()
+
+    return {"status": "sent", "message": f"OTP sent to {email}"}
+
+
+@router.post("/verify-email-otp")
+def verify_email_otp(body: EmailOtpVerify, request: Request,
+                      db: Session = Depends(lambda: __import__('database').SessionLocal())):
+    """Verify the email OTP and return a JWT token."""
+    from database import LoginHistory
+    email = body.email.lower().strip()
+    code  = body.code.strip()
+
+    entry = _otp_store.get(email)
+    if not entry:
+        raise HTTPException(401, detail="No OTP was requested for this email.")
+    if datetime.utcnow() > entry["expires"]:
+        del _otp_store[email]
+        raise HTTPException(401, detail="OTP has expired. Please request a new one.")
+    if entry["code"] != code:
+        raise HTTPException(401, detail="Invalid OTP code.")
+
+    del _otp_store[email]   # one-time use
+
+    ip  = request.client.host if request.client else None
+    loc = get_location_from_ip_safe(ip)
+    try:
+        db.add(LoginHistory(email=email, logged_at=_now_iso(), ip_address=ip, location=loc))
+        db.commit()
+    except Exception:
+        pass
+
+    # Push login history in background
+    threading.Thread(target=_push_login, daemon=True).start()
+
+    return {"token": create_token(email), "email": email}
