@@ -81,7 +81,17 @@ class JWTMiddleware(BaseHTTPMiddleware):
                 request.state.user = email
             except Exception:
                 return JSONResponse({"detail": "Invalid or expired token"}, status_code=401)
-        return await call_next(request)
+        response = await call_next(request)
+        # After login/logout, persist history to GitHub in background
+        if path in ("/auth/direct-login", "/auth/logout") and response.status_code == 200:
+            try:
+                db_bg = database.SessionLocal()
+                _dump_login_history(db_bg)
+                _dump_audit_log(db_bg)
+                db_bg.close()
+            except Exception:
+                pass
+        return response
 
 # Middleware order: innermost first, outermost last (Starlette applies in reverse)
 app.add_middleware(GZipMiddleware, minimum_size=500)
@@ -166,14 +176,28 @@ async def _startup_prewarm():
     # Restore persisted allowed_emails + access_requests from JSON (survives deploys)
     try:
         db_s = database.SessionLocal()
-        # Restore allowed emails from JSON file
-        saved_emails = _load_json_file(_ALLOWED_EMAIL_FILE, [])
-        for rec in saved_emails:
+        # Restore allowed emails
+        for rec in _load_json_file(_ALLOWED_EMAIL_FILE, []):
             if rec.get("email") and not db_s.query(database.AllowedEmail).filter_by(email=rec["email"]).first():
                 db_s.add(database.AllowedEmail(email=rec["email"],
-                    added_by=rec.get("added_by", "restored"), added_at=rec.get("added_at", "")))
-        # Restore access requests from JSON
+                    added_by=rec.get("added_by","restored"), added_at=rec.get("added_at","")))
+        # Restore access requests
         _sync_access_requests_to_db(db_s)
+        # Restore login history
+        for rec in _load_json_file(_LOGIN_HISTORY_FILE, []):
+            if rec.get("logged_at") and not db_s.query(database.LoginHistory).filter_by(
+                    email=rec.get("email"), logged_at=rec.get("logged_at")).first():
+                db_s.add(database.LoginHistory(email=rec.get("email",""),
+                    logged_at=rec.get("logged_at",""), ip_address=rec.get("ip_address"),
+                    location=rec.get("location","")))
+        # Restore audit log
+        for rec in _load_json_file(_AUDIT_LOG_FILE, []):
+            if rec.get("created_at") and not db_s.query(database.AuditLog).filter_by(
+                    user_email=rec.get("user_email"), created_at=rec.get("created_at")).first():
+                db_s.add(database.AuditLog(user_email=rec.get("user_email",""),
+                    event_type=rec.get("event_type",""), details=rec.get("details"),
+                    created_at=rec.get("created_at",""), ip_address=rec.get("ip_address"),
+                    location=rec.get("location","")))
         # Always ensure admin is approved
         if not db_s.query(database.AllowedEmail).filter_by(email=ADMIN_EMAIL).first():
             db_s.add(database.AllowedEmail(email=ADMIN_EMAIL, added_by="system", added_at=datetime.utcnow().isoformat()))
@@ -2649,6 +2673,8 @@ import base64 as _main_b64
 _BACKEND_DIR        = os.path.dirname(os.path.abspath(__file__))
 _ACCESS_REQ_FILE    = os.path.join(_BACKEND_DIR, "access_requests.json")
 _ALLOWED_EMAIL_FILE = os.path.join(_BACKEND_DIR, "allowed_emails_data.json")
+_LOGIN_HISTORY_FILE = os.path.join(_BACKEND_DIR, "login_history.json")
+_AUDIT_LOG_FILE     = os.path.join(_BACKEND_DIR, "audit_log.json")
 
 def _main_github_push(rel_path: str, content: str):
     """Push a file to GitHub repo — background thread."""
@@ -2709,6 +2735,22 @@ def _dump_allowed_emails(db):
     rows = db.query(database.AllowedEmail).all()
     data = [{"email": r.email, "added_by": r.added_by, "added_at": r.added_at} for r in rows]
     _save_json_push(_ALLOWED_EMAIL_FILE, data)
+
+
+def _dump_login_history(db):
+    """Persist last 500 login events to GitHub."""
+    rows = db.query(database.LoginHistory).order_by(database.LoginHistory.id.desc()).limit(500).all()
+    data = [{"email": r.email, "logged_at": r.logged_at, "ip_address": r.ip_address, "location": r.location} for r in rows]
+    _save_json_push(_LOGIN_HISTORY_FILE, data)
+
+
+def _dump_audit_log(db):
+    """Persist last 300 audit events to GitHub."""
+    rows = db.query(database.AuditLog).order_by(database.AuditLog.id.desc()).limit(300).all()
+    data = [{"user_email": r.user_email, "event_type": r.event_type,
+             "details": r.details, "created_at": r.created_at,
+             "ip_address": r.ip_address, "location": r.location} for r in rows]
+    _save_json_push(_AUDIT_LOG_FILE, data)
 
 
 # ── Access Requests (public — no auth required) ───────────────────────────────
