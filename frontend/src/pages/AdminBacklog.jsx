@@ -212,7 +212,6 @@ function AuthTab({ logins, logouts }) {
             <TH>Type</TH>
             <TH>Email</TH>
             <TH>IP Address</TH>
-            <TH>Location</TH>
           </tr>
         </thead>
         <tbody>
@@ -250,7 +249,6 @@ function AuthTab({ logins, logouts }) {
                   {row.ip_address || '—'}
                 </TD>
                 <TD style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>
-                  {row.location || '—'}
                 </TD>
               </tr>
             );
@@ -294,7 +292,6 @@ function UploadsTab({ data }) {
             <TH>Uploaded By</TH>
             <TH>Details</TH>
             <TH>IP Address</TH>
-            <TH>Location</TH>
           </tr>
         </thead>
         <tbody>
@@ -341,7 +338,6 @@ function UploadsTab({ data }) {
                   {u.ip_address || '—'}
                 </TD>
                 <TD style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>
-                  {u.location || '—'}
                 </TD>
               </tr>
             );
