@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Mail, LogIn, RefreshCw, UserPlus, ArrowLeft } from 'lucide-react';
+import { Mail, LogIn, RefreshCw, UserPlus, ArrowLeft, KeyRound } from 'lucide-react';
 import { setToken } from '../utils/auth';
 import { API_ROOT as API } from '../config.js';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [email,   setEmail]   = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState('');
+
+  // Login & OTP state
+  const [email,       setEmail]      = useState('');
+  const [otpCode,     setOtpCode]    = useState('');
+  const [otpMode,     setOtpMode]    = useState(false);
+  const [loading,     setLoading]    = useState(false);
+  const [error,       setError]      = useState('');
+  const [successMsg,  setSuccessMsg] = useState('');
+  const [resendTimer, setResendTimer]= useState(0);
 
   // Request access state
   const [mode,       setMode]       = useState('login');
@@ -18,9 +24,15 @@ export default function LoginPage() {
   const [reqMsg,     setReqMsg]     = useState('');
   const [reqError,   setReqError]   = useState('');
 
-  async function handleLogin(e) {
-    e.preventDefault();
-    setError('');
+  useEffect(() => {
+    if (resendTimer <= 0) return;
+    const t = setTimeout(() => setResendTimer(r => r - 1), 1000);
+    return () => clearTimeout(t);
+  }, [resendTimer]);
+
+  async function handleSendOtp(e, isResend = false) {
+    if (e) e.preventDefault();
+    setError(''); setSuccessMsg('');
     const em = email.toLowerCase().trim();
     if (!em.endsWith('@niveshaay.com')) {
       setError('Only @niveshaay.com email addresses are allowed.');
@@ -28,11 +40,35 @@ export default function LoginPage() {
     }
     setLoading(true);
     try {
-      const res = await axios.post(`${API}/auth/direct-login`, { email: em });
+      await axios.post(`${API}/auth/request-otp`, { email: em });
+      setOtpMode(true);
+      setResendTimer(60);
+      setSuccessMsg(isResend ? 'New OTP sent!' : `OTP sent to ${em}`);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to send OTP. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleVerifyOtp(e) {
+    e.preventDefault();
+    setError(''); setSuccessMsg('');
+    const em = email.toLowerCase().trim();
+    if (!otpCode.trim() || otpCode.trim().length < 6) {
+      setError('Please enter the 6-digit OTP code.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await axios.post(`${API}/auth/verify-otp`, {
+        email: em, code: otpCode.trim(),
+        latitude: null, longitude: null,
+      });
       setToken(res.data.token);
       navigate('/rebalance-alerts', { replace: true });
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Please try again.');
+      setError(err.response?.data?.detail || 'Invalid or expired OTP code.');
     } finally {
       setLoading(false);
     }
@@ -57,7 +93,7 @@ export default function LoginPage() {
         setReqMsg(message);
       }
     } catch (err) {
-      setReqError(err.response?.data?.detail || 'Failed to submit request. Please try again.');
+      setReqError(err.response?.data?.detail || 'Failed to submit. Please try again.');
     } finally {
       setReqLoading(false);
     }
@@ -80,35 +116,66 @@ export default function LoginPage() {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             border: '1px solid rgba(99,102,241,0.35)',
           }}>
-            {mode === 'login' ? <LogIn color="var(--primary)" size={26} /> : <UserPlus color="var(--primary)" size={26} />}
+            {mode === 'login'
+              ? (otpMode ? <KeyRound color="var(--primary)" size={26} /> : <LogIn color="var(--primary)" size={26} />)
+              : <UserPlus color="var(--primary)" size={26} />}
           </div>
           <h1 className="text-gradient" style={{ fontSize: '1.7rem', margin: 0 }}>NIA Performance Center</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '6px' }}>
-            {mode === 'login' ? 'Sign in with your NIA email' : 'Request access to the dashboard'}
+            {mode === 'request' ? 'Request access to the dashboard'
+              : otpMode ? 'Enter the OTP sent to your email'
+              : 'Sign in with your NIA email'}
           </p>
         </div>
 
-        {/* ── Login mode ── */}
+        {/* ── OTP Login mode ── */}
         {mode === 'login' && (
           <>
-            {error && (
-              <div style={{ padding: '10px 14px', marginBottom: '16px', borderRadius: '8px', background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.35)', color: '#f87171', fontSize: '0.85rem' }}>
-                {error}
-              </div>
+            {error && <div style={{ padding: '10px 14px', marginBottom: '16px', borderRadius: '8px', background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.35)', color: '#f87171', fontSize: '0.85rem' }}>{error}</div>}
+            {successMsg && <div style={{ padding: '10px 14px', marginBottom: '16px', borderRadius: '8px', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.35)', color: 'var(--positive)', fontSize: '0.85rem' }}>{successMsg}</div>}
+
+            {!otpMode ? (
+              /* Step 1: Email */
+              <form onSubmit={handleSendOtp} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ position: 'relative' }}>
+                  <Mail size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
+                  <input type="email" placeholder="Enter your NIA email" value={email}
+                    onChange={e => setEmail(e.target.value)} required autoFocus style={inputStyle} />
+                </div>
+                <button type="submit" disabled={loading} className="btn btn-primary"
+                  style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
+                  {loading ? <><RefreshCw size={16} style={{ animation: 'spin 1s linear infinite' }} /><span>Sending OTP…</span></>
+                    : <><Mail size={16} /><span>Send OTP</span></>}
+                </button>
+              </form>
+            ) : (
+              /* Step 2: OTP */
+              <form onSubmit={handleVerifyOtp} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ position: 'relative' }}>
+                  <KeyRound size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
+                  <input type="text" placeholder="6-digit OTP" value={otpCode}
+                    onChange={e => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    required autoFocus maxLength={6}
+                    style={{ ...inputStyle, letterSpacing: '0.3em', fontSize: '1.2rem', paddingLeft: '16px', textAlign: 'center' }} />
+                </div>
+                <button type="submit" disabled={loading || otpCode.length < 6} className="btn btn-primary"
+                  style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px', opacity: otpCode.length < 6 ? 0.6 : 1 }}>
+                  {loading ? <><RefreshCw size={16} style={{ animation: 'spin 1s linear infinite' }} /><span>Verifying…</span></>
+                    : <><LogIn size={16} /><span>Verify &amp; Sign In</span></>}
+                </button>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
+                  <button type="button" onClick={() => { setOtpMode(false); setOtpCode(''); setError(''); setSuccessMsg(''); }}
+                    style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.82rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'inherit' }}>
+                    <ArrowLeft size={13} /> Change email
+                  </button>
+                  <button type="button" disabled={resendTimer > 0 || loading} onClick={e => handleSendOtp(e, true)}
+                    style={{ background: 'none', border: 'none', color: resendTimer > 0 ? 'var(--text-muted)' : 'var(--primary)', fontSize: '0.82rem', cursor: resendTimer > 0 ? 'default' : 'pointer', fontFamily: 'inherit' }}>
+                    {resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend OTP'}
+                  </button>
+                </div>
+              </form>
             )}
-            <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ position: 'relative' }}>
-                <Mail size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
-                <input type="email" placeholder="Enter your NIA email" value={email}
-                  onChange={e => setEmail(e.target.value)} required autoFocus style={inputStyle} />
-              </div>
-              <button type="submit" disabled={loading} className="btn btn-primary"
-                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
-                {loading
-                  ? <><RefreshCw size={16} style={{ animation: 'spin 1s linear infinite' }} /><span>Signing in…</span></>
-                  : <><LogIn size={16} /><span>Sign In</span></>}
-              </button>
-            </form>
+
             <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
               <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>Don't have access? </span>
               <button onClick={() => { setMode('request'); setReqEmail(email); setReqMsg(''); setReqError(''); }}
@@ -132,11 +199,7 @@ export default function LoginPage() {
               </div>
             ) : (
               <>
-                {reqError && (
-                  <div style={{ padding: '10px 14px', marginBottom: '16px', borderRadius: '8px', background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.35)', color: '#f87171', fontSize: '0.85rem' }}>
-                    {reqError}
-                  </div>
-                )}
+                {reqError && <div style={{ padding: '10px 14px', marginBottom: '16px', borderRadius: '8px', background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.35)', color: '#f87171', fontSize: '0.85rem' }}>{reqError}</div>}
                 <form onSubmit={handleRequestAccess} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <div style={{ position: 'relative' }}>
                     <Mail size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
@@ -145,14 +208,12 @@ export default function LoginPage() {
                   </div>
                   <button type="submit" disabled={reqLoading} className="btn btn-primary"
                     style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
-                    {reqLoading
-                      ? <><RefreshCw size={16} style={{ animation: 'spin 1s linear infinite' }} /><span>Sending…</span></>
+                    {reqLoading ? <><RefreshCw size={16} style={{ animation: 'spin 1s linear infinite' }} /><span>Sending…</span></>
                       : <><UserPlus size={16} /><span>Request Access</span></>}
                   </button>
                 </form>
                 <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-                  <button onClick={() => setMode('login')}
-                    style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.82rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'inherit' }}>
+                  <button onClick={() => setMode('login')} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.82rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px', fontFamily: 'inherit' }}>
                     <ArrowLeft size={13} /> Back to Login
                   </button>
                 </div>
