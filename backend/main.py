@@ -201,6 +201,16 @@ async def _startup_prewarm():
                     event_type=rec.get("event_type",""), details=rec.get("details"),
                     created_at=rec.get("created_at",""), ip_address=rec.get("ip_address"),
                     location=rec.get("location","")))
+        # Restore stock events
+        for rec in _load_json_file(_STOCK_EVENTS_FILE, []):
+            if rec.get("event_date") and not db_s.query(StockEvent).filter_by(
+                    basket_id=rec.get("basket_id"), stock_code=rec.get("stock_code"),
+                    event_date=rec.get("event_date"), event_type=rec.get("event_type")).first():
+                db_s.add(StockEvent(
+                    basket_id=rec.get("basket_id",""), stock_code=rec.get("stock_code",""),
+                    event_type=rec.get("event_type",""), description=rec.get("description"),
+                    old_value=rec.get("old_value"), new_value=rec.get("new_value"),
+                    event_date=rec.get("event_date",""), user_email=rec.get("user_email")))
         # Always ensure admin is approved
         if not db_s.query(database.AllowedEmail).filter_by(email=ADMIN_EMAIL).first():
             db_s.add(database.AllowedEmail(email=ADMIN_EMAIL, added_by="system", added_at=datetime.utcnow().isoformat()))
@@ -209,6 +219,20 @@ async def _startup_prewarm():
         print("[startup] Restored allowed_emails and access_requests from JSON")
     except Exception as e:
         print(f"[startup] Could not restore persisted data: {e}")
+
+    # Background: periodically dump stock events to GitHub every 5 min
+    import threading as _t
+    def _periodic_dump():
+        import time as _time2
+        while True:
+            _time2.sleep(300)  # 5 minutes
+            try:
+                _db = database.SessionLocal()
+                _dump_stock_events(_db)
+                _db.close()
+            except Exception:
+                pass
+    _t.Thread(target=_periodic_dump, daemon=True).start()
 
     loop = asyncio.get_running_loop()
     async def _warm():
@@ -2676,8 +2700,9 @@ import base64 as _main_b64
 _BACKEND_DIR        = os.path.dirname(os.path.abspath(__file__))
 _ACCESS_REQ_FILE    = os.path.join(_BACKEND_DIR, "access_requests.json")
 _ALLOWED_EMAIL_FILE = os.path.join(_BACKEND_DIR, "allowed_emails_data.json")
-_LOGIN_HISTORY_FILE = os.path.join(_BACKEND_DIR, "login_history.json")
-_AUDIT_LOG_FILE     = os.path.join(_BACKEND_DIR, "audit_log.json")
+_LOGIN_HISTORY_FILE  = os.path.join(_BACKEND_DIR, "login_history.json")
+_AUDIT_LOG_FILE      = os.path.join(_BACKEND_DIR, "audit_log.json")
+_STOCK_EVENTS_FILE   = os.path.join(_BACKEND_DIR, "stock_events.json")
 
 def _main_github_push(rel_path: str, content: str):
     """Push a file to GitHub repo — background thread."""
@@ -2754,6 +2779,16 @@ def _dump_audit_log(db):
              "details": r.details, "created_at": r.created_at,
              "ip_address": r.ip_address, "location": r.location} for r in rows]
     _save_json_push(_AUDIT_LOG_FILE, data)
+
+
+def _dump_stock_events(db):
+    """Persist last 1000 stock events to GitHub."""
+    rows = db.query(StockEvent).order_by(StockEvent.id.desc()).limit(1000).all()
+    data = [{"basket_id": r.basket_id, "stock_code": r.stock_code,
+             "event_type": r.event_type, "description": r.description,
+             "old_value": r.old_value, "new_value": r.new_value,
+             "event_date": r.event_date, "user_email": getattr(r, "user_email", None)} for r in rows]
+    _save_json_push(_STOCK_EVENTS_FILE, data)
 
 
 # ── Access Requests (public — no auth required) ───────────────────────────────
