@@ -54,3 +54,5 @@ urllib3==2.6.3
 uvicorn==0.45.0
 websockets==16.0
 yfinance==0.2.51
+pyotp==2.9.0
+qrcode==8.2

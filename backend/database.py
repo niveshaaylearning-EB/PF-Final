@@ -213,10 +213,13 @@ class BasketAnalyst(Base):
 
 class AllowedEmail(Base):
     __tablename__ = "allowed_emails"
-    id       = Column(Integer, primary_key=True, index=True)
-    email    = Column(String, unique=True, index=True)
-    added_by = Column(String, nullable=True)
-    added_at = Column(String)   # ISO datetime
+    id           = Column(Integer, primary_key=True, index=True)
+    email        = Column(String, unique=True, index=True)
+    added_by     = Column(String, nullable=True)
+    added_at     = Column(String)   # ISO datetime
+    totp_secret  = Column(String, nullable=True)
+    totp_enabled = Column(Integer, default=0)  # 0=disabled, 1=enabled
+    backup_codes = Column(Text, nullable=True)  # JSON-serialized list of hashed recovery codes
 
 
 class AccessRequest(Base):
@@ -264,6 +267,10 @@ def run_migrations():
         "ALTER TABLE login_history ADD COLUMN location TEXT",
         "ALTER TABLE audit_log ADD COLUMN ip_address TEXT",
         "ALTER TABLE audit_log ADD COLUMN location TEXT",
+        # TOTP 2FA columns
+        "ALTER TABLE allowed_emails ADD COLUMN totp_secret TEXT",
+        "ALTER TABLE allowed_emails ADD COLUMN totp_enabled INTEGER DEFAULT 0",
+        "ALTER TABLE allowed_emails ADD COLUMN backup_codes TEXT",
     ]
     with engine.connect() as conn:
         for sql in migrations:

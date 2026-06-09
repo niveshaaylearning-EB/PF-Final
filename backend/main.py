@@ -181,9 +181,24 @@ async def _startup_prewarm():
         db_s = database.SessionLocal()
         # Restore allowed emails
         for rec in _load_json_file(_ALLOWED_EMAIL_FILE, []):
-            if rec.get("email") and not db_s.query(database.AllowedEmail).filter_by(email=rec["email"]).first():
-                db_s.add(database.AllowedEmail(email=rec["email"],
-                    added_by=rec.get("added_by","restored"), added_at=rec.get("added_at","")))
+            if rec.get("email"):
+                existing = db_s.query(database.AllowedEmail).filter_by(email=rec["email"]).first()
+                if not existing:
+                    db_s.add(database.AllowedEmail(
+                        email=rec["email"],
+                        added_by=rec.get("added_by","restored"),
+                        added_at=rec.get("added_at",""),
+                        totp_secret=rec.get("totp_secret"),
+                        totp_enabled=rec.get("totp_enabled", 0),
+                        backup_codes=rec.get("backup_codes")
+                    ))
+                else:
+                    if "totp_secret" in rec:
+                        existing.totp_secret = rec["totp_secret"]
+                    if "totp_enabled" in rec:
+                        existing.totp_enabled = rec["totp_enabled"]
+                    if "backup_codes" in rec:
+                        existing.backup_codes = rec["backup_codes"]
         # Restore access requests
         _sync_access_requests_to_db(db_s)
         # Restore login history
@@ -2819,7 +2834,14 @@ def _dump_access_requests(db):
 
 def _dump_allowed_emails(db):
     rows = db.query(database.AllowedEmail).all()
-    data = [{"email": r.email, "added_by": r.added_by, "added_at": r.added_at} for r in rows]
+    data = [{
+        "email": r.email,
+        "added_by": r.added_by,
+        "added_at": r.added_at,
+        "totp_secret": r.totp_secret,
+        "totp_enabled": r.totp_enabled,
+        "backup_codes": r.backup_codes
+    } for r in rows]
     _save_json_push(_ALLOWED_EMAIL_FILE, data, sync=True)
 
 
