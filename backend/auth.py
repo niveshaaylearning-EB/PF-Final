@@ -507,3 +507,29 @@ def verify_email_otp(body: EmailOtpVerify, request: Request,
     threading.Thread(target=_push_login, daemon=True).start()
 
     return {"token": create_token(email), "email": email}
+
+
+@router.post("/test-smtp")
+def test_smtp(request: Request):
+    """Test SMTP configuration — returns success or detailed error. Admin debug only."""
+    import smtplib as _sm
+    host = SMTP_HOST
+    port = SMTP_PORT
+    user = SMTP_USER
+    pwd  = SMTP_PASS
+    frm  = SMTP_FROM
+    to   = ADMIN_EMAIL
+
+    try:
+        if SMTP_USE_SSL:
+            with _sm.SMTP_SSL(host, port, timeout=10) as s:
+                s.login(user, pwd)
+                s.sendmail(frm, [to], f"Subject: NIA SMTP Test\n\nSMTP test from {frm} via {host}:{port}")
+        else:
+            with _sm.SMTP(host, port, timeout=10) as s:
+                s.ehlo(); s.starttls(); s.ehlo()
+                s.login(user, pwd)
+                s.sendmail(frm, [to], f"Subject: NIA SMTP Test\n\nSMTP test from {frm} via {host}:{port}")
+        return {"ok": True, "msg": f"Test email sent from {frm} to {to} via {host}:{port}"}
+    except Exception as e:
+        return {"ok": False, "error": str(e), "config": {"host": host, "port": port, "user": user, "from": frm}}
