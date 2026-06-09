@@ -70,19 +70,21 @@ app = FastAPI()
 class JWTMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         path = request.url.path
-        if request.method == "OPTIONS" or path.startswith("/auth/") or path == "/api/health":
-            return await call_next(request)
-        if path.startswith("/api/"):
-            header = request.headers.get("Authorization", "")
-            if not header.startswith("Bearer "):
-                return JSONResponse({"detail": "Not authenticated"}, status_code=401)
-            try:
-                email = verify_token(header.split(" ", 1)[1])
-                request.state.user = email
-            except Exception:
-                return JSONResponse({"detail": "Invalid or expired token"}, status_code=401)
+        # JWT check only for /api/* routes (not auth endpoints)
+        if path.startswith("/api/") and path != "/api/health":
+            if request.method != "OPTIONS":
+                header = request.headers.get("Authorization", "")
+                if not header.startswith("Bearer "):
+                    return JSONResponse({"detail": "Not authenticated"}, status_code=401)
+                try:
+                    email = verify_token(header.split(" ", 1)[1])
+                    request.state.user = email
+                except Exception:
+                    return JSONResponse({"detail": "Invalid or expired token"}, status_code=401)
+
         response = await call_next(request)
-        # After login/logout, persist history to GitHub in background
+
+        # After successful login/logout → persist to GitHub (survives future deploys)
         if path in ("/auth/direct-login", "/auth/logout") and response.status_code == 200:
             try:
                 db_bg = database.SessionLocal()
@@ -91,6 +93,7 @@ class JWTMiddleware(BaseHTTPMiddleware):
                 db_bg.close()
             except Exception:
                 pass
+
         return response
 
 # Middleware order: innermost first, outermost last (Starlette applies in reverse)
