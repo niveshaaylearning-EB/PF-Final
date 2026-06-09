@@ -103,11 +103,39 @@ def direct_login(body: LoginRequest, request: Request,
     ip  = request.client.host if request.client else None
     loc = get_location_from_ip_safe(ip)
 
+    now_str = _now_iso()
     try:
-        db.add(LoginHistory(email=email, logged_at=_now_iso(), ip_address=ip, location=loc))
+        db.add(LoginHistory(email=email, logged_at=now_str, ip_address=ip, location=loc))
         db.commit()
     except Exception:
         pass
+
+    # Push login history to GitHub immediately so it survives next deploy
+    import threading, json as _json, base64 as _b64, urllib.request as _ur
+    def _push_login():
+        try:
+            token = os.environ.get("GITHUB_TOKEN","")
+            repo  = os.environ.get("GITHUB_REPO","")
+            if not token or not repo:
+                return
+            import sqlite3, os as _os
+            db_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "portfolio.db")
+            conn = sqlite3.connect(db_path)
+            conn.row_factory = sqlite3.Row
+            rows = conn.execute("SELECT email,logged_at,ip_address,location FROM login_history ORDER BY id DESC LIMIT 500").fetchall()
+            content = _json.dumps([dict(r) for r in rows], indent=2)
+            conn.close()
+            api = f"https://api.github.com/repos/{repo}/contents/backend/login_history.json"
+            hdrs = {"Authorization":f"Bearer {token}","Accept":"application/vnd.github+json","Content-Type":"application/json","X-GitHub-Api-Version":"2022-11-28"}
+            try:
+                sha = _json.loads(_ur.urlopen(_ur.Request(api,headers=hdrs),timeout=8).read())["sha"]
+            except Exception:
+                sha = None
+            body = _json.dumps({"message":"auto: login event","content":_b64.b64encode(content.encode()).decode(),**( {"sha":sha} if sha else {})}).encode()
+            _ur.urlopen(_ur.Request(api,data=body,headers=hdrs,method="PUT"),timeout=10)
+        except Exception as e:
+            print(f"[login-push] {e}")
+    threading.Thread(target=_push_login, daemon=True).start()
 
     return {"token": create_token(email), "email": email}
 
