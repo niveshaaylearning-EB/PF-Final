@@ -467,7 +467,7 @@ def fetch_basket(sheet_name):
 
         url = (
             f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}"
-            f"/gviz/tq?tqx=out:csv&sheet={requests.utils.quote(sheet_name)}"
+            f"/gviz/tq?tqx=out:csv&sheet={requests.utils.quote(sheet_name)}&t={int(now)}"
         )
 
         try:

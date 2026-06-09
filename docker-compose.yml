@@ -12,6 +12,8 @@ services:
       - "80:80"       # nginx reverse proxy (routes internally to 8000/8001)
     env_file:
       - backend/.env
+    environment:
+      - IS_DOCKER_LOCAL=true
     volumes:
       # Persist database and data files outside the container
       - ./backend/portfolio.db:/app/backend/portfolio.db

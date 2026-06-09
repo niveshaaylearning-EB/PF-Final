@@ -4,7 +4,11 @@ Copies data files from the image into /data (Render persistent disk) if they
 don't exist yet — so the first deploy seeds the disk, and subsequent deploys
 never overwrite live data.
 """
-import os, shutil
+import os, shutil, sys
+
+if os.environ.get("IS_DOCKER_LOCAL") == "true":
+    print("[init] Local Docker detected, skipping symlinking to keep host volume mounts intact.")
+    sys.exit(0)
 
 DATA_DIR    = "/data"
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
