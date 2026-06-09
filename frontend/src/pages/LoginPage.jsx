@@ -250,6 +250,7 @@ export default function LoginPage() {
             
             {qrSvg && (
               <div 
+                className="qr-container"
                 dangerouslySetInnerHTML={{ __html: qrSvg }} 
                 style={{ 
                   margin: '16px auto', 
@@ -370,7 +371,11 @@ export default function LoginPage() {
           </>
         )}
       </div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .qr-container svg { width: 100% !important; height: 100% !important; }
+        .qr-container svg rect, .qr-container svg path { fill: #000000 !important; }
+      `}</style>
     </div>
   );
 }
