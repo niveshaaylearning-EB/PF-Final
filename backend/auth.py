@@ -525,8 +525,8 @@ def verify_email_otp(body: EmailOtpVerify, request: Request,
     return {"token": create_token(email), "email": email}
 
 
-@router.post("/test-smtp")
-def test_smtp(request: Request):
+@router.get("/test-smtp")
+def test_smtp():
     """Test SMTP configuration — returns success or detailed error. Admin debug only."""
     import smtplib as _sm
     host = SMTP_HOST
