@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [email,        setEmail]       = useState('');
   const [loading,      setLoading]     = useState(false);
   const [error,        setError]       = useState('');
-  const [mode,         setMode]        = useState('login'); // 'login' | 'totp_verify' | 'totp_setup' | 'backup_display' | 'request'
+  const [mode,         setMode]        = useState('login');
   
   // 2FA state
   const [tempToken,    setTempToken]   = useState('');
@@ -37,9 +37,10 @@ export default function LoginPage() {
     }
     setLoading(true);
     try {
-      // Send email OTP as primary login method
-      await axios.post(`${API}/auth/request-email-otp`, { email: em });
+      const res = await axios.post(`${API}/auth/request-email-otp`, { email: em });
       setOtpCode('');
+      // If email failed, pre-fill the code so user can still log in
+      if (res.data.code) setOtpCode(res.data.code);
       setMode('email_otp');
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to send OTP. Please try again.');

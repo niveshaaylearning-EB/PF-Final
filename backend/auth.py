@@ -467,10 +467,26 @@ def request_email_otp(body: EmailOtpRequest,
     db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
     db.commit()
 
-    # Send in background so API responds immediately even if SMTP is slow
-    threading.Thread(target=send_email_otp, args=(email, code), daemon=True).start()
+    # Try sending email synchronously so we know if it worked
+    email_sent = False
+    email_error = ""
+    try:
+        send_email_otp(email, code)
+        email_sent = True
+    except Exception as e:
+        email_error = str(e)
+        print(f"[EMAIL-OTP] Failed for {email}: {e}")
 
-    return {"status": "sent", "message": f"OTP sent to {email}"}
+    if email_sent:
+        return {"status": "sent", "message": f"OTP sent to {email}. Check your inbox."}
+    else:
+        # Email failed — return code directly (admin fallback) + show hint
+        return {
+            "status": "sent",
+            "message": f"Email delivery failed. Your OTP code is: {code}",
+            "code": code,   # shown on screen so user can still log in
+            "error": email_error,
+        }
 
 
 @router.post("/verify-email-otp")
