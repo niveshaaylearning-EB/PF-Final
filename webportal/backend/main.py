@@ -396,7 +396,16 @@ async def _fetch_yahoo_charts(codes: list) -> dict:
         sym_to_code[sym] = c
         primary_syms.append(sym)
 
-    async with httpx.AsyncClient(follow_redirects=True, headers=YF_HEADERS, timeout=30.0) as client:
+    async with httpx.AsyncClient(follow_redirects=True, headers={
+        **YF_HEADERS,
+        "Referer": "https://finance.yahoo.com/",
+        "Origin": "https://finance.yahoo.com",
+    }, timeout=30.0) as client:
+        # Warm up session cookies — critical for Yahoo Finance to return data from cloud IPs
+        try:
+            await client.get("https://finance.yahoo.com/", timeout=8.0)
+        except Exception:
+            pass
         pairs = await asyncio.gather(
             *[_one(sym, client) for sym in primary_syms],
             return_exceptions=True,
@@ -923,26 +932,12 @@ async def fetch_live_batch() -> dict:
         # Always fetch Yahoo Finance (fast ~5-10s) and return immediately.
         # Screener batch (MC/PE) always runs in background — 307 stocks via proxy
         # takes ~5-10 min; background task patches _live_cache when done.
-        # Primary: NSE Bhavcopy — single download, all stocks, works on any cloud IP
-        loop = asyncio.get_running_loop()
+        # Primary: Yahoo Finance chart API with cookie warm-up (works on cloud)
+        # NSE bhavcopy is geo-blocked from non-Indian IPs (Render is US-based)
         try:
-            bhav_data = await asyncio.wait_for(
-                loop.run_in_executor(None, _fetch_bhavcopy_prices, codes),
-                timeout=25.0
-            )
+            yahoo_data = await _fetch_yahoo_charts(codes)
         except Exception:
-            bhav_data = {}
-
-        valid_bhav = sum(1 for v in bhav_data.values() if isinstance(v, dict) and v.get("cmp"))
-
-        if valid_bhav > 0:
-            yahoo_data = bhav_data
-        else:
-            # Fallback: Yahoo Finance chart API
-            try:
-                yahoo_data = await _fetch_yahoo_charts(codes)
-            except Exception:
-                yahoo_data = {}
+            yahoo_data = {}
 
         if mc_pe_cold and not _mc_pe_task_running:
             asyncio.create_task(_mc_pe_background_refresh())
