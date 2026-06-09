@@ -1631,6 +1631,7 @@ async def upload_rebalance(request: Request, file: UploadFile = FastAPIFile(...)
                 location   = loc,
             ))
             db_up.commit()
+            _dump_audit_log(db_up)   # persist rebalance upload to GitHub immediately
         finally:
             db_up.close()
 
