@@ -59,7 +59,7 @@ def _get_nse_quote(nse_code: str) -> dict | None:
     except Exception:
         return None
 from datetime import datetime, timedelta
-from auth import verify_token, ADMIN_EMAIL, router as auth_router, get_location_from_ip
+from auth import verify_token, router as auth_router, get_location_from_ip, is_admin_email
 import time as _time
 from sqlalchemy import func as _sqf
 import requests as _http
@@ -227,9 +227,10 @@ async def _startup_prewarm():
                     event_type=rec.get("event_type",""), description=rec.get("description"),
                     old_value=rec.get("old_value"), new_value=rec.get("new_value"),
                     event_date=rec.get("event_date",""), user_email=rec.get("user_email")))
-        # Always ensure admin is approved
-        if not db_s.query(database.AllowedEmail).filter_by(email=ADMIN_EMAIL).first():
-            db_s.add(database.AllowedEmail(email=ADMIN_EMAIL, added_by="system", added_at=datetime.utcnow().isoformat()))
+        # Always ensure admins are approved
+        for adm in ["jay.chaudhari@niveshaay.com", "nukul.madaan@niveshaay.com"]:
+            if not db_s.query(database.AllowedEmail).filter_by(email=adm).first():
+                db_s.add(database.AllowedEmail(email=adm, added_by="system", added_at=datetime.utcnow().isoformat()))
         db_s.commit()
         db_s.close()
         print("[startup] Restored allowed_emails and access_requests from JSON")
@@ -736,7 +737,7 @@ def get_basket_analyst(basket_id: str, db: Session = Depends(get_db)):
 @app.post("/api/baskets/{basket_id}/analyst")
 def set_basket_analyst(basket_id: str, body: AnalystUpdate, request: Request, db: Session = Depends(get_db)):
     user = getattr(request.state, "user", None)
-    if user != ADMIN_EMAIL:
+    if not is_admin_email(user):
         raise HTTPException(status_code=403, detail="Admin only")
     rec = db.query(database.BasketAnalyst).filter_by(basket_id=basket_id).first()
     now = datetime.utcnow().isoformat()
@@ -1503,8 +1504,8 @@ def refresh_yf_metrics():
 @app.get("/api/admin/audit-log")
 def get_audit_log(request: Request, db: Session = Depends(get_db)):
     user = getattr(request.state, "user", None)
-    if user != ADMIN_EMAIL:
-        raise HTTPException(status_code=403, detail=f"Admin only. Authenticated as: {user!r}")
+    if not is_admin_email(user):
+        raise HTTPException(status_code=403, detail="Admin only")
 
     try:
         events = db.query(StockEvent).order_by(StockEvent.id.desc()).limit(500).all()
@@ -1664,7 +1665,7 @@ async def upload_rebalance(request: Request, file: UploadFile = FastAPIFile(...)
 def get_network_info(request: Request):
     """Return the machine's LAN IP so the admin can see the share URL."""
     user = getattr(request.state, "user", None)
-    if user != ADMIN_EMAIL:
+    if not is_admin_email(user):
         raise HTTPException(status_code=403, detail="Admin only")
     import socket as _socket
     try:
@@ -2724,7 +2725,7 @@ class AllowedEmailBody(BaseModel):
 @app.get("/api/allowed-emails")
 def list_allowed_emails(request: Request, db: Session = Depends(get_db)):
     user = getattr(request.state, "user", None)
-    if user != ADMIN_EMAIL:
+    if not is_admin_email(user):
         raise HTTPException(status_code=403, detail="Admin only")
     rows = db.query(database.AllowedEmail).order_by(database.AllowedEmail.added_at.desc()).all()
     return [{"email": r.email, "added_by": r.added_by, "added_at": r.added_at} for r in rows]
@@ -2732,10 +2733,10 @@ def list_allowed_emails(request: Request, db: Session = Depends(get_db)):
 @app.post("/api/allowed-emails")
 def add_allowed_email(body: AllowedEmailBody, request: Request, db: Session = Depends(get_db)):
     user = getattr(request.state, "user", None)
-    if user != ADMIN_EMAIL:
+    if not is_admin_email(user):
         raise HTTPException(status_code=403, detail="Admin only")
     email = body.email.lower().strip()
-    if not email.endswith(f"@{ADMIN_EMAIL.split('@')[1]}"):
+    if not email.endswith("@niveshaay.com"):
         raise HTTPException(status_code=400, detail="Only @niveshaay.com emails can be added")
     existing = db.query(database.AllowedEmail).filter_by(email=email).first()
     if existing:
@@ -2748,10 +2749,10 @@ def add_allowed_email(body: AllowedEmailBody, request: Request, db: Session = De
 @app.delete("/api/allowed-emails/{email_addr}")
 def remove_allowed_email(email_addr: str, request: Request, db: Session = Depends(get_db)):
     user = getattr(request.state, "user", None)
-    if user != ADMIN_EMAIL:
+    if not is_admin_email(user):
         raise HTTPException(status_code=403, detail="Admin only")
     email = email_addr.lower().strip()
-    if email == ADMIN_EMAIL:
+    if is_admin_email(email):
         raise HTTPException(status_code=400, detail="Cannot remove admin email")
     row = db.query(database.AllowedEmail).filter_by(email=email).first()
     if not row:
@@ -2913,7 +2914,7 @@ def submit_access_request(body: dict, db: Session = Depends(get_db)):
 def list_access_requests(request: Request, db: Session = Depends(get_db)):
     """List pending access requests — admin only."""
     user = getattr(request.state, "user", None)
-    if user != ADMIN_EMAIL:
+    if not is_admin_email(user):
         raise HTTPException(status_code=403, detail="Admin only")
     reqs = (db.query(database.AccessRequest)
               .filter_by(status="pending")
@@ -2925,7 +2926,7 @@ def list_access_requests(request: Request, db: Session = Depends(get_db)):
 @app.post("/api/access-requests/{req_id}/approve")
 def approve_access_request(req_id: int, request: Request, db: Session = Depends(get_db)):
     user = getattr(request.state, "user", None)
-    if user != ADMIN_EMAIL:
+    if not is_admin_email(user):
         raise HTTPException(status_code=403, detail="Admin only")
     req = db.query(database.AccessRequest).filter_by(id=req_id).first()
     if not req:
@@ -2943,7 +2944,7 @@ def approve_access_request(req_id: int, request: Request, db: Session = Depends(
 @app.post("/api/access-requests/{req_id}/reject")
 def reject_access_request(req_id: int, request: Request, db: Session = Depends(get_db)):
     user = getattr(request.state, "user", None)
-    if user != ADMIN_EMAIL:
+    if not is_admin_email(user):
         raise HTTPException(status_code=403, detail="Admin only")
     req = db.query(database.AccessRequest).filter_by(id=req_id).first()
     if not req:

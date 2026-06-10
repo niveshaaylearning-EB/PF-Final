@@ -69,9 +69,13 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
     setError('');
     setConfirming(true);
     try {
+      const token = localStorage.getItem('nia_auth_token') || '';
       const resp = await fetch(`${API_BASE}/confirm-rebalance`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
           basket:           previewData.basketKey,
           latestDate:       previewData.latestDate,

@@ -24,6 +24,13 @@ load_dotenv()
 # ── Config ────────────────────────────────────────────────────────────────────
 ALLOWED_DOMAIN = os.environ.get("ALLOWED_DOMAIN", "niveshaay.com")
 ADMIN_EMAIL    = os.environ.get("ADMIN_EMAIL",    "jay.chaudhari@niveshaay.com")
+ADMIN_EMAILS   = {"jay.chaudhari@niveshaay.com", "nukul.madaan@niveshaay.com"}
+
+def is_admin_email(email: str) -> bool:
+    if not email:
+        return False
+    return email.lower().strip() in ADMIN_EMAILS
+
 JWT_SECRET     = os.environ.get("JWT_SECRET",     "nia-perf-secret-change-in-prod-32x")
 JWT_ALGORITHM  = "HS256"
 
@@ -224,6 +231,7 @@ def send_email_otp(to_email: str, code: str):
         print(f"[EMAIL-OTP] Email sent successfully to {to_email}")
     except Exception as e:
         print(f"[EMAIL-OTP] Email failed: {e} — code still valid via logs")
+        raise e
 
 
 # ── FastAPI dependency ─────────────────────────────────────────────────────────
@@ -240,38 +248,34 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 @router.post("/direct-login")
 def direct_login(body: LoginRequest, request: Request,
                  db: Session = Depends(lambda: __import__('database').SessionLocal())):
-    from database import AllowedEmail
+    from database import AllowedEmail, LoginHistory
     email = body.email.lower().strip()
 
     if not email.endswith(f"@{ALLOWED_DOMAIN}"):
         raise HTTPException(status_code=403, detail=f"Only @{ALLOWED_DOMAIN} email addresses are allowed.")
 
-    # Check if user exists in AllowedEmail database
+    # Auto-seed allowed email if missing (any @niveshaay.com is allowed now)
     allowed = db.query(AllowedEmail).filter_by(email=email).first()
-    if email != ADMIN_EMAIL:
-        if not allowed:
-            raise HTTPException(status_code=403, detail="Your email is not approved for access. Use 'Request Access' on the login page.")
-    else:
-        # Auto-seed admin if missing
-        if not allowed:
-            from datetime import datetime
-            allowed = AllowedEmail(email=email, added_by="system", added_at=datetime.utcnow().isoformat())
-            db.add(allowed)
-            db.commit()
+    if not allowed:
+        from datetime import datetime
+        allowed = AllowedEmail(email=email, added_by="system", added_at=datetime.utcnow().isoformat())
+        db.add(allowed)
+        db.commit()
+        # Sync to disk & GitHub in background
+        threading.Thread(target=_push_allowed_emails, daemon=True).start()
 
-    # Determine 2FA state
-    if allowed and allowed.totp_enabled == 1:
-        return {
-            "status": "2fa_required",
-            "email": email,
-            "temp_token": create_temp_token(email)
-        }
-    else:
-        return {
-            "status": "2fa_setup_required",
-            "email": email,
-            "temp_token": create_temp_token(email)
-        }
+    # Add LoginHistory
+    ip = request.client.host if request.client else None
+    loc = get_location_from_ip_safe(ip)
+    try:
+        db.add(LoginHistory(email=email, logged_at=_now_iso(), ip_address=ip, location=loc))
+        db.commit()
+        # Sync login history in background
+        threading.Thread(target=_push_login, daemon=True).start()
+    except Exception:
+        pass
+
+    return {"token": create_token(email), "email": email}
 
 
 @router.post("/totp/enroll")
@@ -413,7 +417,7 @@ def totp_verify(body: VerifyTotpRequest,
 
 @router.get("/me")
 def me(current_user: str = Depends(get_current_user)):
-    return {"email": current_user, "is_admin": current_user == ADMIN_EMAIL}
+    return {"email": current_user, "is_admin": is_admin_email(current_user)}
 
 
 @router.post("/logout")

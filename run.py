@@ -113,7 +113,7 @@ print()
 print(clr("=" * 62, "bold"))
 print(clr("  Ready!  Access the app at:", "bold"))
 print(f"   This PC  : {clr('http://localhost:8000', 'cyan', 'bold')}")
-print(f"   WiFi LAN : {clr(f'http://{lan_ip}:8000', 'cyan', 'bold')}  ← share this")
+print(f"   WiFi LAN : {clr(f'http://{lan_ip}:8000', 'cyan', 'bold')}  <- share this")
 print(clr("=" * 62, "bold"))
 print(clr("  Press Ctrl+C to stop all servers.\n", "yellow"))
 

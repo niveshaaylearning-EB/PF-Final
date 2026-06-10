@@ -128,7 +128,7 @@ function App() {
               <ProtectedRoute><RebalanceAlertPage /></ProtectedRoute>
             } />
             <Route path="/approved-emails" element={
-              <ProtectedRoute><ApprovedEmailsPage /></ProtectedRoute>
+              <ProtectedRoute adminOnly><ApprovedEmailsPage /></ProtectedRoute>
             } />
             <Route path="/" element={
               <ProtectedRoute><HomePage /></ProtectedRoute>
@@ -149,7 +149,7 @@ function App() {
               <ProtectedRoute><ResultCalendar /></ProtectedRoute>
             } />
             <Route path="/admin" element={
-              <ProtectedRoute><AdminBacklog /></ProtectedRoute>
+              <ProtectedRoute adminOnly><AdminBacklog /></ProtectedRoute>
             } />
           </Routes>
         </Suspense>

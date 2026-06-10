@@ -29,4 +29,9 @@ export const getFirstName = () => {
   return part.charAt(0).toUpperCase() + part.slice(1);
 };
 
-export const isAdmin = () => getEmail() === 'jay.chaudhari@niveshaay.com';
+export const isAdmin = () => {
+  const email = getEmail();
+  if (!email) return false;
+  const lowerEmail = email.toLowerCase().trim();
+  return lowerEmail === 'jay.chaudhari@niveshaay.com' || lowerEmail === 'nukul.madaan@niveshaay.com';
+};

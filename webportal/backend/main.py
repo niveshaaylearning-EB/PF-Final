@@ -38,6 +38,46 @@ from fastapi.responses import FileResponse
 
 
 from portfolio_data import BUY_PRICE_DETAILS
+import base64 as _b64
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Admin auth helpers (JWT decode without jose dependency)
+# ─────────────────────────────────────────────────────────────────────────────
+
+_ADMIN_EMAILS = {"jay.chaudhari@niveshaay.com", "nukul.madaan@niveshaay.com"}
+_ACTIVITY_LOG_FILE = Path(__file__).parent / "activity_log.json"
+
+def _get_request_email(request: Request) -> str | None:
+    auth = request.headers.get("Authorization", "")
+    if not auth.startswith("Bearer "):
+        return None
+    try:
+        parts = auth.split(".")
+        if len(parts) != 3:
+            return None
+        padding = 4 - len(parts[1]) % 4
+        payload = json.loads(_b64.urlsafe_b64decode(parts[1] + "=" * padding))
+        return (payload.get("sub") or "").lower().strip() or None
+    except Exception:
+        return None
+
+def _require_admin(request: Request) -> str:
+    email = _get_request_email(request)
+    if not email or email not in _ADMIN_EMAILS:
+        raise HTTPException(status_code=403, detail="Admin access required.")
+    return email
+
+def _log_activity(action: str, user: str, details: dict):
+    try:
+        log = json.loads(_ACTIVITY_LOG_FILE.read_text()) if _ACTIVITY_LOG_FILE.exists() else []
+        log.insert(0, {
+            "action": action, "user": user,
+            "ts": datetime.now(timezone.utc).strftime("%d %b %Y %H:%M UTC"),
+            "details": details,
+        })
+        _ACTIVITY_LOG_FILE.write_text(json.dumps(log[:500], indent=2))
+    except Exception as e:
+        print(f"[activity-log] {e}")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Constants
@@ -3416,10 +3456,12 @@ async def upload_rebalance(
 
 @app.post("/api/preview-rebalance")
 async def preview_rebalance(
+    request: Request,
     basket: str = Form(...),
     file: UploadFile = File(...),
 ):
     """Parse Excel Sheet 2 and return slide1 + slide2 preview WITHOUT writing anything."""
+    _require_admin(request)
     if basket not in BASKET_DISPLAY_NAMES:
         raise HTTPException(status_code=400, detail=f"Unknown basket: {basket}")
 
@@ -3728,6 +3770,7 @@ async def confirm_rebalance(
     request: Request,
 ):
     """Apply confirmed rebalance changes from the 2-slide preview modal."""
+    admin_email = _require_admin(request)
     body          = await request.json()
     basket        = body.get("basket", "")
     latest_date   = body.get("latestDate", "")
@@ -3849,12 +3892,27 @@ async def confirm_rebalance(
     # Backfill fills any missing sell OHLC across all baskets and regenerates gains as final step
     background_tasks.add_task(_backfill_all_sell_ohlc_bg)
 
+    _log_activity("rebalance_upload", admin_email, {
+        "basket": basket,
+        "basketLabel": BASKET_DISPLAY_NAMES.get(basket, basket),
+        "date": latest_date,
+        "stocksProcessed": len(slide2),
+    })
+
     return {
         "ok": True,
         "basket": BASKET_DISPLAY_NAMES[basket],
         "date": latest_date,
         "stocksProcessed": len(slide2),
     }
+
+
+@app.get("/api/activity-log")
+async def get_activity_log(request: Request):
+    """Return recent rebalance activity log — admin only."""
+    _require_admin(request)
+    log = json.loads(_ACTIVITY_LOG_FILE.read_text()) if _ACTIVITY_LOG_FILE.exists() else []
+    return log
 
 
 def _parse_excel_date(val) -> str | None:

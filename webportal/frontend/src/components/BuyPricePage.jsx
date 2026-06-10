@@ -4,6 +4,19 @@ import * as XLSX from 'xlsx';
 import { fetchBasket, fetchLiveData, saveBasket } from '../api/client.js';
 import RollbackButtons from './RollbackButtons.jsx';
 import ColumnFilter from './ColumnFilter.jsx';
+import RebalanceUploadModal from './RebalanceUploadModal.jsx';
+
+const ADMIN_EMAILS = ['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com'];
+const _getAdminState = () => {
+  try {
+    const t = localStorage.getItem('nia_auth_token');
+    if (!t) return { email: null, isAdmin: false };
+    const payload = JSON.parse(atob(t.split('.')[1]));
+    if (payload.exp && Date.now() > payload.exp * 1000) return { email: null, isAdmin: false };
+    const email = (payload.sub || '').toLowerCase().trim();
+    return { email, isAdmin: ADMIN_EMAILS.includes(email) };
+  } catch { return { email: null, isAdmin: false }; }
+};
 
 const BASKET_OPTIONS = [
   { key: 'Mid_Small_Cap',   label: 'Mid & Small Cap'  },
@@ -114,6 +127,10 @@ export default function BuyPricePage() {
   const [fallbackDismissed,setFallbackDismissed]= useState(false);
   const [undoCount,      setUndoCount]      = useState(0);
   const stocksRef   = useRef([]);
+  const [rebalancePreview,   setRebalancePreview]   = useState(null);
+  const [uploadingRebalance, setUploadingRebalance] = useState(false);
+  const rebalanceFileRef = useRef(null);
+  const { isAdmin: userIsAdmin } = _getAdminState();
 
 
   useEffect(() => {
@@ -378,6 +395,62 @@ export default function BuyPricePage() {
     await autoSave(updatedRows);
   };
 
+  const handleRebalanceUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+    setUploadingRebalance(true);
+    try {
+      const form = new FormData();
+      form.append('file', file);
+      form.append('basket', basketKey);
+      const token = localStorage.getItem('nia_auth_token') || '';
+      const resp = await fetch(`${API_BASE}/preview-rebalance`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: form,
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(Array.isArray(data.detail) ? data.detail.map(d => d.msg || JSON.stringify(d)).join('; ') : String(data.detail || 'Upload failed'));
+      setRebalancePreview(data);
+    } catch (err) {
+      alert('Rebalance upload failed: ' + err.message);
+    } finally {
+      setUploadingRebalance(false);
+    }
+  };
+
+  const handleRebalanceConfirmed = () => {
+    setRebalancePreview(null);
+    setSaveMsg('Rebalance applied!');
+    setTimeout(() => setSaveMsg(''), 3000);
+    setLoading(true);
+    fetchBasket(basketKey)
+      .then(d => {
+        const details = d.buyPriceDetails || {};
+        const stocks  = d.stocks || [];
+        stocksRef.current = stocks;
+        const stockMap = {};
+        stocks.forEach(s => { stockMap[s.nseCode] = s; });
+        const allKeys = new Set(stocks.filter(s => (s.allocation || 0) > 0).map(s => s.nseCode));
+        setRows([...allKeys].map(nse => {
+          const det = details[nse] || {};
+          const stk = stockMap[nse] || {};
+          return {
+            nseCode: nse, securityName: det.securityName || '',
+            segment: det.segment || '',
+            allocation: stk.allocation != null ? (stk.allocation * 100).toFixed(2) : '',
+            buyEvents: det.buyEvents || '', sellEvents: det.sellEvents || '',
+            prevBuyEvents: det.prevBuyEvents || '', prevSellEvents: det.prevSellEvents || '',
+            buyPrice: stk.buyPrice || null,
+          };
+        }));
+        refreshUndoCount();
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  };
+
   const handleBpFilterOpen = (col, e) => {
     e.stopPropagation();
     const rect = e.currentTarget.getBoundingClientRect();
@@ -417,6 +490,13 @@ export default function BuyPricePage() {
 
   return (
     <>
+    {rebalancePreview && (
+      <RebalanceUploadModal
+        previewData={rebalancePreview}
+        onClose={() => setRebalancePreview(null)}
+        onConfirmed={handleRebalanceConfirmed}
+      />
+    )}
     {historyRow && (
       <div
         onClick={() => setHistoryRow(null)}
@@ -579,6 +659,28 @@ export default function BuyPricePage() {
           </button>
 
           <RollbackButtons btnStyle="bp" />
+
+          {userIsAdmin && (
+            <>
+              <input
+                ref={rebalanceFileRef}
+                type="file"
+                accept=".xlsx,.xls"
+                style={{ display: 'none' }}
+                onChange={handleRebalanceUpload}
+              />
+              <button
+                className="bp-save-btn"
+                onClick={() => rebalanceFileRef.current?.click()}
+                disabled={uploadingRebalance}
+                title="Upload rebalance Excel to update buy/sell events and weights (Admin only)"
+                style={{ background: 'rgba(99,102,241,0.1)', color: uploadingRebalance ? '#475569' : '#818cf8', borderColor: 'rgba(99,102,241,0.25)' }}
+              >
+                <i className={`fa-solid ${uploadingRebalance ? 'fa-spinner fa-spin' : 'fa-upload'}`} style={{ marginRight: '0.35rem' }} />
+                {uploadingRebalance ? 'Uploading…' : 'Upload Rebalance'}
+              </button>
+            </>
+          )}
 
         </div>
       </div>

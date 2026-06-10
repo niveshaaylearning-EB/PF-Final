@@ -1,8 +1,13 @@
 import { Navigate } from 'react-router-dom';
-import { isLoggedIn, clearToken } from '../utils/auth';
+import { isLoggedIn, isAdmin, clearToken } from '../utils/auth';
 
-export default function ProtectedRoute({ children }) {
-  if (isLoggedIn()) return children;
-  clearToken();
-  return <Navigate to="/login" replace />;
+export default function ProtectedRoute({ children, adminOnly = false }) {
+  if (!isLoggedIn()) {
+    clearToken();
+    return <Navigate to="/login" replace />;
+  }
+  if (adminOnly && !isAdmin()) {
+    return <Navigate to="/" replace />;
+  }
+  return children;
 }
