@@ -193,45 +193,43 @@ def _push_allowed_emails():
 
 # ── Email OTP ─────────────────────────────────────────────────────────────────
 import secrets
-import smtplib
-from email.mime.text import MIMEText
 
-SMTP_HOST    = os.environ.get("SMTP_HOST",    "smtp-relay.brevo.com")
-SMTP_PORT    = int(os.environ.get("SMTP_PORT", "587"))
-SMTP_USER    = os.environ.get("SMTP_USER",    "")
-SMTP_PASS    = os.environ.get("SMTP_PASS",    "")
-SMTP_FROM    = os.environ.get("SMTP_FROM",    "communication@niveshaay.com")
-SMTP_USE_SSL = os.environ.get("SMTP_USE_SSL", "false").lower() == "true"
+SMTP_FROM      = os.environ.get("SMTP_FROM",      "communication@niveshaay.com")
+BREVO_API_KEY  = os.environ.get("BREVO_API_KEY",  "")
 
 def _generate_otp() -> str:
     return str(secrets.randbelow(900000) + 100000)
 
 def send_email_otp(to_email: str, code: str):
-    """Send OTP via Brevo SMTP to the user's email."""
+    """Send OTP via Brevo transactional email API (HTTPS port 443 — works on all clouds)."""
     print(f"[EMAIL-OTP] Code for {to_email}: {code}")   # always log as fallback
-    if not SMTP_USER or not SMTP_PASS:
-        return
-    msg = MIMEText(
-        f"Hello,\n\nYour NIA Performance Center login code is:\n\n    {code}\n\n"
-        f"This code expires in 10 minutes.\nIf you didn't request this, ignore this email.\n\n— NIA Tech Team"
+    if not BREVO_API_KEY:
+        raise RuntimeError("BREVO_API_KEY not configured")
+    import requests as _req
+    resp = _req.post(
+        "https://api.brevo.com/v3/smtp/email",
+        headers={
+            "api-key":      BREVO_API_KEY,
+            "Content-Type": "application/json",
+            "Accept":       "application/json",
+        },
+        json={
+            "sender":      {"email": SMTP_FROM, "name": "NIA Performance Center"},
+            "to":          [{"email": to_email}],
+            "subject":     f"NIA Login Code: {code}",
+            "textContent": (
+                f"Hello,\n\n"
+                f"Your NIA Performance Center login code is:\n\n"
+                f"    {code}\n\n"
+                f"This code expires in 10 minutes.\n"
+                f"If you didn't request this, ignore this email.\n\n"
+                f"— NIA Tech Team"
+            ),
+        },
+        timeout=10,
     )
-    msg["Subject"] = f"NIA Login Code: {code}"
-    msg["From"]    = SMTP_FROM
-    msg["To"]      = to_email
-    try:
-        if SMTP_USE_SSL:
-            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=6) as s:
-                s.login(SMTP_USER, SMTP_PASS)
-                s.sendmail(SMTP_FROM, [to_email], msg.as_string())
-        else:
-            with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=6) as s:
-                s.ehlo(); s.starttls(); s.ehlo()
-                s.login(SMTP_USER, SMTP_PASS)
-                s.sendmail(SMTP_FROM, [to_email], msg.as_string())
-        print(f"[EMAIL-OTP] Email sent successfully to {to_email}")
-    except Exception as e:
-        print(f"[EMAIL-OTP] Email failed: {e} — code still valid via logs")
-        raise e
+    resp.raise_for_status()
+    print(f"[EMAIL-OTP] Email sent via Brevo API to {to_email}")
 
 
 # ── FastAPI dependency ─────────────────────────────────────────────────────────
@@ -537,25 +535,22 @@ def verify_email_otp(body: EmailOtpVerify, request: Request,
 
 @router.get("/test-smtp")
 def test_smtp():
-    """Test SMTP configuration — returns success or detailed error. Admin debug only."""
-    import smtplib as _sm
-    host = SMTP_HOST
-    port = SMTP_PORT
-    user = SMTP_USER
-    pwd  = SMTP_PASS
-    frm  = SMTP_FROM
-    to   = ADMIN_EMAIL
-
+    """Test Brevo API email — returns success or detailed error. Admin debug only."""
+    import requests as _req
+    to = ADMIN_EMAIL
     try:
-        if SMTP_USE_SSL:
-            with _sm.SMTP_SSL(host, port, timeout=10) as s:
-                s.login(user, pwd)
-                s.sendmail(frm, [to], f"Subject: NIA SMTP Test\n\nSMTP test from {frm} via {host}:{port}")
-        else:
-            with _sm.SMTP(host, port, timeout=10) as s:
-                s.ehlo(); s.starttls(); s.ehlo()
-                s.login(user, pwd)
-                s.sendmail(frm, [to], f"Subject: NIA SMTP Test\n\nSMTP test from {frm} via {host}:{port}")
-        return {"ok": True, "msg": f"Test email sent from {frm} to {to} via {host}:{port}"}
+        resp = _req.post(
+            "https://api.brevo.com/v3/smtp/email",
+            headers={"api-key": BREVO_API_KEY, "Content-Type": "application/json"},
+            json={
+                "sender":      {"email": SMTP_FROM, "name": "NIA Performance Center"},
+                "to":          [{"email": to}],
+                "subject":     "NIA Email Test",
+                "textContent": f"Brevo API test from {SMTP_FROM}",
+            },
+            timeout=10,
+        )
+        resp.raise_for_status()
+        return {"ok": True, "msg": f"Test email sent to {to} via Brevo API", "status": resp.status_code}
     except Exception as e:
-        return {"ok": False, "error": str(e), "config": {"host": host, "port": port, "user": user, "from": frm}}
+        return {"ok": False, "error": str(e), "api_key_set": bool(BREVO_API_KEY)}
