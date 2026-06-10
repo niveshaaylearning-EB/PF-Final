@@ -1,9 +1,9 @@
 import { Suspense, lazy, useEffect } from 'react';
-import ApprovedEmailsPage from './pages/ApprovedEmailsPage';
 import { BrowserRouter, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { clearToken, getEmail, isAdmin, getFirstName, isLoggedIn } from './utils/auth.js';
+import { API_ROOT } from './config.js';
 
 // Auto-logout on any 401 (expired token) from the API
 axios.interceptors.response.use(
@@ -16,7 +16,6 @@ axios.interceptors.response.use(
     return Promise.reject(err);
   }
 );
-import { API_ROOT } from './config.js';
 
 const HomePage            = lazy(() => import('./pages/HomePage'));
 const ActualPortfolio     = lazy(() => import('./pages/ActualPortfolio'));
@@ -27,6 +26,7 @@ const LoginPage           = lazy(() => import('./pages/LoginPage'));
 const AdminBacklog        = lazy(() => import('./pages/AdminBacklog'));
 const ResultCalendar      = lazy(() => import('./pages/ResultCalendar'));
 const RebalanceAlertPage  = lazy(() => import('./pages/RebalanceAlertPage'));
+const ApprovedEmailsPage  = lazy(() => import('./pages/ApprovedEmailsPage'));
 
 function PageLoader() {
   return (

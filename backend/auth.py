@@ -220,11 +220,11 @@ def send_email_otp(to_email: str, code: str):
     msg["To"]      = to_email
     try:
         if SMTP_USE_SSL:
-            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=10) as s:
+            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=6) as s:
                 s.login(SMTP_USER, SMTP_PASS)
                 s.sendmail(SMTP_FROM, [to_email], msg.as_string())
         else:
-            with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10) as s:
+            with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=6) as s:
                 s.ehlo(); s.starttls(); s.ehlo()
                 s.login(SMTP_USER, SMTP_PASS)
                 s.sendmail(SMTP_FROM, [to_email], msg.as_string())
@@ -471,12 +471,18 @@ def request_email_otp(body: EmailOtpRequest,
     db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
     db.commit()
 
-    # Try sending email synchronously so we know if it worked
+    # Run SMTP in a thread with a hard timeout so a slow/wrong server
+    # never blocks the endpoint for more than 12 seconds.
+    import concurrent.futures as _cf
     email_sent = False
     email_error = ""
     try:
-        send_email_otp(email, code)
+        with _cf.ThreadPoolExecutor(max_workers=1) as _pool:
+            _pool.submit(send_email_otp, email, code).result(timeout=12)
         email_sent = True
+    except _cf.TimeoutError:
+        email_error = "SMTP timed out"
+        print(f"[EMAIL-OTP] Timed out for {email}")
     except Exception as e:
         email_error = str(e)
         print(f"[EMAIL-OTP] Failed for {email}: {e}")
