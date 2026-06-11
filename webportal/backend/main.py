@@ -126,16 +126,27 @@ _UNDO_FILE        = Path(__file__).parent / "undo_snapshots.json"
 _ROLLBACK_FILE    = Path(__file__).parent / "rollback_points.json"
 _MAX_ROLLBACK_PTS = 5
 
+# ── In-memory JSON cache — files are read once then served from RAM ───────────
+# Invalidated immediately on every write so stale data is never served.
+_portfolios_mem:  dict | None = None
+_buy_price_mem:   dict | None = None
+_rh_mem:          dict | None = None
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Portfolio persistence
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _load_portfolios() -> dict:
+    global _portfolios_mem
+    if _portfolios_mem is not None:
+        return _portfolios_mem
     if _PORTFOLIOS_FILE.exists():
         with open(_PORTFOLIOS_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            _portfolios_mem = json.load(f)
+            return _portfolios_mem
     from portfolio_data import PORTFOLIOS_DATA
-    return PORTFOLIOS_DATA
+    _portfolios_mem = dict(PORTFOLIOS_DATA)
+    return _portfolios_mem
 
 
 import threading as _threading
@@ -191,28 +202,44 @@ def _save_and_push(file_path: Path, data: dict) -> None:
 
 
 def _save_portfolios(data: dict) -> None:
+    global _portfolios_mem
+    _portfolios_mem = data          # update memory cache immediately
     _save_and_push(_PORTFOLIOS_FILE, data)
 
 
 def _load_buy_price_data() -> dict:
+    global _buy_price_mem
+    if _buy_price_mem is not None:
+        return _buy_price_mem
     if _BUY_PRICE_FILE.exists():
         with open(_BUY_PRICE_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return dict(BUY_PRICE_DETAILS)   # copy from portfolio_data.py on first use
+            _buy_price_mem = json.load(f)
+            return _buy_price_mem
+    _buy_price_mem = dict(BUY_PRICE_DETAILS)
+    return _buy_price_mem
 
 
 def _save_buy_price_data(data: dict) -> None:
+    global _buy_price_mem
+    _buy_price_mem = data           # update memory cache immediately
     _save_and_push(_BUY_PRICE_FILE, data)
 
 
 def _load_rebalance_history() -> dict:
+    global _rh_mem
+    if _rh_mem is not None:
+        return _rh_mem
     if _RH_FILE.exists():
         with open(_RH_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {}
+            _rh_mem = json.load(f)
+            return _rh_mem
+    _rh_mem = {}
+    return _rh_mem
 
 
 def _save_rebalance_history(data: dict) -> None:
+    global _rh_mem
+    _rh_mem = data
     _save_and_push(_RH_FILE, data)
 
 
@@ -982,37 +1009,21 @@ async def _mc_pe_background_refresh() -> None:
         _mc_pe_task_running = False
 
 
-async def fetch_live_batch() -> dict:
-    """
-    Fetch live data for every stock across all baskets.
-    - If MC/PE cache is warm: Yahoo Finance runs alone (~5-10s), returns immediately.
-    - If MC/PE cache is cold (first load / 6h refresh): Yahoo + Screener run concurrently;
-      waits up to 75s so the first page load includes MC/PE data.
-    - After first load the MC/PE cache is warm and all subsequent loads are fast.
-    """
-    global _live_cache, _live_cache_ts, _mc_pe_cache, _mc_pe_cache_ts, _mc_pe_task_running
+_live_refresh_task: asyncio.Task | None = None   # background Yahoo refresh
 
-    async with _live_cache_lock:
-        if _live_cache and (time.time() - _live_cache_ts) < LIVE_TTL:
-            return _live_cache
 
+async def _refresh_live_cache() -> None:
+    """Background task: refresh Yahoo price data and update _live_cache in-place."""
+    global _live_cache, _live_cache_ts, _mc_pe_task_running, _live_refresh_task
+    try:
         codes = _all_nse_codes()
         mc_pe_cold = not _mc_pe_cache or (time.time() - _mc_pe_cache_ts) >= _MC_PE_TTL
-
-        # Always fetch Yahoo Finance (fast ~5-10s) and return immediately.
-        # Screener batch (MC/PE) always runs in background — 307 stocks via proxy
-        # takes ~5-10 min; background task patches _live_cache when done.
-        # Primary: Yahoo Finance chart API with cookie warm-up (works on cloud)
-        # NSE bhavcopy is geo-blocked from non-Indian IPs (Render is US-based)
         try:
             yahoo_data = await _fetch_yahoo_charts(codes)
         except Exception:
             yahoo_data = {}
-
         if mc_pe_cold and not _mc_pe_task_running:
             asyncio.create_task(_mc_pe_background_refresh())
-
-        # Build merged response
         data: dict = {}
         for code in codes:
             yf = yahoo_data.get(code, {}) if isinstance(yahoo_data, dict) else {}
@@ -1026,10 +1037,42 @@ async def fetch_live_batch() -> dict:
                 "marketCapCr": sc.get("marketCapCr"),
                 "peRatio":     sc.get("peRatio"),
             }
+        async with _live_cache_lock:
+            _live_cache    = data
+            _live_cache_ts = time.time()
+    finally:
+        _live_refresh_task = None
 
-        _live_cache    = data
-        _live_cache_ts = time.time()
-        return data
+
+async def fetch_live_batch() -> dict:
+    """
+    Stale-while-revalidate: serve the cached result immediately if it exists,
+    and kick off a background refresh whenever the TTL has expired.
+    - Cold start (no cache): awaits the refresh directly (~5-10s Yahoo fetch).
+    - Warm cache (within TTL): returns instantly, no background work needed.
+    - Stale cache (TTL expired): returns stale data NOW, refreshes in background.
+    """
+    global _live_refresh_task
+
+    async with _live_cache_lock:
+        age = time.time() - _live_cache_ts
+        cache_warm = bool(_live_cache) and age < LIVE_TTL
+        cache_stale = bool(_live_cache) and age >= LIVE_TTL
+
+    if cache_warm:
+        return _live_cache
+
+    if cache_stale:
+        # Serve stale immediately; start background refresh if not already running
+        if _live_refresh_task is None or _live_refresh_task.done():
+            _live_refresh_task = asyncio.create_task(_refresh_live_cache())
+        return _live_cache
+
+    # Cache is empty (cold start) — must wait for the first fetch
+    if _live_refresh_task is None or _live_refresh_task.done():
+        _live_refresh_task = asyncio.create_task(_refresh_live_cache())
+    await _live_refresh_task
+    return _live_cache
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2067,13 +2110,18 @@ async def _backfill_ipo_listing_dates() -> None:
 
 @app.get("/api/basket/{key}")
 async def get_basket(key: str, background_tasks: BackgroundTasks):
-    portfolios = _load_portfolios()
-    bp_data    = _load_buy_price_data().get(key, {})
+    # Load both JSON files in parallel (non-blocking via thread pool)
+    portfolios, bp_full = await asyncio.gather(
+        asyncio.to_thread(_load_portfolios),
+        asyncio.to_thread(_load_buy_price_data),
+    )
+    bp_data = bp_full.get(key, {})
     if key == "IPO_Recommendations":
         background_tasks.add_task(_backfill_ipo_listing_dates)
         # Synchronously fill any missing listing prices so they appear on first load
         await _backfill_ipo_listing_prices()
-        portfolios = _load_portfolios()   # reload in case prices were just written
+        # Re-read from in-memory cache (free — no disk I/O after cache is warm)
+        portfolios = _load_portfolios()
         bp_data    = _load_buy_price_data().get(key, {})
     return {
         "stocks":          portfolios.get(key, []),
