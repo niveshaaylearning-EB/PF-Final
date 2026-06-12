@@ -1011,7 +1011,7 @@ async def _mc_pe_background_refresh() -> None:
         _mc_pe_task_running = False
 
 
-_live_refresh_task: asyncio.Task | None = None   # background Yahoo refresh
+_live_refresh_task = None   # asyncio.Task | None — background Yahoo refresh
 
 
 async def _refresh_live_cache() -> None:
