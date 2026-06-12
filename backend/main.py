@@ -318,7 +318,7 @@ class SimulationSipCreate(BaseModel):
     sip_date: str
     amount: float
 
-@app.get("/api/health")
+@app.api_route("/api/health", methods=["GET", "HEAD"])
 def health(): return {"status": "ok"}
 
 @app.get("/api/baskets")
