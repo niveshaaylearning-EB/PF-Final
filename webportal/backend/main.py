@@ -357,17 +357,6 @@ app.add_middleware(
 )
 
 
-@app.on_event("startup")
-async def _startup_preload():
-    """Warm all caches at server start so the first user request is fast."""
-    global _live_refresh_task
-    # Load all JSON files into memory immediately (synchronous but fast)
-    _load_portfolios()
-    _load_buy_price_data()
-    _load_rebalance_history()
-    # Kick off Yahoo Finance fetch in background — ready before first user arrives
-    if _live_refresh_task is None or _live_refresh_task.done():
-        _live_refresh_task = asyncio.create_task(_refresh_live_cache())
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Source 1 — Yahoo Finance chart API: CMP + 1-month OHLC
