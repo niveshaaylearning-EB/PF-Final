@@ -4,9 +4,6 @@ import string
 import hashlib
 import json
 import pyotp
-import qrcode
-import qrcode.image.svg
-
 def generate_totp_secret() -> str:
     """Generate a random Base32 secret for TOTP (Google Authenticator)."""
     return pyotp.random_base32()
@@ -23,6 +20,7 @@ def generate_totp_qr_svg(email: str, secret: str) -> str:
     )
     
     # Generate SVG QR code using path-based factory (most compatible with browsers)
+    import qrcode, qrcode.image.svg
     factory = qrcode.image.svg.SvgPathImage
     img = qrcode.make(uri, image_factory=factory, box_size=10, border=2)
 
