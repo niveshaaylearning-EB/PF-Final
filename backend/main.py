@@ -70,6 +70,11 @@ import time as _time
 from sqlalchemy import func as _sqf
 import requests as _http
 
+# ── Webportal ASGI sub-app (merged; no separate process) ─────────────────────
+import sys as _sys
+_sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'webportal', 'backend'))
+import main as _wp_module  # webportal/backend/main.py
+
 app = FastAPI()
 
 # ── JWT middleware — protects all /api/* routes ───────────────────────────────
@@ -276,15 +281,6 @@ async def _startup_prewarm():
     loop = asyncio.get_running_loop()
     async def _warm():
         try:
-            # Wait for webportal (port 8001) to be ready before warming caches
-            import socket as _sock
-            for _ in range(15):
-                try:
-                    s = _sock.create_connection(("127.0.0.1", 8001), timeout=2)
-                    s.close()
-                    break
-                except Exception:
-                    await asyncio.sleep(2)
             print("[prewarm] Warming all caches in parallel...")
             await asyncio.gather(
                 loop.run_in_executor(_io_pool, sheet_service.get_all_baskets),
@@ -2565,7 +2561,7 @@ def remove_simulation_sip(basket_id: str, sip_id: int, db: Session = Depends(get
 
 # ── Actual Portfolio proxy (webportal on port 8001) ─────────────────────────
 
-_WEBPORTAL = "http://127.0.0.1:8001"
+_WEBPORTAL = "http://127.0.0.1:8000/wp"
 _wp_all_cache: dict = {"data": None, "ts": 0.0}
 _WP_ALL_TTL = 60 * 60  # 60 min — cache basket+live data longer on cloud
 
@@ -3030,61 +3026,8 @@ def sync_from_actual_portfolio(basket_key: str):
     return {"holdings": holdings, "basket_key": basket_key, "count": len(holdings)}
 
 
-# ── /wp/ proxy → webportal backend on port 8001 ──────────────────────────────
-# On cloud (Render), only one port is publicly exposed.
-# All /wp/* requests are forwarded to the internal webportal on port 8001.
-import httpx as _httpx
-from fastapi.responses import Response as _Response
-
-@app.api_route("/wp", methods=["GET","POST","PUT","DELETE","PATCH","OPTIONS"],
-               include_in_schema=False)
-async def proxy_webportal_root(request: Request):
-    return await proxy_webportal("", request)
-
-@app.api_route("/wp/{wp_path:path}", methods=["GET","POST","PUT","DELETE","PATCH","OPTIONS"],
-               include_in_schema=False)
-async def proxy_webportal(wp_path: str, request: Request):
-    url = f"http://127.0.0.1:8001/{wp_path}"
-    qs  = request.url.query
-    if qs:
-        url = f"{url}?{qs}"
-
-    # Strip hop-by-hop headers that must not be forwarded
-    _SKIP = {"host", "content-length", "transfer-encoding",
-             "connection", "keep-alive", "upgrade", "te", "trailers"}
-    headers = {k: v for k, v in request.headers.items()
-               if k.lower() not in _SKIP}
-    body = await request.body()
-
-    last_err = None
-    # Retry up to 3 times (webportal may still be starting)
-    for attempt in range(3):
-        try:
-            async with _httpx.AsyncClient(timeout=30, follow_redirects=True) as client:
-                resp = await client.request(
-                    method  = request.method,
-                    url     = url,
-                    headers = headers,
-                    content = body,
-                )
-            # Strip hop-by-hop response headers
-            resp_headers = {k: v for k, v in resp.headers.items()
-                            if k.lower() not in _SKIP}
-            return _Response(
-                content     = resp.content,
-                status_code = resp.status_code,
-                headers     = resp_headers,
-                media_type  = resp.headers.get("content-type"),
-            )
-        except (_httpx.ConnectError, _httpx.ConnectTimeout) as e:
-            last_err = e
-            await asyncio.sleep(2)  # wait for webportal to start
-        except Exception as e:
-            last_err = e
-            break
-
-    return _Response(content=f"Webportal unavailable: {last_err}",
-                     status_code=503, media_type="text/plain")
+# ── /wp → webportal ASGI sub-app (merged; no separate process) ───────────────
+app.mount('/wp', _wp_module.app)
 
 
 # ── Serve built frontend (production / internal hosting) ─────────────────────
