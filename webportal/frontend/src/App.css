@@ -2649,3 +2649,117 @@ tr.search-dim { opacity: 0.2; }
 @media (max-width: 768px) {
   .dv-row-bottom { grid-template-columns: 1fr; }
 }
+
+/* ── Mobile / Phone Responsive ───────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  /* kpi-strip--4 (used in portfolio view) wasn't collapsing at tablet width */
+  .kpi-strip--4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  body { padding: 0.5rem 0.5rem; }
+
+  /* Header: stack title + controls vertically */
+  .db-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .db-title-row { flex-wrap: wrap; gap: 0.35rem; }
+  .db-title { font-size: 1.15rem; }
+  .db-subtitle { font-size: 0.72rem; }
+
+  .db-perf-badge {
+    font-size: 0.68rem;
+    padding: 0.2rem 0.55rem;
+  }
+
+  /* Controls: wrap to multiple rows */
+  .db-header-controls {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  /* Date chip is redundant — subtitle already shows date */
+  .date-display { display: none; }
+
+  /* Search: full width row */
+  .search-wrapper { flex: 1 1 100%; }
+  .search-input { width: 100% !important; box-sizing: border-box; }
+  .search-input:focus { width: 100% !important; }
+
+  /* Basket selector: auto-grow */
+  .db-basket-select {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.8rem;
+    padding: 0.42rem 0.6rem;
+  }
+
+  /* Actions dropdown: full-width trigger */
+  .db-actions-wrap { flex: 1 1 auto; }
+  .db-actions-btn { width: 100%; justify-content: center; }
+  .db-actions-menu { right: auto; left: 0; min-width: 100%; }
+
+  /* Undo: compact */
+  .undo-btn { font-size: 0.8rem; padding: 0.42rem 0.65rem; }
+
+  /* KPI: 2-column grid */
+  .kpi-strip,
+  .kpi-strip--4 { grid-template-columns: 1fr 1fr; }
+  .kpi-card-value { font-size: 0.98rem; }
+  .kpi-card-new { padding: 0.55rem 0.75rem; }
+
+  /* Stats strip: scroll horizontally */
+  .istat-strip {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.5rem 0.75rem;
+    flex-wrap: nowrap;
+  }
+  .istat-item { flex: 0 0 auto; min-width: 90px; }
+  .istat-divider { margin: 0 0.75rem; flex-shrink: 0; }
+  .istat-value { font-size: 1rem; }
+
+  /* Insights: single column */
+  .insights-grid { grid-template-columns: 1fr; }
+
+  /* Dashboard view: always single column on phones */
+  .dv-row-top,
+  .dv-row-bottom { grid-template-columns: 1fr; }
+
+  /* Tab switcher: wrap */
+  .tab-switcher { flex-wrap: wrap; gap: 0.35rem; }
+  .tab-btn { font-size: 0.78rem; padding: 0.35rem 0.85rem; }
+
+  /* Table cells: smaller padding & font */
+  th, td { font-size: 0.78rem; padding: 0.3rem 0.45rem; }
+
+  /* Header (old-style header element) */
+  header { padding-bottom: 0.6rem; }
+
+  /* Calculate Return page */
+  .cr-page { padding: 1rem 0.75rem; }
+  .cr-controls { flex-direction: column; align-items: stretch; }
+  .cr-date-input { width: 100%; }
+  .cr-calc-btn { width: 100%; justify-content: center; }
+
+  /* P&L page */
+  .pl-page { padding: 1rem 0.75rem; }
+  .pl-header { flex-direction: column; gap: 0.6rem; margin-bottom: 1rem; padding-bottom: 0.75rem; }
+  .pl-controls { flex-direction: column; align-items: stretch; gap: 0.65rem; }
+  .pl-select { min-width: 0; width: 100%; }
+
+  /* Modals */
+  .modal-box { padding: 1.4rem 1.1rem 1.1rem; min-width: 0; }
+  .modal-actions { flex-direction: column; }
+  .btn-confirm-yes, .btn-confirm-no { width: 100%; }
+
+  .bp-modal-box { max-width: 100%; max-height: 92vh; }
+  .bp-page { padding: 0.75rem; }
+  .bp-page-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+}
