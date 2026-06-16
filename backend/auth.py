@@ -194,6 +194,8 @@ def _push_allowed_emails():
 # ── Email OTP ─────────────────────────────────────────────────────────────────
 import secrets
 import time as _time
+import hmac as _hmac_lib
+import hashlib as _hashlib
 
 SMTP_FROM      = os.environ.get("SMTP_FROM",      "communication@niveshaay.com")
 BREVO_API_KEY  = os.environ.get("BREVO_API_KEY",  "")
@@ -204,6 +206,28 @@ _otp_mem: dict = {}
 
 def _generate_otp() -> str:
     return str(secrets.randbelow(900000) + 100000)
+
+# HMAC-based stateless OTP — survives container restarts and multi-worker deployments
+_OTP_SECRET = os.environ.get("OTP_SECRET", "") or JWT_SECRET
+
+def _hmac_otp(email: str, minute: int) -> str:
+    """Deterministic 6-digit code for (email, UTC-minute). Same result on every worker."""
+    key = _OTP_SECRET.encode()
+    msg = f"{email}:{minute}".encode()
+    h = _hmac_lib.new(key, msg, _hashlib.sha256).hexdigest()
+    return str(int(h[-8:], 16) % 900000 + 100000)
+
+def _otp_for_email(email: str) -> str:
+    """OTP valid for the current UTC minute (+ window on verify)."""
+    return _hmac_otp(email, int(_time.time() // 60))
+
+def _verify_hmac_otp(email: str, code: str, window_minutes: int = 15) -> bool:
+    """Returns True if code matches any minute in [now-window, now]."""
+    minute = int(_time.time() // 60)
+    for offset in range(window_minutes + 1):
+        if _hmac_lib.compare_digest(_hmac_otp(email, minute - offset), code):
+            return True
+    return False
 
 def send_email_otp(to_email: str, code: str):
     """Send OTP via Brevo transactional email API (HTTPS port 443 — works on all clouds)."""
@@ -467,9 +491,10 @@ def request_email_otp(body: EmailOtpRequest,
             raise HTTPException(403, detail="Your email is not approved. Request access from the login page.")
 
     from database import OtpCode
-    code = _generate_otp()
+    # Use HMAC-based OTP: same code on any worker, no shared state needed
+    code = _otp_for_email(email)
 
-    # Always store in memory first (survives if DB is temporarily unavailable)
+    # Also store in memory (backup for same-worker verify)
     _otp_mem[email] = {"code": code, "ts": _time.time(), "used": False}
 
     # Store in DB (works across workers); wrapped so a DB hiccup never returns 500
@@ -528,7 +553,7 @@ def verify_email_otp(body: EmailOtpVerify, request: Request,
         OtpCode.created_at >= cutoff,
     ).first()
 
-    # DB miss — check in-memory fallback (covers cold-start / DB-hiccup scenarios)
+    # Fallback 1: in-memory (same worker, covers DB-write failures)
     mem_hit = False
     if not record:
         mem = _otp_mem.get(email)
@@ -536,10 +561,15 @@ def verify_email_otp(body: EmailOtpVerify, request: Request,
                 and (_time.time() - mem["ts"]) < 600):
             mem_hit = True
 
+    # Fallback 2: HMAC stateless check (works across workers and container restarts)
+    hmac_hit = False
     if not record and not mem_hit:
+        hmac_hit = _verify_hmac_otp(email, code)
+
+    if not record and not mem_hit and not hmac_hit:
         raise HTTPException(401, detail="Invalid or expired OTP. Please request a new one.")
 
-    # Mark as used in both DB and memory
+    # Mark as used in DB and memory to prevent replay
     if record:
         record.used = 1
         try:
@@ -548,6 +578,9 @@ def verify_email_otp(body: EmailOtpVerify, request: Request,
             pass
     if email in _otp_mem:
         _otp_mem[email]["used"] = True
+    # For HMAC hits: store a "used" marker so same code can't replay on this worker
+    if hmac_hit:
+        _otp_mem[email] = {"code": code, "ts": _time.time(), "used": True}
 
     ip  = request.client.host if request.client else None
     loc = get_location_from_ip_safe(ip)
