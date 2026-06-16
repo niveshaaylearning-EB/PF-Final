@@ -1,8 +1,17 @@
-export const TOKEN_KEY = 'nia_auth_token';
+export const TOKEN_KEY   = 'nia_auth_token';
+export const REFRESH_KEY = 'nia_refresh_token';
 
-export const getToken   = () => localStorage.getItem(TOKEN_KEY);
-export const setToken   = (t) => localStorage.setItem(TOKEN_KEY, t);
-export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+export const getToken        = () => localStorage.getItem(TOKEN_KEY);
+export const setToken        = (t) => localStorage.setItem(TOKEN_KEY, t);
+export const clearToken      = () => localStorage.removeItem(TOKEN_KEY);
+export const getRefreshToken = () => localStorage.getItem(REFRESH_KEY);
+export const setRefreshToken = (t) => localStorage.setItem(REFRESH_KEY, t);
+export const clearRefreshToken = () => localStorage.removeItem(REFRESH_KEY);
+
+export const clearAllTokens = () => {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(REFRESH_KEY);
+};
 
 const _decodePayload = (t) => {
   try { return JSON.parse(atob(t.split('.')[1])); } catch { return null; }

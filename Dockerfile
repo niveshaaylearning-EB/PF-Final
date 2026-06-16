@@ -30,6 +30,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY backend/requirements.txt ./backend/requirements.txt
 RUN pip install --no-cache-dir -r backend/requirements.txt
+# Advisory vulnerability scan — prints findings but never blocks the build
+RUN pip install --no-cache-dir pip-audit && \
+    pip-audit -r backend/requirements.txt --desc on 2>&1 || true && \
+    pip uninstall -y pip-audit pip-audit-requirements 2>/dev/null || true
 
 # Remove build tools after pip
 RUN apt-get purge -y --auto-remove gcc g++ gfortran libopenblas-dev liblapack-dev pkg-config \

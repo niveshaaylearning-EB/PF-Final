@@ -4,11 +4,14 @@ JWT tokens expire at 11:59 PM IST or 24 hours from login, whichever is earlier.
 """
 import os
 import hashlib as _hashlib_pw
+import hashlib as _hl
+import uuid as _uuid
 from datetime import datetime, timedelta, timezone
 import threading
 import base64 as _b64
 import urllib.request as _ur
 import json as _json
+import re as _re
 
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException, Request, Header
@@ -17,8 +20,20 @@ from jose import jwt, JWTError
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from typing import Optional
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 import totp
+
+# ── Rate limiter (attached to app in main.py) ─────────────────────────────────
+_limiter = Limiter(key_func=get_remote_address)
+
+# ── In-memory security state ──────────────────────────────────────────────────
+# Revoked JTIs — cleared on restart but tokens are short-lived (4h) so acceptable
+_revoked_jtis: set = set()
+
+# Failed login tracking — {email: {"count": int, "locked_until": float}}
+_failed_logins: dict = {}
 
 load_dotenv()
 
@@ -70,18 +85,40 @@ def _now_iso() -> str:
     return datetime.utcnow().isoformat()
 
 def create_token(email: str, first_name: str = "") -> str:
-    IST     = timezone(timedelta(hours=5, minutes=30))
-    now_ist = datetime.now(IST)
-    cap_24h = now_ist + timedelta(hours=24)
-    eod     = now_ist.replace(hour=23, minute=59, second=59, microsecond=0)
-    if eod <= now_ist:
-        eod = eod + timedelta(days=1)
-    exp_ist = min(cap_24h, eod)
-    exp     = exp_ist.astimezone(timezone.utc).replace(tzinfo=None)
-    payload: dict = {"sub": email, "exp": exp}
+    """4-hour access token with unique JTI (used for single-token flows like TOTP)."""
+    jti  = str(_uuid.uuid4())
+    exp  = datetime.utcnow() + timedelta(hours=4)
+    payload: dict = {"sub": email, "exp": exp, "jti": jti}
     if first_name:
         payload["fn"] = first_name
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+def _create_session_tokens(email: str, first_name: str, db,
+                            device_info: str = None, ip: str = None, location: str = None) -> dict:
+    """Create a 4-hour access token + 7-day refresh token and persist the session."""
+    from database import ActiveSession
+    jti = str(_uuid.uuid4())
+    exp = datetime.utcnow() + timedelta(hours=4)
+    payload: dict = {"sub": email, "exp": exp, "jti": jti}
+    if first_name:
+        payload["fn"] = first_name
+    access_token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+    import secrets as _sec
+    refresh_raw = _sec.token_urlsafe(48)
+    refresh_hash = _hl.sha256(refresh_raw.encode()).hexdigest()
+    try:
+        db.add(ActiveSession(
+            jti=jti, email=email, refresh_token=refresh_hash,
+            device_info=(device_info or "")[:200],
+            ip_address=ip, location=location,
+            created_at=_now_iso(), last_seen_at=_now_iso(), is_active=1,
+        ))
+        db.commit()
+    except Exception:
+        try: db.rollback()
+        except: pass
+    return {"token": access_token, "refresh_token": refresh_raw, "jti": jti}
 
 def verify_token(token: str) -> str:
     try:
@@ -89,7 +126,12 @@ def verify_token(token: str) -> str:
         email   = payload.get("sub")
         if not email:
             raise ValueError
+        jti = payload.get("jti")
+        if jti and jti in _revoked_jtis:
+            raise HTTPException(status_code=401, detail="Session revoked. Please log in again.")
         return email
+    except HTTPException:
+        raise
     except (JWTError, ValueError):
         raise HTTPException(status_code=401, detail="Invalid or expired token. Please log in again.")
 
@@ -198,6 +240,67 @@ def _push_allowed_emails():
         _ur.urlopen(_ur.Request(api,data=body,headers=hdrs,method="PUT"),timeout=10)
     except Exception as e:
         print(f"[allowed-emails-push] {e}")
+
+# ── HaveIBeenPwned check ──────────────────────────────────────────────────────
+def _is_pwned_password(password: str) -> bool:
+    """k-anonymity lookup — only first 5 SHA1 chars leave the server."""
+    try:
+        sha1  = _hl.sha1(password.encode("utf-8")).hexdigest().upper()
+        prefix, suffix = sha1[:5], sha1[5:]
+        req = _ur.Request(
+            f"https://api.pwnedpasswords.com/range/{prefix}",
+            headers={"User-Agent": "NIA-PwdCheck/1.0", "Add-Padding": "true"},
+        )
+        with _ur.urlopen(req, timeout=5) as r:
+            for line in r.read().decode().splitlines():
+                h, _ = line.split(":")
+                if h == suffix:
+                    return True
+    except Exception:
+        pass  # network error → don't block the user
+    return False
+
+
+# ── Audit log helper ──────────────────────────────────────────────────────────
+def _log_audit(email: str, event_type: str, details: str = None,
+               ip: str = None, location: str = None):
+    """Add an audit log entry and push to GitHub in a background thread."""
+    def _work():
+        try:
+            from database import SessionLocal, AuditLog
+            db = SessionLocal()
+            db.add(AuditLog(user_email=email, event_type=event_type, details=details,
+                            created_at=_now_iso(), ip_address=ip, location=location))
+            db.commit()
+            rows = db.query(AuditLog).order_by(AuditLog.id.desc()).limit(300).all()
+            data = [{"user_email": r.user_email, "event_type": r.event_type,
+                     "details": r.details, "created_at": r.created_at,
+                     "ip_address": r.ip_address, "location": r.location} for r in rows]
+            db.close()
+            import os as _os
+            content = _json.dumps(data, indent=2)
+            path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "audit_log.json")
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(content)
+            token = os.environ.get("GITHUB_TOKEN", "")
+            repo  = os.environ.get("GITHUB_REPO", "")
+            if not token or not repo:
+                return
+            api = f"https://api.github.com/repos/{repo}/contents/backend/audit_log.json"
+            hdrs = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
+                    "Content-Type": "application/json", "X-GitHub-Api-Version": "2022-11-28"}
+            try:
+                sha = _json.loads(_ur.urlopen(_ur.Request(api, headers=hdrs), timeout=8).read())["sha"]
+            except Exception:
+                sha = None
+            body = _json.dumps({"message": "auto: audit log",
+                                 "content": _b64.b64encode(content.encode()).decode(),
+                                 **( {"sha": sha} if sha else {})}).encode()
+            _ur.urlopen(_ur.Request(api, data=body, headers=hdrs, method="PUT"), timeout=10)
+        except Exception as e:
+            print(f"[audit-log] {e}")
+    threading.Thread(target=_work, daemon=True).start()
+
 
 # ── Email OTP ─────────────────────────────────────────────────────────────────
 import secrets
@@ -458,12 +561,22 @@ def me(current_user: str = Depends(get_current_user)):
 @router.post("/logout")
 def logout(request: Request,
            db: Session = Depends(lambda: __import__('database').SessionLocal())):
-    from database import AuditLog
+    from database import AuditLog, ActiveSession
     auth_header = request.headers.get("Authorization", "")
     if auth_header.startswith("Bearer "):
         try:
-            email = verify_token(auth_header.split(" ", 1)[1])
+            raw_token = auth_header.split(" ", 1)[1]
+            payload = jwt.decode(raw_token, JWT_SECRET, algorithms=[JWT_ALGORITHM],
+                                 options={"verify_exp": False})
+            email = payload.get("sub", "")
+            jti   = payload.get("jti")
             ip    = request.client.host if request.client else None
+            # Revoke in-memory and in DB
+            if jti:
+                _revoked_jtis.add(jti)
+                sess = db.query(ActiveSession).filter_by(jti=jti).first()
+                if sess:
+                    sess.is_active = 0
             db.add(AuditLog(user_email=email, event_type="logout",
                             details=None, created_at=_now_iso(),
                             ip_address=ip, location=get_location_from_ip_safe(ip)))
@@ -774,7 +887,8 @@ def _notify_user_rejected(email: str, first_name: str):
 # ── Registration ──────────────────────────────────────────────────────────────
 
 @router.post("/register")
-def register(body: RegisterRequest,
+@_limiter.limit("5/minute")
+def register(request: Request, body: RegisterRequest,
              db: Session = Depends(lambda: __import__('database').SessionLocal())):
     """Step 1: validate inputs and send OTP to verify email ownership."""
     from database import AllowedEmail
@@ -858,6 +972,10 @@ def register_complete(body: RegisterVerifyRequest,
     if email in _otp_mem:
         _otp_mem[email]["used"] = True
 
+    # HaveIBeenPwned check
+    if _is_pwned_password(body.password):
+        raise HTTPException(400, detail="This password has appeared in a known data breach. Please choose a different password.")
+
     # Create or update account
     existing  = db.query(AllowedEmail).filter_by(email=email).first()
     pw_hash   = _hash_password(body.password)
@@ -885,13 +1003,13 @@ def register_complete(body: RegisterVerifyRequest,
         raise HTTPException(500, detail="Could not save account. Please try again.")
 
     threading.Thread(target=_push_allowed_emails, daemon=True).start()
+    _log_audit(email, "registration_completed", f"{fn} {ln} registered (auto_approved={auto_approved})")
 
     if auto_approved:
-        # User was pre-approved by admin — log them straight in
-        return {"status": "registered", "token": create_token(email, fn), "email": email,
+        tokens = _create_session_tokens(email, fn, db)
+        return {"status": "registered", **tokens, "email": email,
                 "first_name": fn, "last_name": ln}
     else:
-        # Notify admins in background
         threading.Thread(
             target=_notify_admins_new_registration, args=(fn, ln, email), daemon=True
         ).start()
@@ -902,14 +1020,24 @@ def register_complete(body: RegisterVerifyRequest,
 # ── Password login ────────────────────────────────────────────────────────────
 
 @router.post("/login")
-def password_login(body: PasswordLoginRequest, request: Request,
+@_limiter.limit("15/minute")
+def password_login(request: Request, body: PasswordLoginRequest,
                    db: Session = Depends(lambda: __import__('database').SessionLocal())):
     """Login with email + password."""
     from database import AllowedEmail, LoginHistory
+    import time as _t
     email = body.email.lower().strip()
+    ip    = request.client.host if request.client else None
 
     if not email.endswith(f"@{ALLOWED_DOMAIN}"):
         raise HTTPException(400, detail=f"Only @{ALLOWED_DOMAIN} email addresses are allowed.")
+
+    # Account lockout check
+    now = _t.time()
+    lock = _failed_logins.get(email)
+    if lock and lock.get("locked_until", 0) > now:
+        secs_left = int(lock["locked_until"] - now)
+        raise HTTPException(429, detail=f"Account locked due to too many failed attempts. Try again in {secs_left // 60 + 1} minute(s).")
 
     user = db.query(AllowedEmail).filter_by(email=email).first()
     if not user or not user.password_hash:
@@ -919,9 +1047,19 @@ def password_login(body: PasswordLoginRequest, request: Request,
         raise HTTPException(403, detail="Your account is pending admin approval. Please check back later.")
 
     if not _verify_password(body.password, user.password_hash):
+        # Increment failure counter
+        entry = _failed_logins.setdefault(email, {"count": 0, "locked_until": 0})
+        entry["count"] += 1
+        if entry["count"] >= 5:
+            entry["locked_until"] = now + 15 * 60
+            entry["count"] = 0
+            loc = get_location_from_ip_safe(ip)
+            _log_audit(email, "account_locked", f"Locked after 5 failed attempts", ip, loc)
         raise HTTPException(401, detail="Incorrect password.")
 
-    ip  = request.client.host if request.client else None
+    # Successful login — clear lockout
+    _failed_logins.pop(email, None)
+
     loc = get_location_from_ip_safe(ip)
     try:
         db.add(LoginHistory(email=email, logged_at=_now_iso(), ip_address=ip, location=loc))
@@ -931,14 +1069,17 @@ def password_login(body: PasswordLoginRequest, request: Request,
     threading.Thread(target=_push_login, daemon=True).start()
 
     fn = user.first_name or ""
-    return {"token": create_token(email, fn), "email": email,
-            "first_name": fn, "last_name": user.last_name or ""}
+    ua = request.headers.get("User-Agent", "")[:200]
+    tokens = _create_session_tokens(email, fn, db, device_info=ua, ip=ip, location=loc)
+    _log_audit(email, "login_success", f"Login from {loc}", ip, loc)
+    return {**tokens, "email": email, "first_name": fn, "last_name": user.last_name or ""}
 
 
 # ── Forgot / reset password ───────────────────────────────────────────────────
 
 @router.post("/forgot-password")
-def forgot_password(body: ForgotPasswordRequest,
+@_limiter.limit("5/minute")
+def forgot_password(request: Request, body: ForgotPasswordRequest,
                     db: Session = Depends(lambda: __import__('database').SessionLocal())):
     """Send OTP to reset password. Works for any registered @niveshaay.com email."""
     from database import AllowedEmail
@@ -1018,6 +1159,10 @@ def reset_password(body: ResetPasswordRequest,
     if not user:
         raise HTTPException(404, detail="Account not found.")
 
+    # HaveIBeenPwned check
+    if _is_pwned_password(body.new_password):
+        raise HTTPException(400, detail="This password has appeared in a known data breach. Please choose a different password.")
+
     user.password_hash = _hash_password(body.new_password)
     try:
         db.commit()
@@ -1026,6 +1171,7 @@ def reset_password(body: ResetPasswordRequest,
         raise HTTPException(500, detail="Could not update password. Please try again.")
 
     threading.Thread(target=_push_allowed_emails, daemon=True).start()
+    _log_audit(email, "password_changed", "Password reset via OTP")
     return {"status": "password_reset", "message": "Password updated successfully. You can now log in."}
 
 
@@ -1069,6 +1215,7 @@ def admin_approve_registration(
     threading.Thread(
         target=_notify_user_approved, args=(email, user.first_name or ""), daemon=True
     ).start()
+    _log_audit(current_user, "admin_approved_user", f"Approved registration for {email}")
     return {"status": "approved", "email": email}
 
 
@@ -1098,4 +1245,107 @@ def admin_reject_registration(
     threading.Thread(
         target=_notify_user_rejected, args=(email, fn), daemon=True
     ).start()
+    _log_audit(current_user, "admin_rejected_user", f"Rejected registration for {email}")
     return {"status": "rejected", "email": email}
+
+
+# ── Refresh token endpoint ────────────────────────────────────────────────────
+
+class RefreshRequest(BaseModel):
+    refresh_token: str
+
+@router.post("/refresh")
+def refresh_access_token(body: RefreshRequest, request: Request,
+                         db: Session = Depends(lambda: __import__('database').SessionLocal())):
+    """Exchange a valid refresh token for a new access token + rotated refresh token."""
+    from database import ActiveSession, AllowedEmail
+    import secrets as _sec
+    token_hash = _hl.sha256(body.refresh_token.encode()).hexdigest()
+    session = db.query(ActiveSession).filter_by(
+        refresh_token=token_hash, is_active=1
+    ).first()
+    if not session:
+        raise HTTPException(401, detail="Invalid or expired refresh token. Please log in again.")
+
+    # 7-day expiry check
+    try:
+        created = datetime.fromisoformat(session.created_at)
+        if datetime.utcnow() - created > timedelta(days=7):
+            session.is_active = 0
+            db.commit()
+            raise HTTPException(401, detail="Session expired. Please log in again.")
+    except HTTPException:
+        raise
+    except Exception:
+        pass
+
+    user = db.query(AllowedEmail).filter_by(email=session.email).first()
+    fn = (user.first_name or "") if user else ""
+
+    # Rotate: revoke old session, issue new tokens
+    _revoked_jtis.add(session.jti)
+    session.is_active = 0
+    db.commit()
+
+    ip  = request.client.host if request.client else None
+    loc = session.location
+    tokens = _create_session_tokens(session.email, fn, db,
+                                     device_info=session.device_info, ip=ip, location=loc)
+    return {**tokens, "email": session.email, "first_name": fn}
+
+
+# ── Active session management ─────────────────────────────────────────────────
+
+@router.get("/sessions")
+def list_sessions(current_user: str = Depends(get_current_user),
+                  db: Session = Depends(lambda: __import__('database').SessionLocal())):
+    """List all active sessions for the current user."""
+    from database import ActiveSession
+    rows = db.query(ActiveSession).filter_by(
+        email=current_user, is_active=1
+    ).order_by(ActiveSession.created_at.desc()).all()
+    return [{"jti": r.jti, "device_info": r.device_info, "ip_address": r.ip_address,
+             "location": r.location, "created_at": r.created_at,
+             "last_seen_at": r.last_seen_at} for r in rows]
+
+
+@router.delete("/sessions/{jti}")
+def revoke_session(jti: str, current_user: str = Depends(get_current_user),
+                   db: Session = Depends(lambda: __import__('database').SessionLocal())):
+    """Revoke a specific session (can only revoke own sessions)."""
+    from database import ActiveSession
+    sess = db.query(ActiveSession).filter_by(jti=jti, email=current_user).first()
+    if not sess:
+        raise HTTPException(404, detail="Session not found.")
+    _revoked_jtis.add(jti)
+    sess.is_active = 0
+    db.commit()
+    _log_audit(current_user, "session_revoked", f"Revoked session {jti[:8]}…")
+    return {"status": "revoked"}
+
+
+@router.delete("/sessions")
+def revoke_all_other_sessions(request: Request,
+                               current_user: str = Depends(get_current_user),
+                               db: Session = Depends(lambda: __import__('database').SessionLocal())):
+    """Revoke all sessions except the current one."""
+    from database import ActiveSession
+    auth_header = request.headers.get("Authorization", "")
+    current_jti = None
+    if auth_header.startswith("Bearer "):
+        try:
+            payload = jwt.decode(auth_header.split(" ", 1)[1], JWT_SECRET,
+                                  algorithms=[JWT_ALGORITHM], options={"verify_exp": False})
+            current_jti = payload.get("jti")
+        except Exception:
+            pass
+    rows = db.query(ActiveSession).filter_by(email=current_user, is_active=1).all()
+    count = 0
+    for r in rows:
+        if r.jti != current_jti:
+            _revoked_jtis.add(r.jti)
+            r.is_active = 0
+            count += 1
+    db.commit()
+    _log_audit(current_user, "sessions_revoked_all", f"Revoked {count} other session(s)")
+    return {"status": "revoked", "count": count}

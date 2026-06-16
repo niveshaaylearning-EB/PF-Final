@@ -82,6 +82,26 @@ _wp_spec.loader.exec_module(_wp_module)
 
 app = FastAPI()
 
+# ── Slowapi rate-limiter (instance defined in auth.py) ────────────────────────
+from auth import _limiter
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+app.state.limiter = _limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# ── Security headers middleware ───────────────────────────────────────────────
+@app.middleware("http")
+async def _security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"]  = "nosniff"
+    response.headers["X-Frame-Options"]         = "SAMEORIGIN"
+    response.headers["Referrer-Policy"]         = "strict-origin-when-cross-origin"
+    response.headers["X-XSS-Protection"]        = "1; mode=block"
+    response.headers["Permissions-Policy"]      = "geolocation=(), microphone=(), camera=()"
+    if request.url.scheme == "https":
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return response
+
 # ── JWT middleware — protects all /api/* routes ───────────────────────────────
 class JWTMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
@@ -2767,6 +2787,8 @@ def add_allowed_email(body: AllowedEmailBody, request: Request, db: Session = De
     db.add(database.AllowedEmail(email=email, added_by=user, added_at=datetime.utcnow().isoformat()))
     db.commit()
     _dump_allowed_emails(db)
+    from auth import _log_audit as _la
+    _la(user, "email_added", f"Added allowed email: {email}")
     return {"status": "added", "email": email}
 
 @app.delete("/api/allowed-emails/{email_addr}")
@@ -2783,6 +2805,8 @@ def remove_allowed_email(email_addr: str, request: Request, db: Session = Depend
     db.delete(row)
     db.commit()
     _dump_allowed_emails(db)
+    from auth import _log_audit as _la
+    _la(user, "email_removed", f"Removed allowed email: {email}")
     return {"status": "removed", "email": email}
 
 

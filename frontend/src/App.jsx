@@ -2,20 +2,9 @@ import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-import { clearToken, getEmail, isAdmin, getFirstName, isLoggedIn } from './utils/auth.js';
+import { clearAllTokens, getEmail, isAdmin, getFirstName, isLoggedIn } from './utils/auth.js';
 import { API_ROOT } from './config.js';
 
-// Auto-logout on any 401 (expired token) from the API
-axios.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    if (err.response?.status === 401) {
-      clearToken();
-      window.location.replace('/login');
-    }
-    return Promise.reject(err);
-  }
-);
 
 const HomePage            = lazy(() => import('./pages/HomePage'));
 const ActualPortfolio     = lazy(() => import('./pages/ActualPortfolio'));
@@ -46,7 +35,7 @@ function Header() {
   useEffect(() => {
     const id = setInterval(() => {
       if (!isLoggedIn() && location.pathname !== '/login') {
-        clearToken();
+        clearAllTokens();
         navigate('/login', { replace: true });
       }
     }, 60_000);
@@ -59,7 +48,7 @@ function Header() {
     } catch (_) {
       // best-effort — still clear the token even if the call fails
     }
-    clearToken();
+    clearAllTokens();
     navigate('/login', { replace: true });
   }
 

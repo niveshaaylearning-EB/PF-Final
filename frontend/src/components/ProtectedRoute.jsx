@@ -1,9 +1,9 @@
 import { Navigate } from 'react-router-dom';
-import { isLoggedIn, isAdmin, clearToken } from '../utils/auth';
+import { isLoggedIn, isAdmin, clearAllTokens } from '../utils/auth';
 
 export default function ProtectedRoute({ children, adminOnly = false }) {
   if (!isLoggedIn()) {
-    clearToken();
+    clearAllTokens();
     return <Navigate to="/login" replace />;
   }
   if (adminOnly && !isAdmin()) {

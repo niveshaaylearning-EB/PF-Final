@@ -244,6 +244,21 @@ class RebalanceAck(Base):
     acknowledged_at = Column(String, nullable=False)   # ISO datetime
 
 
+class ActiveSession(Base):
+    """One row per login session. Enables refresh-token rotation and session revocation."""
+    __tablename__ = "active_sessions"
+    id            = Column(Integer, primary_key=True, index=True)
+    jti           = Column(String, unique=True, index=True)   # JWT ID — links to access token
+    email         = Column(String, index=True)
+    refresh_token = Column(String, nullable=True)             # SHA-256 hash of the raw refresh token
+    device_info   = Column(String, nullable=True)             # User-Agent snippet
+    ip_address    = Column(String, nullable=True)
+    location      = Column(String, nullable=True)
+    created_at    = Column(String)
+    last_seen_at  = Column(String, nullable=True)
+    is_active     = Column(Integer, default=1)                # 1=active  0=revoked
+
+
 Base.metadata.create_all(bind=engine)
 
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Mail, LogIn, RefreshCw, KeyRound, UserPlus, Lock, Eye, EyeOff } from 'lucide-react';
-import { setToken } from '../utils/auth';
+import { setToken, setRefreshToken } from '../utils/auth';
 import { API_ROOT as API } from '../config.js';
 
 // ── Password strength validation (mirrors backend rules) ─────────────────────
@@ -141,6 +141,7 @@ export default function LoginPage() {
     try {
       const res = await axios.post(`${API}/auth/login`, { email: em, password: loginPw });
       setToken(res.data.token);
+      if (res.data.refresh_token) setRefreshToken(res.data.refresh_token);
       navigate('/', { replace: true });
     } catch (err) {
       setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');
@@ -189,6 +190,7 @@ export default function LoginPage() {
         go('pending');
       } else {
         setToken(res.data.token);
+        if (res.data.refresh_token) setRefreshToken(res.data.refresh_token);
         navigate('/', { replace: true });
       }
     } catch (err) {
