@@ -102,7 +102,7 @@ class JWTMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
 
         # After successful login/logout → persist to GitHub (survives future deploys)
-        if path in ("/auth/direct-login", "/auth/logout") and response.status_code == 200:
+        if path in ("/auth/login", "/auth/direct-login", "/auth/logout") and response.status_code == 200:
             try:
                 db_bg = database.SessionLocal()
                 _dump_login_history(db_bg)
@@ -2860,12 +2860,16 @@ def _dump_access_requests(db):
 def _dump_allowed_emails(db):
     rows = db.query(database.AllowedEmail).all()
     data = [{
-        "email": r.email,
-        "added_by": r.added_by,
-        "added_at": r.added_at,
-        "totp_secret": r.totp_secret,
-        "totp_enabled": r.totp_enabled,
-        "backup_codes": r.backup_codes
+        "email":         r.email,
+        "added_by":      r.added_by,
+        "added_at":      r.added_at,
+        "totp_secret":   r.totp_secret,
+        "totp_enabled":  r.totp_enabled,
+        "backup_codes":  r.backup_codes,
+        "first_name":    r.first_name,
+        "last_name":     r.last_name,
+        "password_hash": r.password_hash,
+        "is_approved":   r.is_approved if r.is_approved is not None else 1,
     } for r in rows]
     _save_json_push(_ALLOWED_EMAIL_FILE, data, sync=True)
 
