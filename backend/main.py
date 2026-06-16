@@ -71,9 +71,14 @@ from sqlalchemy import func as _sqf
 import requests as _http
 
 # ── Webportal ASGI sub-app (merged; no separate process) ─────────────────────
-import sys as _sys
-_sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'webportal', 'backend'))
-import main as _wp_module  # webportal/backend/main.py
+# importlib avoids the 'main' name clash: uvicorn already registered this file
+# as sys.modules['main'], so a plain `import main` would return itself.
+import sys as _sys, importlib.util as _ilu
+_wp_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'webportal', 'backend', 'main.py')
+_sys.path.insert(0, os.path.dirname(_wp_path))
+_wp_spec = _ilu.spec_from_file_location('webportal_main', _wp_path)
+_wp_module = _ilu.module_from_spec(_wp_spec)
+_wp_spec.loader.exec_module(_wp_module)
 
 app = FastAPI()
 
