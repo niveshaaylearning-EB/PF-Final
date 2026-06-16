@@ -23,7 +23,12 @@ export const getEmail = () => {
 };
 
 export const getFirstName = () => {
-  const email = getEmail();
+  const t = getToken();
+  if (!t) return null;
+  const payload = _decodePayload(t);
+  if (payload?.fn) return payload.fn;
+  // Fall back to deriving name from email
+  const email = payload?.sub;
   if (!email) return null;
   const part = email.split('@')[0].split(/[._-]/)[0];
   return part.charAt(0).toUpperCase() + part.slice(1);

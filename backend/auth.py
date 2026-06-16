@@ -1,8 +1,9 @@
 """
-Authentication — TOTP 2-Factor Authentication login restricted to @niveshaay.com.
+Authentication — password-based login with OTP email verification.
 JWT tokens expire at 11:59 PM IST or 24 hours from login, whichever is earlier.
 """
 import os
+import hashlib as _hashlib_pw
 from datetime import datetime, timedelta, timezone
 import threading
 import base64 as _b64
@@ -68,7 +69,7 @@ def get_location_from_ip(ip: str) -> str:
 def _now_iso() -> str:
     return datetime.utcnow().isoformat()
 
-def create_token(email: str) -> str:
+def create_token(email: str, first_name: str = "") -> str:
     IST     = timezone(timedelta(hours=5, minutes=30))
     now_ist = datetime.now(IST)
     cap_24h = now_ist + timedelta(hours=24)
@@ -77,7 +78,10 @@ def create_token(email: str) -> str:
         eod = eod + timedelta(days=1)
     exp_ist = min(cap_24h, eod)
     exp     = exp_ist.astimezone(timezone.utc).replace(tzinfo=None)
-    return jwt.encode({"sub": email, "exp": exp}, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    payload: dict = {"sub": email, "exp": exp}
+    if first_name:
+        payload["fn"] = first_name
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 def verify_token(token: str) -> str:
     try:
@@ -474,6 +478,33 @@ class EmailOtpVerify(BaseModel):
     email: str
     code:  str
 
+class RegisterRequest(BaseModel):
+    first_name: str
+    last_name:  str
+    email:      str
+    password:   str
+
+class RegisterVerifyRequest(BaseModel):
+    first_name: str
+    last_name:  str
+    email:      str
+    password:   str
+    code:       str
+
+class PasswordLoginRequest(BaseModel):
+    email:    str
+    password: str
+    latitude:  Optional[float] = None
+    longitude: Optional[float] = None
+
+class ForgotPasswordRequest(BaseModel):
+    email: str
+
+class ResetPasswordRequest(BaseModel):
+    email:        str
+    code:         str
+    new_password: str
+
 
 @router.post("/request-email-otp")
 def request_email_otp(body: EmailOtpRequest,
@@ -633,3 +664,276 @@ def test_smtp():
         return {"ok": True, "msg": f"Test email sent to {to} via Brevo API", "status": resp.status_code}
     except Exception as e:
         return {"ok": False, "error": str(e), "api_key_set": bool(BREVO_API_KEY)}
+
+
+# ── Password helpers ──────────────────────────────────────────────────────────
+
+import re as _re
+
+def _hash_password(password: str) -> str:
+    """PBKDF2-SHA256 with random salt. Returns 'salt_hex:key_hex'."""
+    import os as _os
+    salt = _os.urandom(32)
+    key  = _hashlib_pw.pbkdf2_hmac("sha256", password.encode(), salt, 200_000)
+    return salt.hex() + ":" + key.hex()
+
+def _verify_password(password: str, stored: str) -> bool:
+    try:
+        salt_hex, key_hex = stored.split(":")
+        salt = bytes.fromhex(salt_hex)
+        key  = _hashlib_pw.pbkdf2_hmac("sha256", password.encode(), salt, 200_000)
+        return key.hex() == key_hex
+    except Exception:
+        return False
+
+def _validate_password(password: str) -> str | None:
+    """Returns an error message string if invalid, None if valid."""
+    if len(password) < 8:
+        return "Password must be at least 8 characters."
+    if not _re.search(r"[A-Z]", password):
+        return "Password must contain at least one uppercase letter."
+    if not _re.search(r"[0-9]", password):
+        return "Password must contain at least one number."
+    if not _re.search(r"[^A-Za-z0-9]", password):
+        return "Password must contain at least one special character."
+    return None
+
+
+# ── Registration ──────────────────────────────────────────────────────────────
+
+@router.post("/register")
+def register(body: RegisterRequest,
+             db: Session = Depends(lambda: __import__('database').SessionLocal())):
+    """Step 1: validate inputs and send OTP to verify email ownership."""
+    from database import AllowedEmail
+    email = body.email.lower().strip()
+
+    if not email.endswith(f"@{ALLOWED_DOMAIN}"):
+        raise HTTPException(400, detail=f"Only @{ALLOWED_DOMAIN} email addresses are allowed.")
+
+    if not body.first_name.strip() or not body.last_name.strip():
+        raise HTTPException(400, detail="First name and last name are required.")
+
+    err = _validate_password(body.password)
+    if err:
+        raise HTTPException(400, detail=err)
+
+    existing = db.query(AllowedEmail).filter_by(email=email).first()
+    if existing and existing.password_hash:
+        raise HTTPException(409, detail="An account with this email already exists. Please log in.")
+
+    # Send verification OTP
+    code = _otp_for_email(email)
+    _otp_mem[email] = {"code": code, "ts": _time.time(), "used": False}
+    try:
+        from database import OtpCode
+        db.query(OtpCode).filter(OtpCode.email == email).delete()
+        db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
+        db.commit()
+    except Exception:
+        try: db.rollback()
+        except: pass
+
+    import concurrent.futures as _cf
+    email_sent = False
+    try:
+        with _cf.ThreadPoolExecutor(max_workers=1) as _pool:
+            _pool.submit(send_email_otp, email, code).result(timeout=12)
+        email_sent = True
+    except Exception as e:
+        print(f"[REGISTER] Email failed for {email}: {e}")
+
+    if email_sent:
+        return {"status": "otp_sent", "message": f"Verification code sent to {email}."}
+    else:
+        return {"status": "otp_sent", "message": f"Email delivery failed. Your code: {code}", "code": code}
+
+
+@router.post("/register/complete")
+def register_complete(body: RegisterVerifyRequest,
+                      db: Session = Depends(lambda: __import__('database').SessionLocal())):
+    """Step 2: verify OTP and create the account."""
+    from database import AllowedEmail, OtpCode
+    email = body.email.lower().strip()
+    code  = body.code.strip()
+
+    err = _validate_password(body.password)
+    if err:
+        raise HTTPException(400, detail=err)
+
+    # Verify OTP (same three-tier check)
+    cutoff = (datetime.utcnow() - timedelta(minutes=10)).isoformat()
+    record = db.query(OtpCode).filter(
+        OtpCode.email == email, OtpCode.code == code,
+        OtpCode.used == 0, OtpCode.created_at >= cutoff,
+    ).first()
+    mem_hit  = False
+    hmac_hit = False
+    if not record:
+        mem = _otp_mem.get(email)
+        if mem and mem["code"] == code and not mem["used"] and (_time.time() - mem["ts"]) < 600:
+            mem_hit = True
+    if not record and not mem_hit:
+        hmac_hit = _verify_hmac_otp(email, code)
+    if not record and not mem_hit and not hmac_hit:
+        raise HTTPException(401, detail="Invalid or expired code. Please request a new one.")
+
+    # Mark OTP used
+    if record:
+        record.used = 1
+        try: db.commit()
+        except: pass
+    if email in _otp_mem:
+        _otp_mem[email]["used"] = True
+
+    # Create or update account
+    existing = db.query(AllowedEmail).filter_by(email=email).first()
+    pw_hash  = _hash_password(body.password)
+    fn = body.first_name.strip()
+    ln = body.last_name.strip()
+    if existing:
+        existing.first_name    = fn
+        existing.last_name     = ln
+        existing.password_hash = pw_hash
+    else:
+        db.add(AllowedEmail(
+            email=email, added_by="self-registered",
+            added_at=datetime.utcnow().isoformat(),
+            first_name=fn, last_name=ln, password_hash=pw_hash,
+        ))
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(500, detail="Could not save account. Please try again.")
+
+    threading.Thread(target=_push_allowed_emails, daemon=True).start()
+    return {"status": "registered", "token": create_token(email, fn), "email": email,
+            "first_name": fn, "last_name": ln}
+
+
+# ── Password login ────────────────────────────────────────────────────────────
+
+@router.post("/login")
+def password_login(body: PasswordLoginRequest, request: Request,
+                   db: Session = Depends(lambda: __import__('database').SessionLocal())):
+    """Login with email + password."""
+    from database import AllowedEmail, LoginHistory
+    email = body.email.lower().strip()
+
+    if not email.endswith(f"@{ALLOWED_DOMAIN}"):
+        raise HTTPException(400, detail=f"Only @{ALLOWED_DOMAIN} email addresses are allowed.")
+
+    user = db.query(AllowedEmail).filter_by(email=email).first()
+    if not user or not user.password_hash:
+        raise HTTPException(401, detail="No account found. Please register first.")
+
+    if not _verify_password(body.password, user.password_hash):
+        raise HTTPException(401, detail="Incorrect password.")
+
+    ip  = request.client.host if request.client else None
+    loc = get_location_from_ip_safe(ip)
+    try:
+        db.add(LoginHistory(email=email, logged_at=_now_iso(), ip_address=ip, location=loc))
+        db.commit()
+    except Exception:
+        pass
+    threading.Thread(target=_push_login, daemon=True).start()
+
+    fn = user.first_name or ""
+    return {"token": create_token(email, fn), "email": email,
+            "first_name": fn, "last_name": user.last_name or ""}
+
+
+# ── Forgot / reset password ───────────────────────────────────────────────────
+
+@router.post("/forgot-password")
+def forgot_password(body: ForgotPasswordRequest,
+                    db: Session = Depends(lambda: __import__('database').SessionLocal())):
+    """Send OTP to reset password. Works for any registered @niveshaay.com email."""
+    from database import AllowedEmail
+    email = body.email.lower().strip()
+
+    if not email.endswith(f"@{ALLOWED_DOMAIN}"):
+        raise HTTPException(400, detail=f"Only @{ALLOWED_DOMAIN} email addresses are allowed.")
+
+    user = db.query(AllowedEmail).filter_by(email=email).first()
+    if not user:
+        # Don't reveal if email exists; still return success to prevent enumeration
+        return {"status": "otp_sent", "message": f"If that email is registered, a code has been sent."}
+
+    code = _otp_for_email(email)
+    _otp_mem[email] = {"code": code, "ts": _time.time(), "used": False}
+    try:
+        from database import OtpCode
+        db.query(OtpCode).filter(OtpCode.email == email).delete()
+        db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
+        db.commit()
+    except Exception:
+        try: db.rollback()
+        except: pass
+
+    import concurrent.futures as _cf
+    email_sent = False
+    try:
+        with _cf.ThreadPoolExecutor(max_workers=1) as _pool:
+            _pool.submit(send_email_otp, email, code).result(timeout=12)
+        email_sent = True
+    except Exception as e:
+        print(f"[FORGOT-PW] Email failed for {email}: {e}")
+
+    if email_sent:
+        return {"status": "otp_sent", "message": f"Password reset code sent to {email}."}
+    else:
+        return {"status": "otp_sent", "message": f"Email delivery failed. Your code: {code}", "code": code}
+
+
+@router.post("/reset-password")
+def reset_password(body: ResetPasswordRequest,
+                   db: Session = Depends(lambda: __import__('database').SessionLocal())):
+    """Verify OTP and set new password."""
+    from database import AllowedEmail, OtpCode
+    email = body.email.lower().strip()
+    code  = body.code.strip()
+
+    err = _validate_password(body.new_password)
+    if err:
+        raise HTTPException(400, detail=err)
+
+    # Verify OTP
+    cutoff = (datetime.utcnow() - timedelta(minutes=10)).isoformat()
+    record = db.query(OtpCode).filter(
+        OtpCode.email == email, OtpCode.code == code,
+        OtpCode.used == 0, OtpCode.created_at >= cutoff,
+    ).first()
+    mem_hit  = False
+    hmac_hit = False
+    if not record:
+        mem = _otp_mem.get(email)
+        if mem and mem["code"] == code and not mem["used"] and (_time.time() - mem["ts"]) < 600:
+            mem_hit = True
+    if not record and not mem_hit:
+        hmac_hit = _verify_hmac_otp(email, code)
+    if not record and not mem_hit and not hmac_hit:
+        raise HTTPException(401, detail="Invalid or expired code. Please request a new one.")
+
+    if record:
+        record.used = 1
+        try: db.commit()
+        except: pass
+    if email in _otp_mem:
+        _otp_mem[email]["used"] = True
+
+    user = db.query(AllowedEmail).filter_by(email=email).first()
+    if not user:
+        raise HTTPException(404, detail="Account not found.")
+
+    user.password_hash = _hash_password(body.new_password)
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise HTTPException(500, detail="Could not update password. Please try again.")
+
+    threading.Thread(target=_push_allowed_emails, daemon=True).start()
+    return {"status": "password_reset", "message": "Password updated successfully. You can now log in."}
