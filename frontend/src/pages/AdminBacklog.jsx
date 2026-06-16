@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Activity, LogIn, LogOut, Upload, RefreshCw, Clock, User, Layers, ArrowLeft, LayoutDashboard, CheckCircle2 } from 'lucide-react';
+import { Activity, LogIn, LogOut, Upload, RefreshCw, Clock, User, Layers, ArrowLeft, LayoutDashboard, CheckCircle2, UserPlus, ShieldCheck, ShieldX, Lock, KeyRound, Shield } from 'lucide-react';
 
 import { API_BASE as API } from '../config.js';
 
@@ -194,61 +194,87 @@ function EventsTab({ data }) {
   );
 }
 
-function AuthTab({ logins, logouts }) {
-  // Merge and sort by timestamp descending
-  const merged = [
-    ...logins.map(l => ({ ...l, _type: 'login',  _time: l.logged_at })),
-    ...logouts.map(u => ({ ...u, email: u.user_email, _type: 'logout', _time: u.created_at })),
-  ].sort((a, b) => (b._time || '').localeCompare(a._time || ''));
+const AUTH_EVENT_META = {
+  login:                  { label: 'Login',            color: 'var(--positive)',  Icon: LogIn       },
+  logout:                 { label: 'Logout',           color: '#f87171',          Icon: LogOut      },
+  registration_requested: { label: 'Access Requested', color: '#a78bfa',          Icon: UserPlus    },
+  registration_completed: { label: 'Account Created',  color: '#60a5fa',          Icon: UserPlus    },
+  admin_approved_user:    { label: 'Approved',         color: 'var(--positive)',  Icon: ShieldCheck },
+  admin_rejected_user:    { label: 'Rejected',         color: '#f87171',          Icon: ShieldX     },
+  account_locked:         { label: 'Account Locked',   color: '#f59e0b',          Icon: Lock        },
+  password_changed:       { label: 'Password Changed', color: '#38bdf8',          Icon: KeyRound    },
+  login_failed:           { label: 'Login Failed',     color: '#f87171',          Icon: ShieldX     },
+};
 
-  if (!merged.length) return <p style={{ color: 'var(--text-muted)', padding: '24px' }}>No auth events yet.</p>;
+function authEventDetails(ev) {
+  const type = ev.event_type;
+  // For approval/rejection, extract the target email from details
+  if (type === 'admin_approved_user' || type === 'admin_rejected_user') {
+    const match = (ev.details || '').match(/for (.+@.+)/);
+    return {
+      actor: ev.user_email,   // admin who acted
+      subject: match ? match[1] : null,
+      note: null,
+    };
+  }
+  if (type === 'registration_requested' || type === 'registration_completed') {
+    return { actor: ev.user_email, subject: null, note: ev.details };
+  }
+  return { actor: ev.user_email, subject: null, note: ev.details };
+}
+
+function AuthTab({ auth_events }) {
+  if (!auth_events || !auth_events.length)
+    return <p style={{ color: 'var(--text-muted)', padding: '24px' }}>No auth events yet.</p>;
 
   return (
     <div style={{ overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '550px' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '650px' }}>
         <thead>
           <tr>
             <TH>Date &amp; Time</TH>
-            <TH>Type</TH>
-            <TH>Email</TH>
+            <TH>Event</TH>
+            <TH>User / Actor</TH>
+            <TH>Details</TH>
             <TH>IP Address</TH>
           </tr>
         </thead>
         <tbody>
-          {merged.map((row, idx) => {
-            const isLogin = row._type === 'login';
+          {auth_events.map((ev, idx) => {
+            const meta = AUTH_EVENT_META[ev.event_type] || { label: ev.event_type, color: 'var(--text-muted)', Icon: Shield };
+            const { Icon, label, color } = meta;
+            const { actor, subject, note } = authEventDetails(ev);
             return (
-              <tr key={`${row._type}-${row.id ?? idx}`}
-                onMouseEnter={ev => ev.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
-                onMouseLeave={ev => ev.currentTarget.style.background = ''}
+              <tr key={ev.id ?? idx}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                onMouseLeave={e => e.currentTarget.style.background = ''}
               >
                 <TD style={{ color: 'var(--text-muted)', fontSize: '0.77rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Clock size={12} />
-                    {fmt(row._time)}
+                    <Clock size={12} />{fmt(ev.created_at)}
                   </div>
                 </TD>
                 <TD>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    {isLogin
-                      ? <LogIn  size={13} style={{ color: 'var(--positive)' }} />
-                      : <LogOut size={13} style={{ color: '#f87171' }} />}
-                    <Badge
-                      text={isLogin ? 'Login' : 'Logout'}
-                      color={isLogin ? 'var(--positive)' : '#f87171'}
-                    />
+                    <Icon size={13} style={{ color }} />
+                    <Badge text={label} color={color} />
                   </div>
                 </TD>
-                <TD>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <User size={12} style={{ color: isLogin ? 'var(--positive)' : '#f87171' }} />
-                    <span style={{ color: isLogin ? 'var(--positive)' : '#f87171' }}>{row.email || '—'}</span>
+                <TD style={{ fontSize: '0.82rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <span style={{ color }}>{actor || '—'}</span>
+                    {subject && (
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.76rem' }}>
+                        → {subject}
+                      </span>
+                    )}
                   </div>
+                </TD>
+                <TD style={{ color: 'var(--text-muted)', fontSize: '0.78rem', maxWidth: '260px' }}>
+                  {note || '—'}
                 </TD>
                 <TD style={{ color: 'var(--text-muted)', fontSize: '0.78rem', fontFamily: 'monospace' }}>
-                  {row.ip_address || '—'}
-                </TD>
-                <TD style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>
+                  {ev.ip_address || '—'}
                 </TD>
               </tr>
             );
@@ -352,14 +378,14 @@ function UploadsTab({ data }) {
 export default function AdminBacklog() {
   const navigate  = useNavigate();
   const [tab,     setTab]     = useState('events');
-  const [data,    setData]    = useState({ events: [], logins: [], uploads: [], logouts: [] });
+  const [data,    setData]    = useState({ events: [], auth_events: [], uploads: [], logins: [], logouts: [] });
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState('');
 
   const load = useCallback(() => {
     setLoading(true); setError('');
     axios.get(`${API}/admin/audit-log`)
-      .then(r => setData({ events: [], logins: [], uploads: [], logouts: [], ...r.data }))
+      .then(r => setData({ events: [], auth_events: [], uploads: [], logins: [], logouts: [], ...r.data }))
       .catch(err => {
         const detail = err.response?.data?.detail || err.message || 'Failed to load backlog.';
         setError(detail);
@@ -371,7 +397,7 @@ export default function AdminBacklog() {
 
   const counts = {
     events:  data.events.length,
-    auth:    data.logins.length + data.logouts.length,
+    auth:    data.auth_events.length,
     uploads: data.uploads.length,
   };
 
@@ -457,7 +483,7 @@ export default function AdminBacklog() {
         ) : (
           <>
             {tab === 'events'   && <EventsTab   data={data.events} />}
-            {tab === 'auth'     && <AuthTab     logins={data.logins} logouts={data.logouts} />}
+            {tab === 'auth'     && <AuthTab     auth_events={data.auth_events} />}
             {tab === 'uploads'  && <UploadsTab  data={data.uploads} />}
             {tab === 'features' && <FeaturesTab />}
           </>

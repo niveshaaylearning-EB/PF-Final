@@ -929,6 +929,10 @@ def register(request: Request, body: RegisterRequest,
     except Exception as e:
         print(f"[REGISTER] Email failed for {email}: {e}")
 
+    ip = request.client.host if request.client else None
+    _log_audit(email, "registration_requested",
+               f"{body.first_name.strip()} {body.last_name.strip()} requested access", ip)
+
     if email_sent:
         return {"status": "otp_sent", "message": f"Verification code sent to {email}."}
     else:

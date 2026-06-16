@@ -1556,12 +1556,31 @@ def get_audit_log(request: Request, db: Session = Depends(get_db)):
         uploads = db.query(database.AuditLog).filter(
             database.AuditLog.event_type == "rebalance_upload"
         ).order_by(database.AuditLog.id.desc()).limit(100).all()
-        logouts = db.query(database.AuditLog).filter(
-            database.AuditLog.event_type == "logout"
-        ).order_by(database.AuditLog.id.desc()).limit(100).all()
+        auth_audit = db.query(database.AuditLog).filter(
+            database.AuditLog.event_type != "rebalance_upload"
+        ).order_by(database.AuditLog.id.desc()).limit(500).all()
     except Exception as e:
         print(f"[admin/audit-log] DB error: {e}")
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
+
+    # Merge LoginHistory logins + AuditLog auth events into one sorted list
+    auth_events = [
+        {
+            "id": f"lh-{l.id}", "event_type": "login", "user_email": l.email,
+            "details": f"Login from {getattr(l, 'location', None) or 'unknown'}",
+            "created_at": l.logged_at,
+            "ip_address": l.ip_address, "location": getattr(l, "location", None),
+        }
+        for l in logins
+    ] + [
+        {
+            "id": f"al-{a.id}", "event_type": a.event_type, "user_email": a.user_email,
+            "details": a.details, "created_at": a.created_at,
+            "ip_address": getattr(a, "ip_address", None), "location": getattr(a, "location", None),
+        }
+        for a in auth_audit
+    ]
+    auth_events.sort(key=lambda x: (x.get("created_at") or ""), reverse=True)
 
     return {
         "events": [
@@ -1573,13 +1592,7 @@ def get_audit_log(request: Request, db: Session = Depends(get_db)):
             }
             for e in events
         ],
-        "logins": [
-            {
-                "id": l.id, "email": l.email, "logged_at": l.logged_at, 
-                "ip_address": l.ip_address, "location": getattr(l, "location", None)
-            }
-            for l in logins
-        ],
+        "auth_events": auth_events,
         "uploads": [
             {
                 "id": u.id, "user_email": u.user_email, "details": u.details, "created_at": u.created_at,
@@ -1587,13 +1600,8 @@ def get_audit_log(request: Request, db: Session = Depends(get_db)):
             }
             for u in uploads
         ],
-        "logouts": [
-            {
-                "id": u.id, "user_email": u.user_email, "created_at": u.created_at,
-                "ip_address": getattr(u, "ip_address", None), "location": getattr(u, "location", None)
-            }
-            for u in logouts
-        ],
+        # kept for backward compat — frontend no longer uses these separately
+        "logins": [], "logouts": [],
     }
 
 
