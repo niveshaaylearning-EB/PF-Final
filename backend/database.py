@@ -223,6 +223,7 @@ class AllowedEmail(Base):
     first_name    = Column(String, nullable=True)
     last_name     = Column(String, nullable=True)
     password_hash = Column(String, nullable=True)  # PBKDF2-SHA256: salt_hex:key_hex
+    is_approved   = Column(Integer, default=1)      # 1=approved  0=pending admin approval
 
 
 class AccessRequest(Base):
@@ -278,6 +279,8 @@ def run_migrations():
         "ALTER TABLE allowed_emails ADD COLUMN first_name TEXT",
         "ALTER TABLE allowed_emails ADD COLUMN last_name TEXT",
         "ALTER TABLE allowed_emails ADD COLUMN password_hash TEXT",
+        # Approval gate — DEFAULT 1 so existing users keep access; self-registered start at 0
+        "ALTER TABLE allowed_emails ADD COLUMN is_approved INTEGER DEFAULT 1",
     ]
     with engine.connect() as conn:
         for sql in migrations:

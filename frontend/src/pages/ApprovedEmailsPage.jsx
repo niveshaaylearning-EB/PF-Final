@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft, Users, UserPlus, Trash2, User, Clock, CheckCircle, XCircle } from 'lucide-react';
-import { API_BASE as API } from '../config.js';
+import { getToken } from '../utils/auth';
+import { API_BASE as API, API_ROOT } from '../config.js';
 
 export default function ApprovedEmailsPage() {
   const navigate = useNavigate();
@@ -14,10 +15,15 @@ export default function ApprovedEmailsPage() {
   const [error,     setError]     = useState('');
   const [success,   setSuccess]   = useState('');
 
-  // Pending requests
+  // Pending access requests (old flow)
   const [requests,      setRequests]      = useState([]);
   const [reqLoading,    setReqLoading]    = useState(true);
   const [processingId,  setProcessingId]  = useState(null);
+
+  // Pending self-registrations (new flow)
+  const [pendingRegs,       setPendingRegs]       = useState([]);
+  const [pendingRegsLoading, setPendingRegsLoading] = useState(true);
+  const [processingReg,     setProcessingReg]     = useState('');
 
   const load = useCallback(() => {
     setLoading(true);
@@ -35,7 +41,43 @@ export default function ApprovedEmailsPage() {
       .finally(() => setReqLoading(false));
   }, []);
 
-  useEffect(() => { load(); loadRequests(); }, [load, loadRequests]);
+  const loadPendingRegs = useCallback(() => {
+    setPendingRegsLoading(true);
+    axios.get(`${API_ROOT}/auth/admin/pending-registrations`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    })
+      .then(r => setPendingRegs(r.data || []))
+      .catch(() => setPendingRegs([]))
+      .finally(() => setPendingRegsLoading(false));
+  }, []);
+
+  useEffect(() => { load(); loadRequests(); loadPendingRegs(); }, [load, loadRequests, loadPendingRegs]);
+
+  const handleApproveReg = async (email) => {
+    setProcessingReg(email);
+    try {
+      await axios.post(`${API_ROOT}/auth/admin/approve-registration`, { email }, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      setSuccess(`${email} approved.`);
+      loadPendingRegs(); load();
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to approve.');
+    } finally { setProcessingReg(''); }
+  };
+
+  const handleRejectReg = async (email) => {
+    setProcessingReg(email);
+    try {
+      await axios.post(`${API_ROOT}/auth/admin/reject-registration`, { email }, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      setSuccess(`${email} registration rejected.`);
+      loadPendingRegs();
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to reject.');
+    } finally { setProcessingReg(''); }
+  };
 
   const handleApprove = async (id, email) => {
     setProcessingId(id);
@@ -142,6 +184,58 @@ export default function ApprovedEmailsPage() {
 
         {error   && <div style={{ marginTop: '10px', padding: '8px 12px', borderRadius: '8px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', fontSize: '0.83rem' }}>{error}</div>}
         {success && <div style={{ marginTop: '10px', padding: '8px 12px', borderRadius: '8px', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: 'var(--positive)', fontSize: '0.83rem' }}>{success}</div>}
+      </div>
+
+      {/* ── Pending Self-Registrations ── */}
+      <div className="glass-panel" style={{ padding: 0, overflow: 'hidden', marginBottom: '20px', border: '1px solid rgba(99,102,241,0.25)' }}>
+        <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(99,102,241,0.06)' }}>
+          <UserPlus size={15} color="var(--primary)" />
+          <span style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '0.88rem' }}>Pending Registrations</span>
+          <span style={{ fontSize: '0.72rem', background: 'rgba(99,102,241,0.2)', color: 'var(--primary)', borderRadius: '10px', padding: '2px 8px', fontWeight: 700 }}>
+            {pendingRegs.length}
+          </span>
+        </div>
+        {pendingRegsLoading ? (
+          <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Loading…</div>
+        ) : pendingRegs.length === 0 ? (
+          <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>No pending registrations.</div>
+        ) : pendingRegs.map((reg, i) => (
+          <div key={reg.email} style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '12px 20px',
+            background: i % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent',
+            borderBottom: i < pendingRegs.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <User size={14} color="var(--primary)" />
+              <div>
+                <div style={{ color: 'var(--text-main)', fontSize: '0.88rem' }}>
+                  {reg.first_name} {reg.last_name}
+                  <span style={{ color: 'var(--text-muted)', marginLeft: '6px', fontSize: '0.8rem' }}>({reg.email})</span>
+                </div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>
+                  Registered {reg.added_at ? new Date(reg.added_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }) : '—'} IST
+                </div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                onClick={() => handleApproveReg(reg.email)}
+                disabled={processingReg === reg.email}
+                style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 14px', borderRadius: '7px', border: '1px solid rgba(16,185,129,0.35)', background: 'rgba(16,185,129,0.1)', color: 'var(--positive)', fontSize: '0.78rem', cursor: processingReg === reg.email ? 'not-allowed' : 'pointer', opacity: processingReg === reg.email ? 0.5 : 1 }}
+              >
+                <CheckCircle size={12} /> Approve
+              </button>
+              <button
+                onClick={() => handleRejectReg(reg.email)}
+                disabled={processingReg === reg.email}
+                style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 14px', borderRadius: '7px', border: '1px solid rgba(239,68,68,0.28)', background: 'rgba(239,68,68,0.08)', color: '#f87171', fontSize: '0.78rem', cursor: processingReg === reg.email ? 'not-allowed' : 'pointer', opacity: processingReg === reg.email ? 0.5 : 1 }}
+              >
+                <XCircle size={12} /> Reject
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* ── Pending Access Requests — always visible to admin ── */}

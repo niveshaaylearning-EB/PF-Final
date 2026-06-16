@@ -96,7 +96,7 @@ function Spinner() {
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  // 'login' | 'register' | 'register-otp' | 'forgot' | 'reset'
+  // 'login' | 'register' | 'register-otp' | 'forgot' | 'reset' | 'pending'
   const [view,    setView]    = useState('login');
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState('');
@@ -185,8 +185,12 @@ export default function LoginPage() {
         first_name: regFirst.trim(), last_name: regLast.trim(),
         email: regEmail.toLowerCase().trim(), password: regPw, code: regOtp.trim(),
       });
-      setToken(res.data.token);
-      navigate('/', { replace: true });
+      if (res.data.status === 'pending_approval') {
+        go('pending');
+      } else {
+        setToken(res.data.token);
+        navigate('/', { replace: true });
+      }
     } catch (err) {
       setError(err.response?.data?.detail || 'Verification failed. Please try again.');
     } finally {
@@ -238,11 +242,12 @@ export default function LoginPage() {
 
   // ── Layout wrapper ─────────────────────────────────────────────────────────
   const subtitle = {
-    login:        'Sign in to your NIA account',
-    register:     'Create your NIA account',
-    'register-otp': `Verify your email — ${regEmail}`,
-    forgot:       'Reset your password',
-    reset:        `Enter the code sent to ${fpEmail}`,
+    login:           'Sign in to your NIA account',
+    register:        'Create your NIA account',
+    'register-otp':  `Verify your email — ${regEmail}`,
+    forgot:          'Reset your password',
+    reset:           `Enter the code sent to ${fpEmail}`,
+    pending:         'Registration submitted',
   }[view] || '';
 
   return (
@@ -363,6 +368,33 @@ export default function LoginPage() {
               ← Back to sign in
             </button>
           </form>
+        )}
+
+        {/* ── PENDING APPROVAL ── */}
+        {view === 'pending' && (
+          <div style={{ textAlign: 'center', padding: '8px 0' }}>
+            <div style={{
+              width: '60px', height: '60px', borderRadius: '50%', margin: '0 auto 18px',
+              background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.35)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <p style={{ color: 'var(--text-main)', fontSize: '0.95rem', fontWeight: 600, marginBottom: '8px' }}>
+              Pending Admin Approval
+            </p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '20px' }}>
+              Your account has been created and is waiting for approval.
+              You'll receive an email at <strong style={{ color: 'var(--text-main)' }}>{regEmail}</strong> once an admin approves your account.
+            </p>
+            <button type="button" onClick={() => go('login')}
+              className="btn btn-primary"
+              style={{ width: '100%', padding: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <LogIn size={16} /> Back to Sign In
+            </button>
+          </div>
         )}
 
         {/* ── RESET PASSWORD ── */}

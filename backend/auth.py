@@ -505,6 +505,9 @@ class ResetPasswordRequest(BaseModel):
     code:         str
     new_password: str
 
+class AdminRegistrationAction(BaseModel):
+    email: str
+
 
 @router.post("/request-email-otp")
 def request_email_otp(body: EmailOtpRequest,
@@ -699,6 +702,71 @@ def _validate_password(password: str) -> str | None:
     return None
 
 
+# ── Generic email helper ──────────────────────────────────────────────────────
+
+def _send_email(to_email: str, subject: str, body: str):
+    """Send a plain-text email via Brevo. Raises on failure."""
+    if not BREVO_API_KEY:
+        raise RuntimeError("BREVO_API_KEY not configured")
+    import requests as _req
+    resp = _req.post(
+        "https://api.brevo.com/v3/smtp/email",
+        headers={"api-key": BREVO_API_KEY, "Content-Type": "application/json", "Accept": "application/json"},
+        json={
+            "sender": {"email": SMTP_FROM, "name": "NIA Performance Center"},
+            "to": [{"email": to_email}],
+            "subject": subject,
+            "textContent": body,
+        },
+        timeout=10,
+    )
+    resp.raise_for_status()
+
+def _notify_admins_new_registration(first_name: str, last_name: str, email: str):
+    """Email all admins when a new self-registered user is pending approval."""
+    subject = f"[NIA] New registration pending approval — {email}"
+    body = (
+        f"Hello,\n\n"
+        f"A new user has registered and is waiting for your approval:\n\n"
+        f"  Name : {first_name} {last_name}\n"
+        f"  Email: {email}\n\n"
+        f"Log in to the NIA Performance Center and go to Approved Login Emails to approve or reject.\n\n"
+        f"— NIA Tech Team"
+    )
+    for admin in ADMIN_EMAILS:
+        try:
+            _send_email(admin, subject, body)
+        except Exception as e:
+            print(f"[NOTIFY-ADMIN] Failed to email {admin}: {e}")
+
+def _notify_user_approved(email: str, first_name: str):
+    """Email user when their registration is approved."""
+    try:
+        _send_email(
+            email,
+            "Your NIA Performance Center account has been approved",
+            f"Hi {first_name},\n\n"
+            f"Your NIA Performance Center account has been approved. You can now log in.\n\n"
+            f"— NIA Tech Team",
+        )
+    except Exception as e:
+        print(f"[NOTIFY-USER-APPROVED] {e}")
+
+def _notify_user_rejected(email: str, first_name: str):
+    """Email user when their registration is rejected."""
+    try:
+        _send_email(
+            email,
+            "NIA Performance Center — registration not approved",
+            f"Hi {first_name},\n\n"
+            f"Your registration request could not be approved at this time.\n"
+            f"Please contact your NIA administrator if you think this is a mistake.\n\n"
+            f"— NIA Tech Team",
+        )
+    except Exception as e:
+        print(f"[NOTIFY-USER-REJECTED] {e}")
+
+
 # ── Registration ──────────────────────────────────────────────────────────────
 
 @router.post("/register")
@@ -787,20 +855,25 @@ def register_complete(body: RegisterVerifyRequest,
         _otp_mem[email]["used"] = True
 
     # Create or update account
-    existing = db.query(AllowedEmail).filter_by(email=email).first()
-    pw_hash  = _hash_password(body.password)
-    fn = body.first_name.strip()
-    ln = body.last_name.strip()
+    existing  = db.query(AllowedEmail).filter_by(email=email).first()
+    pw_hash   = _hash_password(body.password)
+    fn        = body.first_name.strip()
+    ln        = body.last_name.strip()
+    # Pre-added by admin → auto-approve; brand-new self-registration → needs approval
+    auto_approved = 1 if (existing and existing.is_approved) else 0
     if existing:
         existing.first_name    = fn
         existing.last_name     = ln
         existing.password_hash = pw_hash
+        existing.is_approved   = auto_approved
     else:
         db.add(AllowedEmail(
             email=email, added_by="self-registered",
             added_at=datetime.utcnow().isoformat(),
             first_name=fn, last_name=ln, password_hash=pw_hash,
+            is_approved=0,
         ))
+        auto_approved = 0
     try:
         db.commit()
     except Exception as e:
@@ -808,8 +881,18 @@ def register_complete(body: RegisterVerifyRequest,
         raise HTTPException(500, detail="Could not save account. Please try again.")
 
     threading.Thread(target=_push_allowed_emails, daemon=True).start()
-    return {"status": "registered", "token": create_token(email, fn), "email": email,
-            "first_name": fn, "last_name": ln}
+
+    if auto_approved:
+        # User was pre-approved by admin — log them straight in
+        return {"status": "registered", "token": create_token(email, fn), "email": email,
+                "first_name": fn, "last_name": ln}
+    else:
+        # Notify admins in background
+        threading.Thread(
+            target=_notify_admins_new_registration, args=(fn, ln, email), daemon=True
+        ).start()
+        return {"status": "pending_approval",
+                "message": "Your account is pending admin approval. You'll receive an email once approved."}
 
 
 # ── Password login ────────────────────────────────────────────────────────────
@@ -827,6 +910,9 @@ def password_login(body: PasswordLoginRequest, request: Request,
     user = db.query(AllowedEmail).filter_by(email=email).first()
     if not user or not user.password_hash:
         raise HTTPException(401, detail="No account found. Please register first.")
+
+    if not user.is_approved:
+        raise HTTPException(403, detail="Your account is pending admin approval. Please check back later.")
 
     if not _verify_password(body.password, user.password_hash):
         raise HTTPException(401, detail="Incorrect password.")
@@ -937,3 +1023,75 @@ def reset_password(body: ResetPasswordRequest,
 
     threading.Thread(target=_push_allowed_emails, daemon=True).start()
     return {"status": "password_reset", "message": "Password updated successfully. You can now log in."}
+
+
+# ── Admin: registration approvals ─────────────────────────────────────────────
+
+@router.get("/admin/pending-registrations")
+def admin_pending_registrations(
+    current_user: str = Depends(get_current_user),
+    db: Session = Depends(lambda: __import__('database').SessionLocal()),
+):
+    if not is_admin_email(current_user):
+        raise HTTPException(403, detail="Admin only")
+    from database import AllowedEmail
+    rows = db.query(AllowedEmail).filter(
+        AllowedEmail.is_approved == 0, AllowedEmail.password_hash != None
+    ).order_by(AllowedEmail.added_at.desc()).all()
+    return [{"email": r.email, "first_name": r.first_name or "", "last_name": r.last_name or "",
+             "added_at": r.added_at} for r in rows]
+
+
+@router.post("/admin/approve-registration")
+def admin_approve_registration(
+    body: AdminRegistrationAction,
+    current_user: str = Depends(get_current_user),
+    db: Session = Depends(lambda: __import__('database').SessionLocal()),
+):
+    if not is_admin_email(current_user):
+        raise HTTPException(403, detail="Admin only")
+    from database import AllowedEmail
+    email = body.email.lower().strip()
+    user  = db.query(AllowedEmail).filter_by(email=email).first()
+    if not user:
+        raise HTTPException(404, detail="User not found")
+    user.is_approved = 1
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise HTTPException(500, detail="DB error")
+    threading.Thread(target=_push_allowed_emails, daemon=True).start()
+    threading.Thread(
+        target=_notify_user_approved, args=(email, user.first_name or ""), daemon=True
+    ).start()
+    return {"status": "approved", "email": email}
+
+
+@router.post("/admin/reject-registration")
+def admin_reject_registration(
+    body: AdminRegistrationAction,
+    current_user: str = Depends(get_current_user),
+    db: Session = Depends(lambda: __import__('database').SessionLocal()),
+):
+    if not is_admin_email(current_user):
+        raise HTTPException(403, detail="Admin only")
+    from database import AllowedEmail
+    email = body.email.lower().strip()
+    if is_admin_email(email):
+        raise HTTPException(400, detail="Cannot reject an admin account")
+    user = db.query(AllowedEmail).filter_by(email=email).first()
+    if not user:
+        raise HTTPException(404, detail="User not found")
+    fn = user.first_name or ""
+    db.delete(user)
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise HTTPException(500, detail="DB error")
+    threading.Thread(target=_push_allowed_emails, daemon=True).start()
+    threading.Thread(
+        target=_notify_user_rejected, args=(email, fn), daemon=True
+    ).start()
+    return {"status": "rejected", "email": email}
