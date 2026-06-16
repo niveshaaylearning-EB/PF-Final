@@ -8,15 +8,11 @@ import { API_BASE } from '../config.js';
 
 
 function HomePage() {
-  const [marketData, setMarketData] = useState(null);
-  const [alerts,     setAlerts]     = useState([]);
+  const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
-    axios.get(`${API_BASE}/market`).then(r => setMarketData(r.data)).catch(() => {});
     axios.get(`${API_BASE}/alerts`).then(r => setAlerts(r.data || [])).catch(() => {});
   }, []);
-
-  const indices = marketData ? Object.entries(marketData) : [];
 
   const targetHits   = alerts.filter(a => a.type === 'target_hit');
   const stoplossHits = alerts.filter(a => a.type === 'stoploss_hit');
@@ -24,34 +20,6 @@ function HomePage() {
   return (
     <div className="animate-slide-up">
 
-      {/* ── Market ticker bar ── */}
-      {indices.length > 0 && (
-        <div style={{
-          display: 'flex', justifyContent: 'center', gap: '32px',
-          padding: '8px 0', marginBottom: '8px',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
-          flexWrap: 'wrap',
-        }}>
-          {indices.map(([name, d]) => {
-            const up = d.change_pct >= 0;
-            return (
-              <div key={name} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.03em' }}>
-                  {name}
-                </span>
-                <span style={{ fontSize: '0.82rem', color: 'var(--text-main)', fontWeight: 600 }}>
-                  {d.price > 0 ? d.price.toLocaleString('en-IN') : '—'}
-                </span>
-                {d.price > 0 && (
-                  <span style={{ fontSize: '0.75rem', fontWeight: 600, color: up ? 'var(--positive)' : 'var(--negative)' }}>
-                    {up ? '+' : ''}{d.change_pct.toFixed(2)}%
-                  </span>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
 
       {/* ── Target / Stoploss alert banners ── */}
       {stoplossHits.length > 0 && (
