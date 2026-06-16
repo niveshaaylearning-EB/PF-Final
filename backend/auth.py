@@ -479,35 +479,51 @@ class EmailOtpVerify(BaseModel):
 def request_email_otp(body: EmailOtpRequest,
                        db: Session = Depends(lambda: __import__('database').SessionLocal())):
     """Send a 6-digit OTP to the user's email. Public endpoint — no token needed."""
-    from database import AllowedEmail
-    email = body.email.lower().strip()
-
-    if not email.endswith(f"@{ALLOWED_DOMAIN}"):
-        raise HTTPException(400, detail=f"Only @{ALLOWED_DOMAIN} emails allowed.")
-
-    # Admin always allowed; others must be pre-approved
-    if email != ADMIN_EMAIL:
-        if not db.query(AllowedEmail).filter_by(email=email).first():
-            raise HTTPException(403, detail="Your email is not approved. Request access from the login page.")
-
-    from database import OtpCode
-    # Use HMAC-based OTP: same code on any worker, no shared state needed
-    code = _otp_for_email(email)
-
-    # Also store in memory (backup for same-worker verify)
-    _otp_mem[email] = {"code": code, "ts": _time.time(), "used": False}
-
-    # Store in DB (works across workers); wrapped so a DB hiccup never returns 500
     try:
-        db.query(OtpCode).filter(OtpCode.email == email).delete()
-        db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
-        db.commit()
-    except Exception as db_err:
-        print(f"[EMAIL-OTP] DB store failed for {email}: {db_err} — using memory fallback")
+        from database import AllowedEmail
+        email = body.email.lower().strip()
+
+        if not email.endswith(f"@{ALLOWED_DOMAIN}"):
+            raise HTTPException(400, detail=f"Only @{ALLOWED_DOMAIN} emails allowed.")
+
+        # Admin always allowed; others must be pre-approved
+        if email != ADMIN_EMAIL:
+            try:
+                allowed = db.query(AllowedEmail).filter_by(email=email).first()
+            except Exception:
+                allowed = None
+            if not allowed:
+                raise HTTPException(403, detail="Your email is not approved. Request access from the login page.")
+
+        # Use HMAC-based OTP: same code on any worker, no shared state needed
+        code = _otp_for_email(email)
+
+        # Also store in memory (backup for same-worker verify)
+        _otp_mem[email] = {"code": code, "ts": _time.time(), "used": False}
+
+        # Store in DB (works across workers); wrapped so a DB hiccup never returns 500
         try:
-            db.rollback()
+            from database import OtpCode
+            db.query(OtpCode).filter(OtpCode.email == email).delete()
+            db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
+            db.commit()
+        except Exception as db_err:
+            print(f"[EMAIL-OTP] DB store failed for {email}: {db_err} — using memory fallback")
+            try:
+                db.rollback()
+            except Exception:
+                pass
+    except HTTPException:
+        raise
+    except Exception as outer_err:
+        # Last resort: still generate and send a code so user is never stuck
+        print(f"[EMAIL-OTP] Outer error for {getattr(body, 'email', '?')}: {outer_err}")
+        try:
+            email = body.email.lower().strip()
+            code  = _otp_for_email(email)
+            _otp_mem[email] = {"code": code, "ts": _time.time(), "used": False}
         except Exception:
-            pass
+            return {"status": "error", "message": "Service starting up. Please try again in 30 seconds."}
 
     # Run SMTP in a thread with a hard timeout so a slow/wrong server
     # never blocks the endpoint for more than 12 seconds.
