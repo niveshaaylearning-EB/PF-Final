@@ -22,11 +22,17 @@ from fastapi.responses import StreamingResponse
 import database
 from database import StockEvent
 import sheet_service
-try:
-    import yfinance as yf
-    _YF_AVAILABLE = True
-except Exception:
-    _YF_AVAILABLE = False
+# Lazy yfinance wrapper — defers the ~50MB import to first use, reducing startup memory
+class _LazyYF:
+    _mod = None
+    def __getattr__(self, name):
+        if _LazyYF._mod is None:
+            import yfinance as _m
+            _LazyYF._mod = _m
+        return getattr(_LazyYF._mod, name)
+
+yf = _LazyYF()
+_YF_AVAILABLE = True
 
 # Suppress yfinance 401 crumb errors — common on cloud IPs
 import warnings
@@ -485,7 +491,7 @@ async def get_basket_historic(basket_id: str, db: Session = Depends(get_db)):
 
     try:
         raw  = await loop.run_in_executor(_io_pool,
-                   lambda: yf.download(symbols, period="max", progress=False))
+                   lambda: yf.download(symbols, period="10y", progress=False))
         close_data = raw['Close'] if 'Close' in raw else raw
         if isinstance(close_data, pd.Series):
             close_data = close_data.to_frame(name=symbols[0])
@@ -1882,7 +1888,7 @@ def _fetch_benchmark_symbol(symbol: str) -> "pd.Series | None":
 def _fetch_bench_close_max(symbol: str) -> "pd.Series | None":
     """Fetch maximum available daily Close prices — used for inception-period benchmark returns."""
     try:
-        hist = yf.Ticker(symbol).history(period="max", auto_adjust=True)
+        hist = yf.Ticker(symbol).history(period="10y", auto_adjust=True)
         if hist is None or hist.empty:
             return None
         close = hist["Close"].dropna()
