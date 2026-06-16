@@ -162,12 +162,16 @@ def _push_allowed_emails():
         db = SessionLocal()
         rows = db.query(AllowedEmail).all()
         data = [{
-            "email": r.email,
-            "added_by": r.added_by,
-            "added_at": r.added_at,
-            "totp_secret": r.totp_secret,
-            "totp_enabled": r.totp_enabled,
-            "backup_codes": r.backup_codes
+            "email":         r.email,
+            "added_by":      r.added_by,
+            "added_at":      r.added_at,
+            "totp_secret":   r.totp_secret,
+            "totp_enabled":  r.totp_enabled,
+            "backup_codes":  r.backup_codes,
+            "first_name":    r.first_name,
+            "last_name":     r.last_name,
+            "password_hash": r.password_hash,
+            "is_approved":   r.is_approved if r.is_approved is not None else 1,
         } for r in rows]
         db.close()
         

@@ -197,7 +197,11 @@ async def _startup_prewarm():
                         added_at=rec.get("added_at",""),
                         totp_secret=rec.get("totp_secret"),
                         totp_enabled=rec.get("totp_enabled", 0),
-                        backup_codes=rec.get("backup_codes")
+                        backup_codes=rec.get("backup_codes"),
+                        first_name=rec.get("first_name"),
+                        last_name=rec.get("last_name"),
+                        password_hash=rec.get("password_hash"),
+                        is_approved=rec.get("is_approved", 1),
                     ))
                 else:
                     if "totp_secret" in rec:
@@ -206,6 +210,14 @@ async def _startup_prewarm():
                         existing.totp_enabled = rec["totp_enabled"]
                     if "backup_codes" in rec:
                         existing.backup_codes = rec["backup_codes"]
+                    if "first_name" in rec:
+                        existing.first_name = rec["first_name"]
+                    if "last_name" in rec:
+                        existing.last_name = rec["last_name"]
+                    if "password_hash" in rec:
+                        existing.password_hash = rec["password_hash"]
+                    if "is_approved" in rec:
+                        existing.is_approved = rec["is_approved"]
         # Restore access requests
         _sync_access_requests_to_db(db_s)
         # Restore login history
@@ -233,10 +245,14 @@ async def _startup_prewarm():
                     event_type=rec.get("event_type",""), description=rec.get("description"),
                     old_value=rec.get("old_value"), new_value=rec.get("new_value"),
                     event_date=rec.get("event_date",""), user_email=rec.get("user_email")))
-        # Always ensure admins are approved
+        # Always ensure admins exist and are approved
         for adm in ["jay.chaudhari@niveshaay.com", "nukul.madaan@niveshaay.com"]:
-            if not db_s.query(database.AllowedEmail).filter_by(email=adm).first():
-                db_s.add(database.AllowedEmail(email=adm, added_by="system", added_at=datetime.utcnow().isoformat()))
+            adm_row = db_s.query(database.AllowedEmail).filter_by(email=adm).first()
+            if not adm_row:
+                db_s.add(database.AllowedEmail(email=adm, added_by="system",
+                                               added_at=datetime.utcnow().isoformat(), is_approved=1))
+            elif not adm_row.is_approved:
+                adm_row.is_approved = 1
         db_s.commit()
         db_s.close()
         print("[startup] Restored allowed_emails and access_requests from JSON")
