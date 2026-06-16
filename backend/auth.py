@@ -193,9 +193,14 @@ def _push_allowed_emails():
 
 # ── Email OTP ─────────────────────────────────────────────────────────────────
 import secrets
+import time as _time
 
 SMTP_FROM      = os.environ.get("SMTP_FROM",      "communication@niveshaay.com")
 BREVO_API_KEY  = os.environ.get("BREVO_API_KEY",  "")
+
+# In-memory fallback so OTP verify still works even if DB write failed
+# { email: {"code": str, "ts": float, "used": bool} }
+_otp_mem: dict = {}
 
 def _generate_otp() -> str:
     return str(secrets.randbelow(900000) + 100000)
@@ -464,10 +469,20 @@ def request_email_otp(body: EmailOtpRequest,
     from database import OtpCode
     code = _generate_otp()
 
-    # Clear old OTPs for this email, then store new one in DB (works across workers)
-    db.query(OtpCode).filter(OtpCode.email == email).delete()
-    db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
-    db.commit()
+    # Always store in memory first (survives if DB is temporarily unavailable)
+    _otp_mem[email] = {"code": code, "ts": _time.time(), "used": False}
+
+    # Store in DB (works across workers); wrapped so a DB hiccup never returns 500
+    try:
+        db.query(OtpCode).filter(OtpCode.email == email).delete()
+        db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
+        db.commit()
+    except Exception as db_err:
+        print(f"[EMAIL-OTP] DB store failed for {email}: {db_err} — using memory fallback")
+        try:
+            db.rollback()
+        except Exception:
+            pass
 
     # Run SMTP in a thread with a hard timeout so a slow/wrong server
     # never blocks the endpoint for more than 12 seconds.
@@ -513,11 +528,26 @@ def verify_email_otp(body: EmailOtpVerify, request: Request,
         OtpCode.created_at >= cutoff,
     ).first()
 
+    # DB miss — check in-memory fallback (covers cold-start / DB-hiccup scenarios)
+    mem_hit = False
     if not record:
+        mem = _otp_mem.get(email)
+        if (mem and mem["code"] == code and not mem["used"]
+                and (_time.time() - mem["ts"]) < 600):
+            mem_hit = True
+
+    if not record and not mem_hit:
         raise HTTPException(401, detail="Invalid or expired OTP. Please request a new one.")
 
-    record.used = 1
-    db.commit()
+    # Mark as used in both DB and memory
+    if record:
+        record.used = 1
+        try:
+            db.commit()
+        except Exception:
+            pass
+    if email in _otp_mem:
+        _otp_mem[email]["used"] = True
 
     ip  = request.client.host if request.client else None
     loc = get_location_from_ip_safe(ip)
