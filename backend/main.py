@@ -213,6 +213,29 @@ def get_db():
 async def _startup_prewarm():
     """Warm basket + historic caches immediately on startup in background.
     Also ensures admin email is always in the allowed_emails table."""
+    # Fetch latest files from GitHub before restoring (ensures passwords survive deploys
+    # even when local Docker image has a stale copy of the JSON files)
+    _gh_token = os.environ.get("GITHUB_TOKEN", "")
+    _gh_repo  = os.environ.get("GITHUB_REPO", "")
+    if _gh_token and _gh_repo:
+        import urllib.request as _ur_startup
+        import base64 as _b64_startup
+        for _fname in ("allowed_emails_data.json", "login_history.json", "audit_log.json", "stock_events.json"):
+            try:
+                _api = f"https://api.github.com/repos/{_gh_repo}/contents/backend/{_fname}"
+                _hdrs = {"Authorization": f"Bearer {_gh_token}", "Accept": "application/vnd.github+json"}
+                _resp = _ur_startup.urlopen(_ur_startup.Request(_api, headers=_hdrs), timeout=10)
+                _gh_data = json.loads(_resp.read())
+                _content = _b64_startup.b64decode(_gh_data["content"].replace("\n", "")).decode()
+                _local = os.path.join(_BACKEND_DIR, _fname)
+                with open(_local, "w", encoding="utf-8") as _f:
+                    _f.write(_content)
+                print(f"[startup] Fetched fresh {_fname} from GitHub")
+            except Exception as _e:
+                print(f"[startup] Could not fetch {_fname} from GitHub: {_e}")
+    else:
+        print("[startup] WARNING: GITHUB_TOKEN or GITHUB_REPO not set — using local JSON files (passwords may be stale)")
+
     # Restore persisted allowed_emails + access_requests from JSON (survives deploys)
     try:
         db_s = database.SessionLocal()
@@ -1542,6 +1565,42 @@ def refresh_yf_metrics():
     sheet_service._yf_metrics_cache.clear()
     sheet_service._cache.clear()
     return {"status": "cache_cleared"}
+
+
+# ── Admin: force-push all persistent data to GitHub ──────────────────────────
+
+@app.post("/api/admin/sync-to-github")
+def admin_sync_to_github(request: Request, db: Session = Depends(get_db)):
+    """Force-push all JSON data to GitHub and report success/failure per file."""
+    user = getattr(request.state, "user", None)
+    if not is_admin_email(user):
+        raise HTTPException(status_code=403, detail="Admin only")
+
+    token = os.environ.get("GITHUB_TOKEN", "")
+    repo  = os.environ.get("GITHUB_REPO", "")
+    results = {
+        "GITHUB_TOKEN_set": bool(token),
+        "GITHUB_REPO_set":  bool(repo),
+        "GITHUB_REPO":      repo or "(not set)",
+        "files": {}
+    }
+
+    if not token or not repo:
+        results["error"] = "GITHUB_TOKEN or GITHUB_REPO not set on Render. Update env vars."
+        return results
+
+    def _push_and_report(label, dump_fn):
+        try:
+            dump_fn(db)
+            results["files"][label] = "ok"
+        except Exception as e:
+            results["files"][label] = f"error: {e}"
+
+    _push_and_report("allowed_emails_data.json", _dump_allowed_emails)
+    _push_and_report("login_history.json",        _dump_login_history)
+    _push_and_report("audit_log.json",             _dump_audit_log)
+    _push_and_report("stock_events.json",          _dump_stock_events)
+    return results
 
 
 # ── Admin audit log ───────────────────────────────────────────────────────────
