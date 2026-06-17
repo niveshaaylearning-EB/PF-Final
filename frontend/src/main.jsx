@@ -21,7 +21,9 @@ axios.interceptors.response.use(
   res => res,
   async err => {
     const original = err.config;
-    if (err.response?.status === 401 && !original._retry) {
+    // Never intercept 401/428 from auth endpoints — those are meaningful errors for the login page
+    const isAuthEndpoint = /\/auth\/(login|register|forgot-password|reset-password)/.test(original?.url || '');
+    if (err.response?.status === 401 && !original._retry && !isAuthEndpoint) {
       const refreshToken = getRefreshToken();
       if (refreshToken) {
         original._retry = true;
