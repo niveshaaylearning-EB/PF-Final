@@ -1589,17 +1589,60 @@ def admin_sync_to_github(request: Request, db: Session = Depends(get_db)):
         results["error"] = "GITHUB_TOKEN or GITHUB_REPO not set on Render. Update env vars."
         return results
 
-    def _push_and_report(label, dump_fn):
-        try:
-            dump_fn(db)
-            results["files"][label] = "ok"
-        except Exception as e:
-            results["files"][label] = f"error: {e}"
+    import urllib.request as _sync_ur
+    import base64 as _sync_b64
 
-    _push_and_report("allowed_emails_data.json", _dump_allowed_emails)
-    _push_and_report("login_history.json",        _dump_login_history)
-    _push_and_report("audit_log.json",             _dump_audit_log)
-    _push_and_report("stock_events.json",          _dump_stock_events)
+    def _direct_push(filename: str, data_fn) -> str:
+        """Push file synchronously and return 'ok:<sha>' or 'error:<msg>'."""
+        try:
+            content = json.dumps(data_fn(db), indent=2, ensure_ascii=False)
+            api_url = f"https://api.github.com/repos/{repo}/contents/backend/{filename}"
+            hdrs = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
+                    "Content-Type": "application/json", "X-GitHub-Api-Version": "2022-11-28"}
+            try:
+                with _sync_ur.urlopen(_sync_ur.Request(api_url, headers=hdrs), timeout=8) as r:
+                    sha = json.loads(r.read())["sha"]
+            except Exception as e:
+                sha = None
+                results.setdefault("warnings", []).append(f"GET {filename}: {e}")
+            body = json.dumps({"message": f"auto: update {filename}",
+                               "content": _sync_b64.b64encode(content.encode()).decode(),
+                               **( {"sha": sha} if sha else {})}).encode()
+            with _sync_ur.urlopen(_sync_ur.Request(api_url, data=body, headers=hdrs, method="PUT"), timeout=15) as r:
+                resp_data = json.loads(r.read())
+                new_sha = resp_data.get("content", {}).get("sha", "?")
+                return f"ok:{new_sha[:8]}"
+        except Exception as e:
+            return f"error: {e}"
+
+    def _allowed_emails_data(db_):
+        rows = db_.query(database.AllowedEmail).all()
+        return [{"email": r.email, "added_by": r.added_by, "added_at": r.added_at,
+                 "totp_secret": r.totp_secret, "totp_enabled": r.totp_enabled,
+                 "backup_codes": r.backup_codes, "first_name": r.first_name,
+                 "last_name": r.last_name, "password_hash": r.password_hash,
+                 "is_approved": r.is_approved if r.is_approved is not None else 1}
+                for r in rows]
+
+    def _login_history_data(db_):
+        rows = db_.query(database.LoginHistory).order_by(database.LoginHistory.id.desc()).limit(500).all()
+        return [{"email": r.email, "logged_at": r.logged_at, "ip_address": r.ip_address, "location": r.location} for r in rows]
+
+    def _audit_log_data(db_):
+        rows = db_.query(database.AuditLog).order_by(database.AuditLog.id.desc()).limit(300).all()
+        return [{"user_email": r.user_email, "event_type": r.event_type, "details": r.details,
+                 "created_at": r.created_at, "ip_address": r.ip_address, "location": r.location} for r in rows]
+
+    def _stock_events_data(db_):
+        rows = db_.query(StockEvent).order_by(StockEvent.id.desc()).limit(1000).all()
+        return [{"basket_id": r.basket_id, "stock_code": r.stock_code, "event_type": r.event_type,
+                 "description": r.description, "old_value": r.old_value, "new_value": r.new_value,
+                 "event_date": r.event_date, "user_email": getattr(r, "user_email", None)} for r in rows]
+
+    results["files"]["allowed_emails_data.json"] = _direct_push("allowed_emails_data.json", _allowed_emails_data)
+    results["files"]["login_history.json"]        = _direct_push("login_history.json",        _login_history_data)
+    results["files"]["audit_log.json"]             = _direct_push("audit_log.json",             _audit_log_data)
+    results["files"]["stock_events.json"]          = _direct_push("stock_events.json",          _stock_events_data)
     return results
 
 
@@ -2892,17 +2935,17 @@ _LOGIN_HISTORY_FILE  = os.path.join(_BACKEND_DIR, "login_history.json")
 _AUDIT_LOG_FILE      = os.path.join(_BACKEND_DIR, "audit_log.json")
 _STOCK_EVENTS_FILE   = os.path.join(_BACKEND_DIR, "stock_events.json")
 
-def _main_github_push(rel_path: str, content: str):
-    """Push a file to GitHub repo — background thread."""
+def _main_github_push(rel_path: str, content: str, raise_on_error: bool = False):
+    """Push a file to GitHub repo — background thread or blocking call."""
     token = os.environ.get("GITHUB_TOKEN", "")
     repo  = os.environ.get("GITHUB_REPO", "")
     if not token or not repo:
         return
+    import urllib.request as _ur
+    api_url = f"https://api.github.com/repos/{repo}/contents/backend/{os.path.basename(rel_path)}"
+    hdrs = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json", "X-GitHub-Api-Version": "2022-11-28"}
     try:
-        import urllib.request as _ur
-        api_url = f"https://api.github.com/repos/{repo}/contents/backend/{os.path.basename(rel_path)}"
-        hdrs = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
-                "Content-Type": "application/json", "X-GitHub-Api-Version": "2022-11-28"}
         try:
             req = _ur.Request(api_url, headers=hdrs)
             with _ur.urlopen(req, timeout=8) as r:
@@ -2916,13 +2959,15 @@ def _main_github_push(rel_path: str, content: str):
         _ur.urlopen(req2, timeout=10)
     except Exception as e:
         print(f"[github-push] {os.path.basename(rel_path)}: {e}")
+        if raise_on_error:
+            raise
 
-def _save_json_push(filepath: str, data, sync: bool = False):
+def _save_json_push(filepath: str, data, sync: bool = False, raise_on_error: bool = False):
     content = json.dumps(data, indent=2, ensure_ascii=False)
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(content)
     if sync:
-        _main_github_push(filepath, content)   # blocking — used for critical data
+        _main_github_push(filepath, content, raise_on_error=raise_on_error)
     else:
         _main_threading.Thread(target=_main_github_push, args=(filepath, content), daemon=True).start()
 
@@ -2950,7 +2995,7 @@ def _dump_access_requests(db):
              "processed_at": r.processed_at} for r in rows]
     _save_json_push(_ACCESS_REQ_FILE, data)
 
-def _dump_allowed_emails(db):
+def _dump_allowed_emails(db, raise_on_error: bool = False):
     rows = db.query(database.AllowedEmail).all()
     data = [{
         "email":         r.email,
@@ -2964,7 +3009,7 @@ def _dump_allowed_emails(db):
         "password_hash": r.password_hash,
         "is_approved":   r.is_approved if r.is_approved is not None else 1,
     } for r in rows]
-    _save_json_push(_ALLOWED_EMAIL_FILE, data, sync=True)
+    _save_json_push(_ALLOWED_EMAIL_FILE, data, sync=True, raise_on_error=raise_on_error)
 
 
 def _dump_login_history(db):
