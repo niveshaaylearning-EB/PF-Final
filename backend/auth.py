@@ -1044,8 +1044,10 @@ def password_login(request: Request, body: PasswordLoginRequest,
         raise HTTPException(429, detail=f"Account locked due to too many failed attempts. Try again in {secs_left // 60 + 1} minute(s).")
 
     user = db.query(AllowedEmail).filter_by(email=email).first()
-    if not user or not user.password_hash:
+    if not user:
         raise HTTPException(401, detail="No account found. Please register first.")
+    if not user.password_hash:
+        raise HTTPException(401, detail="No password set for this account. Please use 'Forgot password?' to set one.")
 
     if not user.is_approved:
         raise HTTPException(403, detail="Your account is pending admin approval. Please check back later.")

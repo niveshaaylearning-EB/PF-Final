@@ -289,7 +289,7 @@ async def _startup_prewarm():
     except Exception as e:
         print(f"[startup] Could not restore persisted data: {e}")
 
-    # Background: periodically dump stock events to GitHub every 5 min
+    # Background: periodically dump all backlog data to GitHub every 5 min
     import threading as _t
     def _periodic_dump():
         import time as _time2
@@ -298,6 +298,8 @@ async def _startup_prewarm():
             try:
                 _db = database.SessionLocal()
                 _dump_stock_events(_db)
+                _dump_login_history(_db)
+                _dump_audit_log(_db)
                 _db.close()
             except Exception:
                 pass
