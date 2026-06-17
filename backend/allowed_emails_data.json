@@ -6,6 +6,8 @@
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
     "password_hash": "8f896c1ddf5c2c2cb007de1091d9c383b8f83e50c929d185305f3e44d6c66cb1:992dc63b9cec0bd0d2d2758a97ffe80572e5b9709d4a45e02745518678116f8c",
     "is_approved": 1
   },
@@ -16,6 +18,8 @@
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
     "password_hash": null,
     "is_approved": 1
   },
@@ -26,6 +30,8 @@
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
     "password_hash": null,
     "is_approved": 1
   },
@@ -36,6 +42,8 @@
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
     "password_hash": null,
     "is_approved": 1
   },
@@ -46,6 +54,8 @@
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
     "password_hash": null,
     "is_approved": 1
   },
@@ -56,6 +66,8 @@
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
     "password_hash": null,
     "is_approved": 1
   }
