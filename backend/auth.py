@@ -1047,7 +1047,32 @@ def password_login(request: Request, body: PasswordLoginRequest,
     if not user:
         raise HTTPException(401, detail="No account found. Please register first.")
     if not user.password_hash:
-        raise HTTPException(401, detail="No password set for this account. Please use 'Forgot password?' to set one.")
+        # Auto-send OTP so user can set their password without manual "Forgot password?"
+        code = _otp_for_email(email)
+        _otp_mem[email] = {"code": code, "ts": _time.time(), "used": False}
+        try:
+            from database import OtpCode
+            db.query(OtpCode).filter(OtpCode.email == email).delete()
+            db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
+            db.commit()
+        except Exception:
+            try: db.rollback()
+            except: pass
+        import concurrent.futures as _cf
+        email_sent = False
+        try:
+            with _cf.ThreadPoolExecutor(max_workers=1) as _pool:
+                _pool.submit(send_email_otp, email, code).result(timeout=12)
+            email_sent = True
+        except Exception as ex:
+            print(f"[AUTO-SETUP] Email failed for {email}: {ex}")
+        from fastapi.responses import JSONResponse as _JR
+        return _JR(status_code=428, content={
+            "status": "password_setup_required",
+            "email": email,
+            "code": code if not email_sent else None,
+            "message": f"A password setup code has been sent to {email}." if email_sent else f"Email failed. Code: {code}",
+        })
 
     if not user.is_approved:
         raise HTTPException(403, detail="Your account is pending admin approval. Please check back later.")

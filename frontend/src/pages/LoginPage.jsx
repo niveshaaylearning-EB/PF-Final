@@ -140,10 +140,29 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const res = await axios.post(`${API}/auth/login`, { email: em, password: loginPw });
+      // 428 = first-time login, no password set — backend already sent OTP
+      if (res.status === 428 || res.data?.status === 'password_setup_required') {
+        setFpEmail(em);
+        setFpOtp(''); setFpNewPw(''); setFpNewPw2('');
+        if (res.data?.code) setHint(`Email delivery failed. Your setup code: ${res.data.code}`);
+        go('reset');
+        setSuccess(`First-time setup: a password code was sent to ${em}. Enter it below to set your password.`);
+        return;
+      }
       setToken(res.data.token);
       if (res.data.refresh_token) setRefreshToken(res.data.refresh_token);
       navigate('/', { replace: true });
     } catch (err) {
+      // axios throws on non-2xx — check if it's the 428 password setup response
+      if (err.response?.status === 428) {
+        const d = err.response.data;
+        setFpEmail(d?.email || em);
+        setFpOtp(''); setFpNewPw(''); setFpNewPw2('');
+        if (d?.code) setHint(`Email delivery failed. Your setup code: ${d.code}`);
+        go('reset');
+        setSuccess(`First-time setup: a password code was sent to ${d?.email || em}. Enter it below to set your password.`);
+        return;
+      }
       setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
