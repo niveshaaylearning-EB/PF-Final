@@ -5,7 +5,9 @@
     "added_at": "2026-05-29T09:34:19.960526",
     "totp_secret": null,
     "totp_enabled": 0,
-    "backup_codes": null
+    "backup_codes": null,
+    "password_hash": "88b16dc870a6ae5781b81a196c9c46fc1b4c16e0226f2a725486aca2148f6a31:3c8d5146bdb966eb8421b5bcf493cc6d1423d5343a24bdc27ba7fc6fcfcbb6b1",
+    "is_approved": 1
   },
   {
     "email": "nukul.madaan@niveshaay.com",
@@ -13,7 +15,9 @@
     "added_at": "2026-05-29T10:22:32.383567",
     "totp_secret": null,
     "totp_enabled": 0,
-    "backup_codes": null
+    "backup_codes": null,
+    "password_hash": "38d246b71714c7e4d2de285dd3e485c8d51585cda9d19c4bcf6baa4d52bcd45f:5031749a13d26044378b4524dbb16b33935a406040845bf2feb449ac462415f6",
+    "is_approved": 1
   },
   {
     "email": "monika.bansal@niveshaay.com",
@@ -21,7 +25,9 @@
     "added_at": "2026-05-29T10:27:12.974418",
     "totp_secret": null,
     "totp_enabled": 0,
-    "backup_codes": null
+    "backup_codes": null,
+    "password_hash": "5371c592fd646621fcee3c9aacc16a3702448b89c213e9e6101042fc8a168ada:90e658e7cae9f1b9a99973f17b2902b1f621d2a623d3bc2f456412fa2c7b7ea5",
+    "is_approved": 1
   },
   {
     "email": "nakshatra.rathi@niveshaay.com",
@@ -29,7 +35,9 @@
     "added_at": "2026-05-29T10:42:04.767697",
     "totp_secret": null,
     "totp_enabled": 0,
-    "backup_codes": null
+    "backup_codes": null,
+    "password_hash": "d5ed4a2b9737ccdf17ed0b5d76405751d1e00b98c6d5c1b96f9f20f96200f206:209d34a0dfd68cf25f24f18d5fb8fb5c94bacaca414d4083aa57d27a34322c20",
+    "is_approved": 1
   },
   {
     "email": "naksh@niveshaay.com",
@@ -37,7 +45,9 @@
     "added_at": "2026-06-10T09:05:23.152728",
     "totp_secret": null,
     "totp_enabled": 0,
-    "backup_codes": null
+    "backup_codes": null,
+    "password_hash": "effd4465d293c2f20aad23be4e904c1e50f72945c451b61e5275c46a0896e2f6:04327832dc3aa4f7ca4543362e781b2c69ec30821dae5a5ccbb8323944a231b4",
+    "is_approved": 1
   },
   {
     "email": "test.user@niveshaay.com",
@@ -45,6 +55,8 @@
     "added_at": "2026-06-10T09:05:43.929069",
     "totp_secret": null,
     "totp_enabled": 0,
-    "backup_codes": null
+    "backup_codes": null,
+    "password_hash": "e893e69267829731a278d71219921762854979c87d0d0182fdfd8f09a63d18f3:591f2e14e9a9b6b06dfbe91ff2624ac78d06b46c91bdae0b08cb4041a87ac4bc",
+    "is_approved": 1
   }
 ]
