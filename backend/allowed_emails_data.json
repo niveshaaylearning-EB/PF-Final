@@ -6,7 +6,7 @@
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
-    "password_hash": "88b16dc870a6ae5781b81a196c9c46fc1b4c16e0226f2a725486aca2148f6a31:3c8d5146bdb966eb8421b5bcf493cc6d1423d5343a24bdc27ba7fc6fcfcbb6b1",
+    "password_hash": "8f896c1ddf5c2c2cb007de1091d9c383b8f83e50c929d185305f3e44d6c66cb1:992dc63b9cec0bd0d2d2758a97ffe80572e5b9709d4a45e02745518678116f8c",
     "is_approved": 1
   },
   {
