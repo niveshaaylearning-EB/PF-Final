@@ -1,6 +1,14 @@
 [
   {
     "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "email_removed",
+    "details": "Removed allowed email: test.user@niveshaay.com",
+    "created_at": "2026-06-17T10:01:32.634620",
+    "ip_address": null,
+    "location": null
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
     "event_type": "login_success",
     "details": "Login from Unknown",
     "created_at": "2026-06-17T10:01:29.286061",
