@@ -1,113 +1,65 @@
 [
   {
     "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "logout",
-    "details": null,
-    "created_at": "2026-06-17T10:09:54.957932",
-    "ip_address": "10.26.229.1",
+    "event_type": "login_success",
+    "details": "Login from Unknown",
+    "created_at": "2026-06-18T10:49:42.067834",
+    "ip_address": "10.25.87.6",
     "location": "Unknown"
   },
   {
     "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "email_removed",
-    "details": "Removed allowed email: test.user@niveshaay.com",
-    "created_at": "2026-06-17T10:01:32.634620",
+    "event_type": "login_success",
+    "details": "Login from Unknown",
+    "created_at": "2026-06-17T10:08:26.357952",
+    "ip_address": "10.24.166.134",
+    "location": "Unknown"
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "logout",
+    "details": null,
+    "created_at": "2026-06-17T10:07:45.644881",
+    "ip_address": "10.25.240.3",
+    "location": "Unknown"
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "login_success",
+    "details": "Login from Unknown",
+    "created_at": "2026-06-17T09:59:42.243257",
+    "ip_address": "10.27.243.132",
+    "location": "Unknown"
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "login_success",
+    "details": "Login from Unknown",
+    "created_at": "2026-06-17T09:50:41.097657",
+    "ip_address": "10.29.212.129",
+    "location": "Unknown"
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "logout",
+    "details": null,
+    "created_at": "2026-05-26T12:01:59.863549",
     "ip_address": null,
     "location": null
   },
   {
     "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "login_success",
-    "details": "Login from Unknown",
-    "created_at": "2026-06-17T10:01:29.286061",
-    "ip_address": "10.26.229.1",
-    "location": "Unknown"
-  },
-  {
-    "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "login_success",
-    "details": "Login from Unknown",
-    "created_at": "2026-06-17T10:01:14.592728",
-    "ip_address": "10.26.39.133",
-    "location": "Unknown"
+    "event_type": "logout",
+    "details": null,
+    "created_at": "2026-05-26T12:07:57.030777",
+    "ip_address": null,
+    "location": null
   },
   {
     "user_email": "jay.chaudhari@niveshaay.com",
     "event_type": "logout",
     "details": null,
-    "created_at": "2026-06-17T10:01:12.055819",
-    "ip_address": "10.24.51.133",
-    "location": "Unknown"
-  },
-  {
-    "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "login_success",
-    "details": "Login from Unknown",
-    "created_at": "2026-06-17T09:57:29.280663",
-    "ip_address": "10.29.148.66",
-    "location": "Unknown"
-  },
-  {
-    "user_email": "test.user@niveshaay.com",
-    "event_type": "logout",
-    "details": null,
-    "created_at": "2026-06-10T09:06:30.700241",
-    "ip_address": "127.0.0.1",
-    "location": "Local"
-  },
-  {
-    "user_email": "naksh@niveshaay.com",
-    "event_type": "logout",
-    "details": null,
-    "created_at": "2026-06-10T09:05:50.192984",
-    "ip_address": "127.0.0.1",
-    "location": "Local"
-  },
-  {
-    "user_email": "nukul.madaan@niveshaay.com",
-    "event_type": "logout",
-    "details": null,
-    "created_at": "2026-06-10T09:05:27.421573",
-    "ip_address": "127.0.0.1",
-    "location": "Local"
-  },
-  {
-    "user_email": "nukul.madaan@niveshaay.com",
-    "event_type": "logout",
-    "details": null,
-    "created_at": "2026-06-10T09:05:17.847904",
-    "ip_address": "127.0.0.1",
-    "location": "Local"
-  },
-  {
-    "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "logout",
-    "details": null,
-    "created_at": "2026-06-10T09:04:12.708873",
-    "ip_address": "127.0.0.1",
-    "location": "Local"
-  },
-  {
-    "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "logout",
-    "details": null,
-    "created_at": "2026-06-10T09:04:06.785109",
-    "ip_address": "127.0.0.1",
-    "location": "Local"
-  },
-  {
-    "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "logout",
-    "details": null,
-    "created_at": "2026-06-10T09:03:57.635603",
-    "ip_address": "127.0.0.1",
-    "location": "Local"
-  },
-  {
-    "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "logout",
-    "details": null,
-    "created_at": "2026-06-02T10:24:59.641644",
+    "created_at": "2026-05-26T13:09:38.838880",
     "ip_address": "127.0.0.1",
     "location": "Local/Loopback"
   },
@@ -123,7 +75,7 @@
     "user_email": "jay.chaudhari@niveshaay.com",
     "event_type": "logout",
     "details": null,
-    "created_at": "2026-05-26T13:09:38.838880",
+    "created_at": "2026-06-02T10:24:59.641644",
     "ip_address": "127.0.0.1",
     "location": "Local/Loopback"
   },
@@ -131,7 +83,95 @@
     "user_email": "jay.chaudhari@niveshaay.com",
     "event_type": "logout",
     "details": null,
-    "created_at": "2026-05-26T12:07:57.030777",
+    "created_at": "2026-06-10T09:03:57.635603",
+    "ip_address": "127.0.0.1",
+    "location": "Local"
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "logout",
+    "details": null,
+    "created_at": "2026-06-10T09:04:06.785109",
+    "ip_address": "127.0.0.1",
+    "location": "Local"
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "logout",
+    "details": null,
+    "created_at": "2026-06-10T09:04:12.708873",
+    "ip_address": "127.0.0.1",
+    "location": "Local"
+  },
+  {
+    "user_email": "nukul.madaan@niveshaay.com",
+    "event_type": "logout",
+    "details": null,
+    "created_at": "2026-06-10T09:05:17.847904",
+    "ip_address": "127.0.0.1",
+    "location": "Local"
+  },
+  {
+    "user_email": "nukul.madaan@niveshaay.com",
+    "event_type": "logout",
+    "details": null,
+    "created_at": "2026-06-10T09:05:27.421573",
+    "ip_address": "127.0.0.1",
+    "location": "Local"
+  },
+  {
+    "user_email": "naksh@niveshaay.com",
+    "event_type": "logout",
+    "details": null,
+    "created_at": "2026-06-10T09:05:50.192984",
+    "ip_address": "127.0.0.1",
+    "location": "Local"
+  },
+  {
+    "user_email": "test.user@niveshaay.com",
+    "event_type": "logout",
+    "details": null,
+    "created_at": "2026-06-10T09:06:30.700241",
+    "ip_address": "127.0.0.1",
+    "location": "Local"
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "login_success",
+    "details": "Login from Unknown",
+    "created_at": "2026-06-17T09:57:29.280663",
+    "ip_address": "10.29.148.66",
+    "location": "Unknown"
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "logout",
+    "details": null,
+    "created_at": "2026-06-17T10:01:12.055819",
+    "ip_address": "10.24.51.133",
+    "location": "Unknown"
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "login_success",
+    "details": "Login from Unknown",
+    "created_at": "2026-06-17T10:01:14.592728",
+    "ip_address": "10.26.39.133",
+    "location": "Unknown"
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "login_success",
+    "details": "Login from Unknown",
+    "created_at": "2026-06-17T10:01:29.286061",
+    "ip_address": "10.26.229.1",
+    "location": "Unknown"
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "email_removed",
+    "details": "Removed allowed email: test.user@niveshaay.com",
+    "created_at": "2026-06-17T10:01:32.634620",
     "ip_address": null,
     "location": null
   },
@@ -139,40 +179,8 @@
     "user_email": "jay.chaudhari@niveshaay.com",
     "event_type": "logout",
     "details": null,
-    "created_at": "2026-05-26T12:01:59.863549",
-    "ip_address": null,
-    "location": null
-  },
-  {
-    "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "login_success",
-    "details": "Login from Unknown",
-    "created_at": "2026-06-17T09:50:41.097657",
-    "ip_address": "10.29.212.129",
-    "location": "Unknown"
-  },
-  {
-    "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "login_success",
-    "details": "Login from Unknown",
-    "created_at": "2026-06-17T09:59:42.243257",
-    "ip_address": "10.27.243.132",
-    "location": "Unknown"
-  },
-  {
-    "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "logout",
-    "details": null,
-    "created_at": "2026-06-17T10:07:45.644881",
-    "ip_address": "10.25.240.3",
-    "location": "Unknown"
-  },
-  {
-    "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "login_success",
-    "details": "Login from Unknown",
-    "created_at": "2026-06-17T10:08:26.357952",
-    "ip_address": "10.24.166.134",
+    "created_at": "2026-06-17T10:09:54.957932",
+    "ip_address": "10.26.229.1",
     "location": "Unknown"
   }
 ]
