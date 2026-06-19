@@ -1,6 +1,14 @@
 [
   {
     "user_email": "ajay.surya@niveshaay.com",
+    "event_type": "registration_completed",
+    "details": "Ajay Surya registered (auto_approved=0)",
+    "created_at": "2026-06-19T09:32:05.599054",
+    "ip_address": null,
+    "location": null
+  },
+  {
+    "user_email": "ajay.surya@niveshaay.com",
     "event_type": "registration_requested",
     "details": "Ajay Surya requested access",
     "created_at": "2026-06-19T09:31:44.256849",
