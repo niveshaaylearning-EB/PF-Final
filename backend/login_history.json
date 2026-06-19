@@ -1,373 +1,43 @@
 [
   {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-17T09:57:29.268490",
-    "ip_address": "10.29.148.66",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhar@niveshaay.com",
-    "logged_at": "2026-04-27T10:25:03.424248",
-    "ip_address": "127.0.0.1",
-    "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-04-27T11:20:14.131455",
-    "ip_address": "127.0.0.1",
-    "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-19T08:53:44.780137",
-    "ip_address": "127.0.0.1",
-    "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-19T08:54:42.892658",
-    "ip_address": "127.0.0.1",
-    "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-19T08:55:16.421814",
-    "ip_address": "127.0.0.1",
-    "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-19T09:46:16.686616",
-    "ip_address": "127.0.0.1",
-    "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-19T09:56:10.637522",
-    "ip_address": "127.0.0.1",
-    "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-19T09:57:39.589171",
-    "ip_address": "127.0.0.1",
-    "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-26T11:31:16.724568",
-    "ip_address": "127.0.0.1",
-    "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-26T11:32:16.003406",
-    "ip_address": "127.0.0.1",
-    "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-26T12:02:06.911125",
-    "ip_address": "127.0.0.1",
-    "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-26T12:08:05.412942",
-    "ip_address": "127.0.0.1",
-    "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-26T13:09:38.829627",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-26T13:12:45.663408",
-    "ip_address": "127.0.0.1",
-    "location": "Ashram Road, Paldi, SabarmatiTaluka, Ahmedabad, Gujarat, 380006, India"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-29T09:35:05.714437",
-    "ip_address": "127.0.0.1",
-    "location": "Majura Taluka, Gujarat 394518, India"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-29T10:21:27.226223",
-    "ip_address": "127.0.0.1",
-    "location": "Majura Taluka, Gujarat 394518, India"
-  },
-  {
-    "email": "nukul.madaan@niveshaay.com",
-    "logged_at": "2026-05-29T10:26:34.935883",
-    "ip_address": "192.168.1.9",
-    "location": "Private Network"
-  },
-  {
-    "email": "monika.bansal@niveshaay.com",
-    "logged_at": "2026-05-29T10:29:10.848929",
-    "ip_address": "192.168.1.35",
-    "location": "Private Network"
-  },
-  {
     "email": "nakshatra.rathi@niveshaay.com",
-    "logged_at": "2026-05-29T10:42:13.787944",
-    "ip_address": "192.168.1.29",
-    "location": "Private Network"
+    "logged_at": "2026-06-19T08:49:07.598640",
+    "ip_address": "10.25.81.131",
+    "location": "Unknown"
   },
   {
     "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-30T06:02:01.696220",
+    "logged_at": "2026-06-10T09:05:57.807505",
     "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
+    "location": "Local"
   },
   {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-30T06:34:48.051689",
+    "email": "test.user@niveshaay.com",
+    "logged_at": "2026-06-10T09:05:43.931988",
     "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
+    "location": "Local"
   },
   {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-30T07:54:54.286014",
+    "email": "naksh@niveshaay.com",
+    "logged_at": "2026-06-10T09:05:23.157140",
     "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-30T08:00:06.633088",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-30T08:05:44.601046",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
+    "location": "Local"
   },
   {
     "email": "nukul.madaan@niveshaay.com",
-    "logged_at": "2026-05-30T10:43:50.490742",
-    "ip_address": "192.168.1.9",
-    "location": "Private Network"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-30T12:42:59.486072",
+    "logged_at": "2026-06-10T09:04:34.010810",
     "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
+    "location": "Local"
   },
   {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-05-30T13:03:22.465084",
+    "email": "nukul.madaan@niveshaay.com",
+    "logged_at": "2026-06-10T09:04:14.822208",
     "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-01T05:45:26.346382",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "monika.bansal@niveshaay.com",
-    "logged_at": "2026-06-01T07:00:52.136157",
-    "ip_address": "192.168.1.17",
-    "location": "Private Network"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-01T10:17:34.793358",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-01T11:03:16.845183",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T10:02:53.033448",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T10:20:37.670082",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T10:24:44.254748",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T10:25:53.152251",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T10:29:34.651442",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T10:34:00.477284",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T10:48:17.348922",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T10:55:26.554194",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T11:04:45.615997",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T11:31:08.235035",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T11:37:10.749999",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T11:40:59.790814",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T11:42:30.307024",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T11:45:56.573798",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T12:03:20.864606",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T12:11:39.740437",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-02T12:21:01.137748",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-08T08:04:52.805752",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-08T08:17:10.214277",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-08T08:36:42.295639",
-    "ip_address": "127.0.0.1",
-    "location": "Local/Loopback"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-09T11:01:10.365737",
-    "ip_address": "testclient",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-09T11:01:10.147123",
-    "ip_address": "testclient",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-09T11:01:07.881899",
-    "ip_address": null,
     "location": "Local"
   },
   {
     "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-09T10:59:45.893421",
-    "ip_address": "testclient",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-09T10:59:45.661892",
-    "ip_address": "testclient",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-09T10:59:45.391868",
-    "ip_address": null,
-    "location": "Local"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-09T10:58:50.246446",
-    "ip_address": "testclient",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-09T10:58:50.016093",
-    "ip_address": "testclient",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-09T10:58:47.734725",
-    "ip_address": null,
-    "location": "Local"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-10T07:20:36.806471",
+    "logged_at": "2026-06-10T09:04:03.346880",
     "ip_address": "127.0.0.1",
     "location": "Local"
   },
@@ -379,38 +49,374 @@
   },
   {
     "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-10T09:04:03.346880",
-    "ip_address": "127.0.0.1",
-    "location": "Local"
-  },
-  {
-    "email": "nukul.madaan@niveshaay.com",
-    "logged_at": "2026-06-10T09:04:14.822208",
-    "ip_address": "127.0.0.1",
-    "location": "Local"
-  },
-  {
-    "email": "nukul.madaan@niveshaay.com",
-    "logged_at": "2026-06-10T09:04:34.010810",
-    "ip_address": "127.0.0.1",
-    "location": "Local"
-  },
-  {
-    "email": "naksh@niveshaay.com",
-    "logged_at": "2026-06-10T09:05:23.157140",
-    "ip_address": "127.0.0.1",
-    "location": "Local"
-  },
-  {
-    "email": "test.user@niveshaay.com",
-    "logged_at": "2026-06-10T09:05:43.931988",
+    "logged_at": "2026-06-10T07:20:36.806471",
     "ip_address": "127.0.0.1",
     "location": "Local"
   },
   {
     "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-10T09:05:57.807505",
-    "ip_address": "127.0.0.1",
+    "logged_at": "2026-06-09T10:58:47.734725",
+    "ip_address": null,
     "location": "Local"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-09T10:58:50.016093",
+    "ip_address": "testclient",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-09T10:58:50.246446",
+    "ip_address": "testclient",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-09T10:59:45.391868",
+    "ip_address": null,
+    "location": "Local"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-09T10:59:45.661892",
+    "ip_address": "testclient",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-09T10:59:45.893421",
+    "ip_address": "testclient",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-09T11:01:07.881899",
+    "ip_address": null,
+    "location": "Local"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-09T11:01:10.147123",
+    "ip_address": "testclient",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-09T11:01:10.365737",
+    "ip_address": "testclient",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-08T08:36:42.295639",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-08T08:17:10.214277",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-08T08:04:52.805752",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T12:21:01.137748",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T12:11:39.740437",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T12:03:20.864606",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T11:45:56.573798",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T11:42:30.307024",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T11:40:59.790814",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T11:37:10.749999",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T11:31:08.235035",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T11:04:45.615997",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T10:55:26.554194",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T10:48:17.348922",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T10:34:00.477284",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T10:29:34.651442",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T10:25:53.152251",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T10:24:44.254748",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T10:20:37.670082",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-02T10:02:53.033448",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-01T11:03:16.845183",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-01T10:17:34.793358",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "monika.bansal@niveshaay.com",
+    "logged_at": "2026-06-01T07:00:52.136157",
+    "ip_address": "192.168.1.17",
+    "location": "Private Network"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-01T05:45:26.346382",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-30T13:03:22.465084",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-30T12:42:59.486072",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "nukul.madaan@niveshaay.com",
+    "logged_at": "2026-05-30T10:43:50.490742",
+    "ip_address": "192.168.1.9",
+    "location": "Private Network"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-30T08:05:44.601046",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-30T08:00:06.633088",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-30T07:54:54.286014",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-30T06:34:48.051689",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-30T06:02:01.696220",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "nakshatra.rathi@niveshaay.com",
+    "logged_at": "2026-05-29T10:42:13.787944",
+    "ip_address": "192.168.1.29",
+    "location": "Private Network"
+  },
+  {
+    "email": "monika.bansal@niveshaay.com",
+    "logged_at": "2026-05-29T10:29:10.848929",
+    "ip_address": "192.168.1.35",
+    "location": "Private Network"
+  },
+  {
+    "email": "nukul.madaan@niveshaay.com",
+    "logged_at": "2026-05-29T10:26:34.935883",
+    "ip_address": "192.168.1.9",
+    "location": "Private Network"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-29T10:21:27.226223",
+    "ip_address": "127.0.0.1",
+    "location": "Majura Taluka, Gujarat 394518, India"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-29T09:35:05.714437",
+    "ip_address": "127.0.0.1",
+    "location": "Majura Taluka, Gujarat 394518, India"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-26T13:12:45.663408",
+    "ip_address": "127.0.0.1",
+    "location": "Ashram Road, Paldi, SabarmatiTaluka, Ahmedabad, Gujarat, 380006, India"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-26T13:09:38.829627",
+    "ip_address": "127.0.0.1",
+    "location": "Local/Loopback"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-26T12:08:05.412942",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-26T12:02:06.911125",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-26T11:32:16.003406",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-26T11:31:16.724568",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-19T09:57:39.589171",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-19T09:56:10.637522",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-19T09:46:16.686616",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-19T08:55:16.421814",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-19T08:54:42.892658",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-05-19T08:53:44.780137",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-04-27T11:20:14.131455",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "email": "jay.chaudhar@niveshaay.com",
+    "logged_at": "2026-04-27T10:25:03.424248",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-17T09:57:29.268490",
+    "ip_address": "10.29.148.66",
+    "location": "Unknown"
   }
 ]
