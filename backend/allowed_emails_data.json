@@ -58,5 +58,17 @@
     "last_name": null,
     "password_hash": null,
     "is_approved": 1
+  },
+  {
+    "email": "ajay.surya@niveshaay.com",
+    "added_by": "jay.chaudhari@niveshaay.com",
+    "added_at": "2026-06-19T09:33:53.984178",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1
   }
 ]
