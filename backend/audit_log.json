@@ -1,11 +1,11 @@
 [
   {
     "user_email": "jay.chaudhari@niveshaay.com",
-    "event_type": "login_success",
-    "details": "Login from Unknown",
-    "created_at": "2026-06-19T09:33:33.084468",
-    "ip_address": "10.28.50.132",
-    "location": "Unknown"
+    "event_type": "email_added",
+    "details": "Added allowed email: ajay.surya@niveshaay.com",
+    "created_at": "2026-06-19T09:33:54.949841",
+    "ip_address": null,
+    "location": null
   },
   {
     "user_email": "nakshatra.rathi@niveshaay.com",
