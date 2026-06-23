@@ -1,5 +1,21 @@
 [
   {
+    "user_email": "nukul.madaan@niveshaay.com",
+    "event_type": "login_success",
+    "details": "Login from Unknown",
+    "created_at": "2026-06-23T11:54:21.863961",
+    "ip_address": "10.28.50.132",
+    "location": "Unknown"
+  },
+  {
+    "user_email": "nukul.madaan@niveshaay.com",
+    "event_type": "password_changed",
+    "details": "Password reset via OTP",
+    "created_at": "2026-06-23T11:54:10.459047",
+    "ip_address": null,
+    "location": null
+  },
+  {
     "user_email": "nakshatra.rathi@niveshaay.com",
     "event_type": "login_success",
     "details": "Login from Unknown",
