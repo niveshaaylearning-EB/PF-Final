@@ -6,6 +6,1626 @@
     "description": "Stock first appeared in portfolio sheet",
     "old_value": null,
     "new_value": "alloc=6.00%, buy_px=1476.25",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "WAAREEENER",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=2440.83",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "STLTECH",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=233.55",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "SBCL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=7.00%, buy_px=483.20",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "SAMBHV",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%, buy_px=105.14",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "QPOWER",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=972.60",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "PRECWIRE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=186.08",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "OMNI",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=347.43",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "LIQUIDCASE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=9.00%, buy_px=111.38",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "KRISHNADEF",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=937.50",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "KDDL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=1070.78",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "HLEGLAS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=525.36",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "CENTUM",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%, buy_px=1859.06",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "AVALON",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%, buy_px=712.54",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "ASTRAMICRO",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=1114.45",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "AEROFLEX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=288.14",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "AARTIPHARM",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%, buy_px=614.70",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "SAKAR",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "ORCHPHARMA",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "SEDEMAC",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "SHILPAMED",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "TDPOWERSYS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "SAKAR",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "IDEAFORGE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=7.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "VENUSREM",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=1070.48",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "STLTECH",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=375.95",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "SANSERA",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=7.00%, buy_px=2007.73",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "SAILIFE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=1009.18",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "RAMRAT",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=458.59",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "NEOGEN",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=1308.68",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "HFCL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=8.00%, buy_px=126.43",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "EBGNG",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=348.16",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "E2E",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%, buy_px=2556.16",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "CENTUM",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=2327.00",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "ATHERENERG",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%, buy_px=723.39",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "AEROFLEX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=226.82",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "ACUTAAS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=7.00%, buy_px=1664.65",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "DEEDEV",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=7.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "OMNI",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "SHADOWFAX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Trends Trio",
+    "stock_code": "SEDEMAC",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "PARAS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=636.35",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "NPST",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=1153.25",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "CPPLUS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=1820.23",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "STLTECH",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%, buy_px=229.44",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "GENESYS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=303.93",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "ASTRAMICRO",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=944.21",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "SYRMA",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=802.56",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "TEJASNET",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=944.21",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "E2E",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=7.00%, buy_px=2485.93",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "HFCL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=128.42",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "SASKEN",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=944.21",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "ATHERENERG",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=710.18",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "DATAPATTNS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=3094.68",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "URBANCO",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=109.18",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "SANSERA",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=2142.88",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "SHADOWFAX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=944.21",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "IDEAFORGE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=776.09",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "AVANTEL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=144.46",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "GROWW",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=163.82",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "TRITURBINE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=944.21",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "LIQUIDCASE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=944.21",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "MOBIKWIK",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=203.85",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Tech Stack",
+    "stock_code": "MEESHO",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=157.06",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "URBANCO",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=122.67",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "UNIMECH",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=923.33",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "SEDEMAC",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=1646.00",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "SAMBHV",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=7.00%, buy_px=103.71",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "SAILIFE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=670.14",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "QPOWER",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=865.89",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "OMNI",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=7.00%, buy_px=336.45",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "MOBIKWIK",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=236.99",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "MEESHO",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=152.52",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "KRN",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=881.12",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "GROWW",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=169.99",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "EMMVEE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=232.08",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "EBGNG",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=7.00%, buy_px=334.44",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "DEEDEV",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=318.66",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "CPPLUS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=1732.87",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "BLACKBUCK",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=484.25",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "ATHERENERG",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=556.27",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "AJAXENGG",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=595.19",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "OLAELEC",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "SHADOWFAX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA IPO Basket",
+    "stock_code": "ATLANTAELE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "URBANCO",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=115.83",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "SHAILY",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=1372.04",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "SEDEMAC",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=1654.83",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "RRKABEL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=1785.63",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "MEESHO",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=160.36",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "MANORAMA",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=1047.58",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "ICEMAKE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=731.13",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "HFCL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=128.42",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "GRWRHITECH",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=3010.46",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "GOLDIAM",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=379.15",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "GOKEX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=798.84",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "ETERNAL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=227.33",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "EBGNG",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=374.18",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "E2E",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=7.00%, buy_px=2554.18",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "CARYSIL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=948.99",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "ATHERENERG",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=747.33",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "AEROFLEX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=241.70",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "AARTIPHARM",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=651.26",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "SHADOWFAX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "KDDL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "KRN",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "SBCL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "RAMRAT",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "TIMEX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "LIQUIDCASE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "WAAREEENER",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=2585.14",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "VEDL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.00%, buy_px=687.09",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "TRITURBINE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=110.25",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "THERMAX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.50%, buy_px=3269.10",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "TDPOWERSYS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=124.26",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "SYRMA",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%, buy_px=544.04",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "SKIPPER",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.50%, buy_px=225.25",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "SBCL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=251.63",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "SANSERA",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.50%, buy_px=1816.28",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "QPOWER",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.00%, buy_px=787.93",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "POWERMECH",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.00%, buy_px=2950.45",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "POCL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.50%, buy_px=987.60",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "NEOGEN",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.50%, buy_px=1447.55",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "JASH",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=562.76",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "JAINREC",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.50%, buy_px=404.55",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "INOXINDIA",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=1216.19",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "HBLENGINE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=622.69",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "GANECOS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=737.12",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "FIEMIND",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.00%, buy_px=576.00",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "ENRIN",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=2579.59",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "EMMVEE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=217.78",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "EBGNG",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=343.65",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "BORORENEW",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%, buy_px=340.14",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "AVALON",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=855.61",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Green Energy",
+    "stock_code": "ATHERENERG",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=660.11",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "TDPOWERSYS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.50%, buy_px=158.78",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "SYRMA",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=672.44",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "STLTECH",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=233.55",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "SJS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.50%, buy_px=1733.73",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "SBCL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=291.60",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "SANSERA",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=2042.05",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "SAMBHV",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%, buy_px=105.17",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "RAIN",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "QPOWER",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=1066.38",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "PRIVISCL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "KRN",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=811.49",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "IMFA",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.50%, buy_px=1312.48",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "IDEAFORGE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=776.09",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "HLEGLAS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.50%, buy_px=420.88",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "HFCL",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=128.42",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "HBLENGINE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "GOLDIAM",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.50%, buy_px=388.00",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "GOKEX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%, buy_px=506.17",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "GANECOS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.50%, buy_px=784.21",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "E2E",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=2925.83",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "CENTUM",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%, buy_px=1439.17",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "AVALON",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=1182.43",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "ASTRAMICRO",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%, buy_px=1088.61",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "ACUTAAS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=4.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "AARTIPHARM",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=5.00%, buy_px=768.95",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "SHADOWFAX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "NEOGEN",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.00%",
+    "event_date": "2026-06-29",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Make in India",
+    "stock_code": "YASHO",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%, buy_px=1476.25",
     "event_date": "2026-06-28",
     "user_email": null
   },
@@ -8377,1626 +9997,6 @@
     "old_value": null,
     "new_value": "alloc=4.00%, buy_px=1088.61",
     "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "AVALON",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=1182.43",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "CENTUM",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=1439.17",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "E2E",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=2925.83",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "GANECOS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=2.50%, buy_px=784.21",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "GOKEX",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=506.17",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "GOLDIAM",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.50%, buy_px=388.00",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "HBLENGINE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "HFCL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=128.42",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "HLEGLAS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=2.50%, buy_px=420.88",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "IDEAFORGE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=776.09",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "IMFA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=2.50%, buy_px=1312.48",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "KRN",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=811.49",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "PRIVISCL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "QPOWER",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=1066.38",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "RAIN",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "SAMBHV",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=105.17",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "SANSERA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=2042.05",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "SBCL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=291.60",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "SJS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=2.50%, buy_px=1733.73",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "STLTECH",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=233.55",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "SYRMA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=672.44",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "TDPOWERSYS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=2.50%, buy_px=158.78",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "ATHERENERG",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=660.11",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "AVALON",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=855.61",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "BORORENEW",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=340.14",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "EBGNG",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=343.65",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "EMMVEE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=217.78",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "ENRIN",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=2579.59",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "FIEMIND",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=2.00%, buy_px=576.00",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "GANECOS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=737.12",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "HBLENGINE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=622.69",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "INOXINDIA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=1216.19",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "JAINREC",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.50%, buy_px=404.55",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "JASH",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=562.76",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "NEOGEN",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.50%, buy_px=1447.55",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "POCL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.50%, buy_px=987.60",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "POWERMECH",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=2.00%, buy_px=2950.45",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "QPOWER",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=2.00%, buy_px=787.93",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "SANSERA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.50%, buy_px=1816.28",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "SBCL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=251.63",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "SKIPPER",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=2.50%, buy_px=225.25",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "SYRMA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=544.04",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "TDPOWERSYS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=124.26",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "THERMAX",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.50%, buy_px=3269.10",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "TRITURBINE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=110.25",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "VEDL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=2.00%, buy_px=687.09",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "WAAREEENER",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=2585.14",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Green Energy",
-    "stock_code": "LIQUIDCASE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "RAMRAT",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "SBCL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "KRN",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "KDDL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "SHADOWFAX",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "AARTIPHARM",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=651.26",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "AEROFLEX",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=241.70",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "ATHERENERG",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=747.33",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "CARYSIL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=948.99",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "E2E",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=7.00%, buy_px=2554.18",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "EBGNG",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=374.18",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "ETERNAL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=227.33",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "GOKEX",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=798.84",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "GOLDIAM",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=379.15",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "GRWRHITECH",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=3010.46",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "HFCL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=128.42",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "ICEMAKE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=731.13",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "MANORAMA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=1047.58",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "MEESHO",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=160.36",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "RRKABEL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=1785.63",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "SEDEMAC",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=1654.83",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "SHAILY",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=1372.04",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Consumer Trends",
-    "stock_code": "URBANCO",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=115.83",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "ATLANTAELE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "SHADOWFAX",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "OLAELEC",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "AJAXENGG",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=595.19",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "ATHERENERG",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=556.27",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "BLACKBUCK",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=484.25",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "CPPLUS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=1732.87",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "DEEDEV",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=318.66",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "EBGNG",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=7.00%, buy_px=334.44",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "EMMVEE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=232.08",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "GROWW",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=169.99",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "KRN",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=881.12",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "MEESHO",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=152.52",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "MOBIKWIK",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=236.99",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "OMNI",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=7.00%, buy_px=336.45",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "QPOWER",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=865.89",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "SAILIFE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=670.14",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "SAMBHV",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=7.00%, buy_px=103.71",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "SEDEMAC",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=1646.00",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "UNIMECH",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=923.33",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA IPO Basket",
-    "stock_code": "URBANCO",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=122.67",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "TRITURBINE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=944.21",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "SASKEN",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=944.21",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "SHADOWFAX",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=944.21",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "ASTRAMICRO",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=944.21",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "ATHERENERG",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=710.18",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "AVANTEL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=144.46",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "CPPLUS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=1820.23",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "DATAPATTNS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=3094.68",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "E2E",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=7.00%, buy_px=2485.93",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "GENESYS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=303.93",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "GROWW",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=163.82",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "HFCL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=128.42",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "IDEAFORGE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=776.09",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "LIQUIDCASE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=112.89",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "MEESHO",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=157.06",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "MOBIKWIK",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=203.85",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "NPST",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=1153.25",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "PARAS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=636.35",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "PINELABS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=202.09",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "SANSERA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=2142.88",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "STLTECH",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=229.44",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "SYRMA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=802.56",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "URBANCO",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=109.18",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "SHADOWFAX",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "OMNI",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "DEEDEV",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "AARTIPHARM",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=627.81",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "ACUTAAS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=7.00%, buy_px=1664.65",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "AEROFLEX",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=226.82",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "ATHERENERG",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=723.39",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "CENTUM",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=2327.00",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "E2E",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=2556.16",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "EBGNG",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=348.16",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "HFCL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=8.00%, buy_px=126.43",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "ICEMAKE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=772.56",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "NEOGEN",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=1308.68",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "RAMRAT",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=458.59",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "SAILIFE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=1009.18",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "SAMBHV",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=103.89",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "SANSERA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=7.00%, buy_px=2007.73",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "STLTECH",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=375.95",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "VENUSREM",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=1070.48",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "IDEAFORGE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "SAKAR",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "TDPOWERSYS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "SHILPAMED",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "SEDEMAC",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "ORCHPHARMA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "SAKAR",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "AARTIPHARM",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=614.70",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "AEROFLEX",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=288.14",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "ASTRAMICRO",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=1114.45",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "AVALON",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=712.54",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "CENTUM",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=1859.06",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "HLEGLAS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=525.36",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "KDDL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=1070.78",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "KRISHNADEF",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=937.50",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "LIQUIDCASE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=9.00%, buy_px=111.38",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "OMNI",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=347.43",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "PRECWIRE",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=186.08",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "QPOWER",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=972.60",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "SAMBHV",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=105.14",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "SBCL",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=7.00%, buy_px=483.20",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "STLTECH",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%, buy_px=233.55",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "WAAREEENER",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=2440.83",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Make in India",
-    "stock_code": "YASHO",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=1476.25",
-    "event_date": "2026-06-02",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "TEJASNET",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=944.21",
-    "event_date": "2026-06-08",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "SEDEMAC",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%",
-    "event_date": "2026-06-08",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "DEEDEV",
-    "event_type": "allocation_changed",
-    "description": "Allocation changed from 3.00% to 7.00%",
-    "old_value": "3.00",
-    "new_value": "7.00",
-    "event_date": "2026-06-08",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Trends Trio",
-    "stock_code": "RAMRAT",
-    "event_type": "allocation_changed",
-    "description": "Allocation changed from 5.00% to 4.00%",
-    "old_value": "5.00",
-    "new_value": "4.00",
-    "event_date": "2026-06-08",
     "user_email": null
   }
 ]
