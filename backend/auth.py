@@ -1333,3 +1333,4 @@ def revoke_all_other_sessions(request: Request,
     db.commit()
     _log_audit(current_user, "sessions_revoked_all", f"Revoked {count} other session(s)")
     return {"status": "revoked", "count": count}
+
