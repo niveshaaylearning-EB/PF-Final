@@ -6,6 +6,8 @@
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
     "password_hash": "8f896c1ddf5c2c2cb007de1091d9c383b8f83e50c929d185305f3e44d6c66cb1:992dc63b9cec0bd0d2d2758a97ffe80572e5b9709d4a45e02745518678116f8c",
     "is_approved": 1
   },
@@ -16,7 +18,9 @@
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
-    "password_hash": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": "b7292725a88c97c8c2c36463b46a3df5e6d2365ed4be22dba9fcb317330129d2:5e9350789f40ab118b7f3cdf9aa26ecd8a723260746571cfac6892f713dc1fdd",
     "is_approved": 1
   },
   {
@@ -26,6 +30,8 @@
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
     "password_hash": null,
     "is_approved": 1
   },
@@ -36,7 +42,9 @@
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
-    "password_hash": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": "30b52cb71af3237aabee01cf4715d7b28f2b986f2b7e8d8b8c5613d86487f065:1524dceb147a103d656a33d02eabf26487ee09b9ad61f7e237a6296b608d772e",
     "is_approved": 1
   },
   {
@@ -46,16 +54,44 @@
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
     "password_hash": null,
     "is_approved": 1
   },
   {
-    "email": "test.user@niveshaay.com",
-    "added_by": "system",
-    "added_at": "2026-06-10T09:05:43.929069",
+    "email": "ajay.surya@niveshaay.com",
+    "added_by": "jay.chaudhari@niveshaay.com",
+    "added_at": "2026-06-19T09:33:53.984178",
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1
+  },
+  {
+    "email": "dolly.choudhary@niveshaay.com",
+    "added_by": "jay.chaudhari@niveshaay.com",
+    "added_at": "2026-06-30T07:22:35.085999",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1
+  },
+  {
+    "email": "shruti.amanchi@niveshaay.com",
+    "added_by": "jay.chaudhari@niveshaay.com",
+    "added_at": "2026-06-30T07:22:36.374018",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
     "password_hash": null,
     "is_approved": 1
   }

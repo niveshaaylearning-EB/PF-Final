@@ -547,14 +547,12 @@
     {
       "nseCode": "URBANCO",
       "allocation": 0.05,
-      "buyPrice": 109.18,
-      "securityName": "Urban Company Ltd"
+      "buyPrice": 109.18
     },
     {
       "nseCode": "MEESHO",
       "allocation": 0.04,
-      "buyPrice": 157.06,
-      "securityName": "Meesho Ltd"
+      "buyPrice": 157.06
     },
     {
       "nseCode": "TRITURBINE",
@@ -564,68 +562,57 @@
     {
       "nseCode": "SYRMA",
       "allocation": 0.04,
-      "buyPrice": 802.56,
-      "securityName": "Syrma SGS Technology Ltd"
+      "buyPrice": 802.56
     },
     {
       "nseCode": "SANSERA",
       "allocation": 0.05,
-      "buyPrice": 2142.88,
-      "securityName": "Sansera Engineering Ltd"
+      "buyPrice": 2142.88
     },
     {
       "nseCode": "PARAS",
       "allocation": 0.04,
-      "buyPrice": 633.06,
-      "securityName": "Paras Defence and Space Technologies Ltd"
+      "buyPrice": 633.06
     },
     {
       "nseCode": "DATAPATTNS",
       "allocation": 0.03,
-      "buyPrice": 3094.67,
-      "securityName": "Data Patterns (India) Ltd"
+      "buyPrice": 3094.67
     },
     {
       "nseCode": "CPPLUS",
       "allocation": 0.05,
-      "buyPrice": 2064.18,
-      "securityName": "Aditya Infotech Ltd"
+      "buyPrice": 2064.18
     },
     {
       "nseCode": "AVANTEL",
       "allocation": 0.05,
-      "buyPrice": 144.46,
-      "securityName": "Avantel Ltd"
+      "buyPrice": 144.46
     },
     {
       "nseCode": "ATHERENERG",
       "allocation": 0.05,
-      "buyPrice": 710.17,
-      "securityName": "Ather Energy Ltd"
+      "buyPrice": 710.17
     },
     {
       "nseCode": "ASTRAMICRO",
       "allocation": 0.03,
-      "buyPrice": 944.21,
-      "securityName": "Astra Microwave Products Ltd"
+      "buyPrice": 944.21
     },
     {
       "nseCode": "STLTECH",
       "allocation": 0.06,
-      "buyPrice": 229.44,
-      "securityName": "Sterlite Technologies Ltd"
+      "buyPrice": 229.44
     },
     {
       "nseCode": "GENESYS",
       "allocation": 0.05,
-      "buyPrice": 307.03,
-      "securityName": "Genesys International Corporation Ltd"
+      "buyPrice": 307.03
     },
     {
       "nseCode": "E2E",
       "allocation": 0.07,
-      "buyPrice": 2485.93,
-      "securityName": "E2E Networks Ltd"
+      "buyPrice": 248.593
     },
     {
       "nseCode": "SHADOWFAX",
@@ -640,32 +627,27 @@
     {
       "nseCode": "PINELABS",
       "allocation": 0.04,
-      "buyPrice": 202.09,
-      "securityName": "Pine Labs Ltd"
+      "buyPrice": 202.09
     },
     {
       "nseCode": "NPST",
       "allocation": 0.04,
-      "buyPrice": 1153.25,
-      "securityName": "Network People Services Technologies Ltd"
+      "buyPrice": 1153.25
     },
     {
       "nseCode": "MOBIKWIK",
       "allocation": 0.03,
-      "buyPrice": 203.85,
-      "securityName": "One MobiKwik Systems Ltd"
+      "buyPrice": 203.85
     },
     {
       "nseCode": "GROWW",
       "allocation": 0.04,
-      "buyPrice": 163.82,
-      "securityName": "Billionbrains Garage Ventures Ltd"
+      "buyPrice": 163.82
     },
     {
       "nseCode": "LIQUIDCASE",
       "allocation": 0.04,
-      "buyPrice": 112.49,
-      "securityName": "Zerodha Nifty 1D Rate Liquid ETF"
+      "buyPrice": 112.49
     },
     {
       "nseCode": "IDEAFORGE",
@@ -3509,43 +3491,37 @@
       "nseCode": "LENSKART",
       "securityName": "Lenskart Solutions Ltd",
       "buyPrice": 427.94,
-      "sellPrice": 513.38,
-      "sellDate": "05 May 2026"
+      "sellPrice": 513.38
     },
     {
       "nseCode": "RSYSTEMS",
       "securityName": "R Systems International Ltd",
       "buyPrice": 357.03,
-      "sellPrice": 272.075,
-      "sellDate": "21 May 2026"
+      "sellPrice": 272.075
     },
     {
       "nseCode": "BLACKBUCK",
       "securityName": "Blackbuck Ltd",
       "buyPrice": 554.9225,
-      "sellPrice": 521.575,
-      "sellDate": "21 May 2026"
+      "sellPrice": 521.575
     },
     {
       "nseCode": "YATRA",
       "securityName": "Yatra Online Ltd",
       "buyPrice": 144.32,
-      "sellPrice": 95.8125,
-      "sellDate": "21 May 2026"
+      "sellPrice": 95.8125
     },
     {
       "nseCode": "INTELLECT",
       "securityName": "Intellect Design Arena Ltd",
       "buyPrice": 889.45,
-      "sellPrice": 696.125,
-      "sellDate": "21 May 2026"
+      "sellPrice": 696.125
     },
     {
       "nseCode": "MAPMYINDIA",
       "securityName": "CE Info Systems Ltd",
       "buyPrice": 1296.55,
-      "sellPrice": 1054.45,
-      "sellDate": "26 Feb 2026"
+      "sellPrice": 1054.45
     }
   ],
   "Make_in_India_sold": [
