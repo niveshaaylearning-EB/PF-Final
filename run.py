@@ -63,7 +63,16 @@ print(clr("   Niveshaay Portfolio Intelligence Center", "bold", "green"))
 print(clr("=" * 62, "bold"))
 print()
 
-# ── Step 0: Kill any stale servers on our ports ──────────────────────────────
+# ── Step 0a: Pull latest code from GitHub ────────────────────────────────────
+print(clr("[0/3] Pulling latest code from GitHub …", "yellow"))
+pull = subprocess.run("git pull origin main", cwd=BASE, shell=True, capture_output=True, text=True)
+if pull.returncode == 0:
+    print(clr(f"      {pull.stdout.strip() or 'Already up to date.'}", "green"))
+else:
+    print(clr(f"      Git pull failed (continuing anyway): {pull.stderr.strip()}", "red"))
+print()
+
+# ── Step 0b: Kill any stale servers on our ports ─────────────────────────────
 print(clr("[0/3] Clearing ports 8000 and 8001 …", "yellow"))
 kill_port(8000)
 kill_port(8001)
