@@ -14,6 +14,7 @@ services:
       - backend/.env
     environment:
       - IS_DOCKER_LOCAL=true
+      - SMTP_PASSWORD=spwsdnzfvhwbdrzh
     volumes:
       # Persist database and data files outside the container
       - ./backend/portfolio.db:/app/backend/portfolio.db
