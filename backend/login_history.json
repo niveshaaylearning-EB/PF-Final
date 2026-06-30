@@ -1,14 +1,74 @@
 [
   {
-    "email": "nukul.madaan@niveshaay.com",
-    "logged_at": "2026-06-27T08:56:47.123673",
-    "ip_address": "10.26.217.135",
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-30T12:06:40.611589",
+    "ip_address": "127.0.0.1",
+    "location": "Local"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-30T11:55:41.108668",
+    "ip_address": "127.0.0.1",
+    "location": "Local"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-30T07:35:08.615373",
+    "ip_address": "10.30.236.138",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-30T07:34:19.577692",
+    "ip_address": "10.24.35.10",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-30T07:23:34.579572",
+    "ip_address": "10.28.214.68",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-30T07:22:34.691665",
+    "ip_address": "10.24.35.10",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-30T07:12:04.923410",
+    "ip_address": "10.24.35.10",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-30T07:09:43.366410",
+    "ip_address": "10.24.191.130",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-29T08:01:42.187863",
+    "ip_address": "10.27.243.132",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-19T09:33:32.866404",
+    "ip_address": "10.28.50.132",
+    "location": "Unknown"
+  },
+  {
+    "email": "jay.chaudhari@niveshaay.com",
+    "logged_at": "2026-06-17T09:57:29.268490",
+    "ip_address": "10.29.148.66",
     "location": "Unknown"
   },
   {
     "email": "nakshatra.rathi@niveshaay.com",
-    "logged_at": "2026-06-26T07:41:56.526496",
-    "ip_address": "10.27.229.3",
+    "logged_at": "2026-06-19T08:49:07.598640",
+    "ip_address": "10.25.81.131",
     "location": "Unknown"
   },
   {
@@ -19,8 +79,14 @@
   },
   {
     "email": "nakshatra.rathi@niveshaay.com",
-    "logged_at": "2026-06-19T08:49:07.598640",
-    "ip_address": "10.25.81.131",
+    "logged_at": "2026-06-26T07:41:56.526496",
+    "ip_address": "10.27.229.3",
+    "location": "Unknown"
+  },
+  {
+    "email": "nukul.madaan@niveshaay.com",
+    "logged_at": "2026-06-27T08:56:47.123673",
+    "ip_address": "10.26.217.135",
     "location": "Unknown"
   },
   {
@@ -430,59 +496,5 @@
     "logged_at": "2026-04-27T10:25:03.424248",
     "ip_address": "127.0.0.1",
     "location": null
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-17T09:57:29.268490",
-    "ip_address": "10.29.148.66",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-19T09:33:32.866404",
-    "ip_address": "10.28.50.132",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-29T08:01:42.187863",
-    "ip_address": "10.27.243.132",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-30T07:09:43.366410",
-    "ip_address": "10.24.191.130",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-30T07:12:04.923410",
-    "ip_address": "10.24.35.10",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-30T07:22:34.691665",
-    "ip_address": "10.24.35.10",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-30T07:23:34.579572",
-    "ip_address": "10.28.214.68",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-30T07:34:19.577692",
-    "ip_address": "10.24.35.10",
-    "location": "Unknown"
-  },
-  {
-    "email": "jay.chaudhari@niveshaay.com",
-    "logged_at": "2026-06-30T07:35:08.615373",
-    "ip_address": "10.30.236.138",
-    "location": "Unknown"
   }
 ]
