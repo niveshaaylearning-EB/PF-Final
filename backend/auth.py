@@ -382,9 +382,10 @@ def send_email_otp(to_email: str, code: str):
     msg["From"]    = SMTP_FROM
     msg["To"]      = to_email
 
-    with smtplib.SMTP("smtp.office365.com", 587, timeout=10) as s:
+    with smtplib.SMTP("smtp.office365.com", 587, timeout=15) as s:
         s.ehlo()
         s.starttls()
+        s.ehlo()  # must re-identify after STARTTLS
         s.login(SMTP_FROM, SMTP_PASSWORD)
         s.sendmail(SMTP_FROM, [to_email], msg.as_string())
     print(f"[EMAIL-OTP] Email sent via Outlook to {to_email}")
