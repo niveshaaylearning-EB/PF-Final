@@ -1,5 +1,45 @@
 [
   {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "NEOGEN",
+    "event_type": "allocation_changed",
+    "description": "Allocation changed from 2.00% to 4.00%",
+    "old_value": "2.00",
+    "new_value": "4.00",
+    "event_date": "2026-06-30",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "TIMEX",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=3.00%",
+    "event_date": "2026-06-30",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "INOXINDIA",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.50%",
+    "event_date": "2026-06-30",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "SAILIFE",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=2.50%",
+    "event_date": "2026-06-30",
+    "user_email": null
+  },
+  {
     "basket_id": "NIA Make in India",
     "stock_code": "YASHO",
     "event_type": "added",
@@ -9956,46 +9996,6 @@
     "description": "Stock first appeared in portfolio sheet",
     "old_value": null,
     "new_value": "alloc=3.00%",
-    "event_date": "2026-06-01",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "AARTIPHARM",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=768.95",
-    "event_date": "2026-06-01",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "ACUTAAS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%",
-    "event_date": "2026-06-01",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "ASTRAMICRO",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=1088.61",
-    "event_date": "2026-06-01",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "AVALON",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=1182.43",
     "event_date": "2026-06-01",
     "user_email": null
   }
