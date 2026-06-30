@@ -609,7 +609,7 @@ class RegisterVerifyRequest(BaseModel):
 
 class PasswordLoginRequest(BaseModel):
     email:    str
-    password: str
+    password: str = ""
     latitude:  Optional[float] = None
     longitude: Optional[float] = None
 

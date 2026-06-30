@@ -94,7 +94,8 @@ export default function LoginPage() {
       if (res.data?.code) setHint(`Email delivery failed. Your code: ${res.data.code}`);
       else setSuccess(`A login code has been sent to ${em}.`);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to send code. Please try again.');
+      const det = err.response?.data?.detail;
+      setError(typeof det === 'string' ? det : det?.[0]?.msg || 'Failed to send code. Please try again.');
     } finally {
       setLoading(false);
     }
