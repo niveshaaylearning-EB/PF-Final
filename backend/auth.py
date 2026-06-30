@@ -599,14 +599,13 @@ class RegisterRequest(BaseModel):
     first_name: str
     last_name:  str
     email:      str
-    password:   str
 
 class RegisterVerifyRequest(BaseModel):
     first_name: str
     last_name:  str
     email:      str
-    password:   str
-    code:       str
+    password:   str = ""
+    code:       str = ""
 
 class PasswordLoginRequest(BaseModel):
     email:    str
@@ -890,53 +889,42 @@ def _notify_user_rejected(email: str, first_name: str):
 @_limiter.limit("5/minute")
 def register(request: Request, body: RegisterRequest,
              db: Session = Depends(lambda: __import__('database').SessionLocal())):
-    """Step 1: validate inputs and send OTP to verify email ownership."""
+    """Request access: add to DB as pending, admin approves before they can log in."""
     from database import AllowedEmail
     email = body.email.lower().strip()
+    fn    = body.first_name.strip()
+    ln    = body.last_name.strip()
 
     if not email.endswith(f"@{ALLOWED_DOMAIN}"):
         raise HTTPException(400, detail=f"Only @{ALLOWED_DOMAIN} email addresses are allowed.")
-
-    if not body.first_name.strip() or not body.last_name.strip():
+    if not fn or not ln:
         raise HTTPException(400, detail="First name and last name are required.")
 
-    err = _validate_password(body.password)
-    if err:
-        raise HTTPException(400, detail=err)
-
     existing = db.query(AllowedEmail).filter_by(email=email).first()
-    if existing and existing.password_hash:
+    if existing and existing.is_approved:
         raise HTTPException(409, detail="An account with this email already exists. Please log in.")
 
-    # Send verification OTP
-    code = _otp_for_email(email)
-    _otp_mem[email] = {"code": code, "ts": _time.time(), "used": False}
+    ip = request.client.host if request.client else None
+
+    if existing:
+        existing.first_name = fn
+        existing.last_name  = ln
+    else:
+        db.add(AllowedEmail(
+            email=email, added_by="self-registered",
+            added_at=datetime.utcnow().isoformat(),
+            first_name=fn, last_name=ln,
+            is_approved=0,
+        ))
     try:
-        from database import OtpCode
-        db.query(OtpCode).filter(OtpCode.email == email).delete()
-        db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
         db.commit()
     except Exception:
-        try: db.rollback()
-        except: pass
+        db.rollback()
+        raise HTTPException(500, detail="Could not save request. Please try again.")
 
-    import concurrent.futures as _cf
-    email_sent = False
-    try:
-        with _cf.ThreadPoolExecutor(max_workers=1) as _pool:
-            _pool.submit(send_email_otp, email, code).result(timeout=12)
-        email_sent = True
-    except Exception as e:
-        print(f"[REGISTER] Email failed for {email}: {e}")
-
-    ip = request.client.host if request.client else None
-    _log_audit(email, "registration_requested",
-               f"{body.first_name.strip()} {body.last_name.strip()} requested access", ip)
-
-    if email_sent:
-        return {"status": "otp_sent", "message": f"Verification code sent to {email}."}
-    else:
-        return {"status": "otp_sent", "message": f"Email delivery failed. Your code: {code}", "code": code}
+    threading.Thread(target=_push_allowed_emails, daemon=True).start()
+    _log_audit(email, "registration_requested", f"{fn} {ln} requested access", ip)
+    return {"status": "pending_approval", "message": "Access request submitted. An admin will review and approve your account."}
 
 
 @router.post("/register/complete")
@@ -1024,86 +1012,51 @@ def register_complete(body: RegisterVerifyRequest,
 # ── Password login ────────────────────────────────────────────────────────────
 
 @router.post("/login")
-@_limiter.limit("15/minute")
-def password_login(request: Request, body: PasswordLoginRequest,
-                   db: Session = Depends(lambda: __import__('database').SessionLocal())):
-    """Login with email + password."""
-    from database import AllowedEmail, LoginHistory
-    import time as _t
+@_limiter.limit("10/minute")
+def otp_login(request: Request, body: PasswordLoginRequest,
+              db: Session = Depends(lambda: __import__('database').SessionLocal())):
+    """Step 1 of OTP login: validate email, check approval, send OTP."""
+    from database import AllowedEmail, OtpCode
+    import concurrent.futures as _cf
     email = body.email.lower().strip()
     ip    = request.client.host if request.client else None
 
     if not email.endswith(f"@{ALLOWED_DOMAIN}"):
         raise HTTPException(400, detail=f"Only @{ALLOWED_DOMAIN} email addresses are allowed.")
 
-    # Account lockout check
-    now = _t.time()
-    lock = _failed_logins.get(email)
-    if lock and lock.get("locked_until", 0) > now:
-        secs_left = int(lock["locked_until"] - now)
-        raise HTTPException(429, detail=f"Account locked due to too many failed attempts. Try again in {secs_left // 60 + 1} minute(s).")
-
     user = db.query(AllowedEmail).filter_by(email=email).first()
     if not user:
-        raise HTTPException(401, detail="No account found. Please register first.")
-    if not user.password_hash:
-        # Auto-send OTP so user can set their password without manual "Forgot password?"
-        code = _otp_for_email(email)
-        _otp_mem[email] = {"code": code, "ts": _time.time(), "used": False}
-        try:
-            from database import OtpCode
-            db.query(OtpCode).filter(OtpCode.email == email).delete()
-            db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
-            db.commit()
-        except Exception:
-            try: db.rollback()
-            except: pass
-        import concurrent.futures as _cf
-        email_sent = False
-        try:
-            with _cf.ThreadPoolExecutor(max_workers=1) as _pool:
-                _pool.submit(send_email_otp, email, code).result(timeout=12)
-            email_sent = True
-        except Exception as ex:
-            print(f"[AUTO-SETUP] Email failed for {email}: {ex}")
-        from fastapi.responses import JSONResponse as _JR
-        return _JR(status_code=428, content={
-            "status": "password_setup_required",
-            "email": email,
-            "code": code if not email_sent else None,
-            "message": f"A password setup code has been sent to {email}." if email_sent else f"Email failed. Code: {code}",
-        })
-
+        raise HTTPException(401, detail="No account found with this email. Please register first.")
     if not user.is_approved:
-        raise HTTPException(403, detail="Your account is pending admin approval. Please check back later.")
+        raise HTTPException(403, detail="Your account is pending admin approval. You'll be notified when access is granted.")
 
-    if not _verify_password(body.password, user.password_hash):
-        # Increment failure counter
-        entry = _failed_logins.setdefault(email, {"count": 0, "locked_until": 0})
-        entry["count"] += 1
-        if entry["count"] >= 5:
-            entry["locked_until"] = now + 15 * 60
-            entry["count"] = 0
-            loc = get_location_from_ip_safe(ip)
-            _log_audit(email, "account_locked", f"Locked after 5 failed attempts", ip, loc)
-        raise HTTPException(401, detail="Incorrect password.")
-
-    # Successful login — clear lockout
-    _failed_logins.pop(email, None)
-
-    loc = get_location_from_ip_safe(ip)
+    # Generate and store OTP
+    code = _otp_for_email(email)
+    _otp_mem[email] = {"code": code, "ts": _time.time(), "used": False}
     try:
-        db.add(LoginHistory(email=email, logged_at=_now_iso(), ip_address=ip, location=loc))
+        db.query(OtpCode).filter(OtpCode.email == email).delete()
+        db.add(OtpCode(email=email, code=code, created_at=datetime.utcnow().isoformat(), used=0))
         db.commit()
     except Exception:
-        pass
-    threading.Thread(target=_push_login, daemon=True).start()
+        try: db.rollback()
+        except: pass
 
-    fn = user.first_name or ""
-    ua = request.headers.get("User-Agent", "")[:200]
-    tokens = _create_session_tokens(email, fn, db, device_info=ua, ip=ip, location=loc)
-    _log_audit(email, "login_success", f"Login from {loc}", ip, loc)
-    return {**tokens, "email": email, "first_name": fn, "last_name": user.last_name or ""}
+    # Send OTP email
+    email_sent = False
+    try:
+        with _cf.ThreadPoolExecutor(max_workers=1) as _pool:
+            _pool.submit(send_email_otp, email, code).result(timeout=12)
+        email_sent = True
+    except Exception as ex:
+        print(f"[OTP-LOGIN] Email failed for {email}: {ex}")
+
+    _log_audit(email, "otp_requested", f"Login OTP requested", ip)
+    return {
+        "status": "otp_sent",
+        "email": email,
+        "message": f"A login code has been sent to {email}." if email_sent else f"Email failed. Code: {code}",
+        **({"code": code} if not email_sent else {}),
+    }
 
 
 # ── Forgot / reset password ───────────────────────────────────────────────────

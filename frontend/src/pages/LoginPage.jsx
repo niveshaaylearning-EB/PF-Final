@@ -1,18 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Mail, LogIn, RefreshCw, KeyRound, UserPlus, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, LogIn, RefreshCw, KeyRound, UserPlus } from 'lucide-react';
 import { setToken, setRefreshToken } from '../utils/auth';
 import { API_ROOT as API } from '../config.js';
-
-// ── Password strength validation (mirrors backend rules) ─────────────────────
-function validatePassword(pw) {
-  if (pw.length < 8)                    return 'Password must be at least 8 characters.';
-  if (!/[A-Z]/.test(pw))               return 'Password must contain at least one uppercase letter.';
-  if (!/[0-9]/.test(pw))               return 'Password must contain at least one number.';
-  if (!/[^A-Za-z0-9]/.test(pw))        return 'Password must contain at least one special character.';
-  return null;
-}
 
 // ── Shared styles ─────────────────────────────────────────────────────────────
 const inputBase = {
@@ -59,35 +50,6 @@ function SuccessBox({ msg }) {
   );
 }
 
-function PasswordInput({ placeholder, value, onChange, name }) {
-  const [show, setShow] = useState(false);
-  return (
-    <div style={{ position: 'relative' }}>
-      <Lock size={16} style={iconStyle} />
-      <input
-        type={show ? 'text' : 'password'}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        name={name}
-        required
-        style={{ ...inputBase, paddingRight: '42px' }}
-      />
-      <button
-        type="button"
-        onClick={() => setShow(s => !s)}
-        style={{
-          position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
-          background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)',
-          padding: 0, display: 'flex',
-        }}
-      >
-        {show ? <EyeOff size={16} /> : <Eye size={16} />}
-      </button>
-    </div>
-  );
-}
-
 function Spinner() {
   return <RefreshCw size={16} style={{ animation: 'spin 1s linear infinite' }} />;
 }
@@ -96,7 +58,7 @@ function Spinner() {
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  // 'login' | 'register' | 'register-otp' | 'forgot' | 'reset' | 'pending'
+  // 'login' | 'otp' | 'register' | 'pending'
   const [view,    setView]    = useState('login');
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState('');
@@ -105,31 +67,18 @@ export default function LoginPage() {
 
   // login
   const [loginEmail, setLoginEmail] = useState('');
-  const [loginPw,    setLoginPw]    = useState('');
+  const [loginOtp,   setLoginOtp]   = useState('');
 
   // register
   const [regFirst, setRegFirst] = useState('');
   const [regLast,  setRegLast]  = useState('');
   const [regEmail, setRegEmail] = useState('');
-  const [regPw,    setRegPw]    = useState('');
-  const [regPw2,   setRegPw2]   = useState('');
-  const [regOtp,   setRegOtp]   = useState('');
 
-  // forgot / reset
-  const [fpEmail,  setFpEmail]  = useState('');
-  const [fpOtp,    setFpOtp]    = useState('');
-  const [fpNewPw,  setFpNewPw]  = useState('');
-  const [fpNewPw2, setFpNewPw2] = useState('');
-
-  function resetState() {
-    setError(''); setHint(''); setSuccess('');
-    setLoading(false);
-  }
-
+  function resetState() { setError(''); setHint(''); setSuccess(''); setLoading(false); }
   function go(v) { resetState(); setView(v); }
 
-  // ── Login ──────────────────────────────────────────────────────────────────
-  async function handleLogin(e) {
+  // ── Step 1: send OTP ───────────────────────────────────────────────────────
+  async function handleSendOtp(e) {
     e.preventDefault();
     setError(''); setHint(''); setSuccess('');
     const em = loginEmail.toLowerCase().trim();
@@ -139,99 +88,11 @@ export default function LoginPage() {
     }
     setLoading(true);
     try {
-      const res = await axios.post(`${API}/auth/login`, { email: em, password: loginPw });
-      // 428 = first-time login, no password set — backend already sent OTP
-      if (res.status === 428 || res.data?.status === 'password_setup_required') {
-        setFpEmail(em);
-        setFpOtp(''); setFpNewPw(''); setFpNewPw2('');
-        if (res.data?.code) setHint(`Email delivery failed. Your setup code: ${res.data.code}`);
-        go('reset');
-        setSuccess(`First-time setup: a password code was sent to ${em}. Enter it below to set your password.`);
-        return;
-      }
-      setToken(res.data.token);
-      if (res.data.refresh_token) setRefreshToken(res.data.refresh_token);
-      navigate('/', { replace: true });
-    } catch (err) {
-      // axios throws on non-2xx — check if it's the 428 password setup response
-      if (err.response?.status === 428) {
-        const d = err.response.data;
-        setFpEmail(d?.email || em);
-        setFpOtp(''); setFpNewPw(''); setFpNewPw2('');
-        if (d?.code) setHint(`Email delivery failed. Your setup code: ${d.code}`);
-        go('reset');
-        setSuccess(`First-time setup: a password code was sent to ${d?.email || em}. Enter it below to set your password.`);
-        return;
-      }
-      setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // ── Register step 1: send OTP ──────────────────────────────────────────────
-  async function handleRegisterSendOtp(e) {
-    e.preventDefault();
-    setError(''); setHint(''); setSuccess('');
-    const em = regEmail.toLowerCase().trim();
-    if (!regFirst.trim() || !regLast.trim()) { setError('First name and last name are required.'); return; }
-    if (!em.endsWith('@niveshaay.com')) { setError('Only @niveshaay.com email addresses are allowed.'); return; }
-    const pwErr = validatePassword(regPw);
-    if (pwErr) { setError(pwErr); return; }
-    if (regPw !== regPw2) { setError('Passwords do not match.'); return; }
-    setLoading(true);
-    try {
-      const res = await axios.post(`${API}/auth/register`, {
-        first_name: regFirst.trim(), last_name: regLast.trim(), email: em, password: regPw,
-      });
-      if (res.data.code) setHint(`Email delivery failed. Your code: ${res.data.code}`);
-      setRegOtp('');
-      go('register-otp');
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Registration failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // ── Register step 2: verify OTP + complete ─────────────────────────────────
-  async function handleRegisterComplete(e) {
-    e.preventDefault();
-    setError(''); setHint('');
-    if (regOtp.trim().length < 6) { setError('Enter the 6-digit code from your email.'); return; }
-    setLoading(true);
-    try {
-      const res = await axios.post(`${API}/auth/register/complete`, {
-        first_name: regFirst.trim(), last_name: regLast.trim(),
-        email: regEmail.toLowerCase().trim(), password: regPw, code: regOtp.trim(),
-      });
-      if (res.data.status === 'pending_approval') {
-        go('pending');
-      } else {
-        setToken(res.data.token);
-        if (res.data.refresh_token) setRefreshToken(res.data.refresh_token);
-        navigate('/', { replace: true });
-      }
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Verification failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // ── Forgot password: send OTP ──────────────────────────────────────────────
-  async function handleForgotSendOtp(e) {
-    e.preventDefault();
-    setError(''); setHint(''); setSuccess('');
-    const em = fpEmail.toLowerCase().trim();
-    if (!em.endsWith('@niveshaay.com')) { setError('Only @niveshaay.com email addresses are allowed.'); return; }
-    setLoading(true);
-    try {
-      const res = await axios.post(`${API}/auth/forgot-password`, { email: em });
-      if (res.data.code) setHint(`Email delivery failed. Your code: ${res.data.code}`);
-      setFpOtp(''); setFpNewPw(''); setFpNewPw2('');
-      go('reset');
-      if (!res.data.code) setSuccess(`Password reset code sent to ${em}.`);
+      const res = await axios.post(`${API}/auth/login`, { email: em });
+      setLoginOtp('');
+      go('otp');
+      if (res.data?.code) setHint(`Email delivery failed. Your code: ${res.data.code}`);
+      else setSuccess(`A login code has been sent to ${em}.`);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to send code. Please try again.');
     } finally {
@@ -239,36 +100,51 @@ export default function LoginPage() {
     }
   }
 
-  // ── Reset password ─────────────────────────────────────────────────────────
-  async function handleReset(e) {
+  // ── Step 2: verify OTP → login ─────────────────────────────────────────────
+  async function handleVerifyOtp(e) {
     e.preventDefault();
-    setError(''); setHint('');
-    if (fpOtp.trim().length < 6) { setError('Enter the 6-digit code from your email.'); return; }
-    const pwErr = validatePassword(fpNewPw);
-    if (pwErr) { setError(pwErr); return; }
-    if (fpNewPw !== fpNewPw2) { setError('Passwords do not match.'); return; }
+    setError('');
+    if (loginOtp.trim().length < 6) { setError('Enter the 6-digit code from your email.'); return; }
     setLoading(true);
     try {
-      await axios.post(`${API}/auth/reset-password`, {
-        email: fpEmail.toLowerCase().trim(), code: fpOtp.trim(), new_password: fpNewPw,
+      const res = await axios.post(`${API}/auth/verify-email-otp`, {
+        email: loginEmail.toLowerCase().trim(), code: loginOtp.trim(),
       });
-      setSuccess('Password updated! You can now log in.');
-      setTimeout(() => go('login'), 1500);
+      setToken(res.data.token);
+      if (res.data.refresh_token) setRefreshToken(res.data.refresh_token);
+      navigate('/', { replace: true });
     } catch (err) {
-      setError(err.response?.data?.detail || 'Reset failed. Please try again.');
+      setError(err.response?.data?.detail || 'Invalid or expired code. Please try again.');
     } finally {
       setLoading(false);
     }
   }
 
-  // ── Layout wrapper ─────────────────────────────────────────────────────────
+  // ── Register: request access ───────────────────────────────────────────────
+  async function handleRegister(e) {
+    e.preventDefault();
+    setError('');
+    const em = regEmail.toLowerCase().trim();
+    if (!regFirst.trim() || !regLast.trim()) { setError('First name and last name are required.'); return; }
+    if (!em.endsWith('@niveshaay.com')) { setError('Only @niveshaay.com email addresses are allowed.'); return; }
+    setLoading(true);
+    try {
+      await axios.post(`${API}/auth/register`, {
+        first_name: regFirst.trim(), last_name: regLast.trim(), email: em,
+      });
+      go('pending');
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const subtitle = {
-    login:           'Sign in to your NIA account',
-    register:        'Create your NIA account',
-    'register-otp':  `Verify your email — ${regEmail}`,
-    forgot:          'Reset your password',
-    reset:           `Enter the code sent to ${fpEmail}`,
-    pending:         'Registration submitted',
+    login:    'Sign in to your NIA account',
+    otp:      `Enter the code sent to ${loginEmail}`,
+    register: 'Request access to NIA Performance Center',
+    pending:  'Request submitted',
   }[view] || '';
 
   return (
@@ -283,7 +159,7 @@ export default function LoginPage() {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             border: '1px solid rgba(99,102,241,0.35)',
           }}>
-            {view === 'register' || view === 'register-otp'
+            {view === 'register'
               ? <UserPlus color="var(--primary)" size={26} />
               : <LogIn color="var(--primary)" size={26} />}
           </div>
@@ -295,35 +171,55 @@ export default function LoginPage() {
         <HintBox  msg={hint} />
         <SuccessBox msg={success} />
 
-        {/* ── LOGIN ── */}
+        {/* ── LOGIN: email ── */}
         {view === 'login' && (
-          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <form onSubmit={handleSendOtp} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div style={{ position: 'relative' }}>
               <Mail size={16} style={iconStyle} />
               <input type="email" placeholder="your@niveshaay.com" value={loginEmail}
                 onChange={e => setLoginEmail(e.target.value)} required autoFocus style={inputBase} />
             </div>
-            <PasswordInput placeholder="Password" value={loginPw} onChange={e => setLoginPw(e.target.value)} />
             <button type="submit" disabled={loading} className="btn btn-primary"
               style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
-              {loading ? <><Spinner /><span>Signing in…</span></> : <><LogIn size={16} /><span>Sign In</span></>}
+              {loading ? <><Spinner /><span>Sending code…</span></> : <><Mail size={16} /><span>Send Login Code</span></>}
             </button>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
-              <button type="button" onClick={() => go('forgot')}
+            <button type="button" onClick={() => go('register')}
+              style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.82rem', cursor: 'pointer', padding: 0, textAlign: 'right' }}>
+              Request access →
+            </button>
+          </form>
+        )}
+
+        {/* ── LOGIN: OTP ── */}
+        {view === 'otp' && (
+          <form onSubmit={handleVerifyOtp} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div style={{ position: 'relative' }}>
+              <KeyRound size={16} style={iconStyle} />
+              <input type="text" inputMode="numeric" placeholder="Enter 6-digit code" value={loginOtp}
+                onChange={e => setLoginOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                required autoFocus maxLength={6}
+                style={{ ...inputBase, letterSpacing: '0.3em', fontSize: '1.2rem', textAlign: 'center' }} />
+            </div>
+            <button type="submit" disabled={loading} className="btn btn-primary"
+              style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
+              {loading ? <><Spinner /><span>Verifying…</span></> : <><LogIn size={16} /><span>Sign In</span></>}
+            </button>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <button type="button" onClick={() => go('login')}
                 style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.82rem', cursor: 'pointer', padding: 0 }}>
-                Forgot password?
+                ← Use a different email
               </button>
-              <button type="button" onClick={() => go('register')}
+              <button type="button" onClick={handleSendOtp}
                 style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.82rem', cursor: 'pointer', padding: 0 }}>
-                Create account →
+                Resend code
               </button>
             </div>
           </form>
         )}
 
-        {/* ── REGISTER step 1 ── */}
+        {/* ── REGISTER ── */}
         {view === 'register' && (
-          <form onSubmit={handleRegisterSendOtp} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div style={{ display: 'flex', gap: '10px' }}>
               <input type="text" placeholder="First name" value={regFirst}
                 onChange={e => setRegFirst(e.target.value)} required style={{ ...inputNoIcon, flex: 1 }} />
@@ -335,14 +231,9 @@ export default function LoginPage() {
               <input type="email" placeholder="your@niveshaay.com" value={regEmail}
                 onChange={e => setRegEmail(e.target.value)} required autoFocus style={inputBase} />
             </div>
-            <PasswordInput placeholder="Password (min 8 chars)" value={regPw} onChange={e => setRegPw(e.target.value)} />
-            <PasswordInput placeholder="Confirm password" value={regPw2} onChange={e => setRegPw2(e.target.value)} />
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-              Must include: uppercase letter · number · special character
-            </div>
             <button type="submit" disabled={loading} className="btn btn-primary"
               style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
-              {loading ? <><Spinner /><span>Sending code…</span></> : <><UserPlus size={16} /><span>Send Verification Code</span></>}
+              {loading ? <><Spinner /><span>Submitting…</span></> : <><UserPlus size={16} /><span>Request Access</span></>}
             </button>
             <button type="button" onClick={() => go('login')}
               style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.82rem', cursor: 'pointer', padding: 0 }}>
@@ -351,47 +242,7 @@ export default function LoginPage() {
           </form>
         )}
 
-        {/* ── REGISTER step 2: OTP ── */}
-        {view === 'register-otp' && (
-          <form onSubmit={handleRegisterComplete} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div style={{ position: 'relative' }}>
-              <KeyRound size={16} style={iconStyle} />
-              <input type="text" inputMode="numeric" placeholder="Enter 6-digit code" value={regOtp}
-                onChange={e => setRegOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                required autoFocus maxLength={6}
-                style={{ ...inputBase, letterSpacing: '0.25em', fontSize: '1.15rem' }} />
-            </div>
-            <button type="submit" disabled={loading} className="btn btn-primary"
-              style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
-              {loading ? <><Spinner /><span>Creating account…</span></> : <><UserPlus size={16} /><span>Create Account</span></>}
-            </button>
-            <button type="button" onClick={() => go('register')}
-              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.82rem', cursor: 'pointer', padding: 0 }}>
-              ← Change details
-            </button>
-          </form>
-        )}
-
-        {/* ── FORGOT PASSWORD ── */}
-        {view === 'forgot' && (
-          <form onSubmit={handleForgotSendOtp} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div style={{ position: 'relative' }}>
-              <Mail size={16} style={iconStyle} />
-              <input type="email" placeholder="your@niveshaay.com" value={fpEmail}
-                onChange={e => setFpEmail(e.target.value)} required autoFocus style={inputBase} />
-            </div>
-            <button type="submit" disabled={loading} className="btn btn-primary"
-              style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
-              {loading ? <><Spinner /><span>Sending code…</span></> : <><Mail size={16} /><span>Send Reset Code</span></>}
-            </button>
-            <button type="button" onClick={() => go('login')}
-              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.82rem', cursor: 'pointer', padding: 0 }}>
-              ← Back to sign in
-            </button>
-          </form>
-        )}
-
-        {/* ── PENDING APPROVAL ── */}
+        {/* ── PENDING ── */}
         {view === 'pending' && (
           <div style={{ textAlign: 'center', padding: '8px 0' }}>
             <div style={{
@@ -407,38 +258,13 @@ export default function LoginPage() {
               Pending Admin Approval
             </p>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '20px' }}>
-              Your account has been created and is waiting for approval.
-              You'll receive an email at <strong style={{ color: 'var(--text-main)' }}>{regEmail}</strong> once an admin approves your account.
+              Your request has been submitted. An admin will approve your account, after which you can log in with your email.
             </p>
-            <button type="button" onClick={() => go('login')}
-              className="btn btn-primary"
+            <button type="button" onClick={() => go('login')} className="btn btn-primary"
               style={{ width: '100%', padding: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
               <LogIn size={16} /> Back to Sign In
             </button>
           </div>
-        )}
-
-        {/* ── RESET PASSWORD ── */}
-        {view === 'reset' && (
-          <form onSubmit={handleReset} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div style={{ position: 'relative' }}>
-              <KeyRound size={16} style={iconStyle} />
-              <input type="text" inputMode="numeric" placeholder="Enter 6-digit code" value={fpOtp}
-                onChange={e => setFpOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                required autoFocus maxLength={6}
-                style={{ ...inputBase, letterSpacing: '0.25em', fontSize: '1.15rem' }} />
-            </div>
-            <PasswordInput placeholder="New password (min 8 chars)" value={fpNewPw} onChange={e => setFpNewPw(e.target.value)} />
-            <PasswordInput placeholder="Confirm new password" value={fpNewPw2} onChange={e => setFpNewPw2(e.target.value)} />
-            <button type="submit" disabled={loading} className="btn btn-primary"
-              style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
-              {loading ? <><Spinner /><span>Updating password…</span></> : <><Lock size={16} /><span>Set New Password</span></>}
-            </button>
-            <button type="button" onClick={() => go('forgot')}
-              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.82rem', cursor: 'pointer', padding: 0 }}>
-              ← Use a different email
-            </button>
-          </form>
         )}
 
       </div>
