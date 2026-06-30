@@ -1,5 +1,75 @@
 [
   {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "URBANCO",
+    "event_type": "allocation_changed",
+    "description": "Allocation changed from 5.00% to 4.00%",
+    "old_value": "5.00",
+    "new_value": "4.00",
+    "event_date": "2026-06-30",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "GRWRHITECH",
+    "event_type": "allocation_changed",
+    "description": "Allocation changed from 4.00% to 5.00%",
+    "old_value": "4.00",
+    "new_value": "5.00",
+    "event_date": "2026-06-30",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "KDDL",
+    "event_type": "allocation_changed",
+    "description": "Allocation changed from 3.00% to 4.00%",
+    "old_value": "3.00",
+    "new_value": "4.00",
+    "event_date": "2026-06-30",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Consumer Trends",
+    "stock_code": "DIVGIITTS",
+    "event_type": "added",
+    "description": "Stock first appeared in portfolio sheet",
+    "old_value": null,
+    "new_value": "alloc=6.00%",
+    "event_date": "2026-06-30",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "SYRMA",
+    "event_type": "allocation_changed",
+    "description": "Allocation changed from 5.00% to 4.50%",
+    "old_value": "5.00",
+    "new_value": "4.50",
+    "event_date": "2026-06-30",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "HBLENGINE",
+    "event_type": "allocation_changed",
+    "description": "Allocation changed from 4.00% to 3.50%",
+    "old_value": "4.00",
+    "new_value": "3.50",
+    "event_date": "2026-06-30",
+    "user_email": null
+  },
+  {
+    "basket_id": "NIA Mid & Small",
+    "stock_code": "AVALON",
+    "event_type": "allocation_changed",
+    "description": "Allocation changed from 4.00% to 3.50%",
+    "old_value": "4.00",
+    "new_value": "3.50",
+    "event_date": "2026-06-30",
+    "user_email": null
+  },
+  {
     "basket_id": "NIA Mid & Small",
     "stock_code": "NEOGEN",
     "event_type": "allocation_changed",
@@ -9927,76 +9997,6 @@
     "old_value": null,
     "new_value": "alloc=4.00%, buy_px=636.35",
     "event_date": "2026-05-30",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "PINELABS",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=202.09",
-    "event_date": "2026-05-30",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "SANSERA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=2142.88",
-    "event_date": "2026-05-30",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "STLTECH",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=6.00%, buy_px=229.44",
-    "event_date": "2026-05-30",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "SYRMA",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=4.00%, buy_px=802.56",
-    "event_date": "2026-05-30",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Tech Stack",
-    "stock_code": "URBANCO",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=5.00%, buy_px=109.18",
-    "event_date": "2026-05-30",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "NEOGEN",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=2.00%",
-    "event_date": "2026-06-01",
-    "user_email": null
-  },
-  {
-    "basket_id": "NIA Mid & Small",
-    "stock_code": "SHADOWFAX",
-    "event_type": "added",
-    "description": "Stock first appeared in portfolio sheet",
-    "old_value": null,
-    "new_value": "alloc=3.00%",
-    "event_date": "2026-06-01",
     "user_email": null
   }
 ]
