@@ -70,5 +70,29 @@
     "last_name": null,
     "password_hash": null,
     "is_approved": 1
+  },
+  {
+    "email": "dolly.choudhary@niveshaay.com",
+    "added_by": "jay.chaudhari@niveshaay.com",
+    "added_at": "2026-06-30T07:22:35.085999",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1
+  },
+  {
+    "email": "shruti.amanchi@niveshaay.com",
+    "added_by": "jay.chaudhari@niveshaay.com",
+    "added_at": "2026-06-30T07:22:36.374018",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1
   }
 ]
