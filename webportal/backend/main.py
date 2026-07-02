@@ -39,6 +39,14 @@ from fastapi.responses import FileResponse
 
 import base64 as _b64
 
+# Make backend/common importable regardless of how this app is launched:
+# when merged in-process (backend/main.py's importlib load), backend/main.py
+# already puts backend/ on sys.path; but run.py's local-dev mode also runs
+# this file standalone (`uvicorn main:app` with cwd=webportal/backend), where
+# backend/ is never otherwise on sys.path.
+import sys as _sys
+_sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'backend'))
+
 from common.admin import is_admin_email
 from persistence import (
     BASKET_DISPLAY_NAMES,
