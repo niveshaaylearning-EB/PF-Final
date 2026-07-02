@@ -1,4 +1,4 @@
-import { API_BASE } from '../api/base.js';
+import { API_BASE, getAuthToken } from '../api/base.js';
 import { useState } from 'react';
 
 const UPDATE_TYPE_COLORS = {
@@ -69,7 +69,7 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
     setError('');
     setConfirming(true);
     try {
-      const token = localStorage.getItem('nia_auth_token') || '';
+      const token = getAuthToken();
       const resp = await fetch(`${API_BASE}/confirm-rebalance`, {
         method: 'POST',
         headers: {

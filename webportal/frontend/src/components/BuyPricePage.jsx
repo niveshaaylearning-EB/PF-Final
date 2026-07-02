@@ -1,4 +1,4 @@
-import { API_BASE } from '../api/base.js';
+import { API_BASE, getAuthToken } from '../api/base.js';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import * as XLSX from 'xlsx';
 import { fetchBasket, fetchLiveData, saveBasket } from '../api/client.js';
@@ -9,7 +9,7 @@ import RebalanceUploadModal from './RebalanceUploadModal.jsx';
 const ADMIN_EMAILS = ['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com', 'nakshatra.rathi@niveshaay.com'];
 const _getAdminState = () => {
   try {
-    const t = localStorage.getItem('nia_auth_token');
+    const t = getAuthToken();
     if (!t) return { email: null, isAdmin: false };
     const payload = JSON.parse(atob(t.split('.')[1]));
     if (payload.exp && Date.now() > payload.exp * 1000) return { email: null, isAdmin: false };
@@ -417,7 +417,7 @@ export default function BuyPricePage() {
       const form = new FormData();
       form.append('file', file);
       form.append('basket', basketKey);
-      const token = localStorage.getItem('nia_auth_token') || '';
+      const token = getAuthToken();
       const resp = await fetch(`${API_BASE}/preview-rebalance`, {
         method: 'POST',
         headers: token ? { Authorization: `Bearer ${token}` } : {},

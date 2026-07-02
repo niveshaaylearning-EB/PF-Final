@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { getEmail, ADMIN_EMAILS } from '../utils/auth.js';
+import { getEmail, getToken, ADMIN_EMAILS } from '../utils/auth.js';
 
 const EDIT_ALLOWED = ADMIN_EMAILS;
 const BAR_H = 44;
@@ -24,7 +24,13 @@ export default function ActualPortfolio() {
   const iframeTop = headerBottom + BAR_H;
   const email     = getEmail() || '';
   const canEdit   = EDIT_ALLOWED.has(email);
-  const WEBPORTAL_URL = `${WP_BASE}?u=${encodeURIComponent(email)}&edit=${canEdit ? '1' : '0'}`;
+  // Pass the auth token through the URL too, not just email/edit flags: in
+  // local dev the iframe loads from a different origin (port 8001), so it
+  // can't read the main app's localStorage token at all. Without this, admin
+  // detection AND every authenticated upload inside the iframe silently fail
+  // (empty Authorization header -> 403) even when the edit flag says "yes".
+  const token = getToken() || '';
+  const WEBPORTAL_URL = `${WP_BASE}?u=${encodeURIComponent(email)}&edit=${canEdit ? '1' : '0'}&t=${encodeURIComponent(token)}`;
 
   return (
     <>
