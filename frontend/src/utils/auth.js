@@ -43,9 +43,12 @@ export const getFirstName = () => {
   return part.charAt(0).toUpperCase() + part.slice(1);
 };
 
+// Single source of truth for the frontend's admin/edit allowlist — matches
+// backend/common/admin.py's ADMIN_EMAILS on the server side.
+export const ADMIN_EMAILS = new Set(['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com']);
+
 export const isAdmin = () => {
   const email = getEmail();
   if (!email) return false;
-  const lowerEmail = email.toLowerCase().trim();
-  return lowerEmail === 'jay.chaudhari@niveshaay.com' || lowerEmail === 'nukul.madaan@niveshaay.com';
+  return ADMIN_EMAILS.has(email.toLowerCase().trim());
 };

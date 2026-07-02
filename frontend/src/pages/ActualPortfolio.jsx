@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { getEmail } from '../utils/auth.js';
+import { getEmail, ADMIN_EMAILS } from '../utils/auth.js';
 
-const EDIT_ALLOWED = new Set(['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com']);
+const EDIT_ALLOWED = ADMIN_EMAILS;
 const BAR_H = 44;
 
 const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';

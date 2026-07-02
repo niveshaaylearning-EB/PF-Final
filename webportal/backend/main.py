@@ -40,11 +40,12 @@ from fastapi.responses import FileResponse
 from portfolio_data import BUY_PRICE_DETAILS
 import base64 as _b64
 
+from common.admin import is_admin_email
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Admin auth helpers (JWT decode without jose dependency)
 # ─────────────────────────────────────────────────────────────────────────────
 
-_ADMIN_EMAILS = {"jay.chaudhari@niveshaay.com", "nukul.madaan@niveshaay.com"}
 _ACTIVITY_LOG_FILE = Path(__file__).parent / "activity_log.json"
 
 def _get_request_email(request: Request) -> str | None:
@@ -63,7 +64,7 @@ def _get_request_email(request: Request) -> str | None:
 
 def _require_admin(request: Request) -> str:
     email = _get_request_email(request)
-    if not email or email not in _ADMIN_EMAILS:
+    if not email or not is_admin_email(email):
         raise HTTPException(status_code=403, detail="Admin access required.")
     return email
 
@@ -122,6 +123,7 @@ _PORTFOLIOS_FILE  = Path(__file__).parent / "portfolios.json"
 _BUY_PRICE_FILE   = Path(__file__).parent / "buy_price_data.json"
 _RH_FILE          = Path(__file__).parent / "rebalance_history.json"
 _GAINS_FILE       = Path(__file__).parent / "gains_statement.json"
+_HIST_INDEX_FILE  = Path(__file__).parent / "historical_index.json"
 _UNDO_FILE        = Path(__file__).parent / "undo_snapshots.json"
 _ROLLBACK_FILE    = Path(__file__).parent / "rollback_points.json"
 _MAX_ROLLBACK_PTS = 5
@@ -149,56 +151,11 @@ def _load_portfolios() -> dict:
     return _portfolios_mem
 
 
-import threading as _threading
-import base64 as _base64
-
-def _github_push(file_path: Path, content: str) -> None:
-    """Push a file to GitHub in a background thread — free persistent storage."""
-    token = os.environ.get("GITHUB_TOKEN", "")
-    repo  = os.environ.get("GITHUB_REPO", "")
-    if not token or not repo:
-        return
-    try:
-        import urllib.request, urllib.error
-        # Relative path from repo root
-        rel = str(file_path).replace("\\", "/")
-        for prefix in ["/app/", "app/"]:
-            if rel.startswith(prefix):
-                rel = rel[len(prefix):]
-                break
-
-        api_url = f"https://api.github.com/repos/{repo}/contents/{rel}"
-        headers = {
-            "Authorization": f"Bearer {token}",
-            "Accept": "application/vnd.github+json",
-            "Content-Type": "application/json",
-            "X-GitHub-Api-Version": "2022-11-28",
-        }
-        # Get current SHA (needed for update)
-        req = urllib.request.Request(api_url, headers=headers)
-        try:
-            with urllib.request.urlopen(req, timeout=8) as r:
-                sha = json.loads(r.read())["sha"]
-        except Exception:
-            sha = None
-
-        body = json.dumps({
-            "message": f"auto: update {file_path.name}",
-            "content": _base64.b64encode(content.encode()).decode(),
-            **({"sha": sha} if sha else {}),
-        }).encode()
-        req2 = urllib.request.Request(api_url, data=body, headers=headers, method="PUT")
-        urllib.request.urlopen(req2, timeout=10)
-    except Exception as e:
-        print(f"[github-push] Failed to push {file_path.name}: {e}")
-
+from common.json_store import save_json as _common_save_json
 
 def _save_and_push(file_path: Path, data: dict) -> None:
-    """Write JSON to disk and push to GitHub in background."""
-    content = json.dumps(data, indent=2, ensure_ascii=False)
-    with open(file_path, "w", encoding="utf-8") as f:
-        f.write(content)
-    _threading.Thread(target=_github_push, args=(file_path, content), daemon=True).start()
+    """Write JSON to disk and push to GitHub in background (shared with backend/main.py)."""
+    _common_save_json(str(file_path), data, f"webportal/backend/{file_path.name}", sync=False)
 
 
 def _save_portfolios(data: dict) -> None:
@@ -241,6 +198,24 @@ def _save_rebalance_history(data: dict) -> None:
     global _rh_mem
     _rh_mem = data
     _save_and_push(_RH_FILE, data)
+
+
+def _save_gains(gains: dict) -> None:
+    """Write gains_statement.json locally (not pushed to GitHub -- derived/recomputable data)."""
+    with open(_GAINS_FILE, "w", encoding="utf-8") as f:
+        json.dump(gains, f, indent=2, ensure_ascii=False)
+
+
+def _load_historical_index() -> dict:
+    if not _HIST_INDEX_FILE.exists():
+        raise HTTPException(status_code=404, detail="historical_index.json not found")
+    with open(_HIST_INDEX_FILE, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _save_historical_index(hi: dict) -> None:
+    with open(_HIST_INDEX_FILE, "w", encoding="utf-8") as f:
+        json.dump(hi, f, indent=2, ensure_ascii=False)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1605,8 +1580,7 @@ async def set_ohlc_price(body: dict):
 
     _save_buy_price_data(bp_data)
     gains = _compute_all_gains()
-    with open(_GAINS_FILE, "w", encoding="utf-8") as f:
-        json.dump(gains, f, indent=2, ensure_ascii=False)
+    _save_gains(gains)
 
     return {"ok": True, "code": code, "date": date, "type": kind, "price": round(price, 4)}
 
@@ -1664,8 +1638,7 @@ async def refetch_buy_ohlc(basket: str, code: str):
 
     # Regenerate gains statement
     gains = _compute_all_gains()
-    with open(_GAINS_FILE, "w", encoding="utf-8") as f:
-        json.dump(gains, f, indent=2, ensure_ascii=False)
+    _save_gains(gains)
 
     return {"ok": True, "code": code, "basket": basket, "prices": results}
 
@@ -2197,8 +2170,7 @@ async def _refresh_gains_file() -> None:
     """Background task: recompute FIFO gains from current buy_price_data and persist."""
     try:
         gains = _compute_all_gains()
-        with open(_GAINS_FILE, "w", encoding="utf-8") as f:
-            json.dump(gains, f, indent=2, ensure_ascii=False)
+        _save_gains(gains)
     except Exception:
         pass
 
@@ -2230,8 +2202,7 @@ async def _backfill_all_sell_ohlc_bg() -> None:
         if filled:
             _save_buy_price_data(bp_data)
         gains = _compute_all_gains()
-        with open(_GAINS_FILE, "w", encoding="utf-8") as f:
-            json.dump(gains, f, indent=2, ensure_ascii=False)
+        _save_gains(gains)
     except Exception:
         pass
 
@@ -2322,8 +2293,7 @@ async def get_gains_statement():
         with open(_GAINS_FILE, encoding="utf-8") as f:
             return json.load(f)
     gains = _compute_all_gains()
-    with open(_GAINS_FILE, "w", encoding="utf-8") as f:
-        json.dump(gains, f, indent=2, ensure_ascii=False)
+    _save_gains(gains)
     return gains
 
 
@@ -2331,8 +2301,7 @@ async def get_gains_statement():
 async def refresh_gains_statement():
     """Recompute FIFO gains from current buy_price_data.json and persist."""
     gains = _compute_all_gains()
-    with open(_GAINS_FILE, "w", encoding="utf-8") as f:
-        json.dump(gains, f, indent=2, ensure_ascii=False)
+    _save_gains(gains)
     total = sum(len(v) for v in gains.values())
     return {"ok": True, "stocksWithGains": total}
 
@@ -2364,8 +2333,7 @@ async def backfill_sell_ohlc():
 
     _save_buy_price_data(bp_data)
     gains = _compute_all_gains()
-    with open(_GAINS_FILE, "w", encoding="utf-8") as f:
-        json.dump(gains, f, indent=2, ensure_ascii=False)
+    _save_gains(gains)
 
     return {"ok": True, "pricesFilled": filled}
 
@@ -2393,11 +2361,7 @@ async def get_ohlc_fallbacks(basket: str):
 @app.get("/api/index-history")
 async def get_index_history():
     """Serve pre-computed historical index values for all baskets."""
-    p = Path(__file__).parent / "historical_index.json"
-    if not p.exists():
-        raise HTTPException(status_code=404, detail="historical_index.json not found")
-    with open(p, encoding="utf-8") as f:
-        return json.load(f)
+    return _load_historical_index()
 
 
 @app.post("/api/daily-values")
@@ -2415,12 +2379,7 @@ async def post_daily_values(body: dict):
     except ValueError:
         raise HTTPException(status_code=400, detail="date must be YYYY-MM-DD")
 
-    p = Path(__file__).parent / "historical_index.json"
-    if not p.exists():
-        raise HTTPException(status_code=404, detail="historical_index.json not found")
-
-    with open(p, encoding="utf-8") as f:
-        hi = json.load(f)
+    hi = _load_historical_index()
 
     saved = []
     for entry in entries:
@@ -2438,8 +2397,7 @@ async def post_daily_values(body: dict):
         hi[basket]["data"].sort(key=lambda e: e["date"])
         saved.append(basket)
 
-    with open(p, "w", encoding="utf-8") as f:
-        json.dump(hi, f, indent=2, ensure_ascii=False)
+    _save_historical_index(hi)
 
     return {"ok": True, "date": date_str, "saved": saved}
 
@@ -2450,12 +2408,7 @@ async def import_excel_history(basket: str = Form(...), file: UploadFile = File(
     Excel format: Column A = Date (YYYY-MM-DD), Column B = Basket Value, Column C = Benchmark.
     Only dates AFTER the last already-saved date are imported — existing data is never overwritten.
     """
-    p = Path(__file__).parent / "historical_index.json"
-    if not p.exists():
-        raise HTTPException(status_code=404, detail="historical_index.json not found")
-
-    with open(p, encoding="utf-8") as f:
-        hi = json.load(f)
+    hi = _load_historical_index()
 
     if basket not in hi:
         raise HTTPException(status_code=400, detail=f"Unknown basket: {basket}")
@@ -2516,8 +2469,7 @@ async def import_excel_history(basket: str = Form(...), file: UploadFile = File(
         hi[basket]["data"].append(row)
     hi[basket]["data"].sort(key=lambda e: e["date"])
 
-    with open(p, "w", encoding="utf-8") as f:
-        json.dump(hi, f, indent=2, ensure_ascii=False)
+    _save_historical_index(hi)
 
     return {
         "ok": True,
@@ -2602,12 +2554,7 @@ def _parse_excel_rows(raw: bytes) -> tuple[list[dict], str]:
 async def import_excel_multi(files: list[UploadFile] = File(...)):
     """Import multiple Excel files at once. Each file's basket is auto-detected
     from column B header. Only new dates (after the last saved entry) are added."""
-    p = Path(__file__).parent / "historical_index.json"
-    if not p.exists():
-        raise HTTPException(status_code=404, detail="historical_index.json not found")
-
-    with open(p, encoding="utf-8") as f:
-        hi = json.load(f)
+    hi = _load_historical_index()
 
     results = []
     any_saved = False
@@ -2648,8 +2595,7 @@ async def import_excel_multi(files: list[UploadFile] = File(...)):
                         "message": f"Imported {len(new_rows)} new date(s) after {last_date}"})
 
     if any_saved:
-        with open(p, "w", encoding="utf-8") as f:
-            json.dump(hi, f, indent=2, ensure_ascii=False)
+        _save_historical_index(hi)
 
     return {"ok": True, "results": results}
 

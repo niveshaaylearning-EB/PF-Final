@@ -19,6 +19,12 @@ import os
 from io import BytesIO
 from fastapi.responses import StreamingResponse
 
+# Ensure backend/ itself is importable as a package root regardless of how
+# uvicorn was launched, so `from common.xxx import ...` resolves for both
+# this file and the webportal sub-app loaded further below (shared sys.path).
+import sys as _sys
+_sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 import database
 from database import StockEvent
 import sheet_service
@@ -73,7 +79,8 @@ import requests as _http
 # ── Webportal ASGI sub-app (merged; no separate process) ─────────────────────
 # importlib avoids the 'main' name clash: uvicorn already registered this file
 # as sys.modules['main'], so a plain `import main` would return itself.
-import sys as _sys, importlib.util as _ilu
+import importlib.util as _ilu
+
 _wp_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'webportal', 'backend', 'main.py')
 _sys.path.insert(0, os.path.dirname(_wp_path))
 _wp_spec = _ilu.spec_from_file_location('webportal_main', _wp_path)
@@ -2925,8 +2932,7 @@ def remove_allowed_email(email_addr: str, request: Request, db: Session = Depend
 # ── Persistent JSON storage for access requests & approved emails ─────────────
 # SQLite resets on every Render deploy; JSON files persist via GitHub auto-push.
 
-import threading as _main_threading
-import base64 as _main_b64
+from common.json_store import save_json as _common_save_json, load_json as _load_json_file
 
 _BACKEND_DIR        = os.path.dirname(os.path.abspath(__file__))
 _ACCESS_REQ_FILE    = os.path.join(_BACKEND_DIR, "access_requests.json")
@@ -2935,50 +2941,9 @@ _LOGIN_HISTORY_FILE  = os.path.join(_BACKEND_DIR, "login_history.json")
 _AUDIT_LOG_FILE      = os.path.join(_BACKEND_DIR, "audit_log.json")
 _STOCK_EVENTS_FILE   = os.path.join(_BACKEND_DIR, "stock_events.json")
 
-def _main_github_push(rel_path: str, content: str, raise_on_error: bool = False):
-    """Push a file to GitHub repo — background thread or blocking call."""
-    token = os.environ.get("GITHUB_TOKEN", "")
-    repo  = os.environ.get("GITHUB_REPO", "")
-    if not token or not repo:
-        return
-    import urllib.request as _ur
-    api_url = f"https://api.github.com/repos/{repo}/contents/backend/{os.path.basename(rel_path)}"
-    hdrs = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
-            "Content-Type": "application/json", "X-GitHub-Api-Version": "2022-11-28"}
-    try:
-        try:
-            req = _ur.Request(api_url, headers=hdrs)
-            with _ur.urlopen(req, timeout=8) as r:
-                sha = json.loads(r.read())["sha"]
-        except Exception:
-            sha = None
-        body_data = json.dumps({"message": f"auto: update {os.path.basename(rel_path)}",
-                                "content": _main_b64.b64encode(content.encode()).decode(),
-                                **( {"sha": sha} if sha else {})}).encode()
-        req2 = _ur.Request(api_url, data=body_data, headers=hdrs, method="PUT")
-        _ur.urlopen(req2, timeout=10)
-    except Exception as e:
-        print(f"[github-push] {os.path.basename(rel_path)}: {e}")
-        if raise_on_error:
-            raise
-
 def _save_json_push(filepath: str, data, sync: bool = False, raise_on_error: bool = False):
-    content = json.dumps(data, indent=2, ensure_ascii=False)
-    with open(filepath, "w", encoding="utf-8") as f:
-        f.write(content)
-    if sync:
-        _main_github_push(filepath, content, raise_on_error=raise_on_error)
-    else:
-        _main_threading.Thread(target=_main_github_push, args=(filepath, content), daemon=True).start()
-
-def _load_json_file(filepath: str, default):
-    try:
-        if os.path.exists(filepath):
-            with open(filepath, encoding="utf-8") as f:
-                return json.load(f)
-    except Exception:
-        pass
-    return default
+    rel_path = f"backend/{os.path.basename(filepath)}"
+    _common_save_json(filepath, data, rel_path, sync=sync, raise_on_error=raise_on_error)
 
 def _sync_access_requests_to_db(db):
     """Load persisted access requests into DB if they don't exist yet."""

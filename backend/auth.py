@@ -24,6 +24,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 import totp
+from common.admin import ADMIN_EMAILS, is_admin_email  # noqa: F401 (re-exported for existing imports)
 
 # ── Rate limiter (attached to app in main.py) ─────────────────────────────────
 _limiter = Limiter(key_func=get_remote_address)
@@ -40,12 +41,6 @@ load_dotenv()
 # ── Config ────────────────────────────────────────────────────────────────────
 ALLOWED_DOMAIN = os.environ.get("ALLOWED_DOMAIN", "niveshaay.com")
 ADMIN_EMAIL    = os.environ.get("ADMIN_EMAIL",    "jay.chaudhari@niveshaay.com")
-ADMIN_EMAILS   = {"jay.chaudhari@niveshaay.com", "nukul.madaan@niveshaay.com"}
-
-def is_admin_email(email: str) -> bool:
-    if not email:
-        return False
-    return email.lower().strip() in ADMIN_EMAILS
 
 JWT_SECRET     = os.environ.get("JWT_SECRET",     "nia-perf-secret-change-in-prod-32x")
 JWT_ALGORITHM  = "HS256"
