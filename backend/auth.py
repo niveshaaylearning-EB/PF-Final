@@ -42,7 +42,13 @@ load_dotenv()
 ALLOWED_DOMAIN = os.environ.get("ALLOWED_DOMAIN", "niveshaay.com")
 ADMIN_EMAIL    = os.environ.get("ADMIN_EMAIL",    "jay.chaudhari@niveshaay.com")
 
-JWT_SECRET     = os.environ.get("JWT_SECRET",     "nia-perf-secret-change-in-prod-32x")
+JWT_SECRET     = os.environ.get("JWT_SECRET")
+if not JWT_SECRET:
+    raise RuntimeError(
+        "JWT_SECRET is not set. Add it to backend/.env -- refusing to start with "
+        "no signing secret, since a guessable default baked into source code "
+        "would let anyone forge valid login tokens."
+    )
 JWT_ALGORITHM  = "HS256"
 
 # ── Pydantic models ───────────────────────────────────────────────────────────

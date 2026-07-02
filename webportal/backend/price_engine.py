@@ -11,6 +11,7 @@ import asyncio
 import csv
 import io
 import json
+import os
 import re
 import time
 import urllib.parse
@@ -411,7 +412,12 @@ _NSE_HEADERS = {
 # Portfolio PDF parsing — password-protected report upload
 # ─────────────────────────────────────────────────────────────────────────────
 
-_R = b'\x76\x72\x69\x6e\x73\x67\x78\x70\x73\x35\x31\x31\x39\x66'
+# Set PORTFOLIO_PDF_PASSWORD in backend/.env -- the broker sends portfolio
+# reports as a password-protected PDF, and this decrypts it on upload.
+# No real value is baked into source; if unset, decryption fails with a
+# clear "PDF decryption failed" error at upload time instead of silently
+# using a credential anyone reading the code could see.
+_R = os.environ.get("PORTFOLIO_PDF_PASSWORD", "").encode()
 
 _PDF_SECTIONS = {
     "additions":                       "addition",
