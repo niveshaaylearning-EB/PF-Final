@@ -36,7 +36,10 @@ _revoked_jtis: set = set()
 # Failed login tracking — {email: {"count": int, "locked_until": float}}
 _failed_logins: dict = {}
 
-load_dotenv()
+# Single source of truth for all credentials: the repo-root .env (not
+# backend/.env) -- explicit path so this resolves the same regardless of
+# the process's current working directory.
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '.env'))
 
 # ── Config ────────────────────────────────────────────────────────────────────
 ALLOWED_DOMAIN = os.environ.get("ALLOWED_DOMAIN", "niveshaay.com")

@@ -18,8 +18,11 @@
 **/*.log
 **/*.zip
 
-# Secrets (passed via env_file in docker-compose)
-# backend/.env is intentionally included for build context
+# Secrets -- injected at container runtime via docker-compose's env_file: .env,
+# never baked into the image. Explicitly excluded here so `COPY backend/ ./backend/`
+# and similar steps can never accidentally bundle it into an image layer.
+.env
+**/.env
 
 # IDE
 **/.vscode

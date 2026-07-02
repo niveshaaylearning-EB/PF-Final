@@ -47,12 +47,13 @@ import base64 as _b64
 import sys as _sys
 _sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'backend'))
 
-# Load secrets (GITHUB_TOKEN, PORTFOLIO_PDF_PASSWORD, ...) from backend/.env.
-# When merged in-process, backend/auth.py already calls this; but run.py's
-# local-dev mode runs this file standalone, where bare load_dotenv() would
-# never find backend/.env (it's a sibling of this dir, not an ancestor).
+# Load secrets (GITHUB_TOKEN, PORTFOLIO_PDF_PASSWORD, ...) from the repo-root
+# .env -- the single source of truth for all credentials. When merged
+# in-process, backend/auth.py already calls this; but run.py's local-dev
+# mode runs this file standalone, where bare load_dotenv() would never find
+# the root .env (it's two directories up, not an ancestor of the cwd).
 from dotenv import load_dotenv as _load_dotenv
-_load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'backend', '.env'))
+_load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '.env'))
 
 from common.admin import is_admin_email
 from persistence import (
