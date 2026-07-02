@@ -598,7 +598,7 @@ export default function BuyPricePage() {
       <div className="bp-page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <button
-            onClick={() => { window.location.href = '/wp/'; }}
+            onClick={() => { window.location.href = '/wp/' + window.location.search; }}
             style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 0.9rem', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 600, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#94a3b8', cursor: 'pointer' }}
           >
             ← Back

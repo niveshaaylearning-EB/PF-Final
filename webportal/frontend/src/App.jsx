@@ -573,9 +573,9 @@ export default function App() {
           onSearchClear={() => setSearchTerm('')}
           canUndo={historyStack.length > 0}
           onUndo={handleUndo}
-          onBuyPrice={() => { window.location.href = '/wp/buy-price'; }}
-          onCalculateReturn={() => { window.location.href = '/wp/calculate-return'; }}
-          onPLStatement={() => { window.location.href = '/wp/pl-statement'; }}
+          onBuyPrice={() => { window.location.href = '/wp/buy-price' + window.location.search; }}
+          onCalculateReturn={() => { window.location.href = '/wp/calculate-return' + window.location.search; }}
+          onPLStatement={() => { window.location.href = '/wp/pl-statement' + window.location.search; }}
           readOnly={READ_ONLY}
         />
 
