@@ -129,6 +129,7 @@ export default function BuyPricePage() {
   const stocksRef   = useRef([]);
   const [rebalancePreview,   setRebalancePreview]   = useState(null);
   const [uploadingRebalance, setUploadingRebalance] = useState(false);
+  const [lastRebalanceFile, setLastRebalanceFile]   = useState(null);
   const rebalanceFileRef = useRef(null);
   const { isAdmin: userIsAdmin } = _getAdminState();
 
@@ -148,6 +149,18 @@ export default function BuyPricePage() {
       .then(r => r.json())
       .then(setOhlcFallbacks)
       .catch(() => {});
+  }, [basketKey]);
+
+  // Name of the most recently uploaded rebalance file for this basket
+  const refreshLastRebalanceFile = () => {
+    fetch(`${API_BASE}/last-rebalance-file/${basketKey}`)
+      .then(r => r.json())
+      .then(d => setLastRebalanceFile(d.filename || null))
+      .catch(() => setLastRebalanceFile(null));
+  };
+  useEffect(() => {
+    setLastRebalanceFile(null);
+    refreshLastRebalanceFile();
   }, [basketKey]);
 
   const refreshUndoCount = () => {
@@ -424,6 +437,7 @@ export default function BuyPricePage() {
     setRebalancePreview(null);
     setSaveMsg('Rebalance applied!');
     setTimeout(() => setSaveMsg(''), 3000);
+    refreshLastRebalanceFile();
     setLoading(true);
     fetchBasket(basketKey)
       .then(d => {
@@ -685,7 +699,23 @@ export default function BuyPricePage() {
         </div>
       </div>
 
-      <div className="bp-page-subtitle">{label}</div>
+      <div className="bp-page-subtitle" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        {label}
+        {lastRebalanceFile && (
+          <span
+            title="Most recently uploaded rebalance file for this basket"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+              fontSize: '0.72rem', fontWeight: 500, color: '#94a3b8',
+              background: 'rgba(148,163,184,0.08)', border: '1px solid rgba(148,163,184,0.2)',
+              borderRadius: '999px', padding: '0.15rem 0.65rem',
+            }}
+          >
+            <i className="fa-solid fa-file-excel" style={{ color: '#818cf8' }} />
+            {lastRebalanceFile}
+          </span>
+        )}
+      </div>
 
       {/* OHLC Fallback Banner */}
       {!fallbackDismissed && Object.keys(ohlcFallbacks).length > 0 && (

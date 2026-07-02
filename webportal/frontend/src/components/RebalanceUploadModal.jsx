@@ -79,6 +79,7 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
         body: JSON.stringify({
           basket:           previewData.basketKey,
           latestDate:       previewData.latestDate,
+          filename:         previewData.filename,
           slide2,
           historicalEvents: previewData.historicalEvents,
           historyEntries:   previewData.historyEntries,

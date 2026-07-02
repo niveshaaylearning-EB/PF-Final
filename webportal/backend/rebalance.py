@@ -923,6 +923,7 @@ async def preview_rebalance(
         "duplicate": False,
         "basketKey": basket,
         "basket": BASKET_DISPLAY_NAMES[basket],
+        "filename": file.filename or "",
         "newDates": new_dates,
         "latestDate": latest_new,
         "slide1": slide1,
@@ -942,6 +943,7 @@ async def confirm_rebalance(
     body          = await request.json()
     basket        = body.get("basket", "")
     latest_date   = body.get("latestDate", "")
+    filename      = body.get("filename", "")
     slide2        = body.get("slide2", [])        # confirmed (possibly edited) latest-block rows
     hist_events   = body.get("historicalEvents", [])   # pre-computed older-block events
     hist_entries  = body.get("historyEntries", [])     # rows for rebalance_history.json
@@ -1065,6 +1067,7 @@ async def confirm_rebalance(
         "basketLabel": BASKET_DISPLAY_NAMES.get(basket, basket),
         "date": latest_date,
         "stocksProcessed": len(slide2),
+        "filename": filename,
     })
 
     return {
@@ -1072,6 +1075,7 @@ async def confirm_rebalance(
         "basket": BASKET_DISPLAY_NAMES[basket],
         "date": latest_date,
         "stocksProcessed": len(slide2),
+        "filename": filename,
     }
 
 
@@ -1081,6 +1085,18 @@ async def get_activity_log(request: Request):
     _require_admin(request)
     log = json.loads(_ACTIVITY_LOG_FILE.read_text()) if _ACTIVITY_LOG_FILE.exists() else []
     return log
+
+
+@router.get("/api/last-rebalance-file/{basket}")
+async def get_last_rebalance_file(basket: str):
+    """Filename of the most recently confirmed rebalance upload for a basket
+    (not admin-gated -- just a filename, shown as an informational tab)."""
+    log = json.loads(_ACTIVITY_LOG_FILE.read_text()) if _ACTIVITY_LOG_FILE.exists() else []
+    for entry in log:
+        details = entry.get("details") or {}
+        if entry.get("action") == "rebalance_upload" and details.get("basket") == basket and details.get("filename"):
+            return {"filename": details["filename"], "uploadedAt": entry.get("ts", ""), "uploadedBy": entry.get("user", "")}
+    return {"filename": None}
 
 
 def _parse_excel_date(val) -> str | None:
