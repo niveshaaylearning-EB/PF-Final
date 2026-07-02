@@ -1180,8 +1180,12 @@ def admin_pending_registrations(
     if not is_admin_email(current_user):
         raise HTTPException(403, detail="Admin only")
     from database import AllowedEmail
+    # NOTE: the actual registration UI (LoginPage.jsx) only calls /register
+    # (name + email, no password) and never /register/complete, so rows from
+    # real self-registrations never have password_hash set. Filtering on
+    # password_hash != None here made every real request invisible to admins.
     rows = db.query(AllowedEmail).filter(
-        AllowedEmail.is_approved == 0, AllowedEmail.password_hash != None
+        AllowedEmail.is_approved == 0
     ).order_by(AllowedEmail.added_at.desc()).all()
     return [{"email": r.email, "first_name": r.first_name or "", "last_name": r.last_name or "",
              "added_at": r.added_at} for r in rows]

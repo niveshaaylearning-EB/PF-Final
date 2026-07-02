@@ -28,6 +28,7 @@ from persistence import (
     _load_rebalance_history, _save_rebalance_history,
 )
 from price_engine import _norm_name, _resolve_nse, _fetch_nse_symbols
+from common.admin import ADMIN_EMAILS
 from live_data import _fetch_rebalance_prices
 
 router = APIRouter()
@@ -104,7 +105,7 @@ def _extract_rebalance_date(wb, filename: str = "") -> str | None:
     return _parse_date_value(filename)
 
 
-_REBALANCE_ALLOWED = {"jay.chaudhari@niveshaay.com", "nukul.madaan@niveshaay.com"}
+_REBALANCE_ALLOWED = ADMIN_EMAILS
 
 @router.post("/api/upload-rebalance")
 async def upload_rebalance(

@@ -6,7 +6,7 @@ import RollbackButtons from './RollbackButtons.jsx';
 import ColumnFilter from './ColumnFilter.jsx';
 import RebalanceUploadModal from './RebalanceUploadModal.jsx';
 
-const ADMIN_EMAILS = ['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com'];
+const ADMIN_EMAILS = ['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com', 'nakshatra.rathi@niveshaay.com'];
 const _getAdminState = () => {
   try {
     const t = localStorage.getItem('nia_auth_token');

@@ -45,7 +45,11 @@ export const getFirstName = () => {
 
 // Single source of truth for the frontend's admin/edit allowlist — matches
 // backend/common/admin.py's ADMIN_EMAILS on the server side.
-export const ADMIN_EMAILS = new Set(['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com']);
+export const ADMIN_EMAILS = new Set([
+  'jay.chaudhari@niveshaay.com',
+  'nukul.madaan@niveshaay.com',
+  'nakshatra.rathi@niveshaay.com',
+]);
 
 export const isAdmin = () => {
   const email = getEmail();

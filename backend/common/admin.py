@@ -5,7 +5,11 @@ webportal/backend/main.py (and, on the frontend, in
 frontend/src/utils/auth.js and frontend/src/pages/ActualPortfolio.jsx).
 """
 
-ADMIN_EMAILS = {"jay.chaudhari@niveshaay.com", "nukul.madaan@niveshaay.com"}
+ADMIN_EMAILS = {
+    "jay.chaudhari@niveshaay.com",
+    "nukul.madaan@niveshaay.com",
+    "nakshatra.rathi@niveshaay.com",
+}
 
 
 def is_admin_email(email: str) -> bool:

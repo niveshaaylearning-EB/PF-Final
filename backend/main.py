@@ -72,6 +72,7 @@ def _get_nse_quote(nse_code: str) -> dict | None:
         return None
 from datetime import datetime, timedelta
 from auth import verify_token, router as auth_router, get_location_from_ip, is_admin_email
+from common.admin import ADMIN_EMAILS
 import time as _time
 from sqlalchemy import func as _sqf
 import requests as _http
@@ -382,7 +383,7 @@ async def _startup_prewarm():
                     old_value=rec.get("old_value"), new_value=rec.get("new_value"),
                     event_date=rec.get("event_date",""), user_email=rec.get("user_email")))
         # Always ensure admins exist and are approved
-        for adm in ["jay.chaudhari@niveshaay.com", "nukul.madaan@niveshaay.com"]:
+        for adm in ADMIN_EMAILS:
             adm_row = db_s.query(database.AllowedEmail).filter_by(email=adm).first()
             if not adm_row:
                 db_s.add(database.AllowedEmail(email=adm, added_by="system",

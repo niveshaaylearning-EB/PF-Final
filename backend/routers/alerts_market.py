@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 import database
 import sheet_service
 from auth import get_location_from_ip, is_admin_email
+from common.admin import ADMIN_EMAILS
 from main import get_db, _io_pool, _historic_cache, _dump_audit_log
 
 router = APIRouter()
@@ -68,7 +69,7 @@ async def get_alerts(db: Session = Depends(get_db)):
 
 # ── Rebalance Excel upload ────────────────────────────────────────────────────
 
-REBALANCE_ALLOWED = {"jay.chaudhari@niveshaay.com", "nukul.madaan@niveshaay.com"}
+REBALANCE_ALLOWED = ADMIN_EMAILS
 
 @router.post("/api/upload-rebalance")
 async def upload_rebalance(request: Request, file: UploadFile = FastAPIFile(...)):
