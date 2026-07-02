@@ -1,10 +1,11 @@
 """
 CLI script: import all rebalance data from the Excel file into the DB.
-Run: python import_rebalances.py
+Run: python tools/import_rebalances.py (from repo root)
 """
 import sys, os
-sys.path.insert(0, os.path.dirname(__file__))
-os.chdir(os.path.dirname(__file__))
+_BACKEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'backend')
+sys.path.insert(0, _BACKEND_DIR)
+os.chdir(_BACKEND_DIR)
 
 from rebalance_utils import parse_excel, import_basket
 from database import SessionLocal

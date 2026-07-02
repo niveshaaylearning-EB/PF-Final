@@ -46,7 +46,7 @@ def try_parse_date(raw):
 
 
 def main():
-    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'portfolio.db')
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'backend', 'portfolio.db')
     db_path = os.path.normpath(db_path)
     print(f'DB path: {db_path}')
     conn = sqlite3.connect(db_path)

@@ -5,7 +5,7 @@ import io
 import pandas as pd
 from sqlalchemy.orm import Session
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'backend'))
 from database import SessionLocal, NseStock
 
 NSE_URL = "https://archives.nseindia.com/content/equities/EQUITY_L.csv"
