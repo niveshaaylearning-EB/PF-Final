@@ -3223,7 +3223,7 @@
         {
           "sellDate": "08 Jun 2020",
           "sellWeight": 5.0,
-          "sellPrice": null,
+          "sellPrice": 1075.4125,
           "sellType": "Full Exit",
           "lots": [
             {
@@ -4222,24 +4222,6 @@
       "securityName": "Ganesha Ecosphere Ltd",
       "prevSeriesGains": [
         {
-          "sellDate": "08 Apr 2021",
-          "sellWeight": 4.0,
-          "sellPrice": 572.56,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "11 Feb 2021",
-              "weight": 4.0,
-              "buyPrice": 552.56,
-              "gainPct": 3.62
-            }
-          ],
-          "weightedGainPct": 3.62,
-          "weightedAvgBuyPrice": 552.56
-        }
-      ],
-      "currentSeriesGains": [
-        {
           "sellDate": "03 Nov 2023",
           "sellWeight": 3.0,
           "sellPrice": 836.94,
@@ -4324,8 +4306,43 @@
           ],
           "weightedGainPct": 41.12,
           "weightedAvgBuyPrice": 942.7
+        },
+        {
+          "sellDate": "30 Jun 2026",
+          "sellWeight": 2.5,
+          "sellPrice": 892.425,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "21 Dec 2022",
+              "weight": 0.9351,
+              "buyPrice": 942.7,
+              "gainPct": -5.33
+            },
+            {
+              "buyDate": "04 Jan 2024",
+              "weight": 0.0519,
+              "buyPrice": 964.4625,
+              "gainPct": -7.47
+            },
+            {
+              "buyDate": "28 May 2024",
+              "weight": 1.013,
+              "buyPrice": 1174.2125,
+              "gainPct": -24.0
+            },
+            {
+              "buyDate": "11 May 2026",
+              "weight": 0.5,
+              "buyPrice": 1062.15,
+              "gainPct": -15.98
+            }
+          ],
+          "weightedGainPct": -15.07,
+          "weightedAvgBuyPrice": 919.6847
         }
-      ]
+      ],
+      "currentSeriesGains": []
     },
     "GENESYS": {
       "securityName": "Genesys International Corporation Ltd",
@@ -4542,6 +4559,34 @@
         }
       ]
     },
+    "GOLDIAM": {
+      "securityName": "Goldiam International Ltd",
+      "prevSeriesGains": [
+        {
+          "sellDate": "30 Jun 2026",
+          "sellWeight": 3.5,
+          "sellPrice": 439.4125,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "19 Nov 2025",
+              "weight": 2.5,
+              "buyPrice": 381.5375,
+              "gainPct": 15.17
+            },
+            {
+              "buyDate": "11 Feb 2026",
+              "weight": 1.0,
+              "buyPrice": 404.1625,
+              "gainPct": 8.72
+            }
+          ],
+          "weightedGainPct": 13.33,
+          "weightedAvgBuyPrice": 388.0018
+        }
+      ],
+      "currentSeriesGains": []
+    },
     "GOODLUCK": {
       "securityName": "Goodluck India Ltd",
       "prevSeriesGains": [
@@ -4756,6 +4801,22 @@
             }
           ],
           "weightedGainPct": 457.12,
+          "weightedAvgBuyPrice": 150.625
+        },
+        {
+          "sellDate": "30 Jun 2026",
+          "sellWeight": 0.5,
+          "sellPrice": 802.9125,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "21 Jun 2023",
+              "weight": 0.5,
+              "buyPrice": 150.625,
+              "gainPct": 433.05
+            }
+          ],
+          "weightedGainPct": 433.05,
           "weightedAvgBuyPrice": 150.625
         }
       ]
@@ -5051,8 +5112,7 @@
     },
     "IMFA": {
       "securityName": "Indian Metals and Ferro Alloys Ltd",
-      "prevSeriesGains": [],
-      "currentSeriesGains": [
+      "prevSeriesGains": [
         {
           "sellDate": "20 Feb 2026",
           "sellWeight": 1.5,
@@ -5068,8 +5128,31 @@
           ],
           "weightedGainPct": -4.49,
           "weightedAvgBuyPrice": 1339.525
+        },
+        {
+          "sellDate": "30 Jun 2026",
+          "sellWeight": 2.5,
+          "sellPrice": 1266.35,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "19 Nov 2025",
+              "weight": 1.5,
+              "buyPrice": 1339.525,
+              "gainPct": -5.46
+            },
+            {
+              "buyDate": "09 Jan 2026",
+              "weight": 1.0,
+              "buyPrice": 1231.35,
+              "gainPct": 2.84
+            }
+          ],
+          "weightedGainPct": -2.14,
+          "weightedAvgBuyPrice": 1312.4813
         }
-      ]
+      ],
+      "currentSeriesGains": []
     },
     "INDIGO": {
       "securityName": "Interglobe Aviation Ltd",
@@ -5636,7 +5719,7 @@
         {
           "sellDate": "05 Mar 2020",
           "sellWeight": 5.0,
-          "sellPrice": null,
+          "sellPrice": 332.6375,
           "sellType": "Full Exit",
           "lots": [
             {
@@ -7623,6 +7706,28 @@
       ],
       "currentSeriesGains": []
     },
+    "SYRMA": {
+      "securityName": "Syrma SGS Technology Ltd",
+      "prevSeriesGains": [],
+      "currentSeriesGains": [
+        {
+          "sellDate": "30 Jun 2026",
+          "sellWeight": 0.5,
+          "sellPrice": 1389.5,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "02 Jun 2025",
+              "weight": 0.5,
+              "buyPrice": 548.75,
+              "gainPct": 153.21
+            }
+          ],
+          "weightedGainPct": 153.21,
+          "weightedAvgBuyPrice": 548.75
+        }
+      ]
+    },
     "TARIL": {
       "securityName": "Transformers and Rectifiers (India) Ltd",
       "prevSeriesGains": [
@@ -8295,6 +8400,28 @@
         }
       ],
       "currentSeriesGains": []
+    },
+    "AVALON": {
+      "securityName": "Avalon Technologies Ltd",
+      "prevSeriesGains": [],
+      "currentSeriesGains": [
+        {
+          "sellDate": "30 Jun 2026",
+          "sellWeight": 0.5,
+          "sellPrice": 1806.6,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "05 May 2026",
+              "weight": 0.5,
+              "buyPrice": 1182.425,
+              "gainPct": 52.79
+            }
+          ],
+          "weightedGainPct": 52.79,
+          "weightedAvgBuyPrice": 1182.425
+        }
+      ]
     }
   },
   "IPO_Basket": {
@@ -9085,8 +9212,7 @@
   "Trends_Triology": {
     "AARTIPHARM": {
       "securityName": "Aarti Pharmalabs Ltd",
-      "prevSeriesGains": [],
-      "currentSeriesGains": [
+      "prevSeriesGains": [
         {
           "sellDate": "27 May 2026",
           "sellWeight": 1.0,
@@ -9102,8 +9228,25 @@
           ],
           "weightedGainPct": -4.29,
           "weightedAvgBuyPrice": 705.84
+        },
+        {
+          "sellDate": "08 Jun 2026",
+          "sellWeight": 4.0,
+          "sellPrice": 611.7875,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "06 Feb 2025",
+              "weight": 4.0,
+              "buyPrice": 705.84,
+              "gainPct": -13.32
+            }
+          ],
+          "weightedGainPct": -13.32,
+          "weightedAvgBuyPrice": 705.84
         }
-      ]
+      ],
+      "currentSeriesGains": []
     },
     "AETHER": {
       "securityName": "Aether Industries Ltd",
@@ -9291,6 +9434,28 @@
         }
       ]
     },
+    "ICEMAKE": {
+      "securityName": "Ice Make Refrigeration Ltd",
+      "prevSeriesGains": [
+        {
+          "sellDate": "08 Jun 2026",
+          "sellWeight": 3.0,
+          "sellPrice": 735.5625,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "16 Feb 2026",
+              "weight": 3.0,
+              "buyPrice": 772.56,
+              "gainPct": -4.79
+            }
+          ],
+          "weightedGainPct": -4.79,
+          "weightedAvgBuyPrice": 772.56
+        }
+      ],
+      "currentSeriesGains": []
+    },
     "RACLGEAR": {
       "securityName": "RACL Geartech Ltd",
       "prevSeriesGains": [],
@@ -9315,8 +9480,7 @@
     },
     "SAMBHV": {
       "securityName": "Sambhv Steel Tubes Ltd",
-      "prevSeriesGains": [],
-      "currentSeriesGains": [
+      "prevSeriesGains": [
         {
           "sellDate": "18 May 2026",
           "sellWeight": 1.0,
@@ -9348,8 +9512,31 @@
           ],
           "weightedGainPct": 2.83,
           "weightedAvgBuyPrice": 103.79
+        },
+        {
+          "sellDate": "08 Jun 2026",
+          "sellWeight": 3.0,
+          "sellPrice": 105.2125,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "20 Feb 2026",
+              "weight": 2.0,
+              "buyPrice": 103.79,
+              "gainPct": 1.37
+            },
+            {
+              "buyDate": "15 Apr 2026",
+              "weight": 1.0,
+              "buyPrice": 117.81,
+              "gainPct": -10.69
+            }
+          ],
+          "weightedGainPct": -2.65,
+          "weightedAvgBuyPrice": 106.1267
         }
-      ]
+      ],
+      "currentSeriesGains": []
     },
     "SHAILY": {
       "securityName": "Shaily Engineering Plastics Ltd",
@@ -9424,6 +9611,28 @@
           ],
           "weightedGainPct": -1.02,
           "weightedAvgBuyPrice": 3173.02
+        }
+      ]
+    },
+    "RAMRAT": {
+      "securityName": "Ram Ratna Wires Ltd",
+      "prevSeriesGains": [],
+      "currentSeriesGains": [
+        {
+          "sellDate": "08 Jun 2026",
+          "sellWeight": 1.0,
+          "sellPrice": 381.0125,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "04 May 2026",
+              "weight": 1.0,
+              "buyPrice": 458.59,
+              "gainPct": -16.92
+            }
+          ],
+          "weightedGainPct": -16.92,
+          "weightedAvgBuyPrice": 458.59
         }
       ]
     },
@@ -10341,12 +10550,12 @@
             {
               "buyDate": "07 Feb 2022",
               "weight": 7.0,
-              "buyPrice": null,
-              "gainPct": null
+              "buyPrice": 914.45,
+              "gainPct": 42.59
             }
           ],
-          "weightedGainPct": null,
-          "weightedAvgBuyPrice": null
+          "weightedGainPct": 42.59,
+          "weightedAvgBuyPrice": 914.45
         }
       ],
       "currentSeriesGains": []
@@ -11310,8 +11519,7 @@
     },
     "LIQUIDCASE": {
       "securityName": "Zerodha Nifty 1D Rate Liquid ETF",
-      "prevSeriesGains": [],
-      "currentSeriesGains": [
+      "prevSeriesGains": [
         {
           "sellDate": "26 Feb 2026",
           "sellWeight": 10.0,
@@ -11375,8 +11583,47 @@
           ],
           "weightedGainPct": 1.48,
           "weightedAvgBuyPrice": 112.49
+        },
+        {
+          "sellDate": "05 Jun 2026",
+          "sellWeight": 4.0,
+          "sellPrice": 114.4225,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "27 Jan 2026",
+              "weight": 4.0,
+              "buyPrice": 112.49,
+              "gainPct": 1.72
+            }
+          ],
+          "weightedGainPct": 1.72,
+          "weightedAvgBuyPrice": 112.49
         }
-      ]
+      ],
+      "currentSeriesGains": []
+    },
+    "PINELABS": {
+      "securityName": "Pine Labs Ltd",
+      "prevSeriesGains": [
+        {
+          "sellDate": "18 Jun 2026",
+          "sellWeight": 4.0,
+          "sellPrice": 150.95,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "27 Jan 2026",
+              "weight": 4.0,
+              "buyPrice": 234.92,
+              "gainPct": -35.74
+            }
+          ],
+          "weightedGainPct": -35.74,
+          "weightedAvgBuyPrice": 234.92
+        }
+      ],
+      "currentSeriesGains": []
     },
     "RSYSTEMS": {
       "securityName": "R Systems International Ltd",
@@ -14286,6 +14533,44 @@
         }
       ]
     },
+    "GOLDIAM": {
+      "securityName": "Goldiam International Ltd",
+      "prevSeriesGains": [
+        {
+          "sellDate": "10 Jun 2026",
+          "sellWeight": 1.0,
+          "sellPrice": 438.7,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "20 Feb 2025",
+              "weight": 1.0,
+              "buyPrice": 399.75,
+              "gainPct": 9.74
+            }
+          ],
+          "weightedGainPct": 9.74,
+          "weightedAvgBuyPrice": 399.75
+        },
+        {
+          "sellDate": "30 Jun 2026",
+          "sellWeight": 4.0,
+          "sellPrice": 439.4125,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "20 Feb 2025",
+              "weight": 4.0,
+              "buyPrice": 399.75,
+              "gainPct": 9.92
+            }
+          ],
+          "weightedGainPct": 9.92,
+          "weightedAvgBuyPrice": 399.75
+        }
+      ],
+      "currentSeriesGains": []
+    },
     "GRWRHITECH": {
       "securityName": "Garware Hi-Tech Films Ltd",
       "prevSeriesGains": [
@@ -14510,6 +14795,72 @@
           ],
           "weightedGainPct": 27.75,
           "weightedAvgBuyPrice": 181.56
+        }
+      ]
+    },
+    "URBANCO": {
+      "securityName": "Urban Company Ltd",
+      "prevSeriesGains": [],
+      "currentSeriesGains": [
+        {
+          "sellDate": "30 Jun 2026",
+          "sellWeight": 1.0,
+          "sellPrice": 131.2425,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "17 Mar 2026",
+              "weight": 1.0,
+              "buyPrice": 111.23,
+              "gainPct": 17.99
+            }
+          ],
+          "weightedGainPct": 17.99,
+          "weightedAvgBuyPrice": 111.23
+        }
+      ]
+    },
+    "AARTIPHARM": {
+      "securityName": "Aarti Pharmalabs Ltd",
+      "prevSeriesGains": [],
+      "currentSeriesGains": [
+        {
+          "sellDate": "10 Jun 2026",
+          "sellWeight": 1.0,
+          "sellPrice": 624.55,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "17 Mar 2026",
+              "weight": 1.0,
+              "buyPrice": 640.37,
+              "gainPct": -2.47
+            }
+          ],
+          "weightedGainPct": -2.47,
+          "weightedAvgBuyPrice": 640.37
+        }
+      ]
+    },
+    "MEESHO": {
+      "securityName": "Meesho Ltd",
+      "prevSeriesGains": [],
+      "currentSeriesGains": [
+        {
+          "sellDate": "10 Jun 2026",
+          "sellWeight": 1.0,
+          "sellPrice": 169.7425,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "13 Apr 2026",
+              "weight": 1.0,
+              "buyPrice": 160.36,
+              "gainPct": 5.85
+            }
+          ],
+          "weightedGainPct": 5.85,
+          "weightedAvgBuyPrice": 160.36
         }
       ]
     },
@@ -15695,6 +16046,44 @@
           "weightedAvgBuyPrice": 160.472
         }
       ]
+    },
+    "RAMRAT": {
+      "securityName": "Ram Ratna Wires Ltd",
+      "prevSeriesGains": [
+        {
+          "sellDate": "10 Jun 2026",
+          "sellWeight": 1.0,
+          "sellPrice": 364.775,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "27 May 2026",
+              "weight": 1.0,
+              "buyPrice": 488.7375,
+              "gainPct": -25.36
+            }
+          ],
+          "weightedGainPct": -25.36,
+          "weightedAvgBuyPrice": 488.7375
+        },
+        {
+          "sellDate": "30 Jun 2026",
+          "sellWeight": 3.0,
+          "sellPrice": 403.5625,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "27 May 2026",
+              "weight": 3.0,
+              "buyPrice": 488.7375,
+              "gainPct": -17.43
+            }
+          ],
+          "weightedGainPct": -17.43,
+          "weightedAvgBuyPrice": 488.7375
+        }
+      ],
+      "currentSeriesGains": []
     }
   }
 }

@@ -779,77 +779,84 @@ async def preview_rebalance(
 
     basket_bp_curr = _load_buy_price_data().get(basket, {})
 
-    # Only generate buy/sell events for dates that come AFTER the latest existing baseline.
-    # New dates that are chronologically earlier than latest_existing are "historical gap"
-    # dates (present in the Excel but missing from the DB). Processing them from the
-    # latest_existing weights would incorrectly flag long-absent stocks as exits/re-entries.
-    # They are still saved to rebalance_history (so they won't be reprocessed next time)
-    # but no new events are emitted for them.
-    if latest_existing:
-        event_dates = [d for d in new_dates if _date_to_ts(d) > _date_to_ts(latest_existing)]
-    else:
-        event_dates = list(new_dates)
+    # Process every new date, chained sequentially against its own correct predecessor —
+    # the nearest earlier date in the FULL timeline (an existing-recorded date, or another
+    # new date from this same upload) — rather than always against today's live state.
+    # This correctly reconstructs multi-date backfills (an Excel containing years of
+    # historical rebalance snapshots where several older dates are missing from
+    # rebalance_history) instead of comparing an old snapshot against the current
+    # portfolio, which would misreport every stock in it as a "New Addition".
+    event_dates = list(new_dates)
 
-    codes_to_process: set[str] = set(existing_weights.keys())
-    for d in event_dates:
-        for s in date_stock_map.get(d, []):
-            codes_to_process.add(s["nseCode"])
+    def _baseline_before(target_date: str) -> dict:
+        """{nseCode: {securityName, segment, weight}} snapshot for the correct
+        predecessor of target_date — full detail, not just weight, so exited
+        stocks can still be labelled correctly."""
+        earlier = [d for d in existing_dates if _date_to_ts(d) < _date_to_ts(target_date)]
+        earlier += [d for d in new_dates if d != target_date and _date_to_ts(d) < _date_to_ts(target_date)]
+        if not earlier:
+            return {}
+        anchor = max(earlier, key=lambda d: _date_to_ts(d))
+        if anchor in date_snaps:
+            return date_snaps[anchor]
+        if anchor == latest_existing:
+            return {c: {"securityName": basket_bp_curr.get(c, {}).get("securityName", c),
+                        "segment": basket_bp_curr.get(c, {}).get("segment", "Equity"),
+                        "weight": w}
+                    for c, w in existing_weights.items()}
+        return {e["nseCode"]: {"securityName": e.get("securityName", e["nseCode"]),
+                                "segment": e.get("segment", "Equity"),
+                                "weight": float(e.get("weight", 0))}
+                for e in by_date_h.get(anchor, [])}
 
     historical_events: list[dict] = []
     latest_events:     list[dict] = []
+    latest_baseline:   dict = {}
 
-    for code in codes_to_process:
-        prev_w   = existing_weights.get(code, 0.0)
-        last_sn  = basket_bp_curr.get(code, {}).get("securityName", code)
-        last_seg = basket_bp_curr.get(code, {}).get("segment", "Equity")
+    for cur_date in event_dates:
+        day_snap = date_snaps.get(cur_date, {})
+        baseline = _baseline_before(cur_date)
+        is_lat   = (cur_date == latest_new)
+        tgt      = latest_events if is_lat else historical_events
+        if is_lat:
+            latest_baseline = baseline
 
-        for cur_date in event_dates:
-            day_snap = date_snaps.get(cur_date, {})
-            is_lat   = (cur_date == latest_new)
-            tgt      = latest_events if is_lat else historical_events
+        for code in set(baseline) | set(day_snap):
+            prev_w = baseline.get(code, {}).get("weight", 0.0)
 
             if code not in day_snap:
                 # Stock absent from this block → it exited here
                 if prev_w > 0.01:
+                    last_sn  = (baseline.get(code, {}).get("securityName")
+                                or basket_bp_curr.get(code, {}).get("securityName", code))
+                    last_seg = (baseline.get(code, {}).get("segment")
+                                or basket_bp_curr.get(code, {}).get("segment", "Equity"))
                     tgt.append({"nseCode": code, "securityName": last_sn, "segment": last_seg,
                                 "eventType": "sell", "date": cur_date, "delta": round(prev_w, 4),
                                 "newWeight": 0.0, "isSeriesReset": True})
-                prev_w = 0.0
                 continue
 
-            s       = day_snap[code]
-            new_w   = s["weight"]
-            last_sn  = s["securityName"]
-            last_seg = s["segment"]
+            s     = day_snap[code]
+            new_w = s["weight"]
+            sn, seg = s["securityName"], s["segment"]
 
             if prev_w < 0.01:
-                tgt.append({"nseCode": code, "securityName": last_sn, "segment": last_seg,
+                tgt.append({"nseCode": code, "securityName": sn, "segment": seg,
                             "eventType": "buy", "date": cur_date, "delta": round(new_w, 4),
                             "newWeight": round(new_w, 4), "isSeriesReset": False})
             elif new_w > prev_w + 0.01:
-                tgt.append({"nseCode": code, "securityName": last_sn, "segment": last_seg,
+                tgt.append({"nseCode": code, "securityName": sn, "segment": seg,
                             "eventType": "buy", "date": cur_date, "delta": round(new_w - prev_w, 4),
                             "newWeight": round(new_w, 4), "isSeriesReset": False})
             elif new_w < prev_w - 0.01:
-                tgt.append({"nseCode": code, "securityName": last_sn, "segment": last_seg,
+                tgt.append({"nseCode": code, "securityName": sn, "segment": seg,
                             "eventType": "sell", "date": cur_date, "delta": round(prev_w - new_w, 4),
                             "newWeight": round(new_w, 4), "isSeriesReset": False})
 
-            prev_w = new_w
-
-    # ── Slide 2: compare latest block vs the IMMEDIATELY PRECEDING block ──
-    # Use event_dates (not new_dates) so that zombie dates — old dates missing from
-    # rebalance_history due to the previous current_codes filter — don't corrupt the
-    # baseline. If event_dates has >1 entry we compare the latest against the
-    # second-to-last event date (correct for a multi-date first upload). If only one
-    # event date exists, compare against existing_weights (the confirmed prior state).
-    if len(event_dates) > 1:
-        prev_snap_s2 = date_snaps.get(event_dates[-2], {})
-        prev_w_s2    = {c: s["weight"] for c, s in prev_snap_s2.items()}
-    else:
-        prev_snap_s2 = {}
-        prev_w_s2    = existing_weights
-
+    # ── Slide 2: compare latest block vs its correct immediate predecessor ──
+    # latest_baseline is exactly that predecessor (an existing recorded date, another new
+    # date from this same upload, or {} if latest_new is the very first date on record).
+    prev_w_s2      = {c: v["weight"] for c, v in latest_baseline.items()}
     wholly_sold_s2 = set(prev_w_s2.keys()) - current_codes
 
     slide2: list[dict] = []
@@ -874,7 +881,7 @@ async def preview_rebalance(
 
     for code in wholly_sold_s2:
         prev_w     = prev_w_s2.get(code, 0.0)
-        snap_entry = prev_snap_s2.get(code, {})
+        snap_entry = latest_baseline.get(code, {})
         sn  = snap_entry.get("securityName") or basket_bp_curr.get(code, {}).get("securityName", code)
         seg = snap_entry.get("segment")      or basket_bp_curr.get(code, {}).get("segment", "Equity")
         slide2.append({"nseCode": code, "stockName": sn, "segment": seg,
@@ -918,6 +925,23 @@ async def preview_rebalance(
         for s in date_stock_map.get(d, []):
             history_entries.append({"nseCode": s["nseCode"], "securityName": s["securityName"],
                                     "segment": s["segment"], "weight": round(s["weight"], 4), "date": d})
+
+    # If every date in this upload turned out to match already-recorded compositions
+    # exactly (a re-export with dates offset by a few days — e.g. trade date vs T+1
+    # settlement date, the common case for this basket), there is nothing to review or
+    # confirm. Surface that plainly instead of showing a review screen full of
+    # "No Change" rows that looks like a no-op but would still write duplicate-dated
+    # history entries if confirmed.
+    if slide2 and not historical_events and all(row["updateType"] == "No Change" for row in slide2):
+        return {
+            "duplicate": True,
+            "message": (
+                f"No composition changes detected for any of the {len(new_dates)} date(s) "
+                f"found in this file — every stock already matches what's recorded in "
+                f"history (dates may be offset by a few days, e.g. trade date vs settlement "
+                f"date). Nothing to confirm."
+            ),
+        }
 
     return {
         "duplicate": False,

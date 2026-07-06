@@ -1,3 +1,4 @@
+#changes made by me
 # ─────────────────────────────────────────────────────────────────────────────
 # Stage 1 — Build both React frontends (Node alpine, discarded after build)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -25,7 +26,7 @@ WORKDIR /app
 
 # supervisor + build tools for scipy/nsepython
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        supervisor gcc g++ gfortran libopenblas-dev liblapack-dev pkg-config \
+    supervisor gcc g++ gfortran libopenblas-dev liblapack-dev pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 COPY backend/requirements.txt ./backend/requirements.txt
