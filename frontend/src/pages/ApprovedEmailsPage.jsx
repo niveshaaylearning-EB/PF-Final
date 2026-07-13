@@ -14,6 +14,7 @@ export default function ApprovedEmailsPage() {
   const [removing,  setRemoving]  = useState('');
   const [error,     setError]     = useState('');
   const [success,   setSuccess]   = useState('');
+  const [reapprovingAll, setReapprovingAll] = useState(false);
 
   // Pending access requests (old flow)
   const [requests,      setRequests]      = useState([]);
@@ -118,6 +119,21 @@ export default function ApprovedEmailsPage() {
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to add');
     } finally { setAdding(false); }
+  };
+
+  const handleReapproveAll = async () => {
+    setError(''); setSuccess('');
+    setReapprovingAll(true);
+    try {
+      const resp = await axios.post(`${API}/allowed-emails/reapprove-all`);
+      const count = resp.data?.count ?? 0;
+      setSuccess(count > 0
+        ? `Re-approved ${count} email(s) that were stuck pending: ${resp.data.reapproved.join(', ')}`
+        : 'Everyone in this list is already approved -- nothing to fix.');
+      load();
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to re-approve all');
+    } finally { setReapprovingAll(false); }
   };
 
   const handleRemove = async (email) => {
@@ -291,11 +307,21 @@ export default function ApprovedEmailsPage() {
 
       {/* ── Approved Emails list ── */}
       <div className="glass-panel" style={{ padding: 0, overflow: 'hidden' }}>
-        <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.88rem' }}>Approved users</span>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '2px 8px' }}>
-            {emails.length} total
-          </span>
+        <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.88rem' }}>Approved users</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '2px 8px' }}>
+              {emails.length} total
+            </span>
+          </div>
+          <button
+            onClick={handleReapproveAll}
+            disabled={reapprovingAll}
+            title="Fixes any user in this list stuck unable to log in without needing to remove and re-add them"
+            style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 14px', borderRadius: '7px', border: '1px solid rgba(16,185,129,0.35)', background: 'rgba(16,185,129,0.1)', color: 'var(--positive)', fontSize: '0.78rem', fontWeight: 600, cursor: reapprovingAll ? 'not-allowed' : 'pointer', opacity: reapprovingAll ? 0.5 : 1 }}
+          >
+            <CheckCircle size={12} /> {reapprovingAll ? 'Re-approving…' : 'Re-approve all'}
+          </button>
         </div>
 
         {loading ? (
@@ -318,6 +344,11 @@ export default function ApprovedEmailsPage() {
                   </div>
                   <div>
                     <span style={{ color: 'var(--text-main)', fontSize: '0.88rem' }}>{emailStr}</span>
+                    {em?.is_approved === false && (
+                      <span style={{ marginLeft: '8px', fontSize: '0.68rem', fontWeight: 700, color: '#fbbf24', background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: '4px', padding: '1px 6px' }}>
+                        PENDING -- can't log in yet
+                      </span>
+                    )}
                     {em?.added_at && <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '1px' }}>Added {em.added_at.slice(0, 10)}</div>}
                   </div>
                 </div>

@@ -425,6 +425,10 @@ export default function BuyPricePage() {
       });
       const data = await resp.json();
       if (!resp.ok) throw new Error(Array.isArray(data.detail) ? data.detail.map(d => d.msg || JSON.stringify(d)).join('; ') : String(data.detail || 'Upload failed'));
+      if (data.duplicate) {
+        alert(data.message || 'No new rebalance data found in this file.');
+        return;
+      }
       setRebalancePreview(data);
     } catch (err) {
       alert('Rebalance upload failed: ' + err.message);

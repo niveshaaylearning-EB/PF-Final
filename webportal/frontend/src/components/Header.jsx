@@ -16,7 +16,7 @@ export default function Header({
   basketKey, onBasketChange,
   searchTerm, onSearchChange, onSearchClear,
   canUndo, onUndo,
-  onBuyPrice, onCalculateReturn, onPLStatement,
+  onBuyPrice, onCalculateReturn, onPLStatement, onCorporateActions,
   readOnly = false,
 }) {
   const [dateStr,      setDateStr]      = useState('');
@@ -95,6 +95,9 @@ export default function Header({
               </button>
               <button className="db-action-item" onClick={() => { setActionsOpen(false); onPLStatement(); }}>
                 <i className="fa-solid fa-file-invoice-dollar" /> P&amp;L Statement
+              </button>
+              <button className="db-action-item" onClick={() => { setActionsOpen(false); onCorporateActions(); }}>
+                <i className="fa-solid fa-code-branch" /> Corporate Actions
               </button>
             </div>
           )}

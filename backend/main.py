@@ -676,7 +676,8 @@ def list_allowed_emails(request: Request, db: Session = Depends(get_db)):
     if not is_admin_email(user):
         raise HTTPException(status_code=403, detail="Admin only")
     rows = db.query(database.AllowedEmail).order_by(database.AllowedEmail.added_at.desc()).all()
-    return [{"email": r.email, "added_by": r.added_by, "added_at": r.added_at} for r in rows]
+    return [{"email": r.email, "added_by": r.added_by, "added_at": r.added_at,
+             "is_approved": bool(r.is_approved)} for r in rows]
 
 @app.post("/api/allowed-emails")
 def add_allowed_email(body: AllowedEmailBody, request: Request, db: Session = Depends(get_db)):
@@ -688,6 +689,19 @@ def add_allowed_email(body: AllowedEmailBody, request: Request, db: Session = De
         raise HTTPException(status_code=400, detail="Only @niveshaay.com emails can be added")
     existing = db.query(database.AllowedEmail).filter_by(email=email).first()
     if existing:
+        # A row already existing here does NOT mean the user can log in -- self-registrations
+        # land in this same table with is_approved=0, indistinguishable in the old UI from a
+        # truly-approved row. Previously this branch always raised 409, which is what pushed
+        # admins toward "remove then re-add" as a workaround -- and re-adding only "worked" as
+        # an accident of the INSERT defaulting is_approved to 1. Flip it in place instead, so
+        # the intended approval path is the one that actually runs.
+        if not existing.is_approved:
+            existing.is_approved = 1
+            db.commit()
+            _dump_allowed_emails(db)
+            from auth import _log_audit as _la
+            _la(user, "email_reapproved", f"Re-approved existing pending email: {email}")
+            return {"status": "reapproved", "email": email}
         raise HTTPException(status_code=409, detail="Email already approved")
     db.add(database.AllowedEmail(email=email, added_by=user, added_at=datetime.utcnow().isoformat()))
     db.commit()
@@ -695,6 +709,27 @@ def add_allowed_email(body: AllowedEmailBody, request: Request, db: Session = De
     from auth import _log_audit as _la
     _la(user, "email_added", f"Added allowed email: {email}")
     return {"status": "added", "email": email}
+
+@app.post("/api/allowed-emails/reapprove-all")
+def reapprove_all_emails(request: Request, db: Session = Depends(get_db)):
+    """Bulk-fix for accounts stuck with is_approved=0 despite already being listed in the
+    admin's Approved Emails panel (a self-registration lands in the same table as a truly
+    approved user, with no visual distinction in the old UI) -- flips every row to approved
+    in one action instead of the admin having to remove+re-add each stuck user by hand."""
+    user = getattr(request.state, "user", None)
+    if not is_admin_email(user):
+        raise HTTPException(status_code=403, detail="Admin only")
+    rows = db.query(database.AllowedEmail).filter(
+        (database.AllowedEmail.is_approved == 0) | (database.AllowedEmail.is_approved.is_(None))
+    ).all()
+    for r in rows:
+        r.is_approved = 1
+    db.commit()
+    if rows:
+        _dump_allowed_emails(db)
+    from auth import _log_audit as _la
+    _la(user, "email_reapprove_all", f"Re-approved {len(rows)} email(s): {', '.join(r.email for r in rows)}")
+    return {"status": "ok", "reapproved": [r.email for r in rows], "count": len(rows)}
 
 @app.delete("/api/allowed-emails/{email_addr}")
 def remove_allowed_email(email_addr: str, request: Request, db: Session = Depends(get_db)):

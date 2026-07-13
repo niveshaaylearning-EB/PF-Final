@@ -498,12 +498,16 @@ async def calc_buy_price(key: str, nse: str):
         raise HTTPException(status_code=422, detail="Could not parse buy events")
 
     # Use cached buyOHLC prices where available; only fetch what is missing
+    from corporate_actions import _ca_overlay_for  # lazy: avoids circular import
+    ca_overlay  = _ca_overlay_for(key, nse)
     cached_ohlc = det.get("buyOHLC") or {}
     ohlc_avgs: list[float | None] = []
     newly_fetched: dict[str, float] = {}
     newly_fetched_fallbacks: dict[str, str] = {}
     for date_str, _ in events:
-        if date_str in cached_ohlc:
+        if date_str in ca_overlay:
+            ohlc_avgs.append(ca_overlay[date_str])
+        elif date_str in cached_ohlc:
             ohlc_avgs.append(cached_ohlc[date_str])
         else:
             val, fallback_date = await _fetch_ohlc_avg(nse, date_str)
@@ -584,11 +588,15 @@ async def calc_all_baskets():
 
             try:
                 # Use cached buyOHLC prices where available
+                from corporate_actions import _ca_overlay_for  # lazy: avoids circular import
+                ca_overlay  = _ca_overlay_for(key, nse)
                 cached_ohlc = det.get("buyOHLC") or {}
                 ohlc_avgs: list[float | None] = []
                 newly_fetched: dict[str, float] = {}
                 for date_str, _ in events:
-                    if date_str in cached_ohlc:
+                    if date_str in ca_overlay:
+                        ohlc_avgs.append(ca_overlay[date_str])
+                    elif date_str in cached_ohlc:
                         ohlc_avgs.append(cached_ohlc[date_str])
                     else:
                         val, fallback_date = await _fetch_ohlc_avg(nse, date_str)
@@ -965,11 +973,15 @@ async def _recalc_basket_buy_prices(key: str) -> None:
                 continue
             try:
                 # Use cached buyOHLC prices where available
+                from corporate_actions import _ca_overlay_for  # lazy: avoids circular import
+                ca_overlay  = _ca_overlay_for(key, nse)
                 cached_ohlc = det.get("buyOHLC") or {}
                 ohlc_avgs: list[float | None] = []
                 newly_fetched: dict[str, float] = {}
                 for date_str, _ in buy_events:
-                    if date_str in cached_ohlc:
+                    if date_str in ca_overlay:
+                        ohlc_avgs.append(ca_overlay[date_str])
+                    elif date_str in cached_ohlc:
                         ohlc_avgs.append(cached_ohlc[date_str])
                     else:
                         val, fallback_date = await _fetch_ohlc_avg(nse, date_str)

@@ -14,6 +14,7 @@ import SoldStocksTable  from './components/SoldStocksTable.jsx';
 import BuyPricePage          from './components/BuyPricePage.jsx';
 import CalculateReturnPage   from './components/CalculateReturnPage.jsx';
 import PLStatementPage       from './components/PLStatementPage.jsx';
+import CorporateActionsPage  from './components/CorporateActionsPage.jsx';
 import DashboardView         from './components/DashboardView.jsx';
 
 // ── Formatters ───────────────────────────────────────────────────────────────
@@ -138,6 +139,7 @@ export default function App() {
   if (_path === '/buy-price')       return <BuyPricePage />;
   if (_path === '/calculate-return') return <CalculateReturnPage />;
   if (_path === '/pl-statement')    return <PLStatementPage />;
+  if (_path === '/corporate-actions') return <CorporateActionsPage />;
 
   const [basketKey,    setBasketKey]    = useState('Mid_Small_Cap');
   const [rows,         setRows]         = useState([]);
@@ -576,6 +578,7 @@ export default function App() {
           onBuyPrice={() => { window.location.href = '/wp/buy-price' + window.location.search; }}
           onCalculateReturn={() => { window.location.href = '/wp/calculate-return' + window.location.search; }}
           onPLStatement={() => { window.location.href = '/wp/pl-statement' + window.location.search; }}
+          onCorporateActions={() => { window.location.href = '/wp/corporate-actions' + window.location.search; }}
           readOnly={READ_ONLY}
         />
 

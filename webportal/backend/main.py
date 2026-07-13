@@ -101,6 +101,9 @@ app.include_router(_price_engine_router)
 from buy_price_gains import router as _buy_price_gains_router
 app.include_router(_buy_price_gains_router)
 
+from corporate_actions import router as _corporate_actions_router
+app.include_router(_corporate_actions_router)
+
 from historical_index import router as _historical_index_router
 app.include_router(_historical_index_router)
 
