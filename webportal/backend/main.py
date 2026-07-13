@@ -104,8 +104,8 @@ app.include_router(_buy_price_gains_router)
 from corporate_actions import router as _corporate_actions_router
 app.include_router(_corporate_actions_router)
 
-from historical_index import router as _historical_index_router
-app.include_router(_historical_index_router)
+from historical_data import router as _historical_data_router
+app.include_router(_historical_data_router)
 
 from live_data import router as _live_data_router
 app.include_router(_live_data_router)
@@ -113,8 +113,6 @@ app.include_router(_live_data_router)
 from rebalance import router as _rebalance_router
 app.include_router(_rebalance_router)
 
-from historical_upload import router as _historical_upload_router
-app.include_router(_historical_upload_router)
 
 from portfolio_report import router as _portfolio_report_router
 app.include_router(_portfolio_report_router)

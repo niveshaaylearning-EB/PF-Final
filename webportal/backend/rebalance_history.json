@@ -16974,6 +16974,195 @@
       "segment": "Equity",
       "weight": 5,
       "date": "20 May 2026"
+    },
+    {
+      "nseCode": "TIMEX",
+      "securityName": "Timex Group India Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "TDPOWERSYS",
+      "securityName": "TD Power Systems Ltd",
+      "segment": "Equity",
+      "weight": 2.5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "STLTECH",
+      "securityName": "Sterlite Technologies Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "INOXINDIA",
+      "securityName": "INOX India Ltd",
+      "segment": "Equity",
+      "weight": 2.5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "HLEGLAS",
+      "securityName": "HLE Glascoat Ltd",
+      "segment": "Equity",
+      "weight": 2.5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "HBLENGINE",
+      "securityName": "HBL Engineering Ltd",
+      "segment": "Equity",
+      "weight": 3.5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "SYRMA",
+      "securityName": "Syrma SGS Technology Ltd",
+      "segment": "Equity",
+      "weight": 4.5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "CENTUM",
+      "securityName": "Centum Electronics Ltd",
+      "segment": "Equity",
+      "weight": 6,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "AVALON",
+      "securityName": "Avalon Technologies Ltd",
+      "segment": "Equity",
+      "weight": 3.5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "SJS",
+      "securityName": "SJS Enterprises Ltd",
+      "segment": "Equity",
+      "weight": 2.5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "SBCL",
+      "securityName": "Shivalik Bimetal Controls Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "SHADOWFAX",
+      "securityName": "Shadowfax Technologies Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "SANSERA",
+      "securityName": "Sansera Engineering Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "IDEAFORGE",
+      "securityName": "ideaForge Technology Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "ASTRAMICRO",
+      "securityName": "Astra Microwave Products Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "SAMBHV",
+      "securityName": "Sambhv Steel Tubes Ltd",
+      "segment": "Equity",
+      "weight": 6,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "SAILIFE",
+      "securityName": "Sai Life Sciences Ltd",
+      "segment": "Equity",
+      "weight": 2.5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "ACUTAAS",
+      "securityName": "Acutaas Chemicals Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "AARTIPHARM",
+      "securityName": "Aarti Pharmalabs Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "RAIN",
+      "securityName": "Rain Industries Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "PRIVISCL",
+      "securityName": "Privi Speciality Chemicals Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "NEOGEN",
+      "securityName": "Neogen Chemicals Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "QPOWER",
+      "securityName": "Quality Power Electrical Equipments Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "KRN",
+      "securityName": "KRN Heat Exchanger and Refrigeration Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "HFCL",
+      "securityName": "HFCL Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "GOKEX",
+      "securityName": "Gokaldas Exports Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "E2E",
+      "securityName": "E2E Networks Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "30 Jun 2026"
     }
   ],
   "Green_Energy": [
@@ -26309,6 +26498,328 @@
       "segment": "Equity",
       "weight": 4,
       "date": "21 May 2026"
+    },
+    {
+      "nseCode": "URBANCO",
+      "securityName": "Urban Company Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "MEESHO",
+      "securityName": "Meesho Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "TRITURBINE",
+      "securityName": "Triveni Turbine Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "TEJASNET",
+      "securityName": "Tejas Networks Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "SYRMA",
+      "securityName": "Syrma SGS Technology Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "SANSERA",
+      "securityName": "Sansera Engineering Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "PARAS",
+      "securityName": "Paras Defence and Space Technologies Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "DATAPATTNS",
+      "securityName": "Data Patterns (India) Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "CPPLUS",
+      "securityName": "Aditya Infotech Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "AVANTEL",
+      "securityName": "Avantel Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "ATHERENERG",
+      "securityName": "Ather Energy Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "ASTRAMICRO",
+      "securityName": "Astra Microwave Products Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "STLTECH",
+      "securityName": "Sterlite Technologies Ltd",
+      "segment": "Equity",
+      "weight": 6,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "GENESYS",
+      "securityName": "Genesys International Corporation Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "E2E",
+      "securityName": "E2E Networks Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "SHADOWFAX",
+      "securityName": "Shadowfax Technologies Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "SASKEN",
+      "securityName": "Sasken Technologies Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "PINELABS",
+      "securityName": "Pine Labs Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "NPST",
+      "securityName": "Network People Services Technologies Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "MOBIKWIK",
+      "securityName": "One MobiKwik Systems Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "GROWW",
+      "securityName": "Billionbrains Garage Ventures Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "IDEAFORGE",
+      "securityName": "ideaForge Technology Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "HFCL",
+      "securityName": "HFCL Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "05 Jun 2026"
+    },
+    {
+      "nseCode": "URBANCO",
+      "securityName": "Urban Company Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "MEESHO",
+      "securityName": "Meesho Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "TRITURBINE",
+      "securityName": "Triveni Turbine Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "TEJASNET",
+      "securityName": "Tejas Networks Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "SYRMA",
+      "securityName": "Syrma SGS Technology Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "SANSERA",
+      "securityName": "Sansera Engineering Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "PARAS",
+      "securityName": "Paras Defence and Space Technologies Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "DATAPATTNS",
+      "securityName": "Data Patterns (India) Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "CPPLUS",
+      "securityName": "Aditya Infotech Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "AVANTEL",
+      "securityName": "Avantel Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "ATHERENERG",
+      "securityName": "Ather Energy Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "ASTRAMICRO",
+      "securityName": "Astra Microwave Products Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "STLTECH",
+      "securityName": "Sterlite Technologies Ltd",
+      "segment": "Equity",
+      "weight": 6,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "GENESYS",
+      "securityName": "Genesys International Corporation Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "E2E",
+      "securityName": "E2E Networks Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "SHADOWFAX",
+      "securityName": "Shadowfax Technologies Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "SASKEN",
+      "securityName": "Sasken Technologies Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "NPST",
+      "securityName": "Network People Services Technologies Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "MOBIKWIK",
+      "securityName": "One MobiKwik Systems Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "GROWW",
+      "securityName": "Billionbrains Garage Ventures Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "LIQUIDCASE",
+      "securityName": "Zerodha Nifty 1D Rate Liquid ETF",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "IDEAFORGE",
+      "securityName": "ideaForge Technology Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "18 Jun 2026"
+    },
+    {
+      "nseCode": "HFCL",
+      "securityName": "HFCL Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "18 Jun 2026"
     }
   ],
   "Trends_Triology": [
@@ -31351,6 +31862,335 @@
       "segment": "Equity",
       "weight": 6,
       "date": "27 May 2026"
+    },
+    {
+      "nseCode": "GOKEX",
+      "securityName": "Gokaldas Exports Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "HGINFRA",
+      "securityName": "HG Infra Engineering Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "PSPPROJECT",
+      "securityName": "PSP Projects Ltd",
+      "segment": "Equity",
+      "weight": 8,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "INTELLECT",
+      "securityName": "Intellect Design Arena Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "LIQUIDBEES",
+      "securityName": "Nippon India ETF Nifty 1D Rate Liquid BeES",
+      "segment": "Equity",
+      "weight": 14,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "PRINCEPIPE",
+      "securityName": "Prince Pipes and Fittings Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "RUSHIL",
+      "securityName": "Rushil Decor Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "PRAJIND",
+      "securityName": "Praj Industries Ltd",
+      "segment": "Equity",
+      "weight": 10,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "SHARDACROP",
+      "securityName": "Sharda Cropchem Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "EPIGRAL",
+      "securityName": "Epigral Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "VRLLOG",
+      "securityName": "VRL Logistics Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "ANGELONE",
+      "securityName": "Angel One Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "HOMEFIRST",
+      "securityName": "Home First Finance Company India Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "07 Feb 2022"
+    },
+    {
+      "nseCode": "GNFC",
+      "securityName": "Gujarat Narmada Valley Fertilizers & Chemicals Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "SHARDACROP",
+      "securityName": "Sharda Cropchem Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "EPIGRAL",
+      "securityName": "Epigral Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "GOKEX",
+      "securityName": "Gokaldas Exports Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "HGINFRA",
+      "securityName": "HG Infra Engineering Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "PSPPROJECT",
+      "securityName": "PSP Projects Ltd",
+      "segment": "Equity",
+      "weight": 8,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "INTELLECT",
+      "securityName": "Intellect Design Arena Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "PRINCEPIPE",
+      "securityName": "Prince Pipes and Fittings Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "RUSHIL",
+      "securityName": "Rushil Decor Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "PRAJIND",
+      "securityName": "Praj Industries Ltd",
+      "segment": "Equity",
+      "weight": 10,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "RATNAMANI",
+      "securityName": "Ratnamani Metals and Tubes Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "VRLLOG",
+      "securityName": "VRL Logistics Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "ANGELONE",
+      "securityName": "Angel One Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "HOMEFIRST",
+      "securityName": "Home First Finance Company India Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "03 Mar 2022"
+    },
+    {
+      "nseCode": "VENUSREM",
+      "securityName": "Venus Remedies Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "SAKAR",
+      "securityName": "Sakar Healthcare Ltd",
+      "segment": "Equity",
+      "weight": 6,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "TDPOWERSYS",
+      "securityName": "TD Power Systems Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "STLTECH",
+      "securityName": "Sterlite Technologies Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "RAMRAT",
+      "securityName": "Ram Ratna Wires Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "OMNI",
+      "securityName": "Omnitech Engineering Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "HFCL",
+      "securityName": "HFCL Ltd",
+      "segment": "Equity",
+      "weight": 8,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "DEEDEV",
+      "securityName": "DEE Development Engineers Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "AEROFLEX",
+      "securityName": "Aeroflex Industries Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "SHADOWFAX",
+      "securityName": "Shadowfax Technologies Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "SEDEMAC",
+      "securityName": "SEDEMAC Mechatronics Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "ATHERENERG",
+      "securityName": "Ather Energy Ltd",
+      "segment": "Equity",
+      "weight": 6,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "SANSERA",
+      "securityName": "Sansera Engineering Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "SAILIFE",
+      "securityName": "Sai Life Sciences Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "ACUTAAS",
+      "securityName": "Acutaas Chemicals Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "NEOGEN",
+      "securityName": "Neogen Chemicals Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "IDEAFORGE",
+      "securityName": "ideaForge Technology Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "EBGNG",
+      "securityName": "GNG Electronics Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "CENTUM",
+      "securityName": "Centum Electronics Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "08 Jun 2026"
+    },
+    {
+      "nseCode": "E2E",
+      "securityName": "E2E Networks Ltd",
+      "segment": "Equity",
+      "weight": 6,
+      "date": "08 Jun 2026"
     }
   ],
   "Consumer_Trends": [
@@ -34979,6 +35819,335 @@
       "segment": "Equity",
       "weight": 5,
       "date": "27 May 2026"
+    },
+    {
+      "nseCode": "URBANCO",
+      "securityName": "Urban Company Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "TIMEX",
+      "securityName": "Timex Group India Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "KDDL",
+      "securityName": "KDDL Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "SHAILY",
+      "securityName": "Shaily Engineering Plastics Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "SHADOWFAX",
+      "securityName": "Shadowfax Technologies Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "SEDEMAC",
+      "securityName": "SEDEMAC Mechatronics Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "SBCL",
+      "securityName": "Shivalik Bimetal Controls Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "KRN",
+      "securityName": "KRN Heat Exchanger and Refrigeration Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "RRKABEL",
+      "securityName": "R R Kabel Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "RAMRAT",
+      "securityName": "Ram Ratna Wires Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "MEESHO",
+      "securityName": "Meesho Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "MANORAMA",
+      "securityName": "Manorama Industries Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "ICEMAKE",
+      "securityName": "Ice Make Refrigeration Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "HFCL",
+      "securityName": "HFCL Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "GRWRHITECH",
+      "securityName": "Garware Hi-Tech Films Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "GOLDIAM",
+      "securityName": "Goldiam International Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "GOKEX",
+      "securityName": "Gokaldas Exports Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "ETERNAL",
+      "securityName": "Eternal Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "EBGNG",
+      "securityName": "GNG Electronics Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "E2E",
+      "securityName": "E2E Networks Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "CARYSIL",
+      "securityName": "Carysil Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "ATHERENERG",
+      "securityName": "Ather Energy Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "AEROFLEX",
+      "securityName": "Aeroflex Industries Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "AARTIPHARM",
+      "securityName": "Aarti Pharmalabs Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "10 Jun 2026"
+    },
+    {
+      "nseCode": "URBANCO",
+      "securityName": "Urban Company Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "TIMEX",
+      "securityName": "Timex Group India Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "KDDL",
+      "securityName": "KDDL Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "SHAILY",
+      "securityName": "Shaily Engineering Plastics Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "SHADOWFAX",
+      "securityName": "Shadowfax Technologies Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "SEDEMAC",
+      "securityName": "SEDEMAC Mechatronics Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "SBCL",
+      "securityName": "Shivalik Bimetal Controls Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "KRN",
+      "securityName": "KRN Heat Exchanger and Refrigeration Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "RRKABEL",
+      "securityName": "R R Kabel Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "MEESHO",
+      "securityName": "Meesho Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "MANORAMA",
+      "securityName": "Manorama Industries Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "ICEMAKE",
+      "securityName": "Ice Make Refrigeration Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "HFCL",
+      "securityName": "HFCL Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "GRWRHITECH",
+      "securityName": "Garware Hi-Tech Films Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "GOKEX",
+      "securityName": "Gokaldas Exports Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "ETERNAL",
+      "securityName": "Eternal Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "EBGNG",
+      "securityName": "GNG Electronics Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "E2E",
+      "securityName": "E2E Networks Ltd",
+      "segment": "Equity",
+      "weight": 7,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "DIVGIITTS",
+      "securityName": "Divgi TorqTransfer Systems Ltd",
+      "segment": "Equity",
+      "weight": 6,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "CARYSIL",
+      "securityName": "Carysil Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "ATHERENERG",
+      "securityName": "Ather Energy Ltd",
+      "segment": "Equity",
+      "weight": 5,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "AEROFLEX",
+      "securityName": "Aeroflex Industries Ltd",
+      "segment": "Equity",
+      "weight": 3,
+      "date": "30 Jun 2026"
+    },
+    {
+      "nseCode": "AARTIPHARM",
+      "securityName": "Aarti Pharmalabs Ltd",
+      "segment": "Equity",
+      "weight": 4,
+      "date": "30 Jun 2026"
     }
   ],
   "Make_in_India": [

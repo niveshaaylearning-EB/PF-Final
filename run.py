@@ -7,12 +7,18 @@ Press Ctrl+C to stop everything.
 import os, sys, subprocess, threading, time, socket, webbrowser
 
 def kill_port(port):
-    """Kill any process listening on the given TCP port (Windows)."""
+    """Kill any process listening on the given TCP port."""
     try:
-        result = subprocess.run(
-            f'for /f "tokens=5" %a in (\'netstat -ano ^| findstr ":{port}.*LISTENING"\') do taskkill /PID %a /F',
-            shell=True, capture_output=True, text=True
-        )
+        if sys.platform == "win32":
+            subprocess.run(
+                f'for /f "tokens=5" %a in (\'netstat -ano ^| findstr ":{port}.*LISTENING"\') do taskkill /PID %a /F',
+                shell=True, capture_output=True, text=True
+            )
+        else:
+            subprocess.run(
+                f"lsof -i:{port} -t | xargs kill -9",
+                shell=True, capture_output=True, text=True
+            )
     except Exception:
         pass
 
@@ -21,7 +27,12 @@ FRONTEND     = os.path.join(BASE, "frontend")
 BACKEND      = os.path.join(BASE, "backend")
 WEBPORTAL    = os.path.join(BASE, "webportal", "backend")
 WP_FRONTEND  = os.path.join(BASE, "webportal", "frontend")
-PYTHON       = os.path.join(BACKEND, "venv", "Scripts", "python.exe")
+if sys.platform == "win32":
+    PYTHON = os.path.join(BACKEND, "venv", "Scripts", "python.exe")
+else:
+    PYTHON = os.path.join(BACKEND, "venv_mac", "bin", "python")
+    if not os.path.exists(PYTHON):
+        PYTHON = "python3"
 
 # ── Colours (works in Windows Terminal / PowerShell; ignored in plain cmd) ──
 C = {

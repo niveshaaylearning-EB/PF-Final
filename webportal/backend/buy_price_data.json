@@ -1326,7 +1326,9 @@
       "prevBuyEvents": "06 Nov 2019 * 2.4963\n06 Jan 2020 * 2.5037",
       "prevSellEvents": "08 Jun 2020 * 5.0",
       "buyOHLC": {},
-      "sellOHLC": {},
+      "sellOHLC": {
+        "08 Jun 2020": 1075.4125
+      },
       "securityName": "BirlaNu Ltd",
       "segment": "Furniture Home Furnishing"
     },
@@ -1703,10 +1705,10 @@
       "segment": "Auto Components & Equipments"
     },
     "GANECOS": {
-      "buyEvents": "04 Nov 2022 * 5.0\n21 Dec 2022 * 2.0\n04 Jan 2024 * 0.0519\n28 May 2024 * 1.013\n11 May 2026 * 0.5",
-      "sellEvents": "03 Nov 2023 * 3.0\n13 Jun 2024 * 0.0649\n02 Jun 2025 * 1.0\n30 Jul 2025 * 1.0\n19 Aug 2025 * 1.0",
-      "prevBuyEvents": "11 Feb 2021 * 4.0",
-      "prevSellEvents": "08 Apr 2021 * 4.0",
+      "buyEvents": "",
+      "sellEvents": "",
+      "prevBuyEvents": "04 Nov 2022 * 5.0\n21 Dec 2022 * 2.0\n04 Jan 2024 * 0.0519\n28 May 2024 * 1.013\n11 May 2026 * 0.5",
+      "prevSellEvents": "03 Nov 2023 * 3.0\n13 Jun 2024 * 0.0649\n02 Jun 2025 * 1.0\n30 Jul 2025 * 1.0\n19 Aug 2025 * 1.0\n30 Jun 2026 * 2.5",
       "buyOHLC": {
         "04 Nov 2022": 844.2,
         "21 Dec 2022": 942.7,
@@ -1721,7 +1723,8 @@
         "08 Apr 2021": 572.56,
         "13 Jun 2024": 1253.1,
         "19 Aug 2025": 1330.38,
-        "30 Jul 2025": 1474.12
+        "30 Jul 2025": 1474.12,
+        "30 Jun 2026": 892.425
       },
       "securityName": "Ganesha Ecosphere Ltd",
       "segment": "Other Textile Products"
@@ -1796,15 +1799,17 @@
       "segment": "Garments & Apparels"
     },
     "GOLDIAM": {
-      "buyEvents": "19 Nov 2025 * 2.5\n11 Feb 2026 * 1.0",
+      "buyEvents": "",
       "sellEvents": "",
-      "prevBuyEvents": "",
-      "prevSellEvents": "",
+      "prevBuyEvents": "19 Nov 2025 * 2.5\n11 Feb 2026 * 1.0",
+      "prevSellEvents": "30 Jun 2026 * 3.5",
       "buyOHLC": {
         "19 Nov 2025": 381.5375,
         "11 Feb 2026": 404.1625
       },
-      "sellOHLC": {},
+      "sellOHLC": {
+        "30 Jun 2026": 439.4125
+      },
       "securityName": "Goldiam International Ltd",
       "segment": "Gems Jewellery And Watches"
     },
@@ -1872,7 +1877,7 @@
     },
     "HBLENGINE": {
       "buyEvents": "21 Jun 2023 * 4.0\n16 Aug 2023 * 1.0\n04 Jan 2024 * 0.0649\n18 Feb 2025 * 1.0\n23 May 2025 * 1.0",
-      "sellEvents": "13 Jun 2024 * 0.0649\n23 Oct 2024 * 2.0\n11 May 2026 * 1",
+      "sellEvents": "13 Jun 2024 * 0.0649\n23 Oct 2024 * 2.0\n11 May 2026 * 1\n30 Jun 2026 * 0.5",
       "prevBuyEvents": "",
       "prevSellEvents": "",
       "buyOHLC": {
@@ -1885,7 +1890,8 @@
       "sellOHLC": {
         "13 Jun 2024": 483.1625,
         "23 Oct 2024": 558.4625,
-        "11 May 2026": 839.1625
+        "11 May 2026": 839.1625,
+        "30 Jun 2026": 802.9125
       },
       "securityName": "HBL Engineering Ltd",
       "segment": "Other Industrial Products"
@@ -1999,16 +2005,17 @@
       "segment": "Diversified Commercial Services"
     },
     "IMFA": {
-      "buyEvents": "19 Nov 2025 * 3.0\n09 Jan 2026 * 1.0",
-      "sellEvents": "20 Feb 2026 * 1.5",
-      "prevBuyEvents": "",
-      "prevSellEvents": "",
+      "buyEvents": "",
+      "sellEvents": "",
+      "prevBuyEvents": "19 Nov 2025 * 3.0\n09 Jan 2026 * 1.0",
+      "prevSellEvents": "20 Feb 2026 * 1.5\n30 Jun 2026 * 2.5",
       "buyOHLC": {
         "19 Nov 2025": 1339.525,
         "09 Jan 2026": 1231.35
       },
       "sellOHLC": {
-        "20 Feb 2026": 1279.42
+        "20 Feb 2026": 1279.42,
+        "30 Jun 2026": 1266.35
       },
       "securityName": "Indian Metals and Ferro Alloys Ltd",
       "segment": "Ferro & Silica Manganese"
@@ -2210,7 +2217,9 @@
       "prevBuyEvents": "06 Nov 2019 * 5.0",
       "prevSellEvents": "05 Mar 2020 * 5.0",
       "buyOHLC": {},
-      "sellOHLC": {},
+      "sellOHLC": {
+        "05 Mar 2020": 332.6375
+      },
       "securityName": "Kalpataru Projects International Ltd",
       "segment": "Civil Construction"
     },
@@ -2986,14 +2995,16 @@
     },
     "SYRMA": {
       "buyEvents": "02 Jun 2025 * 3.0\n13 Apr 2026 * 2.0",
-      "sellEvents": "",
+      "sellEvents": "30 Jun 2026 * 0.5",
       "prevBuyEvents": "",
       "prevSellEvents": "",
       "buyOHLC": {
         "02 Jun 2025": 548.75,
         "13 Apr 2026": 857.975
       },
-      "sellOHLC": {},
+      "sellOHLC": {
+        "30 Jun 2026": 1389.5
+      },
       "securityName": "Syrma SGS Technology Ltd",
       "segment": "Industrial Products"
     },
@@ -3291,11 +3302,13 @@
       "securityName": "Avalon Technologies Ltd",
       "segment": "Other Electrical Equipment",
       "buyEvents": "05 May 2026 * 4",
-      "sellEvents": "",
+      "sellEvents": "30 Jun 2026 * 0.5",
       "buyOHLC": {
         "05 May 2026": 1182.425
       },
-      "sellOHLC": {},
+      "sellOHLC": {
+        "30 Jun 2026": 1806.6
+      },
       "prevBuyEvents": "",
       "prevSellEvents": ""
     },
@@ -3352,7 +3365,7 @@
     },
     "SHADOWFAX": {
       "securityName": "Shadowfax Technologies Ltd",
-      "segment": "Equity",
+      "segment": "BSE IPO",
       "buyEvents": "20 May 2026 * 3",
       "sellEvents": "",
       "buyOHLC": {
@@ -3364,11 +3377,48 @@
     },
     "NEOGEN": {
       "securityName": "Neogen Chemicals Ltd",
-      "segment": "Equity",
-      "buyEvents": "20 May 2026 * 2",
+      "segment": "BSE Commodities",
+      "buyEvents": "20 May 2026 * 2\n30 Jun 2026 * 2",
       "sellEvents": "",
       "buyOHLC": {
-        "20 May 2026": 1694.75
+        "20 May 2026": 1694.75,
+        "30 Jun 2026": 1982.15
+      },
+      "sellOHLC": {},
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
+    },
+    "TIMEX": {
+      "securityName": "Timex Group India Ltd",
+      "segment": "BSE Consumer Discretionary",
+      "buyEvents": "30 Jun 2026 * 3",
+      "sellEvents": "",
+      "buyOHLC": {
+        "30 Jun 2026": 527.7375
+      },
+      "sellOHLC": {},
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
+    },
+    "INOXINDIA": {
+      "securityName": "INOX India Ltd",
+      "segment": "BSE Industrials",
+      "buyEvents": "30 Jun 2026 * 2.5",
+      "sellEvents": "",
+      "buyOHLC": {
+        "30 Jun 2026": 1921.375
+      },
+      "sellOHLC": {},
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
+    },
+    "SAILIFE": {
+      "securityName": "Sai Life Sciences Ltd",
+      "segment": "BSE 500",
+      "buyEvents": "30 Jun 2026 * 2.5",
+      "sellEvents": "",
+      "buyOHLC": {
+        "30 Jun 2026": 1244.15
       },
       "sellOHLC": {},
       "prevBuyEvents": "",
@@ -4117,8 +4167,8 @@
     "AARTIPHARM": {
       "securityName": "Aarti Pharmalabs Ltd",
       "segment": "Chemicals/Pharmaceuticals",
-      "buyEvents": "06 Feb 2025 * 5",
-      "sellEvents": "27 May 2026 * 1",
+      "buyEvents": "",
+      "sellEvents": "",
       "targetPrice": null,
       "stopLoss": null,
       "buyOHLC": {
@@ -4128,10 +4178,11 @@
         "27 May 2026": 675.5875
       },
       "sellOHLC": {
-        "27 May 2026": 675.5875
+        "27 May 2026": 675.5875,
+        "08 Jun 2026": 611.7875
       },
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevBuyEvents": "06 Feb 2025 * 5",
+      "prevSellEvents": "27 May 2026 * 1\n08 Jun 2026 * 4"
     },
     "ACUTAAS": {
       "securityName": "Acutaas Chemicals Ltd",
@@ -4323,7 +4374,7 @@
     "ICEMAKE": {
       "securityName": "Ice Make Refrigeration Ltd",
       "segment": "Industrial Machinery",
-      "buyEvents": "16 Feb 2026 * 3",
+      "buyEvents": "",
       "sellEvents": "",
       "targetPrice": null,
       "stopLoss": null,
@@ -4333,9 +4384,11 @@
         "16 Feb 2026": 772.56,
         "27 May 2026": 886.3625
       },
-      "sellOHLC": {},
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "sellOHLC": {
+        "08 Jun 2026": 735.5625
+      },
+      "prevBuyEvents": "16 Feb 2026 * 3",
+      "prevSellEvents": "08 Jun 2026 * 3"
     },
     "NEOGEN": {
       "securityName": "Neogen Chemicals Ltd",
@@ -4393,8 +4446,8 @@
     "SAMBHV": {
       "securityName": "Sambhv Steel Tubes Ltd",
       "segment": "Capital Goods/Engineering",
-      "buyEvents": "20 Feb 2026 * 5\n15 Apr 2026 * 1",
-      "sellEvents": "18 May 2026 * 1\n27 May 2026 * 2",
+      "buyEvents": "",
+      "sellEvents": "",
       "targetPrice": null,
       "stopLoss": null,
       "buyOHLC": {
@@ -4407,10 +4460,11 @@
       },
       "sellOHLC": {
         "18 May 2026": 107.82,
-        "27 May 2026": 106.73
+        "27 May 2026": 106.73,
+        "08 Jun 2026": 105.2125
       },
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevBuyEvents": "20 Feb 2026 * 5\n15 Apr 2026 * 1",
+      "prevSellEvents": "18 May 2026 * 1\n27 May 2026 * 2\n08 Jun 2026 * 3"
     },
     "SANSERA": {
       "securityName": "Sansera Engineering Ltd",
@@ -4474,7 +4528,7 @@
     "VENUSREM": {
       "securityName": "Venus Remedies Ltd",
       "segment": "Pharmaceuticals",
-      "buyEvents": "15 Apr 2026 * 3",
+      "buyEvents": "15 Apr 2026 * 3\n08 Jun 2026 * 1",
       "sellEvents": "",
       "targetPrice": null,
       "stopLoss": null,
@@ -4482,7 +4536,8 @@
         "14 Apr 2026": 1070.48,
         "18 May 2026": 930.05,
         "15 Apr 2026": 1070.48,
-        "27 May 2026": 1219.1
+        "27 May 2026": 1219.1,
+        "08 Jun 2026": 1646.55
       },
       "sellOHLC": {},
       "prevBuyEvents": "",
@@ -4506,14 +4561,16 @@
       "securityName": "Ram Ratna Wires Ltd",
       "segment": "Other Electrical Equipment",
       "buyEvents": "04 May 2026 * 5",
-      "sellEvents": "",
+      "sellEvents": "08 Jun 2026 * 1",
       "buyOHLC": {
         "08 May 2026": 452.0125,
         "18 May 2026": 416.225,
         "04 May 2026": 458.59,
         "27 May 2026": 488.7375
       },
-      "sellOHLC": {},
+      "sellOHLC": {
+        "08 Jun 2026": 381.0125
+      },
       "prevBuyEvents": "",
       "prevSellEvents": ""
     },
@@ -4550,11 +4607,12 @@
     "SAKAR": {
       "securityName": "Sakar Healthcare Ltd",
       "segment": "Pharmaceuticals",
-      "buyEvents": "18 May 2026 * 5",
+      "buyEvents": "18 May 2026 * 5\n08 Jun 2026 * 1",
       "sellEvents": "",
       "buyOHLC": {
         "18 May 2026": 763.6625,
-        "27 May 2026": 793.575
+        "27 May 2026": 793.575,
+        "08 Jun 2026": 774.4
       },
       "sellOHLC": {},
       "prevBuyEvents": "",
@@ -4580,11 +4638,12 @@
     "IDEAFORGE": {
       "securityName": "ideaForge Technology Ltd",
       "segment": "Aerospace & Defense",
-      "buyEvents": "18 May 2026 * 5",
+      "buyEvents": "18 May 2026 * 5\n08 Jun 2026 * 2",
       "sellEvents": "",
       "buyOHLC": {
         "18 May 2026": 804.1875,
-        "27 May 2026": 847.825
+        "27 May 2026": 847.825,
+        "08 Jun 2026": 946.5625
       },
       "sellOHLC": {},
       "prevBuyEvents": "",
@@ -4836,7 +4895,8 @@
         "03 Mar 2022": 1001.19,
         "27 Jul 2022": 1000.49,
         "23 Aug 2023": 1000.0
-      }
+      },
+      "segment": "Equity"
     },
     "HGINFRA": {
       "securityName": "HGINFRA",
@@ -4885,7 +4945,7 @@
     },
     "ANGELONE": {
       "securityName": "ANGELONE",
-      "buyEvents": "",
+      "buyEvents": "07 Feb 2022 * 7",
       "sellEvents": "",
       "prevBuyEvents": "21 Nov 2023 * 5",
       "prevSellEvents": "30 Jan 2024 * 5",
@@ -4997,7 +5057,9 @@
       "sellEvents": "",
       "prevBuyEvents": "07 Feb 2022 * 7",
       "prevSellEvents": "02 Nov 2022 * 7",
-      "buyOHLC": {},
+      "buyOHLC": {
+        "07 Feb 2022": 914.45
+      },
       "sellOHLC": {
         "27 May 2026": 1231.05,
         "02 Nov 2022": 1303.9375
@@ -5482,10 +5544,11 @@
     "DEEDEV": {
       "securityName": "DEE Development Engineers Ltd",
       "segment": "BSE Industrials",
-      "buyEvents": "27 May 2026 * 3",
+      "buyEvents": "27 May 2026 * 3\n08 Jun 2026 * 4",
       "sellEvents": "",
       "buyOHLC": {
-        "27 May 2026": 552.9625
+        "27 May 2026": 552.9625,
+        "08 Jun 2026": 688.3875
       },
       "sellOHLC": {},
       "prevBuyEvents": "",
@@ -5498,6 +5561,18 @@
       "sellEvents": "",
       "buyOHLC": {
         "27 May 2026": 198.025
+      },
+      "sellOHLC": {},
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
+    },
+    "SEDEMAC": {
+      "securityName": "SEDEMAC Mechatronics Ltd",
+      "segment": "BSE IPO",
+      "buyEvents": "08 Jun 2026 * 3",
+      "sellEvents": "",
+      "buyOHLC": {
+        "08 Jun 2026": 2361.925
       },
       "sellOHLC": {},
       "prevBuyEvents": "",
@@ -5612,11 +5687,12 @@
     "LIQUIDCASE": {
       "securityName": "Zerodha Nifty 1D Rate Liquid ETF",
       "segment": "Cash",
-      "buyEvents": "27 Jan 2026 * 36",
-      "sellEvents": "26 Feb 2026 * 10\n07 Apr 2026 * 15.5\n05 May 2026 * 6\n21 May 2026 * 0.5",
+      "buyEvents": "18 Jun 2026 * 4",
+      "sellEvents": "",
       "buyOHLC": {
         "25 Feb 2026": 112.89,
-        "27 Jan 2026": 112.49
+        "27 Jan 2026": 112.49,
+        "18 Jun 2026": 114.5925
       },
       "sellOHLC": {
         "06 Apr 2026": 113.49,
@@ -5624,10 +5700,11 @@
         "25 Feb 2026": 112.89,
         "05 May 2026": 113.91,
         "26 Feb 2026": 112.9,
-        "07 Apr 2026": 113.5
+        "07 Apr 2026": 113.5,
+        "05 Jun 2026": 114.4225
       },
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevBuyEvents": "27 Jan 2026 * 36",
+      "prevSellEvents": "26 Feb 2026 * 10\n07 Apr 2026 * 15.5\n05 May 2026 * 6\n21 May 2026 * 0.5\n05 Jun 2026 * 4"
     },
     "MEESHO": {
       "securityName": "Meesho Ltd",
@@ -5685,15 +5762,17 @@
     "PINELABS": {
       "securityName": "Pine Labs Ltd",
       "segment": "Fintech & Digital Public Rail",
-      "buyEvents": "27 Jan 2026 * 4",
+      "buyEvents": "",
       "sellEvents": "",
       "buyOHLC": {
         "25 Feb 2026": 202.09,
         "27 Jan 2026": 234.92
       },
-      "sellOHLC": {},
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "sellOHLC": {
+        "18 Jun 2026": 150.95
+      },
+      "prevBuyEvents": "27 Jan 2026 * 4",
+      "prevSellEvents": "18 Jun 2026 * 4"
     },
     "RSYSTEMS": {
       "securityName": "R Systems International Ltd",
@@ -5905,7 +5984,20 @@
       },
       "sellOHLC": {
         "26 Feb 2026": 1054.45
-      }
+      },
+      "segment": "BSE 500"
+    },
+    "TEJASNET": {
+      "securityName": "Tejas Networks Ltd",
+      "segment": "BSE 500",
+      "buyEvents": "05 Jun 2026 * 4",
+      "sellEvents": "",
+      "buyOHLC": {
+        "05 Jun 2026": 592.7
+      },
+      "sellOHLC": {},
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
     }
   },
   "Make_in_India": {
@@ -7612,27 +7704,31 @@
     "GOLDIAM": {
       "securityName": "Goldiam International Ltd",
       "segment": "Consumer Discretionary",
-      "buyEvents": "20 Feb 2025 * 5",
+      "buyEvents": "",
       "sellEvents": "",
       "buyOHLC": {
         "19 Feb 2025": 379.15,
         "20 Feb 2025": 399.75
       },
-      "sellOHLC": {},
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "sellOHLC": {
+        "10 Jun 2026": 438.7,
+        "30 Jun 2026": 439.4125
+      },
+      "prevBuyEvents": "20 Feb 2025 * 5",
+      "prevSellEvents": "10 Jun 2026 * 1\n30 Jun 2026 * 4"
     },
     "GRWRHITECH": {
       "securityName": "Garware Hi-Tech Films Ltd",
       "segment": "Auto Ancilliary",
-      "buyEvents": "21 Nov 2025 * 4",
+      "buyEvents": "21 Nov 2025 * 4\n30 Jun 2026 * 1",
       "sellEvents": "",
       "buyOHLC": {
         "11 Jun 2024": 2067.5,
         "12 Jun 2024": 2149.33,
         "20 Nov 2025": 4168.68,
         "21 Nov 2025": 4097.83,
-        "13 Jun 2024": 2143.85
+        "13 Jun 2024": 2143.85,
+        "30 Jun 2026": 6725.125
       },
       "sellOHLC": {
         "03 Apr 2025": 3351.42,
@@ -7819,14 +7915,16 @@
       "securityName": "Urban Company Ltd",
       "segment": "Online Services",
       "buyEvents": "17 Mar 2026 * 4\n13 Apr 2026 * 1",
-      "sellEvents": "",
+      "sellEvents": "30 Jun 2026 * 1",
       "buyOHLC": {
         "16 Mar 2026": 111.45,
         "12 Apr 2026": 133.36,
         "17 Mar 2026": 111.23,
         "13 Apr 2026": 133.36
       },
-      "sellOHLC": {},
+      "sellOHLC": {
+        "30 Jun 2026": 131.2425
+      },
       "prevBuyEvents": "",
       "prevSellEvents": ""
     },
@@ -7834,14 +7932,16 @@
       "securityName": "Aarti Pharmalabs Ltd",
       "segment": "Labs & Life Sciences Services",
       "buyEvents": "17 Mar 2026 * 4\n13 Apr 2026 * 1",
-      "sellEvents": "",
+      "sellEvents": "10 Jun 2026 * 1",
       "buyOHLC": {
         "16 Mar 2026": 640.96,
         "12 Apr 2026": 692.45,
         "17 Mar 2026": 640.37,
         "13 Apr 2026": 692.45
       },
-      "sellOHLC": {},
+      "sellOHLC": {
+        "10 Jun 2026": 624.55
+      },
       "prevBuyEvents": "",
       "prevSellEvents": ""
     },
@@ -7849,12 +7949,14 @@
       "securityName": "Meesho Ltd",
       "segment": "Retail - Online",
       "buyEvents": "13 Apr 2026 * 4",
-      "sellEvents": "",
+      "sellEvents": "10 Jun 2026 * 1",
       "buyOHLC": {
         "12 Apr 2026": 160.36,
         "13 Apr 2026": 160.36
       },
-      "sellOHLC": {},
+      "sellOHLC": {
+        "10 Jun 2026": 169.7425
+      },
       "prevBuyEvents": "",
       "prevSellEvents": ""
     },
@@ -7942,10 +8044,11 @@
     "KDDL": {
       "securityName": "KDDL Ltd",
       "segment": "BSE Consumer Discretionary",
-      "buyEvents": "22 May 2026 * 3",
+      "buyEvents": "22 May 2026 * 3\n30 Jun 2026 * 1",
       "sellEvents": "",
       "buyOHLC": {
-        "22 May 2026": 2843.4
+        "22 May 2026": 2843.4,
+        "30 Jun 2026": 3196.8749
       },
       "sellOHLC": {},
       "prevBuyEvents": "",
@@ -8448,10 +8551,37 @@
     "RAMRAT": {
       "securityName": "Ram Ratna Wires Ltd",
       "segment": "BSE Industrials",
-      "buyEvents": "27 May 2026 * 4",
+      "buyEvents": "",
       "sellEvents": "",
       "buyOHLC": {
         "27 May 2026": 488.7375
+      },
+      "sellOHLC": {
+        "10 Jun 2026": 364.775,
+        "30 Jun 2026": 403.5625
+      },
+      "prevBuyEvents": "27 May 2026 * 4",
+      "prevSellEvents": "10 Jun 2026 * 1\n30 Jun 2026 * 3"
+    },
+    "TIMEX": {
+      "securityName": "Timex Group India Ltd",
+      "segment": "BSE Consumer Discretionary",
+      "buyEvents": "10 Jun 2026 * 4",
+      "sellEvents": "",
+      "buyOHLC": {
+        "10 Jun 2026": 463.5625
+      },
+      "sellOHLC": {},
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
+    },
+    "DIVGIITTS": {
+      "securityName": "Divgi TorqTransfer Systems Ltd",
+      "segment": "BSE Consumer Discretionary",
+      "buyEvents": "30 Jun 2026 * 6",
+      "sellEvents": "",
+      "buyOHLC": {
+        "30 Jun 2026": 941.1375
       },
       "sellOHLC": {},
       "prevBuyEvents": "",

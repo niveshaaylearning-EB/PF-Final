@@ -1,0 +1,50 @@
+[
+  {
+    "action": "rebalance_upload",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "03 Jul 2026 05:50 UTC",
+    "details": {
+      "basket": "Techstack",
+      "basketLabel": "Techstack",
+      "date": "18 Jun 2026",
+      "stocksProcessed": 24,
+      "filename": "techstack reb.xlsx"
+    }
+  },
+  {
+    "action": "rebalance_upload",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "03 Jul 2026 05:50 UTC",
+    "details": {
+      "basket": "Trends_Triology",
+      "basketLabel": "Trends Triology",
+      "date": "08 Jun 2026",
+      "stocksProcessed": 23,
+      "filename": "trends tri reb.xlsx"
+    }
+  },
+  {
+    "action": "rebalance_upload",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "03 Jul 2026 05:49 UTC",
+    "details": {
+      "basket": "Mid_Small_Cap",
+      "basketLabel": "Mid & Small Cap",
+      "date": "30 Jun 2026",
+      "stocksProcessed": 30,
+      "filename": "mid n small reb.xlsx"
+    }
+  },
+  {
+    "action": "rebalance_upload",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "03 Jul 2026 05:48 UTC",
+    "details": {
+      "basket": "Consumer_Trends",
+      "basketLabel": "Consumer Trends",
+      "date": "30 Jun 2026",
+      "stocksProcessed": 25,
+      "filename": "consumer trends reb.xlsx"
+    }
+  }
+]
