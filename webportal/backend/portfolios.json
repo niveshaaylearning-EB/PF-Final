@@ -3,97 +3,97 @@
     {
       "nseCode": "WAAREEENER",
       "allocation": 0.05,
-      "buyPrice": 2698.3744,
+      "buyPrice": 2698.37,
       "securityName": "Waaree Energies Ltd"
     },
     {
       "nseCode": "TRITURBINE",
       "allocation": 0.03,
-      "buyPrice": 146.3625,
+      "buyPrice": 146.36,
       "securityName": "Triveni Turbine Ltd"
     },
     {
       "nseCode": "TDPOWERSYS",
       "allocation": 0.05,
-      "buyPrice": 179.6566,
+      "buyPrice": 179.66,
       "securityName": "TD Power Systems Ltd"
     },
     {
       "nseCode": "EMMVEE",
       "allocation": 0.03,
-      "buyPrice": 230.5825,
+      "buyPrice": 230.58,
       "securityName": "Emmvee Photovoltaic Power Ltd"
     },
     {
       "nseCode": "BORORENEW",
       "allocation": 0.06,
-      "buyPrice": 581.4369,
+      "buyPrice": 581.44,
       "securityName": "Borosil Renewables Ltd"
     },
     {
       "nseCode": "VEDL",
       "allocation": 0.02,
-      "buyPrice": 601.1925,
+      "buyPrice": 601.19,
       "securityName": "Vedanta Ltd"
     },
     {
       "nseCode": "THERMAX",
       "allocation": 0.045,
-      "buyPrice": 3710.3183,
+      "buyPrice": 3710.32,
       "securityName": "Thermax Limited"
     },
     {
       "nseCode": "SYRMA",
       "allocation": 0.06,
-      "buyPrice": 580.4126,
+      "buyPrice": 580.41,
       "securityName": "Syrma SGS Technology Ltd"
     },
     {
       "nseCode": "AVALON",
       "allocation": 0.05,
-      "buyPrice": 1141.0634,
+      "buyPrice": 1141.06,
       "securityName": "Avalon Technologies Ltd"
     },
     {
       "nseCode": "SKIPPER",
       "allocation": 0.025,
-      "buyPrice": 252.754,
+      "buyPrice": 252.75,
       "securityName": "Skipper Ltd"
     },
     {
       "nseCode": "POWERMECH",
       "allocation": 0.02,
-      "buyPrice": 3242.0302,
+      "buyPrice": 3242.03,
       "securityName": "Power Mech Projects Ltd"
     },
     {
       "nseCode": "ENRIN",
       "allocation": 0.05,
-      "buyPrice": 2657.0058,
+      "buyPrice": 2657.01,
       "securityName": "Siemens Energy India Ltd"
     },
     {
       "nseCode": "SBCL",
       "allocation": 0.05,
-      "buyPrice": 451.853,
+      "buyPrice": 451.85,
       "securityName": "Shivalik Bimetal Controls Ltd"
     },
     {
       "nseCode": "FIEMIND",
       "allocation": 0.02,
-      "buyPrice": 824.8734,
+      "buyPrice": 824.87,
       "securityName": "Fiem Industries Ltd"
     },
     {
       "nseCode": "ATHERENERG",
       "allocation": 0.03,
-      "buyPrice": 684.8127,
+      "buyPrice": 684.81,
       "securityName": "Ather Energy Ltd"
     },
     {
       "nseCode": "SANSERA",
       "allocation": 0.045,
-      "buyPrice": 1991.2563,
+      "buyPrice": 1991.26,
       "securityName": "Sansera Engineering Ltd"
     },
     {
@@ -105,37 +105,37 @@
     {
       "nseCode": "QPOWER",
       "allocation": 0.02,
-      "buyPrice": 800.5047,
+      "buyPrice": 800.5,
       "securityName": "Quality Power Electrical Equipments Ltd"
     },
     {
       "nseCode": "POCL",
       "allocation": 0.035,
-      "buyPrice": 1043.8517,
+      "buyPrice": 1043.85,
       "securityName": "Pondy Oxides and Chemicals Ltd"
     },
     {
       "nseCode": "JAINREC",
       "allocation": 0.035,
-      "buyPrice": 408.1466,
+      "buyPrice": 408.15,
       "securityName": "Jain Resource Recycling Ltd"
     },
     {
       "nseCode": "GANECOS",
       "allocation": 0.03,
-      "buyPrice": 860.5767,
+      "buyPrice": 860.58,
       "securityName": "Ganesha Ecosphere Ltd"
     },
     {
       "nseCode": "EBGNG",
       "allocation": 0.05,
-      "buyPrice": 335.9767,
+      "buyPrice": 335.98,
       "securityName": "GNG Electronics Ltd"
     },
     {
       "nseCode": "NEOGEN",
       "allocation": 0.035,
-      "buyPrice": 1558.6897,
+      "buyPrice": 1558.69,
       "securityName": "Neogen Chemicals Ltd"
     },
     {
@@ -146,14 +146,162 @@
     {
       "nseCode": "INOXINDIA",
       "allocation": 0.03,
-      "buyPrice": 1468.7632,
+      "buyPrice": 1468.76,
       "securityName": "INOX India Ltd"
     },
     {
       "nseCode": "HBLENGINE",
       "allocation": 0.05,
-      "buyPrice": 675.7312,
+      "buyPrice": 675.73,
       "securityName": "HBL Engineering Ltd"
+    },
+    {
+      "nseCode": "TRANSRAILL",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "TATAPOWER",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "SWELECTES",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "SWSOLAR",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "CROMPTON",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "KEC",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "LIQUIDBEES",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "INOXWIND",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "EKC",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "IEX",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "SONACOMS",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "MAPMYINDIA",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "POWERINDIA",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "GREAVESCOT",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "APARINDS",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "GRAVITA",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "MTARTECH",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "SANGHVIMOV",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "PENIND",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "KSB",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "KPITTECH",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "BBL",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "EXIDEIND",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "RECLTD",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "TECHNOE",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "PRAJIND",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "PITTIENG",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "IONEXCHANG",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "TARIL",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "PREMIERENE",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "SHAKTIPUMP",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "ACMESOLAR",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "OSWALPUMPS",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "GENUSPOWER",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "WEBELSOLAR",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "KPIL",
+      "allocation": 0.0
+    },
+    {
+      "nseCode": "HPL",
+      "allocation": 0.0
     }
   ],
   "Mid_Small_Cap": [
@@ -185,12 +333,12 @@
     {
       "nseCode": "HBLENGINE",
       "allocation": 0.035,
-      "buyPrice": 271.12
+      "buyPrice": 393.86
     },
     {
       "nseCode": "SYRMA",
       "allocation": 0.045,
-      "buyPrice": 672.44
+      "buyPrice": 686.18
     },
     {
       "nseCode": "CENTUM",
@@ -210,7 +358,7 @@
     {
       "nseCode": "SBCL",
       "allocation": 0.05,
-      "buyPrice": 326.42
+      "buyPrice": 444.9
     },
     {
       "nseCode": "SHADOWFAX",
@@ -275,7 +423,7 @@
     {
       "nseCode": "KRN",
       "allocation": 0.03,
-      "buyPrice": 874.89
+      "buyPrice": 879.07
     },
     {
       "nseCode": "HFCL",
@@ -297,43 +445,43 @@
     {
       "nseCode": "URBANCO",
       "allocation": 0.04,
-      "buyPrice": 122.66,
+      "buyPrice": 122.63,
       "securityName": "Urban Company Ltd"
     },
     {
       "nseCode": "UNIMECH",
       "allocation": 0.05,
-      "buyPrice": 943.89,
+      "buyPrice": 951.56,
       "securityName": "Unimech Aerospace and Manufacturing Ltd"
     },
     {
       "nseCode": "SEDEMAC",
       "allocation": 0.05,
-      "buyPrice": 1646.0,
+      "buyPrice": 1654.0,
       "securityName": "SEDEMAC Mechatronics Ltd"
     },
     {
       "nseCode": "SAMBHV",
       "allocation": 0.07,
-      "buyPrice": 103.71,
+      "buyPrice": 101.02,
       "securityName": "Sambhv Steel Tubes Ltd"
     },
     {
       "nseCode": "OMNI",
       "allocation": 0.07,
-      "buyPrice": 359.96,
+      "buyPrice": 368.57,
       "securityName": "Omnitech Engineering Ltd"
     },
     {
       "nseCode": "DEEDEV",
       "allocation": 0.04,
-      "buyPrice": 318.66,
+      "buyPrice": 331.12,
       "securityName": "DEE Development Engineers Ltd"
     },
     {
       "nseCode": "AJAXENGG",
       "allocation": 0.04,
-      "buyPrice": 595.19,
+      "buyPrice": 603.39,
       "securityName": "AJAX Engineering Ltd"
     },
     {
@@ -344,25 +492,25 @@
     {
       "nseCode": "BLACKBUCK",
       "allocation": 0.05,
-      "buyPrice": 484.24,
+      "buyPrice": 485.0,
       "securityName": "Blackbuck Ltd"
     },
     {
       "nseCode": "SAILIFE",
       "allocation": 0.04,
-      "buyPrice": 670.14,
+      "buyPrice": 685.22,
       "securityName": "Sai Life Sciences Ltd"
     },
     {
       "nseCode": "QPOWER",
       "allocation": 0.05,
-      "buyPrice": 865.89,
+      "buyPrice": 886.9,
       "securityName": "Quality Power Electrical Equipments Ltd"
     },
     {
       "nseCode": "EMMVEE",
       "allocation": 0.03,
-      "buyPrice": 232.08,
+      "buyPrice": 231.55,
       "securityName": "Emmvee Photovoltaic Power Ltd"
     },
     {
@@ -378,43 +526,43 @@
     {
       "nseCode": "ATHERENERG",
       "allocation": 0.05,
-      "buyPrice": 556.26,
+      "buyPrice": 561.88,
       "securityName": "Ather Energy Ltd"
     },
     {
       "nseCode": "MOBIKWIK",
       "allocation": 0.04,
-      "buyPrice": 236.99,
+      "buyPrice": 229.25,
       "securityName": "One MobiKwik Systems Ltd"
     },
     {
       "nseCode": "GROWW",
       "allocation": 0.04,
-      "buyPrice": 169.99,
+      "buyPrice": 168.74,
       "securityName": "Billionbrains Garage Ventures Ltd"
     },
     {
       "nseCode": "MEESHO",
       "allocation": 0.05,
-      "buyPrice": 152.52,
+      "buyPrice": 157.0,
       "securityName": "Meesho Ltd"
     },
     {
       "nseCode": "KRN",
       "allocation": 0.04,
-      "buyPrice": 881.12,
+      "buyPrice": 895.75,
       "securityName": "KRN Heat Exchanger and Refrigeration Ltd"
     },
     {
       "nseCode": "EBGNG",
       "allocation": 0.07,
-      "buyPrice": 334.44,
+      "buyPrice": 330.25,
       "securityName": "GNG Electronics Ltd"
     },
     {
       "nseCode": "CPPLUS",
       "allocation": 0.05,
-      "buyPrice": 1732.88,
+      "buyPrice": 1707.82,
       "securityName": "Aditya Infotech Ltd"
     }
   ],
@@ -479,7 +627,7 @@
     {
       "nseCode": "ATHERENERG",
       "allocation": 0.06,
-      "buyPrice": 736.32,
+      "buyPrice": 737.95,
       "securityName": "Ather Energy Ltd"
     },
     {
@@ -514,7 +662,7 @@
     {
       "nseCode": "EBGNG",
       "allocation": 0.04,
-      "buyPrice": 359.91,
+      "buyPrice": 361.34,
       "securityName": "GNG Electronics Ltd"
     },
     {
@@ -526,7 +674,7 @@
     {
       "nseCode": "E2E",
       "allocation": 0.06,
-      "buyPrice": 2786.89,
+      "buyPrice": 2932.7,
       "securityName": "E2E Networks Ltd"
     }
   ],
@@ -599,7 +747,7 @@
     {
       "nseCode": "GENESYS",
       "allocation": 0.05,
-      "buyPrice": 306.58
+      "buyPrice": 307.03
     },
     {
       "nseCode": "E2E",
@@ -657,7 +805,7 @@
     {
       "nseCode": "WAAREEENER",
       "allocation": 0.04,
-      "buyPrice": 2440.82,
+      "buyPrice": 2401.09,
       "securityName": "Waaree Energies Ltd"
     },
     {
@@ -669,7 +817,7 @@
     {
       "nseCode": "SAMBHV",
       "allocation": 0.06,
-      "buyPrice": 105.14,
+      "buyPrice": 102.9,
       "securityName": "Sambhv Steel Tubes Ltd"
     },
     {
@@ -681,7 +829,7 @@
     {
       "nseCode": "PRECWIRE",
       "allocation": 0.03,
-      "buyPrice": 186.08,
+      "buyPrice": 186.48,
       "securityName": "Precision Wires India Ltd"
     },
     {
@@ -693,7 +841,7 @@
     {
       "nseCode": "HLEGLAS",
       "allocation": 0.04,
-      "buyPrice": 525.36,
+      "buyPrice": 516.18,
       "securityName": "HLE Glascoat Ltd"
     },
     {
@@ -737,25 +885,25 @@
     {
       "nseCode": "ASTRAMICRO",
       "allocation": 0.04,
-      "buyPrice": 1114.45,
+      "buyPrice": 1145.4,
       "securityName": "Astra Microwave Products Ltd"
     },
     {
       "nseCode": "KDDL",
       "allocation": 0.04,
-      "buyPrice": 1095.2215,
+      "buyPrice": 1095.22,
       "securityName": "KDDL Ltd"
     },
     {
       "nseCode": "CENTUM",
       "allocation": 0.06,
-      "buyPrice": 2007.1685,
+      "buyPrice": 2007.17,
       "securityName": "Centum Electronics Ltd"
     },
     {
       "nseCode": "AVALON",
       "allocation": 0.06,
-      "buyPrice": 712.53,
+      "buyPrice": 712.98,
       "securityName": "Avalon Technologies Ltd"
     },
     {
@@ -767,7 +915,7 @@
     {
       "nseCode": "AARTIPHARM",
       "allocation": 0.06,
-      "buyPrice": 617.5392,
+      "buyPrice": 617.54,
       "securityName": "Aarti Pharmalabs Ltd"
     }
   ],
@@ -775,7 +923,7 @@
     {
       "nseCode": "URBANCO",
       "allocation": 0.04,
-      "buyPrice": 115.66,
+      "buyPrice": 116.76,
       "securityName": "Urban Company Ltd"
     },
     {
@@ -887,7 +1035,7 @@
     {
       "nseCode": "ATHERENERG",
       "allocation": 0.05,
-      "buyPrice": 754.38,
+      "buyPrice": 776.9,
       "securityName": "Ather Energy Ltd"
     },
     {
@@ -899,7 +1047,7 @@
     {
       "nseCode": "AARTIPHARM",
       "allocation": 0.04,
-      "buyPrice": 650.79,
+      "buyPrice": 653.39,
       "securityName": "Aarti Pharmalabs Ltd"
     }
   ],
@@ -6221,6 +6369,16 @@
       "nseCode": "EMMVEE",
       "allocation": 0,
       "buyPrice": 217
+    },
+    {
+      "nseCode": "CMRGREEN",
+      "allocation": 0,
+      "buyPrice": 0
+    },
+    {
+      "nseCode": "KUSUMGAR",
+      "allocation": 0,
+      "buyPrice": 0
     }
   ],
   "IPO_Recommendations_sold": []

@@ -111,8 +111,8 @@ const EMPTY_FILTERS = { nse: '', name: '', date: '', action: 'All' };
 const ACTION_OPTS   = ['All', 'Wholly Sold', 'Partially Sold'];
 
 const fStyle = {
-  width: '100%', background: '#0f172a', border: '1px solid #334155',
-  borderRadius: '4px', color: '#e2e8f0', fontSize: '0.75rem',
+  width: '100%', background: 'var(--input-bg)', border: '1px solid var(--border-color)',
+  borderRadius: '4px', color: 'var(--text-primary)', fontSize: '0.75rem',
   padding: '0.2rem 0.4rem', boxSizing: 'border-box',
 };
 
@@ -224,7 +224,7 @@ export default function SoldStocksTable({ rows, activeNseCodes = new Set(), onCh
             <th></th>
           </tr>
           {showFilters && (
-            <tr style={{ background: 'rgba(15,23,42,0.8)' }}>
+            <tr style={{ background: 'var(--th-bg)' }}>
               <th><input value={colFilters.nse}  onChange={e => setColF('nse',  e.target.value)} placeholder="Filter…"   style={fStyle} /></th>
               <th><input value={colFilters.name} onChange={e => setColF('name', e.target.value)} placeholder="Filter…"   style={fStyle} /></th>
               <th><input value={colFilters.date} onChange={e => setColF('date', e.target.value)} placeholder="e.g. 2024" style={fStyle} /></th>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Calendar, Search, ArrowLeft, AlertCircle, Filter, Loader2 } from 'lucide-react';
+import { Calendar, CalendarPlus, Search, ArrowLeft, AlertCircle, Filter, Loader2 } from 'lucide-react';
 import { API_BASE } from '../config.js';
 
 export default function ResultCalendar() {
@@ -53,12 +53,29 @@ export default function ResultCalendar() {
 
   const formatEventDate = (dateStr) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-IN', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-IN', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
+  };
+
+  // Google Calendar "quick add" link — no OAuth/API needed, just opens a
+  // pre-filled event-creation page in a new tab. All-day event, so the end
+  // date is the next calendar day (Google's convention: end date exclusive).
+  const buildGoogleCalendarUrl = (event) => {
+    const fmt = (d) => d.toISOString().slice(0, 10).replace(/-/g, '');
+    const start = new Date(event.date);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
+
+    const text = encodeURIComponent(`${event.stock_code} Results`);
+    const details = encodeURIComponent(
+      `${event.stock_name} (${event.stock_code}) — ${event.purpose || 'Financial results'}.\n` +
+      `Basket${event.baskets.length > 1 ? 's' : ''}: ${event.baskets.join(', ')}`
+    );
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${fmt(start)}/${fmt(end)}&details=${details}`;
   };
 
   return (
@@ -155,6 +172,7 @@ export default function ResultCalendar() {
                     <th>Baskets</th>
                     <th>Result Date</th>
                     <th style={{ textAlign: 'right' }}>Remaining Days</th>
+                    <th style={{ textAlign: 'center' }}>Calendar</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -219,6 +237,23 @@ export default function ResultCalendar() {
                           }}>
                             {daysLeft === 0 ? 'Today!' : daysLeft === 1 ? 'Tomorrow' : `In ${daysLeft} days`}
                           </span>
+                        </td>
+                        <td style={{ textAlign: 'center' }}>
+                          <a
+                            href={buildGoogleCalendarUrl(event)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Add to Google Calendar"
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: '5px',
+                              fontSize: '0.75rem', fontWeight: 600, textDecoration: 'none',
+                              padding: '4px 10px', borderRadius: '8px',
+                              background: 'var(--hover-overlay)', border: '1px solid var(--panel-border)',
+                              color: 'var(--primary)', whiteSpace: 'nowrap',
+                            }}
+                          >
+                            <CalendarPlus size={13} /> Add
+                          </a>
                         </td>
                       </tr>
                     );

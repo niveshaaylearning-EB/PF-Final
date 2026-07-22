@@ -4,9 +4,9 @@ import io
 from datetime import datetime
 
 import openpyxl
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 
-from persistence import _load_historical_index, _save_historical_index
+from persistence import _load_historical_index, _save_historical_index, _require_admin
 
 router = APIRouter()
 
@@ -17,10 +17,11 @@ async def get_index_history():
 
 
 @router.post("/api/daily-values")
-async def post_daily_values(body: dict):
+async def post_daily_values(body: dict, request: Request):
     """Append (or update) daily basket + benchmark index values in historical_index.json.
     Body: { "date": "YYYY-MM-DD", "entries": [ { "basket": key, "value": float, "benchmark": float }, ... ] }
     If an entry for the given date already exists, it is overwritten."""
+    _require_admin(request)
     date_str = (body.get("date") or "").strip()
     entries  = body.get("entries") or []
 
@@ -55,11 +56,12 @@ async def post_daily_values(body: dict):
 
 
 @router.post("/api/import-excel-history")
-async def import_excel_history(basket: str = Form(...), file: UploadFile = File(...)):
+async def import_excel_history(request: Request, basket: str = Form(...), file: UploadFile = File(...)):
     """Import historical index values from an Excel file for a specific basket.
     Excel format: Column A = Date (YYYY-MM-DD), Column B = Basket Value, Column C = Benchmark.
     Only dates AFTER the last already-saved date are imported — existing data is never overwritten.
     """
+    _require_admin(request)
     hi = _load_historical_index()
 
     if basket not in hi:
@@ -203,9 +205,10 @@ def _parse_excel_rows(raw: bytes) -> tuple[list[dict], str]:
 
 
 @router.post("/api/import-excel-multi")
-async def import_excel_multi(files: list[UploadFile] = File(...)):
+async def import_excel_multi(request: Request, files: list[UploadFile] = File(...)):
     """Import multiple Excel files at once. Each file's basket is auto-detected
     from column B header. Only new dates (after the last saved entry) are added."""
+    _require_admin(request)
     hi = _load_historical_index()
 
     results = []
@@ -257,7 +260,7 @@ stocks list from buy-price data (recovery tool after data corrections)."""
 import io
 
 import openpyxl
-from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, Request, UploadFile
 
 from buy_price_gains import (
     _date_to_ts, _add_event,
@@ -268,6 +271,7 @@ from persistence import (
     _load_portfolios, _save_portfolios,
     _load_buy_price_data, _save_buy_price_data,
     _load_rebalance_history, _save_rebalance_history,
+    _require_admin,
 )
 from rebalance import _parse_excel_date, _resolve_nse_code
 
@@ -276,12 +280,14 @@ from rebalance import _parse_excel_date, _resolve_nse_code
 @router.post("/api/upload-historical-excel")
 async def upload_historical_excel(
     background_tasks: BackgroundTasks,
+    request: Request,
     basket: str = Form(...),
     file: UploadFile = File(...),
 ):
     """Upload an Excel workbook whose 'Historical Constituents' sheet (col A: Date,
     col B: Stock Name, col C: Weight %) contains rebalance history.
     Only dates AFTER the last stored rebalance date are processed."""
+    _require_admin(request)
 
     if basket not in BASKET_DISPLAY_NAMES:
         raise HTTPException(status_code=400, detail=f"Unknown basket: {basket}")
@@ -492,9 +498,10 @@ async def upload_historical_excel(
 
 
 @router.post("/api/rebuild-sold/{basket}")
-async def rebuild_sold_endpoint(basket: str, background_tasks: BackgroundTasks):
+async def rebuild_sold_endpoint(basket: str, background_tasks: BackgroundTasks, request: Request):
     """Rebuild sold-stock records from buy/sell event log. Fixes wrong weights, actions,
     sell prices, and duplicates caused by earlier code paths."""
+    _require_admin(request)
     if basket not in BASKET_DISPLAY_NAMES:
         raise HTTPException(400, f"Unknown basket: {basket}")
     _auto_save_rollback()

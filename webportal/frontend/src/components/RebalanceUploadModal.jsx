@@ -6,22 +6,22 @@ const UPDATE_TYPE_COLORS = {
   'Partial Add':  '#34d399',
   'Partial Sell': '#f87171',
   'Wholly Sell':  '#ef4444',
-  'No Change':    '#64748b',
+  'No Change':    'var(--text-secondary)',
 };
 
 const cellStyle = { padding: '0.35rem 0.7rem', fontSize: '0.79rem', verticalAlign: 'middle' };
-const hdrStyle  = { padding: '0.3rem 0.7rem', color: '#64748b', fontWeight: 600,
+const hdrStyle  = { padding: '0.3rem 0.7rem', color: 'var(--text-secondary)', fontWeight: 600,
                     fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.04em',
                     borderBottom: '1px solid rgba(255,255,255,0.1)' };
 const inputStyle = {
   background: 'transparent', border: 'none',
   borderBottom: '1px solid rgba(99,102,241,0.3)',
-  color: '#e2e8f0', fontSize: '0.79rem', width: '100%',
+  color: 'var(--text-primary)', fontSize: '0.79rem', width: '100%',
   outline: 'none', padding: '0.1rem 0',
 };
 
 function Badge({ type }) {
-  const color = UPDATE_TYPE_COLORS[type] || '#94a3b8';
+  const color = UPDATE_TYPE_COLORS[type] || 'var(--text-secondary)';
   return (
     <span style={{ fontSize: '0.68rem', fontWeight: 700, color,
                    background: color + '22', padding: '0.15rem 0.5rem',
@@ -105,11 +105,11 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 1000,
-      background: 'rgba(0,0,0,0.7)', display: 'flex',
+      background: 'var(--modal-overlay-bg)', display: 'flex',
       alignItems: 'center', justifyContent: 'center', padding: '1rem',
     }}>
       <div style={{
-        background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(99,102,241,0.35)',
+        background: 'var(--modal-bg)', border: '1px solid rgba(99,102,241,0.35)',
         borderRadius: '14px', width: '100%', maxWidth: '900px',
         maxHeight: '90vh', display: 'flex', flexDirection: 'column',
         boxShadow: '0 20px 60px rgba(0,0,0,0.7)',
@@ -118,20 +118,20 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
         <div style={{ padding: '1.2rem 1.5rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.07)',
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <div style={{ fontWeight: 700, fontSize: '1rem', color: '#e2e8f0' }}>
+            <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)' }}>
               <i className="fa-solid fa-code-branch" style={{ color: '#818cf8', marginRight: '0.5rem' }} />
               Review Rebalance — {previewData.basket}
             </div>
-            <div style={{ fontSize: '0.76rem', color: '#64748b', marginTop: '0.25rem' }}>
+            <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
               {previewData.latestDate} · {previewData.slide2.length} stock{previewData.slide2.length !== 1 ? 's' : ''}
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {totalSlides > 1 && (
-              <span style={{ fontSize: '0.78rem', color: '#64748b' }}>{slide} / {totalSlides}</span>
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{slide} / {totalSlides}</span>
             )}
             <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer',
-              color: '#64748b', fontSize: '1.1rem', padding: '0.2rem' }}>
+              color: 'var(--text-secondary)', fontSize: '1.1rem', padding: '0.2rem' }}>
               <i className="fa-solid fa-xmark" />
             </button>
           </div>
@@ -156,10 +156,10 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
           {/* ── Slide 1: Date Discrepancies ── */}
           {displaySlide === 1 && (
             <>
-              <div style={{ fontSize: '0.84rem', color: '#94a3b8', marginBottom: '0.9rem' }}>
+              <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginBottom: '0.9rem' }}>
                 <i className="fa-solid fa-calendar-days" style={{ color: '#fbbf24', marginRight: '0.4rem' }} />
                 The following stocks have existing event dates that differ slightly from the Excel rebalance date.
-                Edit the <strong style={{ color: '#e2e8f0' }}>New Date</strong> column if needed before continuing.
+                Edit the <strong style={{ color: 'var(--text-primary)' }}>New Date</strong> column if needed before continuing.
               </div>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
@@ -173,8 +173,8 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
                   {slide1.map((row, i) => (
                     <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                       <td style={cellStyle}>
-                        <div style={{ color: '#e2e8f0', fontWeight: 500 }}>{row.stockName}</div>
-                        <div style={{ color: '#64748b', fontSize: '0.72rem' }}>{row.nseCode}</div>
+                        <div style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{row.stockName}</div>
+                        <div style={{ color: 'var(--text-secondary)', fontSize: '0.72rem' }}>{row.nseCode}</div>
                       </td>
                       <td style={cellStyle}>
                         <span style={{ fontSize: '0.72rem', fontWeight: 700,
@@ -184,7 +184,7 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
                           {row.eventType}
                         </span>
                       </td>
-                      <td style={{ ...cellStyle, color: '#94a3b8' }}>{row.existingDate}</td>
+                      <td style={{ ...cellStyle, color: 'var(--text-secondary)' }}>{row.existingDate}</td>
                       <td style={cellStyle}>
                         <input
                           style={inputStyle}
@@ -205,7 +205,7 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
           {/* ── Slide 2: Weight Changes ── */}
           {displaySlide === 2 && (
             <>
-              <div style={{ fontSize: '0.84rem', color: '#94a3b8', marginBottom: '0.9rem' }}>
+              <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginBottom: '0.9rem' }}>
                 <i className="fa-solid fa-scale-balanced" style={{ color: '#818cf8', marginRight: '0.4rem' }} />
                 Review weight changes for the rebalance. All fields are editable before confirming.
               </div>
@@ -236,24 +236,24 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
                           onChange={e => updateSlide2(i, 'nseCode', e.target.value.toUpperCase())}
                         />
                       </td>
-                      <td style={{ ...cellStyle, textAlign: 'right', color: '#94a3b8' }}>
+                      <td style={{ ...cellStyle, textAlign: 'right', color: 'var(--text-secondary)' }}>
                         {row.prevWeight > 0 ? `${row.prevWeight}%` : '—'}
                       </td>
                       <td style={{ ...cellStyle, textAlign: 'right',
-                                   color: row.newWeight === 0 ? '#94a3b8' : '#e2e8f0', fontWeight: 600 }}>
+                                   color: row.newWeight === 0 ? 'var(--text-secondary)' : 'var(--text-primary)', fontWeight: 600 }}>
                         {row.newWeight > 0 ? `${row.newWeight}%` : '—'}
                       </td>
                       <td style={{ ...cellStyle, textAlign: 'right',
                                    color: row.updateType === 'New Addition' || row.updateType === 'Partial Add'
-                                     ? '#34d399' : row.updateType === 'No Change' ? '#64748b' : '#f87171' }}>
+                                     ? '#34d399' : row.updateType === 'No Change' ? 'var(--text-secondary)' : '#f87171' }}>
                         {row.change}
                       </td>
                       <td style={cellStyle}>
                         <select
                           value={row.updateType}
                           onChange={e => updateSlide2(i, 'updateType', e.target.value)}
-                          style={{ background: 'rgba(15,23,42,0.9)', border: '1px solid rgba(99,102,241,0.3)',
-                                   color: UPDATE_TYPE_COLORS[row.updateType] || '#94a3b8',
+                          style={{ background: 'var(--modal-bg)', border: '1px solid rgba(99,102,241,0.3)',
+                                   color: UPDATE_TYPE_COLORS[row.updateType] || 'var(--text-secondary)',
                                    borderRadius: '4px', padding: '0.15rem 0.3rem',
                                    fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
                         >
@@ -327,7 +327,7 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
                 disabled={confirming}
                 style={{ background: confirming ? 'rgba(16,185,129,0.08)' : 'rgba(16,185,129,0.18)',
                          border: '1px solid rgba(16,185,129,0.35)',
-                         color: confirming ? '#64748b' : '#10b981',
+                         color: confirming ? 'var(--text-secondary)' : '#10b981',
                          borderRadius: '8px', padding: '0.5rem 1.4rem',
                          cursor: confirming ? 'default' : 'pointer',
                          fontSize: '0.84rem', fontWeight: 700 }}

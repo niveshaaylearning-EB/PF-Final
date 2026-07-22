@@ -1,4 +1,4 @@
-import { API_BASE } from '../api/base.js';
+import { API_BASE, getAuthToken } from '../api/base.js';
 import { useState, useEffect, useRef } from 'react';
 
 const BASKETS = [
@@ -34,8 +34,8 @@ const INPUT_BASE = {
   borderRadius: '8px',
   fontSize: '1rem',
   fontWeight: 600,
-  border: '1.5px solid rgba(255,255,255,0.08)',
-  background: 'rgba(255,255,255,0.04)',
+  border: '1.5px solid var(--border-color)',
+  background: 'var(--input-bg)',
   outline: 'none',
   transition: 'border-color 0.15s, background 0.15s',
   textAlign: 'right',
@@ -116,9 +116,13 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
 
     setSaving(true);
     try {
+      const token = getAuthToken();
       const resp = await fetch(`${API_BASE}/daily-values`, {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body:    JSON.stringify({ date, entries }),
       });
       const data = await resp.json();
@@ -148,7 +152,12 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
     try {
       const fd = new FormData();
       for (const f of xlFiles) fd.append('files', f);
-      const resp = await fetch(`${API_BASE}/import-excel-multi`, { method: 'POST', body: fd });
+      const xlToken = getAuthToken();
+      const resp = await fetch(`${API_BASE}/import-excel-multi`, {
+        method: 'POST',
+        headers: xlToken ? { Authorization: `Bearer ${xlToken}` } : {},
+        body: fd,
+      });
       const data = await resp.json();
       if (!resp.ok) {
         setXlError(data.detail || 'Import failed.');
@@ -179,14 +188,14 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
       ref={overlayRef}
       style={{
         position: 'fixed', inset: 0, zIndex: 1000,
-        background: 'rgba(0,0,0,0.72)',
+        background: 'var(--modal-overlay-bg)',
         backdropFilter: 'blur(4px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}
       onClick={e => { if (e.target === overlayRef.current) onClose(); }}
     >
       <div style={{
-        background: 'linear-gradient(160deg, #0f172a 0%, #0c1322 100%)',
+        background: 'var(--modal-bg)',
         border: '1px solid rgba(139,92,246,0.2)',
         borderRadius: '16px',
         padding: '2rem 2.25rem',
@@ -199,18 +208,18 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
         {/* Title row */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 700, color: '#f1f5f9', letterSpacing: '-0.02em' }}>
+            <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
               Add Daily Index Values
             </h2>
-            <p style={{ margin: '0.3rem 0 0', fontSize: '0.85rem', color: '#64748b' }}>
+            <p style={{ margin: '0.3rem 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
               Fill any basket(s) you have data for — the rest will be skipped.
             </p>
           </div>
           <button
             onClick={onClose}
             style={{
-              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: '8px', color: '#64748b', cursor: 'pointer',
+              background: 'var(--hover-bg)', border: '1px solid var(--border-color)',
+              borderRadius: '8px', color: 'var(--text-secondary)', cursor: 'pointer',
               fontSize: '1.15rem', padding: '0.3rem 0.65rem', lineHeight: 1,
             }}
             title="Close (Esc)"
@@ -225,14 +234,14 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
           </div>
           <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'flex-end', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', flex: 1, minWidth: '220px' }}>
-              <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Excel Files (.xlsx) — select multiple</label>
+              <label style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Excel Files (.xlsx) — select multiple</label>
               <input
                 ref={fileInputRef}
                 type="file"
                 accept=".xlsx,.xls"
                 multiple
                 onChange={e => { setXlFiles(Array.from(e.target.files || [])); setXlResults([]); setXlError(''); }}
-                style={{ background: 'rgba(255,255,255,0.04)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '0.45rem 0.7rem', fontSize: '0.82rem', cursor: 'pointer' }}
+                style={{ background: 'var(--input-bg)', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '0.45rem 0.7rem', fontSize: '0.82rem', cursor: 'pointer' }}
               />
               {xlFiles.length > 0 && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
@@ -253,10 +262,10 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
           {xlResults.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
               {xlResults.map((r, i) => (
-                <div key={i} style={{ padding: '0.45rem 0.75rem', borderRadius: '7px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem', background: r.ok && r.imported > 0 ? 'rgba(74,222,128,0.07)' : r.ok ? 'rgba(255,255,255,0.02)' : 'rgba(239,68,68,0.07)', border: `1px solid ${r.ok && r.imported > 0 ? 'rgba(74,222,128,0.18)' : r.ok ? 'rgba(255,255,255,0.05)' : 'rgba(239,68,68,0.18)'}` }}>
+                <div key={i} style={{ padding: '0.45rem 0.75rem', borderRadius: '7px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem', background: r.ok && r.imported > 0 ? 'rgba(74,222,128,0.07)' : r.ok ? 'var(--hover-bg)' : 'rgba(239,68,68,0.07)', border: `1px solid ${r.ok && r.imported > 0 ? 'rgba(74,222,128,0.18)' : r.ok ? 'var(--hover-bg)' : 'rgba(239,68,68,0.18)'}` }}>
                   <span>{r.ok && r.imported > 0 ? '✅' : r.ok ? '✔️' : '❌'}</span>
-                  <span style={{ color: '#64748b', flexShrink: 0 }}>{r.file}</span>
-                  <span style={{ color: r.ok ? (r.imported > 0 ? '#4ade80' : '#475569') : '#f87171' }}>{r.error || r.message}</span>
+                  <span style={{ color: 'var(--text-secondary)', flexShrink: 0 }}>{r.file}</span>
+                  <span style={{ color: r.ok ? (r.imported > 0 ? '#4ade80' : 'var(--text-secondary)') : '#f87171' }}>{r.error || r.message}</span>
                 </div>
               ))}
             </div>
@@ -266,9 +275,9 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
 
         {/* Divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.07)' }} />
-          <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.07em' }}>or enter manually</span>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.07)' }} />
+          <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }} />
+          <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>or enter manually</span>
+          <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }} />
         </div>
 
         {/* Date picker — manual entry */}
@@ -293,13 +302,13 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
             value={date}
             onChange={e => setDate(e.target.value)}
             style={{
-              background: 'transparent', border: 'none', color: '#e2e8f0',
+              background: 'transparent', border: 'none', color: 'var(--text-primary)',
               fontSize: '1.05rem', fontWeight: 600, outline: 'none', cursor: 'pointer', flex: 1, colorScheme: 'dark',
             }}
           />
           <span style={{
             fontSize: '0.78rem', fontWeight: 600, whiteSpace: 'nowrap',
-            color: filledCount > 0 ? '#a78bfa' : '#475569',
+            color: filledCount > 0 ? '#a78bfa' : 'var(--text-secondary)',
             background: filledCount > 0 ? 'rgba(139,92,246,0.15)' : 'transparent',
             padding: filledCount > 0 ? '0.2rem 0.6rem' : '0',
             borderRadius: '20px', transition: 'all 0.2s',
@@ -312,15 +321,15 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
         <div style={{
           display: 'grid', gridTemplateColumns: '1fr 170px 170px',
           gap: '0.75rem', padding: '0 0.5rem 0.6rem',
-          borderBottom: '1px solid rgba(255,255,255,0.07)', marginBottom: '0.4rem',
+          borderBottom: '1px solid var(--border-color)', marginBottom: '0.4rem',
         }}>
-          <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Basket</span>
+          <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Basket</span>
           <div style={{ textAlign: 'right' }}>
             <span style={{ fontSize: '0.72rem', fontWeight: 700, color: COL.basket.base, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Basket Value</span>
           </div>
           <div style={{ textAlign: 'right' }}>
             <span style={{ fontSize: '0.72rem', fontWeight: 700, color: COL.benchmark.base, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Benchmark</span>
-            <span style={{ display: 'block', fontSize: '0.68rem', fontWeight: 400, color: '#475569', marginTop: '0.1rem' }}>NIFTY Smallcap 100</span>
+            <span style={{ display: 'block', fontSize: '0.68rem', fontWeight: 400, color: 'var(--text-secondary)', marginTop: '0.1rem' }}>NIFTY Smallcap 100</span>
           </div>
         </div>
 
@@ -336,14 +345,14 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
                   display: 'grid', gridTemplateColumns: '1fr 170px 170px',
                   gap: '0.75rem', alignItems: 'center',
                   padding: '0.65rem 0.75rem', borderRadius: '9px',
-                  background: filled ? 'rgba(139,92,246,0.06)' : idx % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent',
+                  background: filled ? 'rgba(139,92,246,0.06)' : idx % 2 === 0 ? 'var(--hover-bg)' : 'transparent',
                   border: filled ? '1px solid rgba(139,92,246,0.2)' : '1px solid transparent',
                   transition: 'background 0.2s, border-color 0.2s',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   {filled && <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#8b5cf6', flexShrink: 0 }} />}
-                  <span style={{ fontSize: '0.95rem', fontWeight: filled ? 600 : 500, color: filled ? '#e2e8f0' : '#94a3b8', transition: 'color 0.2s' }}>
+                  <span style={{ fontSize: '0.95rem', fontWeight: filled ? 600 : 500, color: filled ? 'var(--text-primary)' : 'var(--text-secondary)', transition: 'color 0.2s' }}>
                     {b.label}
                   </span>
                 </div>
@@ -352,9 +361,9 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
                   onChange={e => setVal(b.key, 'value', e.target.value)}
                   style={{
                     ...INPUT_BASE,
-                    color: v.value ? COL.basket.base : '#475569',
-                    borderColor: v.value ? COL.basket.border : 'rgba(255,255,255,0.07)',
-                    background: v.value ? COL.basket.bg : 'rgba(255,255,255,0.03)',
+                    color: v.value ? COL.basket.base : 'var(--text-secondary)',
+                    borderColor: v.value ? COL.basket.border : 'var(--border-color)',
+                    background: v.value ? COL.basket.bg : 'var(--input-bg)',
                   }}
                 />
                 <input
@@ -362,9 +371,9 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
                   onChange={e => setVal(b.key, 'benchmark', e.target.value)}
                   style={{
                     ...INPUT_BASE,
-                    color: v.benchmark ? COL.benchmark.base : '#475569',
-                    borderColor: v.benchmark ? COL.benchmark.border : 'rgba(255,255,255,0.07)',
-                    background: v.benchmark ? COL.benchmark.bg : 'rgba(255,255,255,0.03)',
+                    color: v.benchmark ? COL.benchmark.base : 'var(--text-secondary)',
+                    borderColor: v.benchmark ? COL.benchmark.border : 'var(--border-color)',
+                    background: v.benchmark ? COL.benchmark.bg : 'var(--input-bg)',
                   }}
                 />
               </div>
@@ -388,7 +397,7 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
         <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '2rem' }}>
           <button
             onClick={onClose}
-            style={{ padding: '0.65rem 1.5rem', borderRadius: '9px', fontSize: '0.92rem', fontWeight: 500, background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#64748b', cursor: 'pointer' }}
+            style={{ padding: '0.65rem 1.5rem', borderRadius: '9px', fontSize: '0.92rem', fontWeight: 500, background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', cursor: 'pointer' }}
           >
             Cancel
           </button>
@@ -411,7 +420,7 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
         </>}
 
         {/* ── Audit Trail ── */}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: '1.5rem' }}>
+        <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
             <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#a78bfa', boxShadow: '0 0 5px #a78bfa' }} />
             <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
@@ -420,13 +429,13 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
           </div>
 
           {auditDates.length === 0 ? (
-            <div style={{ padding: '1.25rem', textAlign: 'center', color: '#475569', fontSize: '0.85rem', background: 'rgba(255,255,255,0.02)', borderRadius: '8px' }}>
+            <div style={{ padding: '1.25rem', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem', background: 'var(--hover-bg)', borderRadius: '8px' }}>
               No data saved yet.
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {auditDates.map(d => (
-                <div key={d} style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)' }}>
+                <div key={d} style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
                   {/* Date header */}
                   <div style={{
                     padding: '0.5rem 0.85rem',
@@ -446,10 +455,10 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
                     <div style={{
                       display: 'grid', gridTemplateColumns: '1fr 130px 130px',
                       gap: '0.5rem', padding: '0.35rem 0.85rem',
-                      background: 'rgba(255,255,255,0.02)',
-                      borderBottom: '1px solid rgba(255,255,255,0.05)',
+                      background: 'var(--hover-bg)',
+                      borderBottom: '1px solid var(--hover-bg)',
                     }}>
-                      <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Basket</span>
+                      <span style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Basket</span>
                       <span style={{ fontSize: '0.68rem', fontWeight: 700, color: COL.basket.base, textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'right', opacity: 0.7 }}>Index Value</span>
                       <span style={{ fontSize: '0.68rem', fontWeight: 700, color: COL.benchmark.base, textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'right', opacity: 0.7 }}>Benchmark<br /><span style={{ fontSize: '0.62rem', fontWeight: 500, textTransform: 'none', letterSpacing: 0, opacity: 0.75 }}>(Nifty Smallcap 100)</span></span>
                     </div>
@@ -459,11 +468,11 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
                         style={{
                           display: 'grid', gridTemplateColumns: '1fr 130px 130px',
                           gap: '0.5rem', padding: '0.45rem 0.85rem',
-                          background: i % 2 === 0 ? 'rgba(255,255,255,0.015)' : 'transparent',
-                          borderBottom: i < auditByDate[d].length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+                          background: i % 2 === 0 ? 'var(--hover-bg)' : 'transparent',
+                          borderBottom: i < auditByDate[d].length - 1 ? '1px solid var(--input-bg)' : 'none',
                         }}
                       >
-                        <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: 500 }}>{row.label}</span>
+                        <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>{row.label}</span>
                         <span style={{ fontSize: '0.88rem', color: COL.basket.base, fontWeight: 600, textAlign: 'right' }}>{row.value.toFixed(2)}</span>
                         <span style={{ fontSize: '0.88rem', color: COL.benchmark.base, fontWeight: 600, textAlign: 'right' }}>{row.benchmark.toFixed(2)}</span>
                       </div>

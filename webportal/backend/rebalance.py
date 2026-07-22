@@ -28,13 +28,13 @@ from persistence import (
     _load_rebalance_history, _save_rebalance_history,
 )
 from price_engine import _norm_name, _resolve_nse, _fetch_nse_symbols
-from common.admin import ADMIN_EMAILS
 from live_data import _fetch_rebalance_prices
 
 router = APIRouter()
 
 @router.post("/api/trigger-rebalance")
-async def trigger_rebalance(background_tasks: BackgroundTasks, basket: str = Form(...)):
+async def trigger_rebalance(background_tasks: BackgroundTasks, request: Request, basket: str = Form(...)):
+    _require_admin(request)
     if basket not in BASKET_DISPLAY_NAMES:
         raise HTTPException(status_code=400, detail=f"Unknown basket: {basket}")
     background_tasks.add_task(_recalc_basket_buy_prices, basket)
@@ -105,8 +105,6 @@ def _extract_rebalance_date(wb, filename: str = "") -> str | None:
     return _parse_date_value(filename)
 
 
-_REBALANCE_ALLOWED = ADMIN_EMAILS
-
 @router.post("/api/upload-rebalance")
 async def upload_rebalance(
     request: Request,
@@ -114,9 +112,7 @@ async def upload_rebalance(
     basket: str = Form(...),
     file: UploadFile = File(...),
 ):
-    user_email = request.headers.get("X-User-Email", "")
-    if user_email and user_email not in _REBALANCE_ALLOWED:
-        raise HTTPException(status_code=403, detail="You do not have permission to upload rebalance files.")
+    _require_admin(request)
     if basket not in BASKET_DISPLAY_NAMES:
         raise HTTPException(status_code=400, detail=f"Unknown basket: {basket}")
 

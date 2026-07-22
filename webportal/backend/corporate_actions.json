@@ -1,0 +1,184 @@
+[
+  {
+    "id": "8dfd76a2-7221-4846-8dc6-83de20e3d93a",
+    "basketKey": "Mid_Small_Cap",
+    "nseCode": "E2E",
+    "securityName": "E2E Networks Ltd",
+    "type": "split",
+    "exDate": "05 Jun 2026",
+    "recordDate": "",
+    "ratio": {
+      "old": 10,
+      "new": 1
+    },
+    "demerger": null,
+    "source": "Yahoo Finance corporate action data (verify against official NSE announcement before approving)",
+    "status": "pending_review",
+    "createdAt": "13 Jul 2026 13:39",
+    "createdBy": "jay.chaudhari@niveshaay.com",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reversalOf": null,
+    "comparisonReport": {
+      "currentBuyPrice": 3113.065,
+      "revisedBuyPrice": 311.3065,
+      "difference": -2801.7585,
+      "eligibleEvents": [
+        {
+          "date": "05 May 2026",
+          "weight": 3.0,
+          "oldPrice": 2925.825,
+          "newPrice": 292.5825
+        },
+        {
+          "date": "11 May 2026",
+          "weight": 1.0,
+          "oldPrice": 3489.5,
+          "newPrice": 348.95
+        },
+        {
+          "date": "20 May 2026",
+          "weight": 1.0,
+          "oldPrice": 3298.35,
+          "newPrice": 329.835
+        }
+      ],
+      "ineligibleEvents": []
+    }
+  },
+  {
+    "id": "8ff79311-7e13-446b-bc49-becf7d47c861",
+    "basketKey": "Trends_Triology",
+    "nseCode": "E2E",
+    "securityName": "E2E Networks Ltd",
+    "type": "split",
+    "exDate": "05 Jun 2026",
+    "recordDate": "",
+    "ratio": {
+      "old": 10,
+      "new": 1
+    },
+    "demerger": null,
+    "source": "Yahoo Finance corporate action data (verify against official NSE announcement before approving)",
+    "status": "pending_review",
+    "createdAt": "13 Jul 2026 13:39",
+    "createdBy": "jay.chaudhari@niveshaay.com",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reversalOf": null,
+    "comparisonReport": {
+      "currentBuyPrice": 2786.8885,
+      "revisedBuyPrice": 278.6889,
+      "difference": -2508.1996,
+      "eligibleEvents": [
+        {
+          "date": "05 Sep 2024",
+          "weight": 8.0,
+          "oldPrice": 2568.17,
+          "newPrice": 256.817
+        },
+        {
+          "date": "08 May 2026",
+          "weight": 1.0,
+          "oldPrice": 3361.675,
+          "newPrice": 336.1675
+        },
+        {
+          "date": "27 May 2026",
+          "weight": 1.0,
+          "oldPrice": 3961.85,
+          "newPrice": 396.185
+        }
+      ],
+      "ineligibleEvents": []
+    }
+  },
+  {
+    "id": "5bed0768-5a0a-44ec-89f7-5f8a935d05f1",
+    "basketKey": "Techstack",
+    "nseCode": "E2E",
+    "securityName": "E2E Networks Ltd",
+    "type": "split",
+    "exDate": "05 Jun 2026",
+    "recordDate": "",
+    "ratio": {
+      "old": 10,
+      "new": 1
+    },
+    "demerger": null,
+    "source": "Yahoo Finance corporate action data (verify against official NSE announcement before approving)",
+    "status": "pending_review",
+    "createdAt": "13 Jul 2026 13:39",
+    "createdBy": "jay.chaudhari@niveshaay.com",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reversalOf": null,
+    "comparisonReport": {
+      "currentBuyPrice": 2131.9357,
+      "revisedBuyPrice": 213.1936,
+      "difference": -1918.7421,
+      "eligibleEvents": [
+        {
+          "date": "27 Jan 2026",
+          "weight": 6.0,
+          "oldPrice": 2052.4,
+          "newPrice": 205.24
+        },
+        {
+          "date": "26 Feb 2026",
+          "weight": 1.0,
+          "oldPrice": 2609.15,
+          "newPrice": 260.915
+        }
+      ],
+      "ineligibleEvents": []
+    }
+  },
+  {
+    "id": "42f78c02-b831-4765-a7e1-c78696bb268a",
+    "basketKey": "Consumer_Trends",
+    "nseCode": "E2E",
+    "securityName": "E2E Networks Ltd",
+    "type": "split",
+    "exDate": "05 Jun 2026",
+    "recordDate": "",
+    "ratio": {
+      "old": 10,
+      "new": 1
+    },
+    "demerger": null,
+    "source": "Yahoo Finance corporate action data (verify against official NSE announcement before approving)",
+    "status": "pending_review",
+    "createdAt": "13 Jul 2026 13:39",
+    "createdBy": "jay.chaudhari@niveshaay.com",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reversalOf": null,
+    "comparisonReport": {
+      "currentBuyPrice": 2554.1786,
+      "revisedBuyPrice": 255.4179,
+      "difference": -2298.7607,
+      "eligibleEvents": [
+        {
+          "date": "28 Aug 2025",
+          "weight": 4.0,
+          "oldPrice": 2399.3,
+          "newPrice": 239.93
+        },
+        {
+          "date": "13 Apr 2026",
+          "weight": 1.0,
+          "oldPrice": 2430.4,
+          "newPrice": 243.04
+        },
+        {
+          "date": "05 May 2026",
+          "weight": 2.0,
+          "oldPrice": 2925.825,
+          "newPrice": 292.5825
+        }
+      ],
+      "ineligibleEvents": []
+    }
+  }
+]

@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import RollbackButtons from './RollbackButtons.jsx';
+import { getTheme, toggleTheme, THEME_SYNC_TYPE } from '../utils/theme.js';
 
-const BASKET_OPTIONS = [
+export const BASKET_OPTIONS = [
   { key: 'Mid_Small_Cap',        label: 'Mid & Small Cap'      },
   { key: 'Green_Energy',         label: 'Green Energy'         },
   { key: 'IPO_Basket',           label: 'IPO Basket'           },
@@ -21,7 +22,20 @@ export default function Header({
 }) {
   const [dateStr,      setDateStr]      = useState('');
   const [actionsOpen,  setActionsOpen]  = useState(false);
+  const [theme,        setThemeState]   = useState(getTheme());
   const actionsRef = useRef(null);
+
+  useEffect(() => {
+    // Keeps this icon correct when the theme changes because the outer
+    // app's toggle was clicked, not this one.
+    const onMessage = (e) => {
+      if (e.data?.type === THEME_SYNC_TYPE && (e.data.theme === 'light' || e.data.theme === 'dark')) {
+        setThemeState(e.data.theme);
+      }
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, []);
 
   useEffect(() => {
     setDateStr(new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }));
@@ -75,8 +89,18 @@ export default function Header({
           <span>{dateStr}</span>
         </div>
 
-        {/* Rollback */}
-        <RollbackButtons btnStyle="header" />
+        {/* Theme toggle */}
+        <button
+          className="undo-btn"
+          onClick={() => setThemeState(toggleTheme())}
+          title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+          aria-label="Toggle color theme"
+        >
+          <i className={`fa-solid ${theme === 'light' ? 'fa-moon' : 'fa-sun'}`} />
+        </button>
+
+        {/* Rollback — edit-only users */}
+        {!readOnly && <RollbackButtons btnStyle="header" />}
 
         {/* Portfolio Actions dropdown — edit-only users */}
         {!readOnly && <div className="db-actions-wrap" ref={actionsRef}>

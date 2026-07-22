@@ -1,4 +1,4 @@
-import { API_BASE } from '../api/base.js';
+import { API_BASE, getAuthToken } from '../api/base.js';
 import { useState, useEffect } from 'react';
 
 function useRollback() {
@@ -17,7 +17,11 @@ function useRollback() {
     if (!window.confirm(`Rollback to previous version?\n(Saved: ${rbkPoint.createdAt})\n\nThis will undo all changes made after that point.`)) return;
     setRbkMsg('Restoring…');
     try {
-      const resp = await fetch(`${API_BASE}/rollback-points/${rbkPoint.id}/restore`, { method: 'POST' });
+      const token = getAuthToken();
+      const resp = await fetch(`${API_BASE}/rollback-points/${rbkPoint.id}/restore`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.detail || 'Failed');
       setRbkMsg('Done. Reloading…');
@@ -39,7 +43,7 @@ export default function RollbackButtons({ btnStyle = 'bp' }) {
   const btnCss = isHeader
     ? {
         background:  active ? 'rgba(251,191,36,0.12)' : 'transparent',
-        color:       active ? '#fbbf24' : '#475569',
+        color:       active ? '#fbbf24' : 'var(--text-secondary)',
         border:      `1px solid ${active ? 'rgba(251,191,36,0.3)' : 'rgba(71,85,105,0.3)'}`,
         borderRadius: '7px', padding: '0.32rem 0.7rem',
         fontSize: '0.82rem', fontWeight: 600,
@@ -48,7 +52,7 @@ export default function RollbackButtons({ btnStyle = 'bp' }) {
       }
     : {
         background:  active ? 'rgba(251,191,36,0.1)' : 'transparent',
-        color:       active ? '#fbbf24' : '#475569',
+        color:       active ? '#fbbf24' : 'var(--text-secondary)',
         borderColor: active ? 'rgba(251,191,36,0.3)' : 'rgba(71,85,105,0.3)',
       };
 

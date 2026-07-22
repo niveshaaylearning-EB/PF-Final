@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react';
  * Filters client-side from `symbols` prop (loaded once in App.jsx).
  * Calls `onCommit(symbol)` when user picks a suggestion or blurs the field.
  */
-export default function NseAutocomplete({ initialValue, onCommit, symbols = [] }) {
+export default function NseAutocomplete({ initialValue, onCommit, symbols = [], disabled = false }) {
   const [value,        setValue]        = useState(initialValue || '');
   const [suggestions,  setSuggestions]  = useState([]);
   const [isOpen,       setIsOpen]       = useState(false);
@@ -87,6 +87,7 @@ export default function NseAutocomplete({ initialValue, onCommit, symbols = [] }
         placeholder="NSE Code"
         autoComplete="off"
         spellCheck={false}
+        disabled={disabled}
         style={{ textTransform: 'uppercase', width: '100%' }}
       />
 

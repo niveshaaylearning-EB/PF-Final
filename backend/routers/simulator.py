@@ -1,16 +1,16 @@
-"""Simulator: return calculation, per-basket overrides (mods) and SIPs."""
+"""Simulator: return calculation and each logged-in user's own virtual portfolio holdings + SIPs."""
 import asyncio
 import time as _time
 from datetime import datetime, timedelta
 
 import pandas as pd
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 import database
 from main import (
-    get_db, _io_pool, yf, SimulationModCreate, SimulationSipCreate,
+    get_db, _io_pool, yf, SimulationHoldingCreate, SimulationSipCreate,
 )
 from routers.stocks import _stock_hist_price_cache, _STOCK_HIST_PRICE_TTL
 
@@ -202,59 +202,68 @@ async def calculate_simulator_return(req: SimulatorCalculateRequest):
         "sip_details":     sip_details,
     }
 
-@router.post("/api/simulator/{basket_id}/reset")
-def reset_simulation(basket_id: str, db: Session = Depends(get_db)):
-    db.query(database.SimulationMod).filter(database.SimulationMod.basket_id == basket_id).delete()
-    db.query(database.SimulationSip).filter(database.SimulationSip.basket_id == basket_id).delete()
+@router.post("/api/simulator/reset")
+def reset_simulation(request: Request, db: Session = Depends(get_db)):
+    user = request.state.user
+    db.query(database.SimulationMod).filter(database.SimulationMod.user_email == user).delete()
+    db.query(database.SimulationSip).filter(database.SimulationSip.user_email == user).delete()
     db.commit()
     return {"status": "success"}
 
-@router.get("/api/simulator/{basket_id}")
-def get_simulation_mods(basket_id: str, db: Session = Depends(get_db)):
-    mods = db.query(database.SimulationMod).filter(database.SimulationMod.basket_id == basket_id).all()
-    return mods
+@router.get("/api/simulator")
+def get_simulation_holdings(request: Request, db: Session = Depends(get_db)):
+    user = request.state.user
+    return db.query(database.SimulationMod).filter(database.SimulationMod.user_email == user).all()
 
-@router.post("/api/simulator/{basket_id}")
-def override_simulation(basket_id: str, item: SimulationModCreate, db: Session = Depends(get_db)):
+@router.post("/api/simulator")
+def upsert_simulation_holding(item: SimulationHoldingCreate, request: Request, db: Session = Depends(get_db)):
+    user = request.state.user
+    code = item.stock_code.upper()
     db_obj = db.query(database.SimulationMod).filter(
-        database.SimulationMod.basket_id == basket_id,
-        database.SimulationMod.stock_code == item.stock_code.upper()
+        database.SimulationMod.user_email == user,
+        database.SimulationMod.stock_code == code
     ).first()
 
-    if item.override_type == "remove":
-        if db_obj:
-            db.delete(db_obj)
+    if db_obj:
+        if item.allocation is not None: db_obj.allocation = item.allocation
+        if item.buy_price is not None: db_obj.buy_price = item.buy_price
+        if item.buy_date is not None: db_obj.buy_date = item.buy_date
+        if item.cmp is not None: db_obj.cmp = item.cmp
     else:
-        if db_obj:
-            db_obj.override_type = item.override_type
-            if item.formula is not None: db_obj.formula = item.formula
-            if item.allocation is not None: db_obj.allocation = item.allocation
-            if item.buy_price is not None: db_obj.buy_price = item.buy_price
-            if item.cmp is not None: db_obj.cmp = item.cmp
-        else:
-            db_obj = database.SimulationMod(
-                basket_id=basket_id,
-                stock_code=item.stock_code.upper(),
-                override_type=item.override_type,
-                formula=item.formula,
-                allocation=item.allocation,
-                buy_price=item.buy_price,
-                cmp=item.cmp
-            )
-            db.add(db_obj)
+        db_obj = database.SimulationMod(
+            user_email=user,
+            stock_code=code,
+            allocation=item.allocation,
+            buy_price=item.buy_price,
+            buy_date=item.buy_date,
+            cmp=item.cmp
+        )
+        db.add(db_obj)
 
     db.commit()
     return {"status": "success"}
 
-@router.get("/api/simulator/{basket_id}/sips")
-def get_simulation_sips(basket_id: str, db: Session = Depends(get_db)):
-    sips = db.query(database.SimulationSip).filter(database.SimulationSip.basket_id == basket_id).order_by(database.SimulationSip.sip_date.asc()).all()
+@router.delete("/api/simulator/{stock_code}")
+def delete_simulation_holding(stock_code: str, request: Request, db: Session = Depends(get_db)):
+    user = request.state.user
+    db.query(database.SimulationMod).filter(
+        database.SimulationMod.user_email == user,
+        database.SimulationMod.stock_code == stock_code.upper()
+    ).delete()
+    db.commit()
+    return {"status": "success"}
+
+@router.get("/api/simulator/sips")
+def get_simulation_sips(request: Request, db: Session = Depends(get_db)):
+    user = request.state.user
+    sips = db.query(database.SimulationSip).filter(database.SimulationSip.user_email == user).order_by(database.SimulationSip.sip_date.asc()).all()
     return [{"id": s.id, "sip_date": s.sip_date, "amount": s.amount} for s in sips]
 
-@router.post("/api/simulator/{basket_id}/sips")
-def add_simulation_sip(basket_id: str, item: SimulationSipCreate, db: Session = Depends(get_db)):
+@router.post("/api/simulator/sips")
+def add_simulation_sip(item: SimulationSipCreate, request: Request, db: Session = Depends(get_db)):
+    user = request.state.user
     db_obj = database.SimulationSip(
-        basket_id=basket_id,
+        user_email=user,
         sip_date=item.sip_date,
         amount=item.amount
     )
@@ -262,10 +271,11 @@ def add_simulation_sip(basket_id: str, item: SimulationSipCreate, db: Session = 
     db.commit()
     return {"status": "success", "id": db_obj.id}
 
-@router.delete("/api/simulator/{basket_id}/sips/{sip_id}")
-def remove_simulation_sip(basket_id: str, sip_id: int, db: Session = Depends(get_db)):
+@router.delete("/api/simulator/sips/{sip_id}")
+def remove_simulation_sip(sip_id: int, request: Request, db: Session = Depends(get_db)):
+    user = request.state.user
     db.query(database.SimulationSip).filter(
-        database.SimulationSip.basket_id == basket_id,
+        database.SimulationSip.user_email == user,
         database.SimulationSip.id == sip_id
     ).delete()
     db.commit()

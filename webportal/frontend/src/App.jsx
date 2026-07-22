@@ -1,14 +1,17 @@
 import { API_BASE } from './api/base.js';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import './App.css';
-import { fetchBasket, fetchLiveData, fetchLiveStock, saveBasket } from './api/client.js';
+import { fetchBasket, fetchLiveData, fetchLiveStock, saveBasket, fetchBasketStockMap, fetchPerformanceBatch } from './api/client.js';
 
-import Header           from './components/Header.jsx';
+import Header, { BASKET_OPTIONS } from './components/Header.jsx';
 import KPIPanel         from './components/KPIPanel.jsx';
 import PortfolioTable   from './components/PortfolioTable.jsx';
 import InsightsSidebar  from './components/InsightsSidebar.jsx';
 import ConfirmModal     from './components/ConfirmModal.jsx';
-import StockInfoTooltip from './components/StockInfoTooltip.jsx';
+import WhatIfModal from './components/WhatIfModal.jsx';
+import WhatIfAddStockBar from './components/WhatIfAddStockBar.jsx';
+import WhatIfImpactBanner from './components/WhatIfImpactBanner.jsx';
+import { EMPTY_SLOT, mergeSimForDisplay, computeWhatIf, buildTouchedDetails } from './whatIfCalc.js';
 import LoadProgress     from './components/LoadProgress.jsx';
 import SoldStocksTable  from './components/SoldStocksTable.jsx';
 import BuyPricePage          from './components/BuyPricePage.jsx';
@@ -19,30 +22,30 @@ import DashboardView         from './components/DashboardView.jsx';
 
 // ── Formatters ───────────────────────────────────────────────────────────────
 export const formatPercent = (v) =>
-  v == null || isNaN(v) ? '#N/A' : (v * 100).toFixed(2) + '%';
+  v == null || isNaN(v) ? '-' : (v * 100).toFixed(2) + '%';
 
 export const formatRupee = (v) =>
   v == null || isNaN(v)
-    ? '#N/A'
+    ? '-'
     : '\u20B9' + Number(v).toLocaleString('en-IN', { maximumFractionDigits: 2 });
 
 export const getColorClass = (v) =>
   v == null || isNaN(v) ? 'neutral' : v > 0 ? 'positive' : v < 0 ? 'negative' : 'neutral';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-const calcPerformance = (open1M, close1M) => {
+export const calcPerformance = (open1M, close1M) => {
   if (open1M != null && close1M != null && open1M !== 0)
     return (close1M - open1M) / open1M;
   return null;
 };
 
-const calcContribution = (allocation, performance) => {
+export const calcContribution = (allocation, performance) => {
   if (allocation != null && performance != null)
     return allocation * performance;
   return null;
 };
 
-const calcAbsoluteReturns = (cmp, buyPrice) => {
+export const calcAbsoluteReturns = (cmp, buyPrice) => {
   if (cmp != null && buyPrice != null && buyPrice !== 0)
     return (cmp - buyPrice) / buyPrice;
   return null;
@@ -70,8 +73,36 @@ const calcHoldingDays = (buyEvents, sellEvents) => {
   return Math.floor((Date.now() - lastEntry.getTime()) / 86_400_000);
 };
 
+// IPO_Recommendations stocks have no buyEvents at all (only a listingDate),
+// so calcHoldingDays(buyEvents) always returned null for them -- this parses
+// the mixed date formats actually present in that basket's data ("28-Oct-2024",
+// "30-07-2025") and computes days-since-listing directly.
+const _parseListingDate = (s) => {
+  if (!s) return null;
+  const str = s.trim();
+  const monthMap = { jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11 };
+  let m = str.match(/^(\d{1,2})[-\s]([A-Za-z]{3})[-\s](\d{4})$/);
+  if (m) {
+    const mi = monthMap[m[2].toLowerCase()];
+    if (mi != null) return new Date(Number(m[3]), mi, Number(m[1]));
+    return null;
+  }
+  m = str.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+  if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+  m = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  const d = new Date(str);
+  return isNaN(d) ? null : d;
+};
+
+const calcDaysSinceListing = (listingDateStr) => {
+  const d = _parseListingDate(listingDateStr);
+  if (!d) return null;
+  return Math.floor((Date.now() - d.getTime()) / 86_400_000);
+};
+
 // Build history from buyPriceDetails client-side (fallback if server omits it)
-const parseEventLines = (str) => {
+export const parseEventLines = (str) => {
   if (!str) return [];
   return str.trim().split('\n').flatMap(line => {
     const parts = line.split('*');
@@ -80,6 +111,37 @@ const parseEventLines = (str) => {
     const qty  = parseFloat(parts[1].trim());
     return isNaN(qty) ? [] : [{ date, qty }];
   });
+};
+
+// Mirrors the backend's _current_series_buy_events (buy_price_gains.py) exactly:
+// returns {date, weight} for every buy lot still open in the CURRENT series,
+// FIFO-consuming the oldest lot(s) first on each sell so a later PARTIAL sell
+// correctly reduces an earlier lot's remaining weight (not just tracked via a
+// net-total reset-on-full-exit check, which silently left every buy lot at
+// its full original weight even after part of it had been sold). A full exit
+// naturally "resets" the series since the next buy appends to an empty list.
+export const currentSeriesBuyEvents = (buyEventsStr, sellEventsStr) => {
+  const combined = [
+    ...parseEventLines(buyEventsStr).map(e => ({ ...e, type: 'buy' })),
+    ...parseEventLines(sellEventsStr).map(e => ({ ...e, type: 'sell' })),
+  ].sort((a, b) => dateToTs(a.date) - dateToTs(b.date));
+
+  let lots = [];
+  for (const ev of combined) {
+    if (ev.type === 'buy') {
+      lots.push({ date: ev.date, remaining: Math.round(ev.qty * 1e6) / 1e6 });
+    } else {
+      let toConsume = ev.qty;
+      for (const lot of lots) {
+        if (toConsume <= 1e-6) break;
+        const take = Math.min(lot.remaining, toConsume);
+        lot.remaining = Math.round((lot.remaining - take) * 1e6) / 1e6;
+        toConsume = Math.round((toConsume - take) * 1e6) / 1e6;
+      }
+      lots = lots.filter(l => l.remaining > 1e-6);
+    }
+  }
+  return lots.map(l => ({ date: l.date, weight: l.remaining }));
 };
 
 const dateToTs = (dateStr) => {
@@ -148,7 +210,8 @@ export default function App() {
   const [historyStack, setHistoryStack] = useState([]);
   const [searchTerm,   setSearchTerm]   = useState('');
   const [confirm,      setConfirm]      = useState(null);
-  const [tooltip,      setTooltip]      = useState(null);
+  const [whatIfNse,    setWhatIfNse]    = useState(null);
+  const [simOverlay,   setSimOverlay]   = useState({}); // { [basketKey]: { editedBuys, deletedNse, added } } -- temporary, in-memory only, never persisted
   const [basketMeta,   setBasketMeta]   = useState({ history: {}, buyPriceDetails: {} });
   const [loadProgress, setLoadProgress] = useState(null);
   const [hasChanges,   setHasChanges]   = useState(false);
@@ -159,6 +222,9 @@ export default function App() {
   const [ohlcFallbacks,     setOhlcFallbacks]     = useState({});
   const [fallbackDismissed, setFallbackDismissed] = useState(false);
   const [indexHistory,      setIndexHistory]      = useState(null);
+  const [basketStockMap,    setBasketStockMap]    = useState(null);
+  const [perfByTenure,      setPerfByTenure]      = useState({}); // {nseCode: {"1M":pct, "3M":pct, ...}}
+  const [selectedTenure,    setSelectedTenure]    = useState('1M');
 
   const loadGenRef = useRef(0);
 
@@ -168,6 +234,11 @@ export default function App() {
       .then(r => r.json())
       .then(setNseSymbols)
       .catch(() => {});
+  }, []);
+
+  // Load {basketKey: [nseCode,...]} once for cross-basket search + overlap %
+  useEffect(() => {
+    fetchBasketStockMap().then(setBasketStockMap).catch(() => {});
   }, []);
 
   // Load index history once for since-inception calculation
@@ -269,6 +340,7 @@ export default function App() {
     setLoadProgress(null);
     setHasChanges(false);
     setActiveTab('holdings');
+    setPerfByTenure({});
 
     let liveSnapshot = null;
 
@@ -292,7 +364,9 @@ export default function App() {
         targetPrice:     buyPriceDetails[item.nseCode]?.targetPrice  ?? null,
         stopLoss:        buyPriceDetails[item.nseCode]?.stopLoss    ?? null,
         listingDate:     buyPriceDetails[item.nseCode]?.listingDate || '',
-        holdingDays:     calcHoldingDays(buyPriceDetails[item.nseCode]?.buyEvents),
+        holdingDays:     basketKey === 'IPO_Recommendations'
+          ? calcDaysSinceListing(buyPriceDetails[item.nseCode]?.listingDate)
+          : calcHoldingDays(buyPriceDetails[item.nseCode]?.buyEvents),
         cmp:             null,
         open1M:          null,
         close1M:         null,
@@ -306,6 +380,13 @@ export default function App() {
       }));
       setRows(initialRows);
       setLoadProgress({ loaded: 0, total: composition.length });
+
+      // Multi-tenure performance (1M/3M/6M/1Y/2Y/3Y/5Y) — fetched in the
+      // background, independent of the live-price load below; the table
+      // just shows "—" for any stock/tenure not in yet.
+      fetchPerformanceBatch(initialRows.map(r => r.nseCode))
+        .then(data => { if (gen === loadGenRef.current) setPerfByTenure(data); })
+        .catch(() => {});
 
       if (!liveSnapshot || Object.keys(liveSnapshot).length === 0) {
         setLiveLoading(true);
@@ -398,7 +479,9 @@ export default function App() {
                   const updated = (d.stocks || []).find(s => s.nseCode === row.nseCode);
                   return updated ? { ...row, buyPrice: updated.buyPrice ?? row.buyPrice,
                     allocation: updated.allocation ?? row.allocation,
-                    holdingDays: calcHoldingDays(bpDetails[row.nseCode]?.buyEvents) } : row;
+                    holdingDays: basketKey === 'IPO_Recommendations'
+                      ? calcDaysSinceListing(bpDetails[row.nseCode]?.listingDate)
+                      : calcHoldingDays(bpDetails[row.nseCode]?.buyEvents) } : row;
                 }));
               }
             })
@@ -423,24 +506,79 @@ export default function App() {
     }));
   }, [rows, isIPO]);
 
+  // ── What-if simulation overlay ───────────────────────────────────────────────
+  // Applied on top of displayRows for every aggregate/summary consumer below,
+  // so an active simulation is genuinely reflected across the whole portfolio
+  // (KPIs, pie chart, top gainers/losers) -- not just inside its own modal.
+  // `simRows` (index-safe, same order/length as displayRows + appended adds)
+  // feeds the editable table; `simAgg.overlaid` (deleted stocks removed,
+  // correct for aggregation) feeds every read-only summary view.
+  const simSlot = simOverlay[basketKey] || EMPTY_SLOT;
+  const simRows = useMemo(() => mergeSimForDisplay(displayRows, simSlot), [displayRows, simSlot]);
+  const simAgg  = useMemo(() => computeWhatIf(displayRows, simSlot), [displayRows, simSlot]);
+  const simBefore = useMemo(() => computeWhatIf(displayRows, EMPTY_SLOT), [displayRows]);
+  const simDetails = useMemo(() => buildTouchedDetails(displayRows, simSlot), [displayRows, simSlot]);
+  const hasSimulation = simSlot.added.length > 0 || simSlot.deletedNse.length > 0 ||
+    Object.keys(simSlot.editedBuys).length > 0 || Object.keys(simSlot.weightReductions || {}).length > 0;
+
+  // ── Cross-basket search: which OTHER baskets hold a stock matching the search ──
+  const crossBasketMatches = useMemo(() => {
+    const term = searchTerm.trim().toUpperCase();
+    if (!term || !basketStockMap) return [];
+    const matchedCodes = new Set();
+    for (const codes of Object.values(basketStockMap)) {
+      for (const code of codes) {
+        if (code.includes(term)) matchedCodes.add(code);
+      }
+    }
+    const results = [];
+    for (const code of matchedCodes) {
+      const inBaskets = Object.entries(basketStockMap)
+        .filter(([key, codes]) => key !== basketKey && codes.includes(code))
+        .map(([key]) => key);
+      if (inBaskets.length > 0) results.push({ code, baskets: inBaskets });
+    }
+    return results.slice(0, 10);
+  }, [searchTerm, basketStockMap, basketKey]);
+
+  // ── Basket overlap %: for the CURRENT basket, what % of its stocks also
+  // appear in each other basket ──────────────────────────────────────────────
+  const basketOverlap = useMemo(() => {
+    if (!basketStockMap || !basketStockMap[basketKey]) return [];
+    const current = basketStockMap[basketKey];
+    if (!current.length) return [];
+    const currentSet = new Set(current);
+    return Object.entries(basketStockMap)
+      .filter(([key]) => key !== basketKey)
+      .map(([key, codes]) => {
+        const commonCodes = codes.filter(c => currentSet.has(c)).sort();
+        return { key, pct: Math.round((commonCodes.length / current.length) * 1000) / 10, common: commonCodes.length, total: current.length, commonCodes };
+      })
+      .filter(o => o.common > 0)
+      .sort((a, b) => b.pct - a.pct);
+  }, [basketStockMap, basketKey]);
+  const resetSimulation = useCallback(() => {
+    setSimOverlay(prev => ({ ...prev, [basketKey]: { editedBuys: {}, deletedNse: [], added: [], weightReductions: {} } }));
+  }, [basketKey]);
+
   // ── Derived KPI metrics ──────────────────────────────────────────────────────
-  const totalContribution = displayRows.reduce((s, r) => s + (r.contribution || 0), 0);
+  const totalContribution = simAgg.totalContribution;
 
   const avgMarketCap = (() => {
-    const mc = displayRows.filter(r => r.marketCap > 0).map(r => r.marketCap);
+    const mc = simAgg.overlaid.filter(r => r.marketCap > 0).map(r => r.marketCap);
     return mc.length ? mc.reduce((a, b) => a + b, 0) / mc.length : 0;
   })();
 
   const medianPE = (() => {
-    const pes = displayRows.map(r => r.peRatio).filter(p => p != null && !isNaN(p) && isFinite(p)).sort((a, b) => a - b);
+    const pes = simAgg.overlaid.map(r => r.peRatio).filter(p => p != null && !isNaN(p) && isFinite(p)).sort((a, b) => a - b);
     if (!pes.length) return 0;
     const mid = Math.floor(pes.length / 2);
     return pes.length % 2 !== 0 ? pes[mid] : (pes[mid - 1] + pes[mid]) / 2;
   })();
 
-  const activeStocks = displayRows.filter(r => r.cmp != null).length;
+  const activeStocks = simAgg.overlaid.filter(r => r.cmp != null).length;
 
-  const totalAllocation = displayRows.reduce((s, r) => s + (r.allocation || 0), 0);
+  const totalAllocation = simAgg.totalAllocation;
 
   const totalAbsReturn = (() => {
     const hist = indexHistory?.[basketKey]?.data;
@@ -491,7 +629,7 @@ export default function App() {
   const handleListingDateChange = useCallback(async (idx, val) => {
     setRows(prev => {
       const next = [...prev];
-      next[idx] = { ...next[idx], listingDate: val };
+      next[idx] = { ...next[idx], listingDate: val, holdingDays: calcDaysSinceListing(val) };
       return next;
     });
     setHasChanges(true);
@@ -554,9 +692,15 @@ export default function App() {
     setRows(prev => prev.filter((_, i) => i !== idx));
   }, [rows, saveToHistory, showConfirm]);
 
-  // ── Tooltip ──────────────────────────────────────────────────────────────────
-  const handleInfoHover = useCallback((nse, x, y) => setTooltip({ nse, x, y }), []);
-  const handleInfoLeave = useCallback(() => setTooltip(null), []);
+  // ── What-If simulator ────────────────────────────────────────────────────────
+  const openWhatIf  = useCallback((nse) => setWhatIfNse(nse), []);
+  const closeWhatIf = useCallback(() => setWhatIfNse(null), []);
+  const handleRemoveSimAdded = useCallback((simId) => {
+    setSimOverlay(prev => {
+      const prevSlot = prev[basketKey] || EMPTY_SLOT;
+      return { ...prev, [basketKey]: { ...prevSlot, added: prevSlot.added.filter(a => a.id !== simId) } };
+    });
+  }, [basketKey]);
 
   // ── Confirm modal ─────────────────────────────────────────────────────────────
   const handleConfirmYes = () => { if (confirm?.resolve) confirm.resolve(true);  setConfirm(null); };
@@ -582,6 +726,26 @@ export default function App() {
           readOnly={READ_ONLY}
         />
 
+        {crossBasketMatches.length > 0 && (
+          <div className="cross-basket-panel">
+            {crossBasketMatches.map(m => (
+              <div key={m.code} className="cross-basket-row">
+                <span className="cross-basket-code">{m.code}</span>
+                <span className="cross-basket-label">also in:</span>
+                {m.baskets.map(key => (
+                  <button
+                    key={key}
+                    className="btn btn-secondary cross-basket-go"
+                    onClick={() => handleBasketChange(key)}
+                  >
+                    {BASKET_OPTIONS.find(b => b.key === key)?.label || key} →
+                  </button>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
         <KPIPanel
           totalContribution={totalContribution}
           totalAbsReturn={totalAbsReturn}
@@ -589,8 +753,12 @@ export default function App() {
           medianPE={medianPE}
           activeStocks={activeStocks}
           totalAllocation={totalAllocation}
-          rows={displayRows}
+          rows={simAgg.overlaid}
         />
+
+        {hasSimulation && (
+          <WhatIfImpactBanner before={simBefore} after={simAgg} details={simDetails} onReset={resetSimulation} />
+        )}
 
         {/* Tab switcher */}
         <div className="dv-tabs">
@@ -605,16 +773,18 @@ export default function App() {
 
         {dashView === 'overview' ? (
           <DashboardView
-            rows={displayRows}
+            rows={simAgg.overlaid}
             avgMarketCap={avgMarketCap}
             medianPE={medianPE}
             isIPO={isIPO}
             onViewHoldings={() => setDashView('holdings')}
+            basketOverlap={basketOverlap}
+            onGoToBasket={handleBasketChange}
           />
         ) : (
           <div className="holdings-view">
             {/* Insight cards — full-width row above table */}
-            <InsightsSidebar rows={rows} isIPO={isIPO} />
+            <InsightsSidebar rows={simAgg.overlaid} isIPO={isIPO} />
 
             {/* OHLC Fallback Banner */}
             {!fallbackDismissed && Object.keys(ohlcFallbacks).length > 0 && (
@@ -633,7 +803,7 @@ export default function App() {
 
             <div className="table-section">
               <PortfolioTable
-                rows={displayRows}
+                rows={simRows}
                 searchTerm={searchTerm}
                 nseSymbols={nseSymbols}
                 isIPO={isIPO}
@@ -644,19 +814,41 @@ export default function App() {
                 onListingDateChange={handleListingDateChange}
                 onAddRow={handleAddRow}
                 onRemoveRow={handleRemoveRow}
-                onInfoHover={handleInfoHover}
-                onInfoLeave={handleInfoLeave}
+                onInfoClick={openWhatIf}
+                onRemoveSimAdded={handleRemoveSimAdded}
                 totalContribution={totalContribution}
                 avgMarketCap={avgMarketCap}
                 medianPE={medianPE}
+                tenure={selectedTenure}
+                onTenureChange={setSelectedTenure}
+                perfByTenure={perfByTenure}
               />
+              {!isIPO && (
+                <WhatIfAddStockBar
+                  basketKey={basketKey}
+                  rows={displayRows}
+                  nseSymbols={nseSymbols}
+                  simOverlay={simOverlay}
+                  setSimOverlay={setSimOverlay}
+                />
+              )}
             </div>
           </div>
         )}
       </div>
 
       {confirm && <ConfirmModal title={confirm.title} message={confirm.msg} onConfirm={handleConfirmYes} onCancel={handleConfirmNo} />}
-      {tooltip  && <StockInfoTooltip nse={tooltip.nse} x={tooltip.x} y={tooltip.y} basketMeta={basketMeta} />}
+      {whatIfNse && (
+        <WhatIfModal
+          nse={whatIfNse}
+          basketKey={basketKey}
+          basketMeta={basketMeta}
+          rows={displayRows}
+          simOverlay={simOverlay}
+          setSimOverlay={setSimOverlay}
+          onClose={closeWhatIf}
+        />
+      )}
     </>
   );
 }

@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatPercent, formatRupee, getColorClass } from '../App.jsx';
+import { BASKET_OPTIONS } from './Header.jsx';
 
 const PIE_COLORS = ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#ec4899','#84cc16','#14b8a6','#a78bfa','#34d399'];
 
@@ -173,13 +174,13 @@ function RiskValuationPanel({ medianPE, avgMarketCap, rows }) {
 
   const mcFormatted = avgMarketCap > 0
     ? (avgMarketCap >= 100000 ? '₹' + (avgMarketCap / 100000).toFixed(2) + ' L Cr' : '₹' + Math.round(avgMarketCap).toLocaleString('en-IN') + ' Cr')
-    : '#N/A';
+    : '-';
 
   const stats = [
-    { label: 'Median PE Ratio',  value: medianPE > 0 ? medianPE.toFixed(1) + 'x' : '#N/A', icon: 'fa-calculator' },
+    { label: 'Median PE Ratio',  value: medianPE > 0 ? medianPE.toFixed(1) + 'x' : '-', icon: 'fa-calculator' },
     { label: 'Avg Market Cap',   value: mcFormatted,                                          icon: 'fa-building-columns' },
-    { label: 'Earliest Holding', value: earliest ? earliest + ' Days' : '#N/A',              icon: 'fa-calendar-days' },
-    { label: 'Avg Holding Days', value: avgHolding ? avgHolding + ' Days' : '#N/A',          icon: 'fa-clock' },
+    { label: 'Earliest Holding', value: earliest ? earliest + ' Days' : '-',              icon: 'fa-calendar-days' },
+    { label: 'Avg Holding Days', value: avgHolding ? avgHolding + ' Days' : '-',          icon: 'fa-clock' },
   ];
 
   return (
@@ -197,7 +198,52 @@ function RiskValuationPanel({ medianPE, avgMarketCap, rows }) {
   );
 }
 
-export default function DashboardView({ rows, avgMarketCap, medianPE, isIPO, onViewHoldings }) {
+function BasketOverlapPanel({ overlap, onGoToBasket }) {
+  const [expandedKey, setExpandedKey] = useState(null);
+  const maxPct = Math.max(...overlap.map(o => o.pct), 0.0001);
+  return (
+    <Panel title="Basket Overlap">
+      <div className="dv-barlist-sub">Shared tickers vs. each other basket ({overlap[0]?.total ?? 0} stocks in this basket) — click the count to see which</div>
+      <div className="dv-barlist">
+        {overlap.map((o, i) => {
+          const label = BASKET_OPTIONS.find(b => b.key === o.key)?.label || o.key;
+          const pct = maxPct > 0 ? (o.pct / maxPct) * 100 : 0;
+          const isExpanded = expandedKey === o.key;
+          return (
+            <div key={o.key}>
+              <div className="dv-bar-row dv-bar-row--wide">
+                <span className="dv-bar-rank">{i + 1}</span>
+                <span className="dv-bar-name" style={{ cursor: onGoToBasket ? 'pointer' : 'default' }}
+                  onClick={() => onGoToBasket && onGoToBasket(o.key)} title="Go to this basket">
+                  {label}
+                </span>
+                <div className="dv-bar-track">
+                  <div className="dv-bar dv-bar--neutral" style={{ width: pct + '%' }} />
+                </div>
+                <span
+                  className="dv-bar-val dv-bar-val--clickable"
+                  onClick={() => setExpandedKey(isExpanded ? null : o.key)}
+                  title="Show overlapping stocks"
+                >
+                  {o.common}/{o.total} ({o.pct.toFixed(1)}%) {isExpanded ? '▲' : '▼'}
+                </span>
+              </div>
+              {isExpanded && (
+                <div className="dv-overlap-tickers">
+                  {o.commonCodes.map(code => (
+                    <span key={code} className="dv-overlap-ticker-chip">{code}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </Panel>
+  );
+}
+
+export default function DashboardView({ rows, avgMarketCap, medianPE, isIPO, onViewHoldings, basketOverlap, onGoToBasket }) {
   const validPerf = rows.filter(r => r.performance != null && isFinite(r.performance));
   const validCont = rows.filter(r => r.contribution != null && isFinite(r.contribution));
 
@@ -219,6 +265,13 @@ export default function DashboardView({ rows, avgMarketCap, medianPE, isIPO, onV
         {!isIPO && <BarListPanel title="Top Contributors (1M)" items={topContribs} valueKey="contribution" subtitle="By contribution to portfolio" />}
         {!isIPO && <BarListPanel title="Top Draggers (1M)" items={topDraggers} valueKey="contribution" subtitle="By drag on portfolio" />}
       </div>
+
+      {/* Row 3: Basket Overlap */}
+      {basketOverlap && basketOverlap.length > 0 && (
+        <div className="dv-row-bottom">
+          <BasketOverlapPanel overlap={basketOverlap} onGoToBasket={onGoToBasket} />
+        </div>
+      )}
     </div>
   );
 }

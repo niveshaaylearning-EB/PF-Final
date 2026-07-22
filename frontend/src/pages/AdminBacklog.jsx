@@ -40,11 +40,9 @@ const FEATURES = [
   {
     section: 'Simulator (Virtual Portfolio)',
     items: [
-      'Add / modify / delete simulated stocks per basket',
-      'Sync stocks & buy prices directly from Actual Portfolio',
+      'Private per-user virtual portfolio — add/modify/delete any stock',
       'SIP management — scheduled investment simulation',
-      'Alpha comparison: simulated vs actual return',
-      'Historic return comparison chart',
+      'Historic performance chart for the simulated portfolio',
       'Export to Excel & PDF',
     ],
   },

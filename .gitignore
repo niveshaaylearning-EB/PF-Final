@@ -64,3 +64,6 @@ desktop.ini
 
 # ── Vite ──────────────────────────────────────────────────────────────────────
 .vite/
+
+# ── Local-only launcher (not pushed to GitHub) ────────────────────────────────
+start.bat

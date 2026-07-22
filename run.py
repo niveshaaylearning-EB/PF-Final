@@ -1,5 +1,5 @@
 """
-NIA Performance Center — single-window launcher.
+Niveshaay Equity Basket Tracker — single-window launcher.
 Runs:  frontend build  →  webportal backend (:8001)  →  main backend (:8000)
 All output is prefixed and shown in this window.
 Press Ctrl+C to stop everything.

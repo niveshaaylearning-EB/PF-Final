@@ -114,43 +114,27 @@ def download_actual_full(data: dict = Body(...)):
 
 @router.post("/api/download/simulator-full")
 def download_simulator_full(data: dict = Body(...)):
-    """Export full simulator Excel with Summary + Holdings sheets."""
-    basket_name   = data.get("basket_name", "Portfolio")
-    actual_return = float(data.get("actual_return", 0))
-    sim_return    = float(data.get("sim_return", 0))
-    alpha         = float(data.get("alpha", 0))
-    holdings      = data.get("holdings", [])
-    historic      = data.get("historic", {})   # {actual: {...}, simulated: {...}}
+    """Export a user's virtual portfolio Excel with Summary + Holdings sheets."""
+    sim_return = float(data.get("sim_return", 0))
+    holdings   = data.get("holdings", [])
+    historic   = data.get("historic", {})   # {simulated: {...}}
 
-    actual_hist = historic.get("actual", {})
-    sim_hist    = historic.get("simulated", {})
+    sim_hist = historic.get("simulated", {})
 
     # ── Sheet 1: Summary ──────────────────────────────────────────────────────
     summary_rows = [
-        {"Metric": "Basket",                  "Value": basket_name},
-        {"Metric": "Actual Portfolio Return (%)",   "Value": round(actual_return, 2)},
         {"Metric": "Simulated Portfolio Return (%)", "Value": round(sim_return, 2)},
-        {"Metric": "Alpha / Difference (%)",  "Value": round(alpha, 2)},
         {"Metric": "", "Value": ""},
-        {"Metric": "--- Historical Comparison ---", "Value": ""},
+        {"Metric": "--- Historical Performance ---", "Value": ""},
     ]
     for period in ["1M", "6M", "1Y", "3Y", "5Y"]:
-        a = actual_hist.get(period, {}) or {}
         s = sim_hist.get(period, {}) or {}
-        if not a and not s:
+        if not s:
             continue
-        a_net  = a.get("net")
-        s_net  = s.get("net")
-        delta  = round(s_net - a_net, 2) if a_net is not None and s_net is not None else None
-        summary_rows.append({"Metric": f"{period} — Actual Net (%)",   "Value": a_net  if a_net  is not None else "N/A"})
-        summary_rows.append({"Metric": f"{period} — Sim Net (%)",      "Value": s_net  if s_net  is not None else "N/A"})
-        summary_rows.append({"Metric": f"{period} — Delta (%)",        "Value": delta  if delta  is not None else "N/A"})
-        if a.get("cagr") is not None or s.get("cagr") is not None:
-            a_cagr = a.get("cagr"); s_cagr = s.get("cagr")
-            d_cagr = round(s_cagr - a_cagr, 2) if a_cagr is not None and s_cagr is not None else None
-            summary_rows.append({"Metric": f"{period} — Actual CAGR (%)", "Value": a_cagr if a_cagr is not None else "N/A"})
-            summary_rows.append({"Metric": f"{period} — Sim CAGR (%)",    "Value": s_cagr if s_cagr is not None else "N/A"})
-            summary_rows.append({"Metric": f"{period} — CAGR Delta (%)",  "Value": d_cagr if d_cagr is not None else "N/A"})
+        s_net = s.get("net")
+        summary_rows.append({"Metric": f"{period} — Net (%)",  "Value": s_net if s_net is not None else "N/A"})
+        if s.get("cagr") is not None:
+            summary_rows.append({"Metric": f"{period} — CAGR (%)", "Value": s.get("cagr")})
         summary_rows.append({"Metric": "", "Value": ""})
 
     # ── Sheet 2: Holdings ────────────────────────────────────────────────────
@@ -166,6 +150,5 @@ def download_simulator_full(data: dict = Body(...)):
             pd.DataFrame(holdings_clean).to_excel(writer, sheet_name="Holdings", index=False)
 
     output.seek(0)
-    safe_name = basket_name.replace("/", "-").replace("\\", "-")
-    headers = {'Content-Disposition': f'attachment; filename="{safe_name}_Simulated.xlsx"'}
+    headers = {'Content-Disposition': 'attachment; filename="My_Virtual_Portfolio_Simulated.xlsx"'}
     return StreamingResponse(output, headers=headers, media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

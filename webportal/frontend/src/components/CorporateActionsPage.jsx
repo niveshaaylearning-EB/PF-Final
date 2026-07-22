@@ -27,12 +27,12 @@ const STATUS_COLORS = {
   pending_review: '#fbbf24',
   approved:       '#10b981',
   rejected:       '#ef4444',
-  reversed:       '#64748b',
+  reversed:       'var(--text-secondary)',
 };
 
-const box = { background: 'rgba(15,23,42,0.6)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: '10px', padding: '1rem 1.2rem', marginBottom: '1rem' };
-const label = { display: 'block', fontSize: '0.72rem', color: '#64748b', marginBottom: '0.2rem', textTransform: 'uppercase', letterSpacing: '0.03em' };
-const input = { background: 'rgba(2,6,23,0.6)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: '6px', color: '#e2e8f0', padding: '0.4rem 0.6rem', fontSize: '0.84rem', width: '100%' };
+const box = { background: 'var(--card-bg)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: '10px', padding: '1rem 1.2rem', marginBottom: '1rem' };
+const label = { display: 'block', fontSize: '0.72rem', color: 'var(--text-secondary)', marginBottom: '0.2rem', textTransform: 'uppercase', letterSpacing: '0.03em' };
+const input = { background: 'var(--input-bg)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: '6px', color: 'var(--text-primary)', padding: '0.4rem 0.6rem', fontSize: '0.84rem', width: '100%' };
 const btn = (color) => ({ background: color + '18', border: `1px solid ${color}55`, color, borderRadius: '6px', padding: '0.4rem 0.9rem', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer' });
 const fmt = (v) => v == null ? '—' : `₹${Number(v).toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
 
@@ -78,22 +78,22 @@ function ComparisonReport({ report, type }) {
   return (
     <div style={{ marginTop: '0.75rem', fontSize: '0.8rem' }}>
       <div style={{ display: 'flex', gap: '2rem', marginBottom: '0.6rem' }}>
-        <div><span style={{ color: '#64748b' }}>Current buy price: </span><strong style={{ color: '#e2e8f0' }}>{fmt(report.currentBuyPrice)}</strong></div>
-        <div><span style={{ color: '#64748b' }}>Revised buy price: </span><strong style={{ color: '#10b981' }}>{fmt(report.revisedBuyPrice)}</strong></div>
-        <div><span style={{ color: '#64748b' }}>Difference: </span><strong style={{ color: (report.difference ?? 0) < 0 ? '#ef4444' : '#10b981' }}>{fmt(report.difference)}</strong></div>
+        <div><span style={{ color: 'var(--text-secondary)' }}>Current buy price: </span><strong style={{ color: 'var(--text-primary)' }}>{fmt(report.currentBuyPrice)}</strong></div>
+        <div><span style={{ color: 'var(--text-secondary)' }}>Revised buy price: </span><strong style={{ color: '#10b981' }}>{fmt(report.revisedBuyPrice)}</strong></div>
+        <div><span style={{ color: 'var(--text-secondary)' }}>Difference: </span><strong style={{ color: (report.difference ?? 0) < 0 ? '#ef4444' : '#10b981' }}>{fmt(report.difference)}</strong></div>
       </div>
 
       {report.eligibleEvents?.length > 0 && (
         <div style={{ marginBottom: '0.5rem' }}>
-          <div style={{ color: '#64748b', marginBottom: '0.2rem' }}>Eligible buy events (adjusted):</div>
+          <div style={{ color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>Eligible buy events (adjusted):</div>
           <table style={{ width: '100%', fontSize: '0.76rem' }}>
             <tbody>
               {report.eligibleEvents.map((e, i) => (
                 <tr key={i}>
-                  <td style={{ color: '#94a3b8', padding: '0.1rem 0.5rem 0.1rem 0' }}>{e.date}</td>
-                  <td style={{ color: '#94a3b8', padding: '0.1rem 0.5rem' }}>{e.weight}% wt</td>
+                  <td style={{ color: 'var(--text-secondary)', padding: '0.1rem 0.5rem 0.1rem 0' }}>{e.date}</td>
+                  <td style={{ color: 'var(--text-secondary)', padding: '0.1rem 0.5rem' }}>{e.weight}% wt</td>
                   <td style={{ color: '#f87171', padding: '0.1rem 0.5rem' }}>{fmt(e.oldPrice)}</td>
-                  <td style={{ color: '#64748b', padding: '0.1rem 0.3rem' }}>→</td>
+                  <td style={{ color: 'var(--text-secondary)', padding: '0.1rem 0.3rem' }}>→</td>
                   <td style={{ color: '#34d399', padding: '0.1rem 0.5rem' }}>{fmt(e.newPrice)}</td>
                 </tr>
               ))}
@@ -104,14 +104,14 @@ function ComparisonReport({ report, type }) {
 
       {report.ineligibleEvents?.length > 0 && (
         <div style={{ marginBottom: '0.5rem' }}>
-          <div style={{ color: '#64748b', marginBottom: '0.2rem' }}>Ineligible (on/after ex-date, unchanged):</div>
+          <div style={{ color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>Ineligible (on/after ex-date, unchanged):</div>
           <table style={{ width: '100%', fontSize: '0.76rem' }}>
             <tbody>
               {report.ineligibleEvents.map((e, i) => (
                 <tr key={i}>
-                  <td style={{ color: '#94a3b8', padding: '0.1rem 0.5rem 0.1rem 0' }}>{e.date}</td>
-                  <td style={{ color: '#94a3b8', padding: '0.1rem 0.5rem' }}>{e.weight}% wt</td>
-                  <td style={{ color: '#64748b', padding: '0.1rem 0.5rem' }}>{fmt(e.price)}</td>
+                  <td style={{ color: 'var(--text-secondary)', padding: '0.1rem 0.5rem 0.1rem 0' }}>{e.date}</td>
+                  <td style={{ color: 'var(--text-secondary)', padding: '0.1rem 0.5rem' }}>{e.weight}% wt</td>
+                  <td style={{ color: 'var(--text-secondary)', padding: '0.1rem 0.5rem' }}>{fmt(e.price)}</td>
                 </tr>
               ))}
             </tbody>
@@ -121,7 +121,7 @@ function ComparisonReport({ report, type }) {
 
       {type === 'demerger' && report.resultingCompanyPreview && (
         <div>
-          <div style={{ color: '#64748b', marginBottom: '0.2rem' }}>
+          <div style={{ color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>
             Resulting company preview (entitlement ratio: {report.resultingCompanyPreview.entitlementRatio ?? '—'},
             {' '}weight: {report.resultingCompanyPreview.resultingWeight ?? 'not set'}%):
           </div>
@@ -129,8 +129,8 @@ function ComparisonReport({ report, type }) {
             <tbody>
               {(report.resultingCompanyPreview.perEventBuyPrice || []).map((e, i) => (
                 <tr key={i}>
-                  <td style={{ color: '#94a3b8', padding: '0.1rem 0.5rem 0.1rem 0' }}>{e.date}</td>
-                  <td style={{ color: '#94a3b8', padding: '0.1rem 0.5rem' }}>parent wt {e.parentWeight}%</td>
+                  <td style={{ color: 'var(--text-secondary)', padding: '0.1rem 0.5rem 0.1rem 0' }}>{e.date}</td>
+                  <td style={{ color: 'var(--text-secondary)', padding: '0.1rem 0.5rem' }}>parent wt {e.parentWeight}%</td>
                   <td style={{ color: '#818cf8', padding: '0.1rem 0.5rem' }}>resulting buy price {fmt(e.resultingBuyPrice)}</td>
                 </tr>
               ))}
@@ -206,10 +206,10 @@ function RecordCard({ rec, onChanged }) {
     <div style={box}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <div style={{ fontWeight: 700, color: '#e2e8f0', fontSize: '0.92rem' }}>
-            {rec.nseCode} <span style={{ color: '#64748b', fontWeight: 400 }}>· {rec.type} · {rec.basketKey}</span>
+          <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.92rem' }}>
+            {rec.nseCode} <span style={{ color: 'var(--text-secondary)', fontWeight: 400 }}>· {rec.type} · {rec.basketKey}</span>
           </div>
-          <div style={{ fontSize: '0.76rem', color: '#94a3b8', marginTop: '0.15rem' }}>
+          <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>
             Ex-date {rec.exDate}{rec.recordDate ? ` · Record date ${rec.recordDate}` : ''}
           </div>
         </div>
@@ -222,7 +222,7 @@ function RecordCard({ rec, onChanged }) {
       <ComparisonReport report={rec.comparisonReport} type={rec.type} />
 
       {editable && edit && (
-        <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: 'rgba(2,6,23,0.4)', borderRadius: '8px' }}>
+        <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: 'var(--input-bg)', borderRadius: '8px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', marginBottom: '0.6rem' }}>
             <div><label style={label}>Ex-date</label><input style={input} value={form.exDate} onChange={e => setForm(f => ({ ...f, exDate: e.target.value }))} placeholder="DD Mon YYYY" /></div>
             <div><label style={label}>Record date</label><input style={input} value={form.recordDate} onChange={e => setForm(f => ({ ...f, recordDate: e.target.value }))} placeholder="DD Mon YYYY" /></div>
@@ -267,7 +267,7 @@ function RecordCard({ rec, onChanged }) {
       {err && <div style={{ color: '#ef4444', fontSize: '0.78rem', marginTop: '0.5rem' }}>{err}</div>}
 
       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
-        {editable && <button style={btn('#94a3b8')} disabled={busy} onClick={() => setEdit(v => !v)}>{edit ? 'Close edit' : 'Edit'}</button>}
+        {editable && <button style={btn('var(--text-secondary)')} disabled={busy} onClick={() => setEdit(v => !v)}>{edit ? 'Close edit' : 'Edit'}</button>}
         {rec.status === 'pending_review' && <button style={btn('#10b981')} disabled={busy} onClick={doApprove}>Approve</button>}
         {rec.status === 'pending_review' && <button style={btn('#ef4444')} disabled={busy} onClick={doReject}>Reject</button>}
         {rec.status === 'approved' && <button style={btn('#f87171')} disabled={busy} onClick={doReverse}>Reverse</button>}
@@ -320,8 +320,8 @@ export default function CorporateActionsPage() {
   if (admin === null) return null;
   if (!admin.isAdmin) {
     return (
-      <div style={{ padding: '2rem', color: '#94a3b8' }}>
-        <button style={btn('#94a3b8')} onClick={() => { window.location.href = '/wp/' + window.location.search; }}>← Back</button>
+      <div style={{ padding: '2rem', color: 'var(--text-secondary)' }}>
+        <button style={btn('var(--text-secondary)')} onClick={() => { window.location.href = '/wp/' + window.location.search; }}>← Back</button>
         <div style={{ marginTop: '1rem' }}>Admin access required to view Corporate Actions.</div>
       </div>
     );
@@ -333,8 +333,8 @@ export default function CorporateActionsPage() {
   return (
     <div style={{ padding: '1.5rem', maxWidth: '980px', margin: '0 auto' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.2rem' }}>
-        <button style={btn('#94a3b8')} onClick={() => { window.location.href = '/wp/' + window.location.search; }}>← Back</button>
-        <div style={{ fontWeight: 700, fontSize: '1.15rem', color: '#e2e8f0' }}>
+        <button style={btn('var(--text-secondary)')} onClick={() => { window.location.href = '/wp/' + window.location.search; }}>← Back</button>
+        <div style={{ fontWeight: 700, fontSize: '1.15rem', color: 'var(--text-primary)' }}>
           <i className="fa-solid fa-code-branch" style={{ color: '#818cf8', marginRight: '0.5rem' }} />
           Corporate Actions
         </div>
@@ -342,7 +342,7 @@ export default function CorporateActionsPage() {
 
       {/* Create form */}
       <form onSubmit={handleCreate} style={box}>
-        <div style={{ fontWeight: 700, color: '#e2e8f0', marginBottom: '0.75rem' }}>Create corporate action</div>
+        <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Create corporate action</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.6rem', marginBottom: '0.6rem' }}>
           <div>
             <label style={label}>Basket</label>
@@ -411,13 +411,13 @@ export default function CorporateActionsPage() {
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
         {['all', 'pending_review', 'approved', 'rejected', 'reversed'].map(s => (
           <button key={s} onClick={() => setFilter(s)}
-            style={{ ...btn(filter === s ? '#818cf8' : '#64748b'), fontWeight: filter === s ? 700 : 500 }}>
+            style={{ ...btn(filter === s ? '#818cf8' : 'var(--text-secondary)'), fontWeight: filter === s ? 700 : 500 }}>
             {s === 'all' ? 'All' : s.replace('_', ' ')} {s !== 'all' ? `(${counts[s] || 0})` : `(${records.length})`}
           </button>
         ))}
       </div>
 
-      {filtered.length === 0 && <div style={{ color: '#64748b', fontSize: '0.84rem' }}>No corporate actions in this view.</div>}
+      {filtered.length === 0 && <div style={{ color: 'var(--text-secondary)', fontSize: '0.84rem' }}>No corporate actions in this view.</div>}
       {filtered.map(rec => <RecordCard key={rec.id} rec={rec} onChanged={load} />)}
     </div>
   );

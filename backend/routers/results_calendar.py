@@ -21,7 +21,10 @@ from routers.actual_portfolio_bridge import _fetch_all_webportal_baskets
 router = APIRouter()
 
 _RESULTS_CACHE_FILE = os.path.join(os.path.dirname(__file__), '..', 'results_calendar_cache.json')
-_RESULTS_TTL = 12 * 3600  # 12 hours
+_RESULTS_TTL = 12 * 3600      # 12 hours -- normal cache lifetime for a successful fetch
+_RESULTS_RETRY_TTL = 15 * 60  # 15 minutes -- short-lived cache when a source errored, so a
+                              # transient NSE rate-limit/block self-heals quickly instead of
+                              # leaving an empty result cached for the full 12h window
 
 def _load_results_cache() -> dict:
     try:
@@ -104,6 +107,7 @@ async def _refresh_results_calendar_data(db: Session) -> list:
 
     upcoming_events = []
     seen_events = set()  # (code, date) dedup
+    any_source_failed = False  # tracks transient errors so we don't cache a bad empty result for 12h
 
     # ── Source 1: NSE board meetings (nse_events) — real announced dates ──────
     try:
@@ -142,6 +146,7 @@ async def _refresh_results_calendar_data(db: Session) -> list:
                 })
     except Exception as nse_err:
         print(f"[Results Calendar] NSE events fetch error: {nse_err}")
+        any_source_failed = True
 
     # ── Source 1b: NSE corporate actions via direct HTTP (if nsepython geo-blocked) ──
     if not upcoming_events:
@@ -159,7 +164,9 @@ async def _refresh_results_calendar_data(db: Session) -> list:
                     f"https://www.nseindia.com/api/corporates-corporateActions"
                     f"?index=equities&from_date={_from}&to_date={_to}&type=boardMeeting"
                 )
-            if _r.status_code == 200:
+            if _r.status_code != 200:
+                any_source_failed = True
+            else:
                 for item in _r.json():
                     code = str(item.get("symbol","")).strip().upper()
                     if code not in unique_codes:
@@ -180,6 +187,7 @@ async def _refresh_results_calendar_data(db: Session) -> list:
                                             "date": ds, "purpose": "Financial Results"})
         except Exception as _e:
             print(f"[Results Calendar] NSE direct fetch error: {_e}")
+            any_source_failed = True
 
     # ── Source 2: yfinance calendar — covers large caps NSE may not list yet ──
     remaining_codes = [c for c in unique_codes if not any(e['stock_code'] == c for e in upcoming_events)]
@@ -231,7 +239,8 @@ async def _refresh_results_calendar_data(db: Session) -> list:
 
     _results_cache["calendar"] = {
         "time": now,
-        "data": upcoming_events
+        "data": upcoming_events,
+        "reliable": not any_source_failed,
     }
     _save_results_cache(_results_cache)
 
@@ -244,7 +253,12 @@ async def get_results_calendar(db: Session = Depends(get_db)):
     cached = _results_cache.get("calendar")
     today_str = date.today().isoformat()
 
-    if cached and (now - cached['time']) < _RESULTS_TTL:
+    # If the last refresh had a source error (e.g. NSE rate-limiting), don't trust
+    # the full 12h TTL -- retry much sooner so a transient failure self-heals
+    # instead of leaving a possibly-empty/incomplete result cached all day.
+    effective_ttl = _RESULTS_TTL if (cached and cached.get("reliable", True)) else _RESULTS_RETRY_TTL
+
+    if cached and (now - cached['time']) < effective_ttl:
         holdings = db.query(database.BasketHistory).filter(database.BasketHistory.stock_code != None).all()
         hidden_objs = db.query(database.HiddenStock).all()
 

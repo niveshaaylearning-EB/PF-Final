@@ -1,8 +1,20 @@
-import { API_BASE } from '../api/base.js';
+import { API_BASE, getAuthToken } from '../api/base.js';
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import * as XLSX from 'xlsx';
 import RollbackButtons from './RollbackButtons.jsx';
 import ColumnFilter from './ColumnFilter.jsx';
+
+const ADMIN_EMAILS = ['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com', 'nakshatra.rathi@niveshaay.com'];
+const _getAdminState = () => {
+  try {
+    const t = getAuthToken();
+    if (!t) return { isAdmin: false };
+    const payload = JSON.parse(atob(t.split('.')[1]));
+    if (payload.exp && Date.now() > payload.exp * 1000) return { isAdmin: false };
+    const email = (payload.sub || '').toLowerCase().trim();
+    return { isAdmin: ADMIN_EMAILS.includes(email) };
+  } catch { return { isAdmin: false }; }
+};
 
 const BASKET_OPTIONS = [
   { key: 'Green_Energy',    label: 'Green Energy'     },
@@ -60,6 +72,7 @@ function SellTypeBadge({ type }) {
 }
 
 export default function PLStatementPage() {
+  const { isAdmin: userIsAdmin } = _getAdminState();
   const [gainsData,         setGainsData]         = useState(null);
   const [loading,           setLoading]           = useState(true);
   const [error,             setError]             = useState('');
@@ -283,9 +296,13 @@ export default function PLStatementPage() {
     if (!pending) return;
     setSaveStatus(prev => ({ ...prev, [row._key]: 'saving' }));
     try {
+      const token = getAuthToken();
       const res = await fetch(`${API_BASE}/set-ohlc-price`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ basket: basketKey, code: row.nseCode, date: row._firstBuyDate, price: pending.buyPrice, type: 'buy' }),
       });
       if (!res.ok) throw new Error();
@@ -339,7 +356,7 @@ export default function PLStatementPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <button
             onClick={() => { window.location.href = '/wp/' + window.location.search; }}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 0.9rem', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 600, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#94a3b8', cursor: 'pointer' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 0.9rem', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 600, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--text-secondary)', cursor: 'pointer' }}
           >
             ← Back
           </button>
@@ -348,9 +365,11 @@ export default function PLStatementPage() {
             <p className="pl-subtitle">Realised Gains &amp; Losses — Niveshaay Investment Advisors</p>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <RollbackButtons btnStyle="bp" />
-        </div>
+        {userIsAdmin && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <RollbackButtons btnStyle="bp" />
+          </div>
+        )}
       </div>
 
       <div className="pl-controls-card">
@@ -439,14 +458,14 @@ export default function PLStatementPage() {
           <span style={{ color:'#fbbf24', flexShrink:0 }}>⚠</span>
           <div style={{ flex:1 }}>
             <strong style={{ color:'#fbbf24' }}>Next-Trading-Day Prices Used</strong>
-            <div style={{ color:'#94a3b8', marginTop:'0.3rem', lineHeight:1.6 }}>
+            <div style={{ color:'var(--text-secondary)', marginTop:'0.3rem', lineHeight:1.6 }}>
               {Object.entries(ohlcFallbacks).map(([nse, info]) => {
                 const parts = [...Object.entries(info.buyFallbacks||{}).map(([r,a]) => `Buy ${r}→${a}`), ...Object.entries(info.sellFallbacks||{}).map(([r,a]) => `Sell ${r}→${a}`)];
-                return parts.length ? <div key={nse}><strong style={{ color:'#e2e8f0' }}>{nse}</strong>{info.securityName ? ` (${info.securityName})` : ''}: {parts.join(', ')}</div> : null;
+                return parts.length ? <div key={nse}><strong style={{ color:'var(--text-primary)' }}>{nse}</strong>{info.securityName ? ` (${info.securityName})` : ''}: {parts.join(', ')}</div> : null;
               })}
             </div>
           </div>
-          <button onClick={() => setFallbackDismissed(true)} style={{ background:'none', border:'none', color:'#64748b', cursor:'pointer', fontSize:'1rem', padding:0, flexShrink:0 }}>&times;</button>
+          <button onClick={() => setFallbackDismissed(true)} style={{ background:'none', border:'none', color:'var(--text-secondary)', cursor:'pointer', fontSize:'1rem', padding:0, flexShrink:0 }}>&times;</button>
         </div>
       )}
 
@@ -494,7 +513,7 @@ export default function PLStatementPage() {
               </tr>
               {/* Column filter row */}
               {showFilters && (
-                <tr style={{ background: 'rgba(15,23,42,0.8)' }}>
+                <tr style={{ background: 'var(--th-bg)' }}>
                   <th><input value={colFilters.nse}      onChange={e => setColF('nse', e.target.value)}      placeholder="Filter…" style={fStyle} /></th>
                   <th><input value={colFilters.name}     onChange={e => setColF('name', e.target.value)}     placeholder="Filter…" style={fStyle} /></th>
                   <th><input value={colFilters.sellDate} onChange={e => setColF('sellDate', e.target.value)} placeholder="e.g. 2026" style={fStyle} /></th>
@@ -572,7 +591,7 @@ export default function PLStatementPage() {
                           style={{ ...cellInput, textAlign: 'right', width: '5.5rem', color: ov.buyPrice !== undefined ? '#fbbf24' : 'inherit' }}
                           placeholder="₹"
                         />
-                        {pendingSave[row._key] && (
+                        {userIsAdmin && pendingSave[row._key] && (
                           <button
                             onClick={() => persistPrice(row)}
                             title="Save corrected buy price to database"
@@ -591,7 +610,7 @@ export default function PLStatementPage() {
                     <td style={{ textAlign: 'center', padding: '0 0.25rem' }}>
                       <button onClick={() => deleteRow(row._key)} title="Remove row" style={{
                         background: 'none', border: '1px solid #475569', borderRadius: '4px',
-                        color: '#64748b', cursor: 'pointer', fontSize: '0.8rem', lineHeight: 1,
+                        color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '0.8rem', lineHeight: 1,
                         padding: '1px 5px', fontWeight: 700,
                       }}>−</button>
                     </td>
@@ -621,13 +640,13 @@ export default function PLStatementPage() {
 }
 
 const fStyle = {
-  width: '100%', background: '#0f172a', border: '1px solid #334155',
-  borderRadius: '4px', color: '#e2e8f0', fontSize: '0.75rem',
+  width: '100%', background: 'var(--input-bg)', border: '1px solid var(--border-color)',
+  borderRadius: '4px', color: 'var(--text-primary)', fontSize: '0.75rem',
   padding: '0.2rem 0.4rem', boxSizing: 'border-box',
 };
 
 const cellInput = {
-  background: 'transparent', border: 'none', borderBottom: '1px solid #334155',
+  background: 'transparent', border: 'none', borderBottom: '1px solid var(--border-color)',
   color: 'var(--text-primary)', fontSize: '0.82rem', padding: '0.1rem 0.2rem',
   width: '100%', outline: 'none', fontFamily: 'inherit',
 };

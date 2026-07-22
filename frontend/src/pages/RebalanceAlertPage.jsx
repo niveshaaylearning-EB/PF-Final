@@ -4,7 +4,7 @@ import axios from 'axios';
 import { API_BASE as API } from '../config.js';
 
 const clr = (pct) => {
-  if (pct == null) return '#94a3b8';
+  if (pct == null) return 'var(--text-muted)';
   return pct >= 0 ? '#10b981' : '#ef4444';
 };
 
@@ -26,18 +26,18 @@ function Section({ title, color, dot, children }) {
 function Table({ headers, rows }) {
   if (!rows.length) return null;
   return (
-    <div style={{ overflowX: 'auto', borderRadius: 8, border: '1px solid rgba(255,255,255,0.07)', marginBottom: '0.25rem' }}>
+    <div style={{ overflowX: 'auto', borderRadius: 8, border: '1px solid var(--panel-border)', marginBottom: '0.25rem' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
         <thead>
-          <tr style={{ background: 'rgba(255,255,255,0.04)' }}>
+          <tr style={{ background: 'var(--hover-overlay)' }}>
             {headers.map(h => (
-              <th key={h} style={{ padding: '0.45rem 0.85rem', textAlign: 'left', color: '#475569', fontWeight: 600, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>{h}</th>
+              <th key={h} style={{ padding: '0.45rem 0.85rem', textAlign: 'left', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap', borderBottom: '1px solid var(--panel-border)' }}>{h}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {rows.map((row, i) => (
-            <tr key={i} style={{ borderBottom: i < rows.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
+            <tr key={i} style={{ borderBottom: i < rows.length - 1 ? '1px solid var(--panel-border)' : 'none' }}>
               {row.map((cell, j) => (
                 <td key={j} style={{ padding: '0.5rem 0.85rem', whiteSpace: 'nowrap', ...cell.style }}>{cell.node || cell.text}</td>
               ))}
@@ -53,38 +53,38 @@ function AlertCard({ alert, idx, total }) {
   const { basketLabel, rebalanceDate, fullExits, partialSells, newAdditions, weightIncreased } = alert;
 
   const exitRows = fullExits.map(s => [
-    { text: s.nseCode, style: { fontWeight: 700, color: '#e2e8f0' } },
-    { text: s.securityName, style: { color: '#94a3b8' } },
-    { text: fmt(s.buyPrice), style: { color: '#94a3b8' } },
+    { text: s.nseCode, style: { fontWeight: 700, color: 'var(--text-main)' } },
+    { text: s.securityName, style: { color: 'var(--text-muted)' } },
+    { text: fmt(s.buyPrice), style: { color: 'var(--text-muted)' } },
     { text: fmt(s.sellPrice), style: { color: clr(s.returnPct) } },
     { text: fmtPct(s.returnPct), style: { color: clr(s.returnPct), fontWeight: 700 } },
-    { text: s.weight + '%', style: { color: '#94a3b8' } },
+    { text: s.weight + '%', style: { color: 'var(--text-muted)' } },
   ]);
 
   const partialRows = partialSells.map(s => [
-    { text: s.nseCode, style: { fontWeight: 700, color: '#e2e8f0' } },
-    { text: s.securityName, style: { color: '#94a3b8' } },
+    { text: s.nseCode, style: { fontWeight: 700, color: 'var(--text-main)' } },
+    { text: s.securityName, style: { color: 'var(--text-muted)' } },
     { text: s.weight + '%', style: { color: '#f59e0b' } },
-    { text: fmt(s.buyPrice), style: { color: '#94a3b8' } },
+    { text: fmt(s.buyPrice), style: { color: 'var(--text-muted)' } },
     { text: fmt(s.sellPrice), style: { color: clr(s.returnPct) } },
     { text: fmtPct(s.returnPct), style: { color: clr(s.returnPct), fontWeight: 700 } },
   ]);
 
   const addRows = newAdditions.map(s => [
-    { text: s.nseCode, style: { fontWeight: 700, color: '#e2e8f0' } },
-    { text: s.securityName, style: { color: '#94a3b8' } },
+    { text: s.nseCode, style: { fontWeight: 700, color: 'var(--text-main)' } },
+    { text: s.securityName, style: { color: 'var(--text-muted)' } },
     { text: (s.weight || '—') + (s.weight ? '%' : ''), style: { color: '#10b981' } },
   ]);
 
   const increaseRows = weightIncreased.map(s => [
-    { text: s.nseCode, style: { fontWeight: 700, color: '#e2e8f0' } },
-    { text: s.securityName, style: { color: '#94a3b8' } },
-    { node: <span style={{ color: '#f59e0b' }}>{s.oldWeight}% <span style={{ color: '#475569' }}>→</span> {s.newWeight}%</span> },
+    { text: s.nseCode, style: { fontWeight: 700, color: 'var(--text-main)' } },
+    { text: s.securityName, style: { color: 'var(--text-muted)' } },
+    { node: <span style={{ color: '#f59e0b' }}>{s.oldWeight}% <span style={{ color: 'var(--text-muted)' }}>→</span> {s.newWeight}%</span> },
   ]);
 
   return (
     <div style={{
-      background: 'rgba(15,23,42,0.9)',
+      background: 'var(--panel-bg)',
       border: '1px solid rgba(99,102,241,0.2)',
       borderRadius: 14,
       padding: '1.5rem 1.75rem',
@@ -92,10 +92,10 @@ function AlertCard({ alert, idx, total }) {
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.2rem' }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700, color: '#f1f5f9' }}>{basketLabel}</h3>
-          <span style={{ fontSize: '0.82rem', color: '#64748b' }}>Rebalanced on {rebalanceDate}</span>
+          <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-main)' }}>{basketLabel}</h3>
+          <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Rebalanced on {rebalanceDate}</span>
         </div>
-        <span style={{ fontSize: '0.72rem', color: '#475569', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 6, padding: '0.2rem 0.6rem' }}>
+        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', background: 'var(--hover-overlay)', border: '1px solid var(--panel-border)', borderRadius: 6, padding: '0.2rem 0.6rem' }}>
           {idx + 1} / {total}
         </span>
       </div>
@@ -159,7 +159,7 @@ export default function RebalanceAlertPage() {
   };
 
   if (loading) return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', color: '#64748b', fontSize: '0.9rem' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
       Checking for rebalance updates…
     </div>
   );
@@ -176,11 +176,11 @@ export default function RebalanceAlertPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.3rem' }}>
             <span style={{ fontSize: '1.5rem' }}>🔔</span>
-            <h2 style={{ margin: 0, fontSize: '1.45rem', fontWeight: 700, color: '#f1f5f9' }}>
+            <h2 style={{ margin: 0, fontSize: '1.45rem', fontWeight: 700, color: 'var(--text-main)' }}>
               Portfolio Rebalance Update
             </h2>
           </div>
-          <p style={{ margin: 0, color: '#64748b', fontSize: '0.88rem' }}>
+          <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.88rem' }}>
             {alerts.length} basket{alerts.length > 1 ? 's were' : ' was'} rebalanced since your last visit.
           </p>
         </div>
@@ -192,20 +192,20 @@ export default function RebalanceAlertPage() {
       ))}
 
       {/* Footer note + Continue */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1.5rem', padding: '1rem 1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
-        <span style={{ fontSize: '0.8rem', color: '#475569' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1.5rem', padding: '1rem 1.25rem', background: 'var(--hover-overlay)', borderRadius: 10, border: '1px solid var(--panel-border)' }}>
+        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
           ℹ️ This alert shows once per rebalance event — you won't see it again after clicking Continue.
         </span>
         <div style={{ display: 'flex', gap: '0.75rem', flexShrink: 0 }}>
           <button
             onClick={() => navigate('/actual')}
-            style={{ padding: '0.55rem 1.2rem', borderRadius: 8, border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.1)', color: '#a5b4fc', fontSize: '0.88rem', fontWeight: 600, cursor: 'pointer' }}
+            style={{ padding: '0.55rem 1.2rem', borderRadius: 8, border: '1px solid rgba(99,102,241,0.3)', background: 'var(--primary-glow)', color: 'var(--primary)', fontSize: '0.88rem', fontWeight: 600, cursor: 'pointer' }}
           >
             View P&amp;L Statement
           </button>
           <button
             onClick={handleContinue}
-            style={{ padding: '0.55rem 1.4rem', borderRadius: 8, border: 'none', background: '#6366f1', color: '#fff', fontSize: '0.88rem', fontWeight: 700, cursor: 'pointer' }}
+            style={{ padding: '0.55rem 1.4rem', borderRadius: 8, border: 'none', background: 'var(--primary)', color: '#fff', fontSize: '0.88rem', fontWeight: 700, cursor: 'pointer' }}
           >
             Continue →
           </button>

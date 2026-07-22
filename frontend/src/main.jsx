@@ -4,6 +4,10 @@ import axios from 'axios'
 import App from './App.jsx'
 import './index.css'
 import { getToken, setToken, clearAllTokens, getRefreshToken, setRefreshToken } from './utils/auth.js'
+import { initTheme } from './utils/theme.js'
+
+// Apply the saved theme before first paint to avoid a flash of the wrong theme.
+initTheme();
 
 // Attach JWT to every outbound request
 axios.interceptors.request.use(config => {

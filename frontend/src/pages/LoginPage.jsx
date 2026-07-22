@@ -142,9 +142,9 @@ export default function LoginPage() {
   }
 
   const subtitle = {
-    login:    'Sign in to your NIA account',
+    login:    'Sign in to your Niveshaay account',
     otp:      `Enter the code sent to ${loginEmail}`,
-    register: 'Request access to NIA Performance Center',
+    register: 'Request access to Niveshaay Equity Basket Tracker',
     pending:  'Request submitted',
   }[view] || '';
 
@@ -164,7 +164,7 @@ export default function LoginPage() {
               ? <UserPlus color="var(--primary)" size={26} />
               : <LogIn color="var(--primary)" size={26} />}
           </div>
-          <h1 className="text-gradient" style={{ fontSize: '1.7rem', margin: 0 }}>NIA Performance Center</h1>
+          <h1 className="text-gradient" style={{ fontSize: '1.7rem', margin: 0 }}>Niveshaay Equity Basket Tracker</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '6px' }}>{subtitle}</p>
         </div>
 

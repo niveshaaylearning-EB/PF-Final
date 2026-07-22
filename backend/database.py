@@ -55,22 +55,28 @@ class Rationale(Base):
     rationale_text = Column(Text)
 
 class SimulationMod(Base):
+    """A single stock holding in a user's own virtual portfolio."""
     __tablename__ = "simulation_mods"
     id = Column(Integer, primary_key=True, index=True)
-    basket_id = Column(String, index=True)
+    user_email = Column(String, index=True)
     stock_code = Column(String, index=True)
-    override_type = Column(String) # 'add', 'modify', 'remove', 'delete'
-    formula = Column(String, nullable=True)
     allocation = Column(Float, nullable=True)
     buy_price = Column(Float, nullable=True)
+    buy_date = Column(String, nullable=True)   # YYYY-MM-DD -- used to compute Holding Days
     cmp = Column(Float, nullable=True)
+    # Legacy columns from the basket-wise simulator, unused going forward.
+    basket_id = Column(String, index=True, nullable=True)
+    override_type = Column(String, nullable=True)
+    formula = Column(String, nullable=True)
 
 class SimulationSip(Base):
     __tablename__ = "simulation_sips"
     id = Column(Integer, primary_key=True, index=True)
-    basket_id = Column(String, index=True)
+    user_email = Column(String, index=True)
     sip_date = Column(String)   # YYYY-MM-DD
     amount = Column(Float)
+    # Legacy column from the basket-wise simulator, unused going forward.
+    basket_id = Column(String, index=True, nullable=True)
 
 
 class NseStock(Base):
@@ -296,6 +302,10 @@ def run_migrations():
         "ALTER TABLE allowed_emails ADD COLUMN password_hash TEXT",
         # Approval gate — DEFAULT 1 so existing users keep access; self-registered start at 0
         "ALTER TABLE allowed_emails ADD COLUMN is_approved INTEGER DEFAULT 1",
+        # Simulator moved from per-basket to per-user virtual portfolios
+        "ALTER TABLE simulation_mods ADD COLUMN user_email TEXT",
+        "ALTER TABLE simulation_sips ADD COLUMN user_email TEXT",
+        "ALTER TABLE simulation_mods ADD COLUMN buy_date TEXT",
     ]
     with engine.connect() as conn:
         for sql in migrations:

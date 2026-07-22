@@ -1,9 +1,33 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { Sun, Moon } from 'lucide-react';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { clearAllTokens, getEmail, isAdmin, getFirstName, isLoggedIn } from './utils/auth.js';
+import { getTheme, toggleTheme, THEME_CHANGE_EVENT } from './utils/theme.js';
 import { API_ROOT } from './config.js';
+
+function ThemeToggle() {
+  const [theme, setThemeState] = useState(getTheme());
+  useEffect(() => {
+    // Keeps the icon correct even when the theme changes because the toggle
+    // inside the embedded Actual Portfolio iframe was clicked, not this one.
+    const onChange = (e) => setThemeState(e.detail);
+    window.addEventListener(THEME_CHANGE_EVENT, onChange);
+    return () => window.removeEventListener(THEME_CHANGE_EVENT, onChange);
+  }, []);
+  return (
+    <button
+      onClick={() => setThemeState(toggleTheme())}
+      className="btn btn-secondary"
+      style={{ fontSize: '0.78rem', padding: '6px 10px' }}
+      title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+      aria-label="Toggle color theme"
+    >
+      {theme === 'light' ? <Moon size={14} /> : <Sun size={14} />}
+    </button>
+  );
+}
 
 
 const HomePage            = lazy(() => import('./pages/HomePage'));
@@ -57,7 +81,7 @@ function Header() {
   return (
     <header className="main-header">
       <Link to="/" style={{ textDecoration: 'none' }}>
-        <h1 className="text-gradient" style={{ margin: 0, fontSize: '1.8rem' }}>NIA Performance Center</h1>
+        <h1 className="text-gradient" style={{ margin: 0, fontSize: '1.8rem' }}>Niveshaay Equity Basket Tracker</h1>
       </Link>
       <nav className="main-header-nav">
         <Link to="/" className="btn btn-secondary">Home</Link>
@@ -80,12 +104,13 @@ function Header() {
             Backlog
           </Link>
         )}
+        <ThemeToggle />
         {loggedIn && (
           <>
             {email && (
               <span style={{
                 fontSize: '0.75rem', color: 'var(--text-muted)',
-                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+                background: 'var(--hover-overlay)', border: '1px solid var(--panel-border)',
                 borderRadius: '20px', padding: '4px 10px',
               }}>
                 {getFirstName()}

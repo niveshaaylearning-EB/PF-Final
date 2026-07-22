@@ -365,7 +365,7 @@
             }
           ],
           "weightedGainPct": -3.17,
-          "weightedAvgBuyPrice": 598.6143
+          "weightedAvgBuyPrice": 546.4611
         }
       ]
     },
@@ -1258,7 +1258,7 @@
             }
           ],
           "weightedGainPct": 0.91,
-          "weightedAvgBuyPrice": 109.0804
+          "weightedAvgBuyPrice": 112.59
         }
       ],
       "currentSeriesGains": []
@@ -1296,7 +1296,7 @@
             }
           ],
           "weightedGainPct": -23.07,
-          "weightedAvgBuyPrice": 297.52
+          "weightedAvgBuyPrice": 387.88
         }
       ],
       "currentSeriesGains": [
@@ -1383,7 +1383,7 @@
             }
           ],
           "weightedGainPct": -12.47,
-          "weightedAvgBuyPrice": 296.4753
+          "weightedAvgBuyPrice": 304.24
         }
       ],
       "currentSeriesGains": [
@@ -1530,7 +1530,7 @@
             }
           ],
           "weightedGainPct": 0.0,
-          "weightedAvgBuyPrice": 1000.1571
+          "weightedAvgBuyPrice": 1000.0
         }
       ],
       "currentSeriesGains": [
@@ -1592,7 +1592,7 @@
             }
           ],
           "weightedGainPct": 0.72,
-          "weightedAvgBuyPrice": 1000.5623
+          "weightedAvgBuyPrice": 1000.3147
         }
       ]
     },
@@ -1951,7 +1951,7 @@
             }
           ],
           "weightedGainPct": 453.98,
-          "weightedAvgBuyPrice": 747.9379
+          "weightedAvgBuyPrice": 1149.3733
         }
       ]
     },
@@ -2077,7 +2077,7 @@
             }
           ],
           "weightedGainPct": 392.62,
-          "weightedAvgBuyPrice": 72.2778
+          "weightedAvgBuyPrice": 122.195
         }
       ]
     },
@@ -2213,7 +2213,7 @@
             }
           ],
           "weightedGainPct": 642.23,
-          "weightedAvgBuyPrice": 172.955
+          "weightedAvgBuyPrice": 184.9025
         }
       ]
     },
@@ -2453,7 +2453,7 @@
             }
           ],
           "weightedGainPct": 220.1,
-          "weightedAvgBuyPrice": 275.4986
+          "weightedAvgBuyPrice": 324.9675
         }
       ]
     },
@@ -2595,7 +2595,7 @@
             }
           ],
           "weightedGainPct": 448.29,
-          "weightedAvgBuyPrice": 108.06
+          "weightedAvgBuyPrice": 129.33
         }
       ]
     },
@@ -2733,7 +2733,7 @@
             }
           ],
           "weightedGainPct": -35.62,
-          "weightedAvgBuyPrice": 117.17
+          "weightedAvgBuyPrice": 128.08
         }
       ]
     },
@@ -2799,7 +2799,7 @@
             }
           ],
           "weightedGainPct": -49.14,
-          "weightedAvgBuyPrice": 427.4475
+          "weightedAvgBuyPrice": 557.525
         }
       ]
     }
@@ -2860,7 +2860,7 @@
             }
           ],
           "weightedGainPct": 262.68,
-          "weightedAvgBuyPrice": 321.4536
+          "weightedAvgBuyPrice": 333.2743
         }
       ],
       "currentSeriesGains": []
@@ -2910,7 +2910,7 @@
             }
           ],
           "weightedGainPct": 26.02,
-          "weightedAvgBuyPrice": 1031.5003
+          "weightedAvgBuyPrice": 1133.3521
         }
       ],
       "currentSeriesGains": []
@@ -3334,7 +3334,7 @@
             }
           ],
           "weightedGainPct": 8.48,
-          "weightedAvgBuyPrice": 283.3804
+          "weightedAvgBuyPrice": 291.997
         }
       ],
       "currentSeriesGains": []
@@ -3394,7 +3394,7 @@
             }
           ],
           "weightedGainPct": -13.49,
-          "weightedAvgBuyPrice": 543.8
+          "weightedAvgBuyPrice": 593.925
         }
       ],
       "currentSeriesGains": []
@@ -3492,7 +3492,7 @@
             }
           ],
           "weightedGainPct": 151.42,
-          "weightedAvgBuyPrice": 328.8644
+          "weightedAvgBuyPrice": 368.2685
         }
       ],
       "currentSeriesGains": []
@@ -3574,7 +3574,7 @@
             }
           ],
           "weightedGainPct": 171.95,
-          "weightedAvgBuyPrice": 152.7067
+          "weightedAvgBuyPrice": 197.5371
         }
       ],
       "currentSeriesGains": []
@@ -3646,7 +3646,7 @@
             }
           ],
           "weightedGainPct": 63.62,
-          "weightedAvgBuyPrice": 791.1674
+          "weightedAvgBuyPrice": 969.1236
         }
       ],
       "currentSeriesGains": []
@@ -3712,7 +3712,7 @@
             }
           ],
           "weightedGainPct": 3.96,
-          "weightedAvgBuyPrice": 651.6269
+          "weightedAvgBuyPrice": 706.5993
         }
       ],
       "currentSeriesGains": []
@@ -4037,7 +4037,7 @@
             }
           ],
           "weightedGainPct": 354.64,
-          "weightedAvgBuyPrice": 127.6832
+          "weightedAvgBuyPrice": 127.7399
         }
       ]
     },
@@ -4130,7 +4130,7 @@
             }
           ],
           "weightedGainPct": 154.35,
-          "weightedAvgBuyPrice": 649.018
+          "weightedAvgBuyPrice": 666.7233
         }
       ],
       "currentSeriesGains": []
@@ -4339,7 +4339,7 @@
             }
           ],
           "weightedGainPct": -15.07,
-          "weightedAvgBuyPrice": 919.6847
+          "weightedAvgBuyPrice": 1060.8507
         }
       ],
       "currentSeriesGains": []
@@ -4399,7 +4399,7 @@
             }
           ],
           "weightedGainPct": -68.03,
-          "weightedAvgBuyPrice": 732.6675
+          "weightedAvgBuyPrice": 739.985
         }
       ],
       "currentSeriesGains": []
@@ -4537,7 +4537,7 @@
             }
           ],
           "weightedGainPct": 235.72,
-          "weightedAvgBuyPrice": 225.1279
+          "weightedAvgBuyPrice": 286.2311
         }
       ],
       "currentSeriesGains": [
@@ -4746,7 +4746,7 @@
             }
           ],
           "weightedGainPct": 78.17,
-          "weightedAvgBuyPrice": 1621.0184
+          "weightedAvgBuyPrice": 1621.9269
         }
       ],
       "currentSeriesGains": []
@@ -4936,7 +4936,7 @@
             }
           ],
           "weightedGainPct": 102.32,
-          "weightedAvgBuyPrice": 94.4583
+          "weightedAvgBuyPrice": 98.2475
         }
       ],
       "currentSeriesGains": [
@@ -4992,7 +4992,7 @@
             }
           ],
           "weightedGainPct": -8.17,
-          "weightedAvgBuyPrice": 286.1035
+          "weightedAvgBuyPrice": 286.1661
         }
       ]
     },
@@ -5149,7 +5149,7 @@
             }
           ],
           "weightedGainPct": -2.14,
-          "weightedAvgBuyPrice": 1312.4813
+          "weightedAvgBuyPrice": 1296.255
         }
       ],
       "currentSeriesGains": []
@@ -5209,7 +5209,7 @@
             }
           ],
           "weightedGainPct": 76.89,
-          "weightedAvgBuyPrice": 3252.5872
+          "weightedAvgBuyPrice": 3321.4675
         }
       ],
       "currentSeriesGains": []
@@ -5265,7 +5265,7 @@
             }
           ],
           "weightedGainPct": -42.56,
-          "weightedAvgBuyPrice": 909.0298
+          "weightedAvgBuyPrice": 1132.0
         }
       ]
     },
@@ -5309,7 +5309,7 @@
             }
           ],
           "weightedGainPct": 6.77,
-          "weightedAvgBuyPrice": 1714.1594
+          "weightedAvgBuyPrice": 1796.3725
         }
       ]
     },
@@ -5603,7 +5603,7 @@
             }
           ],
           "weightedGainPct": 114.0,
-          "weightedAvgBuyPrice": 1079.836
+          "weightedAvgBuyPrice": 1130.0421
         }
       ],
       "currentSeriesGains": []
@@ -5708,7 +5708,7 @@
             }
           ],
           "weightedGainPct": -9.85,
-          "weightedAvgBuyPrice": 167.6967
+          "weightedAvgBuyPrice": 173.33
         }
       ],
       "currentSeriesGains": []
@@ -5790,7 +5790,7 @@
             }
           ],
           "weightedGainPct": 223.75,
-          "weightedAvgBuyPrice": 283.9086
+          "weightedAvgBuyPrice": 398.8
         }
       ],
       "currentSeriesGains": []
@@ -5932,7 +5932,7 @@
             }
           ],
           "weightedGainPct": 0.05,
-          "weightedAvgBuyPrice": 1000.8932
+          "weightedAvgBuyPrice": 1000.7163
         }
       ],
       "currentSeriesGains": [
@@ -6004,7 +6004,7 @@
             }
           ],
           "weightedGainPct": 0.0,
-          "weightedAvgBuyPrice": 1007.5694
+          "weightedAvgBuyPrice": 1000.0022
         }
       ]
     },
@@ -6127,7 +6127,7 @@
             }
           ],
           "weightedGainPct": 0.63,
-          "weightedAvgBuyPrice": 110.5972
+          "weightedAvgBuyPrice": 113.4213
         }
       ],
       "currentSeriesGains": []
@@ -6330,7 +6330,7 @@
             }
           ],
           "weightedGainPct": -0.55,
-          "weightedAvgBuyPrice": 163.27
+          "weightedAvgBuyPrice": 157.59
         }
       ],
       "currentSeriesGains": []
@@ -6621,7 +6621,7 @@
             }
           ],
           "weightedGainPct": 26.94,
-          "weightedAvgBuyPrice": 1060.2785
+          "weightedAvgBuyPrice": 1076.935
         }
       ],
       "currentSeriesGains": []
@@ -6781,7 +6781,7 @@
             }
           ],
           "weightedGainPct": -34.02,
-          "weightedAvgBuyPrice": 479.2944
+          "weightedAvgBuyPrice": 588.482
         }
       ],
       "currentSeriesGains": []
@@ -6961,7 +6961,7 @@
             }
           ],
           "weightedGainPct": 158.98,
-          "weightedAvgBuyPrice": 383.1886
+          "weightedAvgBuyPrice": 538.0514
         }
       ],
       "currentSeriesGains": []
@@ -7081,7 +7081,7 @@
             }
           ],
           "weightedGainPct": -6.73,
-          "weightedAvgBuyPrice": 130.9633
+          "weightedAvgBuyPrice": 197.458
         }
       ],
       "currentSeriesGains": []
@@ -7191,7 +7191,7 @@
             }
           ],
           "weightedGainPct": 159.73,
-          "weightedAvgBuyPrice": 222.0987
+          "weightedAvgBuyPrice": 252.512
         }
       ],
       "currentSeriesGains": []
@@ -7279,7 +7279,7 @@
             }
           ],
           "weightedGainPct": -16.8,
-          "weightedAvgBuyPrice": 35.0212
+          "weightedAvgBuyPrice": 35.2025
         }
       ],
       "currentSeriesGains": []
@@ -7345,7 +7345,7 @@
             }
           ],
           "weightedGainPct": 68.7,
-          "weightedAvgBuyPrice": 68.1233
+          "weightedAvgBuyPrice": 71.2414
         }
       ],
       "currentSeriesGains": []
@@ -7535,7 +7535,7 @@
             }
           ],
           "weightedGainPct": -28.69,
-          "weightedAvgBuyPrice": 192.0367
+          "weightedAvgBuyPrice": 265.67
         }
       ],
       "currentSeriesGains": []
@@ -7641,7 +7641,7 @@
             }
           ],
           "weightedGainPct": -11.86,
-          "weightedAvgBuyPrice": 370.1429
+          "weightedAvgBuyPrice": 381.376
         }
       ],
       "currentSeriesGains": []
@@ -7767,7 +7767,7 @@
             }
           ],
           "weightedGainPct": 261.11,
-          "weightedAvgBuyPrice": 87.6564
+          "weightedAvgBuyPrice": 87.6625
         }
       ],
       "currentSeriesGains": []
@@ -7905,7 +7905,7 @@
             }
           ],
           "weightedGainPct": 150.08,
-          "weightedAvgBuyPrice": 358.2606
+          "weightedAvgBuyPrice": 358.3373
         }
       ],
       "currentSeriesGains": []
@@ -8141,7 +8141,7 @@
             }
           ],
           "weightedGainPct": 219.38,
-          "weightedAvgBuyPrice": 93.0891
+          "weightedAvgBuyPrice": 94.0627
         }
       ]
     },
@@ -8358,7 +8358,7 @@
             }
           ],
           "weightedGainPct": 57.52,
-          "weightedAvgBuyPrice": 589.7771
+          "weightedAvgBuyPrice": 964.6
         }
       ],
       "currentSeriesGains": []
@@ -9533,7 +9533,7 @@
             }
           ],
           "weightedGainPct": -2.65,
-          "weightedAvgBuyPrice": 106.1267
+          "weightedAvgBuyPrice": 108.4633
         }
       ],
       "currentSeriesGains": []
@@ -10133,7 +10133,7 @@
             }
           ],
           "weightedGainPct": 2.31,
-          "weightedAvgBuyPrice": 106.6015
+          "weightedAvgBuyPrice": 110.346
         }
       ],
       "currentSeriesGains": [
@@ -10242,7 +10242,7 @@
             }
           ],
           "weightedGainPct": 0.05,
-          "weightedAvgBuyPrice": 1000.3775
+          "weightedAvgBuyPrice": 999.5
         }
       ],
       "currentSeriesGains": [
@@ -11825,7 +11825,7 @@
             }
           ],
           "weightedGainPct": -13.98,
-          "weightedAvgBuyPrice": 348.1989
+          "weightedAvgBuyPrice": 348.344
         }
       ]
     },
@@ -11869,7 +11869,7 @@
             }
           ],
           "weightedGainPct": -27.29,
-          "weightedAvgBuyPrice": 2278.9845
+          "weightedAvgBuyPrice": 2280.15
         }
       ]
     },
@@ -11913,7 +11913,7 @@
             }
           ],
           "weightedGainPct": -73.85,
-          "weightedAvgBuyPrice": 780.24
+          "weightedAvgBuyPrice": 783.9
         }
       ]
     },
@@ -12140,7 +12140,7 @@
             }
           ],
           "weightedGainPct": 86.65,
-          "weightedAvgBuyPrice": 241.7342
+          "weightedAvgBuyPrice": 242.29
         }
       ]
     },
@@ -12266,7 +12266,7 @@
             }
           ],
           "weightedGainPct": -36.86,
-          "weightedAvgBuyPrice": 550.628
+          "weightedAvgBuyPrice": 552.7733
         }
       ]
     },
@@ -12546,7 +12546,7 @@
             }
           ],
           "weightedGainPct": 220.25,
-          "weightedAvgBuyPrice": 2222.4876
+          "weightedAvgBuyPrice": 2223.0072
         }
       ]
     },
@@ -12590,7 +12590,7 @@
             }
           ],
           "weightedGainPct": 11.56,
-          "weightedAvgBuyPrice": 284.372
+          "weightedAvgBuyPrice": 287.3116
         }
       ]
     },
@@ -12713,7 +12713,7 @@
             }
           ],
           "weightedGainPct": -0.05,
-          "weightedAvgBuyPrice": 1001.0561
+          "weightedAvgBuyPrice": 1000.47
         }
       ],
       "currentSeriesGains": [
@@ -12803,7 +12803,7 @@
             }
           ],
           "weightedGainPct": 127.45,
-          "weightedAvgBuyPrice": 148.0608
+          "weightedAvgBuyPrice": 154.943
         }
       ]
     },
@@ -12847,7 +12847,7 @@
             }
           ],
           "weightedGainPct": -27.51,
-          "weightedAvgBuyPrice": 354.3275
+          "weightedAvgBuyPrice": 387.845
         }
       ]
     },
@@ -12968,7 +12968,7 @@
             }
           ],
           "weightedGainPct": 243.93,
-          "weightedAvgBuyPrice": 331.2876
+          "weightedAvgBuyPrice": 332.5663
         }
       ]
     },
@@ -13460,7 +13460,7 @@
             }
           ],
           "weightedGainPct": 102.42,
-          "weightedAvgBuyPrice": 405.61
+          "weightedAvgBuyPrice": 407.4595
         }
       ]
     },
@@ -13561,7 +13561,7 @@
             }
           ],
           "weightedGainPct": 27.19,
-          "weightedAvgBuyPrice": 779.2314
+          "weightedAvgBuyPrice": 780.7349
         }
       ]
     },
@@ -13871,7 +13871,7 @@
             }
           ],
           "weightedGainPct": 236.89,
-          "weightedAvgBuyPrice": 264.1715
+          "weightedAvgBuyPrice": 264.2197
         }
       ]
     },
@@ -13949,7 +13949,7 @@
             }
           ],
           "weightedGainPct": 131.89,
-          "weightedAvgBuyPrice": 191.4833
+          "weightedAvgBuyPrice": 191.4962
         }
       ]
     },
@@ -14033,7 +14033,7 @@
             }
           ],
           "weightedGainPct": 26.03,
-          "weightedAvgBuyPrice": 239.8208
+          "weightedAvgBuyPrice": 240.1011
         }
       ]
     },
@@ -14089,7 +14089,7 @@
             }
           ],
           "weightedGainPct": 139.29,
-          "weightedAvgBuyPrice": 126.4476
+          "weightedAvgBuyPrice": 126.6198
         }
       ]
     },
@@ -14223,7 +14223,7 @@
             }
           ],
           "weightedGainPct": 134.69,
-          "weightedAvgBuyPrice": 483.3739
+          "weightedAvgBuyPrice": 483.4328
         }
       ]
     },
@@ -14289,7 +14289,7 @@
             }
           ],
           "weightedGainPct": 39.53,
-          "weightedAvgBuyPrice": 863.243
+          "weightedAvgBuyPrice": 863.8717
         }
       ]
     },
@@ -14339,7 +14339,7 @@
             }
           ],
           "weightedGainPct": 5.11,
-          "weightedAvgBuyPrice": 2286.3854
+          "weightedAvgBuyPrice": 2286.4014
         }
       ]
     },
@@ -14411,7 +14411,7 @@
             }
           ],
           "weightedGainPct": 249.48,
-          "weightedAvgBuyPrice": 90.9749
+          "weightedAvgBuyPrice": 90.9849
         }
       ]
     },
@@ -14639,7 +14639,7 @@
             }
           ],
           "weightedGainPct": -21.35,
-          "weightedAvgBuyPrice": 192.2067
+          "weightedAvgBuyPrice": 175.55
         }
       ]
     },
@@ -14710,7 +14710,7 @@
             }
           ],
           "weightedGainPct": 0.97,
-          "weightedAvgBuyPrice": 625.8943
+          "weightedAvgBuyPrice": 580.1775
         }
       ],
       "currentSeriesGains": []
@@ -15961,7 +15961,7 @@
             }
           ],
           "weightedGainPct": 144.39,
-          "weightedAvgBuyPrice": 970.8117
+          "weightedAvgBuyPrice": 1041.7825
         }
       ]
     },

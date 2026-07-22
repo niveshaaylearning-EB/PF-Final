@@ -1,8 +1,20 @@
-import { API_BASE } from '../api/base.js';
+import { API_BASE, getAuthToken } from '../api/base.js';
 import { useState, useEffect, useMemo } from 'react';
 import DailyValuesPanel from './DailyValuesPanel.jsx';
 import RollbackButtons from './RollbackButtons.jsx';
 import ColumnFilter from './ColumnFilter.jsx';
+
+const ADMIN_EMAILS = ['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com', 'nakshatra.rathi@niveshaay.com'];
+const _getAdminState = () => {
+  try {
+    const t = getAuthToken();
+    if (!t) return { isAdmin: false };
+    const payload = JSON.parse(atob(t.split('.')[1]));
+    if (payload.exp && Date.now() > payload.exp * 1000) return { isAdmin: false };
+    const email = (payload.sub || '').toLowerCase().trim();
+    return { isAdmin: ADMIN_EMAILS.includes(email) };
+  } catch { return { isAdmin: false }; }
+};
 
 const BASKET_ORDER = [
   'Mid_Small_Cap', 'Green_Energy', 'Make_in_India', 'Trends_Triology',
@@ -61,6 +73,7 @@ function getCrColVal(field, row) {
 }
 
 export default function CalculateReturnPage() {
+  const { isAdmin: userIsAdmin } = _getAdminState();
   const [histData,     setHistData]     = useState(null);
   const [loading,      setLoading]      = useState(true);
   const [baseDate,     setBaseDate]     = useState('');
@@ -218,7 +231,7 @@ export default function CalculateReturnPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <button
             onClick={() => { window.location.href = '/wp/' + window.location.search; }}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 0.9rem', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 600, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#94a3b8', cursor: 'pointer' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 0.9rem', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 600, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--text-secondary)', cursor: 'pointer' }}
           >
             ← Back
           </button>
@@ -227,22 +240,24 @@ export default function CalculateReturnPage() {
             <p className="cr-subtitle">Historical Index Value Analysis — Niveshaay Investment Advisors</p>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <RollbackButtons btnStyle="bp" />
-          <button
-            onClick={() => setShowDailyPanel(true)}
-            style={{
-              display: 'flex', alignItems: 'center', gap: '0.4rem',
-              padding: '0.5rem 1.1rem', borderRadius: '8px', fontSize: '0.88rem', fontWeight: 600,
-              background: '#6366f1', border: 'none', color: '#fff', cursor: 'pointer',
-            }}
-          >
-            <i className="fa-solid fa-calendar-plus" /> Add Daily Values
-          </button>
-        </div>
+        {userIsAdmin && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <RollbackButtons btnStyle="bp" />
+            <button
+              onClick={() => setShowDailyPanel(true)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '0.4rem',
+                padding: '0.5rem 1.1rem', borderRadius: '8px', fontSize: '0.88rem', fontWeight: 600,
+                background: '#6366f1', border: 'none', color: '#fff', cursor: 'pointer',
+              }}
+            >
+              <i className="fa-solid fa-calendar-plus" /> Add Daily Values
+            </button>
+          </div>
+        )}
       </div>
 
-      {showDailyPanel && <DailyValuesPanel onClose={() => setShowDailyPanel(false)} onSaved={fetchHistData} />}
+      {userIsAdmin && showDailyPanel && <DailyValuesPanel onClose={() => setShowDailyPanel(false)} onSaved={fetchHistData} />}
 
       {/* Controls */}
       <div className="cr-controls-card">

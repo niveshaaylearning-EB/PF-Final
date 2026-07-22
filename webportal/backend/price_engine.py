@@ -15,6 +15,7 @@ import os
 import re
 import time
 import urllib.parse
+from datetime import datetime, timezone
 from typing import Optional
 
 import httpx
@@ -22,7 +23,7 @@ from fastapi import APIRouter, File, UploadFile
 from pypdf import PdfReader
 
 from config import YF_HEADERS, YF_SYMBOL_MAP, LIVE_TTL
-from persistence import BASKET_DISPLAY_NAMES, _all_nse_codes
+from persistence import BASKET_DISPLAY_NAMES, _all_nse_codes, _load_portfolios
 
 router = APIRouter()
 
@@ -121,6 +122,118 @@ def _fetch_bhavcopy_prices(codes: list) -> dict:
     except Exception:
         pass
     return results
+
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Multi-tenure performance (1M/3M/6M/1Y/2Y/3Y/5Y)
+# ─────────────────────────────────────────────────────────────────────────────
+# For any tenure, the return is:
+#   (CLOSE of the last fully-completed trading session)
+#     vs
+#   (OPEN of the first trading day of the window, i.e. `tenure` calendar days
+#    before that last completed session)
+# Today's bar is deliberately excluded even if Yahoo already has one for it --
+# while the market is open (or freshly closed but not yet finalized upstream)
+# that bar's OHLC is still live/provisional, so the "last trading session" is
+# always the most recent bar strictly BEFORE today.
+# One 5-year daily-bar fetch per stock covers every tenure at once, rather
+# than one request per tenure.
+
+_TENURE_DAYS = {"1M": 30, "3M": 91, "6M": 182, "1Y": 365, "2Y": 730, "3Y": 1095, "5Y": 1825}
+
+_perf_cache: dict = {}          # code -> {time, data: {tenure: pct|None}}
+_PERF_TTL = 12 * 3600           # 12h -- daily bars for past periods never change; only today's does
+
+def _compute_tenure_performance(bars: list) -> dict:
+    """`bars` is a list of (timestamp_seconds, open, close) sorted ascending by time."""
+    result = {t: None for t in _TENURE_DAYS}
+    if not bars:
+        return result
+
+    today = datetime.now(timezone.utc).date()
+    completed = [b for b in bars if datetime.fromtimestamp(b[0], tz=timezone.utc).date() < today]
+    if not completed:
+        return result
+
+    last_ts, _, last_close = completed[-1]
+    if last_close is None:
+        return result
+    for tenure, days in _TENURE_DAYS.items():
+        cutoff = last_ts - days * 86400
+        start_bar = next((b for b in completed if b[0] >= cutoff), None)
+        if start_bar is None:
+            continue
+        start_open = start_bar[1]
+        if start_open is None or start_open <= 0:
+            continue
+        result[tenure] = (last_close - start_open) / start_open
+    return result
+
+async def _fetch_tenure_bars(code: str, client: httpx.AsyncClient) -> list:
+    """5 years of daily (timestamp, open, close) bars for one NSE stock."""
+    sym = YF_SYMBOL_MAP.get(code, f"{code}.NS")
+    url = ("https://query1.finance.yahoo.com/v8/finance/chart/"
+           + urllib.parse.quote(sym) + "?interval=1d&range=5y")
+    try:
+        resp = await client.get(url, timeout=20.0)
+        if resp.status_code != 200:
+            return []
+        r = (resp.json().get("chart") or {}).get("result") or []
+        if not r:
+            return []
+        r = r[0]
+        ts = r.get("timestamp") or []
+        q  = ((r.get("indicators") or {}).get("quote") or [{}])[0]
+        opens  = q.get("open")  or []
+        closes = q.get("close") or []
+        bars = [(t, opens[i], closes[i]) for i, t in enumerate(ts)
+                if i < len(opens) and i < len(closes) and opens[i] is not None and closes[i] is not None]
+        bars.sort(key=lambda b: b[0])
+        return bars
+    except Exception:
+        return []
+
+async def fetch_performance_batch(codes: list) -> dict:
+    """{code: {tenure: pct|None}} for every code, using a 12h per-code cache."""
+    now = time.time()
+    result: dict = {}
+    to_fetch: list = []
+    for c in codes:
+        cached = _perf_cache.get(c)
+        if cached and (now - cached['time']) < _PERF_TTL:
+            result[c] = cached['data']
+        else:
+            to_fetch.append(c)
+
+    if not to_fetch:
+        return result
+
+    if not _YF_COOKIES:
+        await _refresh_yf_cookies()
+
+    sem = asyncio.Semaphore(15)
+
+    async def _one(code: str, client: httpx.AsyncClient):
+        async with sem:
+            bars = await _fetch_tenure_bars(code, client)
+            return code, _compute_tenure_performance(bars)
+
+    async with httpx.AsyncClient(
+        follow_redirects=True,
+        headers={**YF_HEADERS, "Referer": "https://finance.yahoo.com/", "Origin": "https://finance.yahoo.com"},
+        cookies=_YF_COOKIES,
+    ) as client:
+        pairs = await asyncio.gather(*[_one(c, client) for c in to_fetch], return_exceptions=True)
+
+    for item in pairs:
+        if isinstance(item, Exception):
+            continue
+        code, perf = item
+        _perf_cache[code] = {'time': now, 'data': perf}
+        result[code] = perf
+
+    return result
 
 
 async def _fetch_yahoo_charts(codes: list) -> dict:
@@ -789,7 +902,13 @@ async def fetch_live_batch() -> dict:
 # Single-stock lookup (used when a stock isn't found in the batch cache)
 # ─────────────────────────────────────────────────────────────────────────────
 
-async def fetch_live_single(nse_code: str) -> Optional[dict]:
+async def fetch_live_single(nse_code: str, skip_mc_pe: bool = False) -> Optional[dict]:
+    """
+    `skip_mc_pe` short-circuits the Market Cap + PE cascade (Screener.in →
+    Google Finance → NSE India, each with a 12-13s timeout) for callers that
+    only need CMP/OHLC and would otherwise pay that latency for fields they
+    throw away -- e.g. the what-if simulator's "Add Hypothetical Stock" flow.
+    """
     code   = nse_code.strip().upper()
     sym    = f"{code}.NS"
 
@@ -828,6 +947,9 @@ async def fetch_live_single(nse_code: str) -> Optional[dict]:
         except Exception:
             pass
 
+    if skip_mc_pe:
+        return result or None
+
     # Market Cap + PE — cascade: Screener.in → Google Finance → NSE India
     sem = asyncio.Semaphore(1)
     _, metrics = await _fetch_mc_pe_one(code, sem)
@@ -839,6 +961,37 @@ async def fetch_live_single(nse_code: str) -> Optional[dict]:
 # ─────────────────────────────────────────────────────────────────────────────
 # NSE equity symbol list — fetched from NSE archives CSV, cached 24 h
 # ─────────────────────────────────────────────────────────────────────────────
+
+def _fetch_nse_symbols_from_local_db() -> list:
+    """
+    Fallback source: the main backend's `nse_stocks` SQLite table (already
+    populated separately, see tools/sync_nse.py).
+
+    Deliberately does NOT `import database` (backend/database.py) to get at
+    it -- that module's default DATABASE_URL is `sqlite:///./portfolio.db`,
+    a path resolved relative to the process's CURRENT WORKING DIRECTORY at
+    import time, not to database.py's own file location. run.py starts this
+    app as its own process with cwd=webportal/backend, so importing that
+    module from here would silently open (or even create) the wrong, empty
+    portfolio.db in webportal/backend instead of the real one in backend/ --
+    reading the known file by absolute path instead sidesteps that entirely.
+    """
+    try:
+        if os.environ.get("DATABASE_URL", "sqlite").split(":", 1)[0] != "sqlite":
+            return []   # non-SQLite backend configured -- nothing we can read directly
+        backend_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'backend')
+        db_path = os.path.join(backend_dir, 'portfolio.db')
+        if not os.path.isfile(db_path):
+            return []
+        import sqlite3
+        conn = sqlite3.connect(db_path)
+        try:
+            rows = conn.execute("SELECT code, name FROM nse_stocks").fetchall()
+            return [{"symbol": code, "name": name} for code, name in rows if code and name]
+        finally:
+            conn.close()
+    except Exception:
+        return []
 
 async def _fetch_nse_symbols() -> list:
     """Fetch all NSE-listed equity symbols + company names from NSE archives CSV."""
@@ -872,6 +1025,15 @@ async def _fetch_nse_symbols() -> list:
     except Exception:
         pass
 
+    # NSE's archives CSV is frequently blocked by its own bot-protection on
+    # cloud IPs (Akamai edge block, independent of headers/retries) -- fall
+    # back to the local DB copy rather than leaving the autocomplete empty.
+    local_symbols = _fetch_nse_symbols_from_local_db()
+    if local_symbols:
+        _nse_symbols_cache = local_symbols
+        _nse_symbols_ts    = time.time()
+        return local_symbols
+
     return _nse_symbols_cache   # return stale cache on failure
 
 
@@ -887,6 +1049,29 @@ async def health():
 @router.get("/api/baskets")
 async def get_baskets():
     return BASKET_DISPLAY_NAMES
+
+
+@router.get("/api/basket-stock-map")
+async def get_basket_stock_map():
+    """{basketKey: [nseCode, ...]} for every basket -- powers cross-basket
+    stock search ("which other baskets hold this stock") and the basket
+    overlap % panel in the frontend. Read-only, no admin gate.
+
+    Only counts stocks with a POSITIVE allocation -- a basket's stock list
+    can carry old, fully-sold-out entries at 0% allocation indefinitely
+    (never cleaned out), and those aren't real current holdings, so they'd
+    silently inflate the stock count and overlap denominator. IPO_Recommendations
+    is a watchlist with no allocation concept at all (every entry is legitimately
+    0%), so it's exempted from the filter -- every entry there counts.
+    """
+    portfolios = _load_portfolios()
+    return {
+        key: sorted({
+            s["nseCode"] for s in portfolios.get(key, [])
+            if s.get("nseCode") and (key == "IPO_Recommendations" or (s.get("allocation") or 0) > 0)
+        })
+        for key in BASKET_DISPLAY_NAMES
+    }
 
 
 @router.post("/api/debug/pdf-text")

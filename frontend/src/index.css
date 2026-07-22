@@ -1,23 +1,75 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
-:root {
+:root,
+:root[data-theme="dark"] {
   --bg-color: #0b0f19;
   --panel-bg: rgba(20, 27, 45, 0.6);
   --panel-border: rgba(255, 255, 255, 0.08);
   --text-main: #f0f4f8;
   --text-muted: #9ba1b0;
-  
+
   --primary: #6366f1;
   --primary-glow: rgba(99, 102, 241, 0.4);
   --secondary: #8b5cf6;
-  
+
   --positive: #10b981;
   --positive-bg: rgba(16, 185, 129, 0.15);
   --negative: #ef4444;
   --negative-bg: rgba(239, 68, 68, 0.15);
-  
+
   --glass-bg: rgba(20, 27, 45, 0.4);
   --glass-blur: blur(12px);
+
+  /* Surfaces that were raw literals scattered through this file --
+     centralized here so the light theme below can override them. */
+  --hover-overlay: rgba(255, 255, 255, 0.05);
+  --panel-border-hover: rgba(255, 255, 255, 0.15);
+  --input-bg: rgba(0, 0, 0, 0.2);
+  --select-bg: rgba(15, 20, 35, 0.92);
+  --select-chevron: #9ba1b0;
+  --select-option-bg: #0f1423;
+  --select-option-hover-bg: #1e2540;
+  --th-bg: rgba(255, 255, 255, 0.02);
+  --row-hover-bg: rgba(255, 255, 255, 0.03);
+  --modal-overlay-bg: rgba(0, 0, 0, 0.6);
+  --tooltip-bg: rgba(15, 20, 40, 0.95);
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --shadow-color-strong: rgba(0, 0, 0, 0.35);
+}
+
+/* ── Light theme — Niveshaay brand palette (cream / navy / maroon / forest / gold) ── */
+:root[data-theme="light"] {
+  --bg-color: #f6f1e4;
+  --panel-bg: rgba(255, 253, 247, 0.82);
+  --panel-border: rgba(74, 58, 40, 0.14);
+  --text-main: #2a2118;
+  --text-muted: #6f6152;
+
+  --primary: #1e4d8c;
+  --primary-glow: rgba(30, 77, 140, 0.25);
+  --secondary: #c8932f;
+
+  --positive: #3c6b3a;
+  --positive-bg: rgba(60, 107, 58, 0.13);
+  --negative: #a3402e;
+  --negative-bg: rgba(163, 64, 46, 0.13);
+
+  --glass-bg: rgba(255, 253, 247, 0.65);
+  --glass-blur: blur(12px);
+
+  --hover-overlay: rgba(74, 58, 40, 0.05);
+  --panel-border-hover: rgba(74, 58, 40, 0.22);
+  --input-bg: rgba(74, 58, 40, 0.045);
+  --select-bg: rgba(255, 253, 247, 0.95);
+  --select-chevron: #6f6152;
+  --select-option-bg: #fffdf7;
+  --select-option-hover-bg: #eee0bd;
+  --th-bg: rgba(74, 58, 40, 0.045);
+  --row-hover-bg: rgba(74, 58, 40, 0.03);
+  --modal-overlay-bg: rgba(42, 33, 24, 0.45);
+  --tooltip-bg: rgba(255, 253, 247, 0.98);
+  --shadow-color: rgba(74, 58, 40, 0.12);
+  --shadow-color-strong: rgba(74, 58, 40, 0.2);
 }
 
 * {
@@ -45,14 +97,14 @@ body {
   border: 1px solid var(--panel-border);
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px var(--shadow-color);
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .glass-panel:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px var(--shadow-color-strong);
+  border-color: var(--panel-border-hover);
 }
 
 /* Typography */
@@ -109,8 +161,8 @@ h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-muted); }
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--hover-overlay);
+  border-color: var(--panel-border-hover);
 }
 
 /* Inputs & Modals */
@@ -127,7 +179,7 @@ h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-muted); }
 }
 
 input, select, textarea {
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--input-bg);
   border: 1px solid var(--panel-border);
   color: var(--text-main);
   padding: 12px 16px;
@@ -142,16 +194,16 @@ input:focus, select:focus, textarea:focus {
   border-color: var(--primary);
 }
 
-/* ── Dark-theme select dropdown ─────────────────────────────────────────────
+/* ── Select dropdown ─────────────────────────────────────────────────────────
    Browsers render <option> elements using native OS chrome, so we must set
-   both the <select> AND <option> background explicitly. Without this the
-   dropdown list is white on dark-themed pages.
+   both the <select> AND <option> background explicitly, per theme -- the
+   chevron arrow is an embedded SVG data-URI, which can't reference a CSS
+   variable for its fill, so dark/light each get their own background-image.
 */
 select {
-  background: rgba(15, 20, 35, 0.92);
+  background: var(--select-bg);
   color: var(--text-main);
   cursor: pointer;
-  /* Custom dark chevron arrow */
   appearance: none;
   -webkit-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239ba1b0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
@@ -160,22 +212,26 @@ select {
   padding-right: 36px;
 }
 
+:root[data-theme="light"] select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236f6152' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+}
+
 select option {
-  background: #0f1423;
+  background: var(--select-option-bg);
   color: var(--text-main);
 }
 
 select option:checked,
 select option:hover {
-  background: #1e2540;
-  color: #fff;
+  background: var(--select-option-hover-bg);
+  color: var(--text-main);
 }
 
 /* Modals */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--modal-overlay-bg);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -221,7 +277,7 @@ th, td {
 }
 
 th {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--th-bg);
   font-weight: 500;
   color: var(--text-muted);
   font-size: 0.75rem;
@@ -230,7 +286,7 @@ th {
 }
 
 tr:hover td {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--row-hover-bg);
 }
 
 /* Animations */

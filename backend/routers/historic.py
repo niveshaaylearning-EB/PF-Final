@@ -17,7 +17,6 @@ from main import (
     _historic_sim_cache, _HIST_SIM_VER, _save_disk_cache, RationaleCreate,
 )
 from routers.benchmarks import _BENCHMARKS, _fetch_bench_close_max
-from routers.actual_portfolio_bridge import _fetch_all_webportal_baskets, _fetch_index_history
 
 router = APIRouter()
 
@@ -160,76 +159,22 @@ async def get_basket_historic(basket_id: str, db: Session = Depends(get_db)):
         print(f"Historic calc error for {basket_id}: {e}")
         return {}
 
-@router.get("/api/simulator/{basket_id}/historic")
-async def get_simulator_historic(basket_id: str, db: Session = Depends(get_db)):
-    # ── Simulator cache key includes the basket + mod fingerprint ─────────────
-    mods_raw = db.query(database.SimulationMod).filter(database.SimulationMod.basket_id == basket_id).all()
-    mod_key = f"{_HIST_SIM_VER}:{basket_id}|" + ','.join(sorted(f"{m.stock_code}:{m.allocation}:{m.buy_price}:{m.cmp}" for m in mods_raw))
+@router.get("/api/simulator/historic")
+async def get_simulator_historic(request: Request, db: Session = Depends(get_db)):
+    """Historic net/CAGR returns for the current user's own virtual portfolio holdings."""
+    user = getattr(request.state, "user", None)
+    holdings_raw = db.query(database.SimulationMod).filter(database.SimulationMod.user_email == user).all()
+    if not holdings_raw:
+        return {"simulated": {}}
+
+    # ── Cache key includes the user + holdings fingerprint ────────────────────
+    mod_key = f"{_HIST_SIM_VER}:{user}|" + ','.join(sorted(f"{m.stock_code}:{m.allocation}:{m.buy_price}:{m.cmp}" for m in holdings_raw))
     cached = _historic_sim_cache.get(mod_key)
     if cached and (_time.time() - cached['time']) < 3600:  # 1-hour cache (index-history changes daily)
         return cached['data']
 
-    baskets_data = _fetch_all_webportal_baskets()
-    if not baskets_data or basket_id not in baskets_data:
-        raise HTTPException(status_code=404, detail="Basket not found")
-
     loop = asyncio.get_running_loop()
-    actual_holdings = baskets_data[basket_id].get("holdings", [])
-    if not actual_holdings:
-        return {"actual": {}, "simulated": {}}
-
-    # ── Actual returns: exclusively from webportal index-history ─────────────
-    # Same source and formula as the webportal's CalculateReturnPage.
-    # basket_id IS already the webportal key (e.g. Mid_Small_Cap), so look up directly.
-    actual_hist = {}
-    hi = _fetch_index_history()
-    if hi:
-        idx_entry = hi.get(basket_id) or {}
-        idx_data  = idx_entry.get("data", [])
-        if idx_data:
-            def _find_closest_pt(pts, target):
-                exact = next((d for d in pts if d["date"] == target), None)
-                if exact: return exact
-                after = [d for d in pts if d["date"] >= target]
-                if after: return min(after, key=lambda d: d["date"])
-                return max(pts, key=lambda d: d["date"])
-
-            latest_pt = max(idx_data, key=lambda d: d["date"])
-            lv = float(latest_pt["value"])
-            today_str = datetime.now().date()
-            for label, days in [("1M", 30), ("6M", 182), ("1Y", 365), ("3Y", 1095), ("5Y", 1825)]:
-                base_date = (today_str - timedelta(days=days)).isoformat()
-                base_pt = _find_closest_pt(idx_data, base_date)
-                bv = float(base_pt["value"])
-                if bv <= 0:
-                    continue
-                # Use same formula as CalculateReturnPage: years = day_diff / 365.25
-                years = (datetime.strptime(latest_pt["date"], "%Y-%m-%d") - datetime.strptime(base_pt["date"], "%Y-%m-%d")).days / 365.25
-                net_pct  = round((lv - bv) / bv * 100, 2)
-                cagr_pct = round((pow(lv / bv, 1 / years) - 1) * 100, 2) if years > 0 else None
-                actual_hist[label] = {"net": net_pct, "cagr": cagr_pct}
-
-    # ── No mods → simulated == actual, skip yfinance entirely ───────────────
-    if not mods_raw:
-        result = {"actual": actual_hist, "simulated": actual_hist}
-        _historic_sim_cache[mod_key] = {'time': _time.time(), 'data': result}
-        return result
-
-    # ── Simulated returns: apply overrides then compute via yfinance ─────────
-    sim_holdings = [h.copy() for h in actual_holdings]
-    for mod in mods_raw:
-        if mod.override_type == 'modify':
-            for h in sim_holdings:
-                if h['code'] == mod.stock_code:
-                    if mod.allocation is not None: h['allocation'] = mod.allocation
-                    if mod.buy_price is not None: h['buy_price'] = mod.buy_price
-                    if mod.cmp is not None: h['cmp'] = mod.cmp
-                    break
-        elif mod.override_type == 'add':
-            if mod.stock_code not in [h['code'] for h in sim_holdings]:
-                sim_holdings.append({'code': mod.stock_code, 'allocation': mod.allocation or 0})
-        elif mod.override_type == 'delete':
-            sim_holdings = [h for h in sim_holdings if h['code'] != mod.stock_code]
+    sim_holdings = [{'code': m.stock_code, 'allocation': m.allocation or 0} for m in holdings_raw]
 
     def compute_sim_historic(holdings):
         if not holdings:
@@ -286,7 +231,7 @@ async def get_simulator_historic(basket_id: str, db: Session = Depends(get_db)):
             return {}
 
     sim_hist = await loop.run_in_executor(_io_pool, compute_sim_historic, sim_holdings)
-    result = {"actual": actual_hist, "simulated": sim_hist}
+    result = {"simulated": sim_hist}
 
     # ── Store in simulator cache ──────────────────────────────────────────────
     _historic_sim_cache[mod_key] = {'time': _time.time(), 'data': result}

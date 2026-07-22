@@ -1,19 +1,15 @@
 import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Download, Plus, Edit2, RotateCcw, X, Target, Filter, ArrowLeft } from 'lucide-react';
 import AutoCompleteInput from '../components/AutoCompleteInput';
 import HistoricComparison from '../components/HistoricComparison';
 
 import { API_BASE } from '../config.js';
 
-const PERIOD_OPTIONS = ['1W', '1M', '3M', '6M', '1Y'];
-
 function SimulatorPortfolio() {
-  const [baskets, setBaskets] = useState({});
-  const [selectedId, setSelectedId] = useState('all');
   const [loading, setLoading] = useState(true);
-  const [mods, setMods] = useState([]);
+  const [holdings, setHoldings] = useState([]);
   const [sips, setSips] = useState([]);
   const [simReturnData, setSimReturnData] = useState(null);
   const [calculatingReturn, setCalculatingReturn] = useState(false);
@@ -22,7 +18,7 @@ function SimulatorPortfolio() {
   const [sipExpandedIdx, setSipExpandedIdx] = useState(null);
 
   // Sorting & Filtering
-  const [filters, setFilters] = useState({ code: '', theme: '', performance: '' });
+  const [filters, setFilters] = useState({ code: '', performance: '' });
   const [sortConfig, setSortConfig] = useState({ key: 'performance', direction: 'desc' });
   const [showFilters, setShowFilters] = useState(false);
 
@@ -35,7 +31,6 @@ function SimulatorPortfolio() {
   const [fetchingPrice, setFetchingPrice] = useState(false);
   const [exportModalOpen, setExportModalOpen] = useState(false);
 
-
   // Universal confirmation dialog
   const [confirmDialog, setConfirmDialog] = useState({
     open: false, title: '', message: '', confirmText: 'Confirm',
@@ -43,53 +38,22 @@ function SimulatorPortfolio() {
   });
 
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const period = searchParams.get('period') || '1M';
-  const setPeriod = (p) => setSearchParams(prev => { prev.set('period', p); return prev; }, { replace: true });
-
-  // Basket-level period return from webportal index-history
-  const [allBasketPeriodReturns, setAllBasketPeriodReturns] = useState({});
-  const [fetchingPeriod, setFetchingPeriod] = useState(false);
 
   useEffect(() => {
-    fetchBaskets();
+    (async () => {
+      setLoading(true);
+      await fetchHoldings();
+      setLoading(false);
+    })();
   }, []);
 
-  useEffect(() => {
-    if (selectedId !== 'all') {
-      fetchMods(selectedId);
-    }
-  }, [selectedId]);
-
-  // Fetch basket-level period returns from webportal index-history whenever period changes
-  useEffect(() => {
-    setFetchingPeriod(true);
-    axios.get(`${API_BASE}/basket-period-returns?period=${period}`)
-      .then(r => setAllBasketPeriodReturns(r.data || {}))
-      .catch(() => {})
-      .finally(() => setFetchingPeriod(false));
-  }, [period]);
-
-  const fetchBaskets = async () => {
-    setLoading(true);
+  const fetchHoldings = async () => {
     try {
-      const res = await axios.get(`${API_BASE}/baskets`);
-      const data = res.data || {};
-      setBaskets(data);
-      if (Object.keys(data).length > 0) setSelectedId(Object.keys(data)[0]);
-    } catch (e) {
-      console.error(e);
-    }
-    setLoading(false);
-  };
-
-  const fetchMods = async (basketId) => {
-    try {
-      const [modsRes, sipsRes] = await Promise.all([
-        axios.get(`${API_BASE}/simulator/${basketId}`),
-        axios.get(`${API_BASE}/simulator/${basketId}/sips`),
+      const [holdingsRes, sipsRes] = await Promise.all([
+        axios.get(`${API_BASE}/simulator`),
+        axios.get(`${API_BASE}/simulator/sips`),
       ]);
-      setMods(modsRes.data || []);
+      setHoldings(holdingsRes.data || []);
       setSips(sipsRes.data || []);
     } catch (e) {
       console.error(e);
@@ -97,29 +61,25 @@ function SimulatorPortfolio() {
   };
 
   const handleExportExcel = async () => {
-    if (!selectedId || !baskets[selectedId]) return;
     setExportModalOpen(false);
     try {
       let historicData = {};
       try {
-        const hRes = await axios.get(`${API_BASE}/simulator/${selectedId}/historic`);
+        const hRes = await axios.get(`${API_BASE}/simulator/historic`);
         historicData = hRes.data || {};
       } catch (_) {}
 
-      const _simRetVal = simReturnData ? simReturnData.absolute_return : simulatedPortfolio.basket_return;
+      const _simRetVal = simReturnData ? simReturnData.absolute_return : simulatedPortfolio.portfolio_return;
       const payload = {
-        basket_name:   baskets[selectedId].name,
-        actual_return: baskets[selectedId].stats.basket_return,
-        sim_return:    _simRetVal,
-        alpha:         _simRetVal - baskets[selectedId].stats.basket_return,
-        holdings:      simulatedPortfolio.holdings,
-        historic:      historicData,
+        sim_return: _simRetVal,
+        holdings:   simulatedPortfolio.holdings,
+        historic:   historicData,
       };
       const res = await axios.post(`${API_BASE}/download/simulator-full`, payload, { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `${baskets[selectedId].name}_Simulated.xlsx`);
+      link.setAttribute('download', 'My_Virtual_Portfolio_Simulated.xlsx');
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -135,28 +95,26 @@ function SimulatorPortfolio() {
 
   const saveMod = async () => {
     try {
-      await axios.post(`${API_BASE}/simulator/${selectedId}`, editMod);
+      const buyDate = editMod.override_type === 'add' ? (modalDate || null) : (editMod.buy_date ?? null);
+      await axios.post(`${API_BASE}/simulator`, {
+        stock_code: editMod.stock_code,
+        allocation: editMod.allocation,
+        buy_price:  editMod.buy_price,
+        buy_date:   buyDate,
+        cmp:        editMod.cmp,
+      });
       setModalOpen(false);
-      fetchMods(selectedId);
+      fetchHoldings();
       setHistRefreshKey(k => k + 1);
     } catch(e) {
       console.error(e);
     }
   };
 
-  const removeMod = async (stockCode) => {
-    try {
-      await axios.post(`${API_BASE}/simulator/${selectedId}`, { stock_code: stockCode, override_type: 'remove' });
-      fetchMods(selectedId);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   const resetMods = async () => {
     try {
-      await axios.post(`${API_BASE}/simulator/${selectedId}/reset`);
-      fetchMods(selectedId);
+      await axios.post(`${API_BASE}/simulator/reset`);
+      fetchHoldings();
       setHistRefreshKey(k => k + 1);
     } catch (e) {
       console.error(e);
@@ -166,24 +124,25 @@ function SimulatorPortfolio() {
   const saveSip = async () => {
     if (!newSip.sip_date || newSip.amount <= 0) return;
     try {
-      await axios.post(`${API_BASE}/simulator/${selectedId}/sips`, newSip);
+      await axios.post(`${API_BASE}/simulator/sips`, newSip);
       setSipModalOpen(false);
       setNewSip({ sip_date: '', amount: 0 });
-      fetchMods(selectedId);
+      fetchHoldings();
     } catch (e) { console.error(e); }
   };
 
   const removeSip = async (sipId) => {
     try {
-      await axios.delete(`${API_BASE}/simulator/${selectedId}/sips/${sipId}`);
-      fetchMods(selectedId);
+      await axios.delete(`${API_BASE}/simulator/sips/${sipId}`);
+      fetchHoldings();
     } catch (e) { console.error(e); }
   };
 
-  const deleteModStock = async (stockCode) => {
+  const deleteStock = async (stockCode) => {
     try {
-      await axios.post(`${API_BASE}/simulator/${selectedId}`, { stock_code: stockCode, override_type: 'delete' });
-      fetchMods(selectedId);
+      await axios.delete(`${API_BASE}/simulator/${stockCode}`);
+      fetchHoldings();
+      setHistRefreshKey(k => k + 1);
     } catch (e) { console.error(e); }
   };
 
@@ -202,19 +161,19 @@ function SimulatorPortfolio() {
 
   const confirmSaveMod = () => {
     const isAdd = editMod?.override_type === 'add';
-    
+
     // Calculate new total allocation
     const code = editMod?.stock_code?.toUpperCase()?.trim();
     const newAlloc = parseFloat(editMod?.allocation || 0);
-    
+
     // Find if the stock already exists in the current simulated holdings
     const existingHolding = simulatedPortfolio?.holdings?.find(h => h.code === code);
     const oldAlloc = existingHolding ? parseFloat(existingHolding.allocation || 0) : 0;
-    
+
     // Calculate what the new total allocation would be
     const currentTotal = simulatedPortfolio?.total_allocation || 0;
     const projectedTotal = currentTotal - oldAlloc + newAlloc;
-    
+
     if (projectedTotal > 100) {
       setAllocationError(`Overall allocation cannot exceed 100%. Current total would be ${projectedTotal.toFixed(1)}%. Please reduce the allocation.`);
       return;
@@ -223,40 +182,30 @@ function SimulatorPortfolio() {
     setModalOpen(false);
 
     showConfirm(
-      isAdd ? 'Add Stock to Simulator' : `Modify ${editMod?.stock_code}`,
+      isAdd ? 'Add Stock to Virtual Portfolio' : `Modify ${editMod?.stock_code}`,
       isAdd
-        ? `Add ${editMod?.stock_code || 'stock'} to the simulated portfolio?`
-        : `Apply changes to ${editMod?.stock_code} in the simulated portfolio?`,
+        ? `Add ${editMod?.stock_code || 'stock'} to your virtual portfolio?`
+        : `Apply changes to ${editMod?.stock_code}?`,
       isAdd ? 'Yes, Add' : 'Yes, Modify',
       { background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.4)', color: 'var(--primary)', fontWeight: 700 },
       saveMod
     );
   };
 
-  const confirmRemoveMod = (stockCode) => {
-    showConfirm(
-      'Revert Override',
-      `Revert ${stockCode} back to its actual portfolio values?`,
-      'Yes, Revert',
-      { background: 'rgba(239,68,68,0.2)', border: '1px solid rgba(239,68,68,0.4)', color: '#f87171', fontWeight: 700 },
-      () => removeMod(stockCode)
-    );
-  };
-
   const confirmDeleteStock = (stockCode) => {
     showConfirm(
       'Delete Stock',
-      `Remove ${stockCode} entirely from the simulated portfolio?`,
+      `Remove ${stockCode} entirely from your virtual portfolio?`,
       'Yes, Delete',
       { background: 'rgba(239,68,68,0.2)', border: '1px solid rgba(239,68,68,0.4)', color: '#f87171', fontWeight: 700 },
-      () => deleteModStock(stockCode)
+      () => deleteStock(stockCode)
     );
   };
 
   const confirmResetAll = () => {
     showConfirm(
-      'Reset All Overrides',
-      'Remove all modifications, added stocks, weight changes, and SIPs — and restore the simulator to match the actual portfolio?',
+      'Reset Virtual Portfolio',
+      'Remove all stocks and SIPs from your virtual portfolio? This cannot be undone.',
       'Yes, Reset All',
       { background: 'rgba(239,68,68,0.2)', border: '1px solid rgba(239,68,68,0.4)', color: '#f87171', fontWeight: 700 },
       resetMods
@@ -264,56 +213,37 @@ function SimulatorPortfolio() {
   };
 
   const simulatedPortfolio = useMemo(() => {
-    if (!selectedId || !baskets[selectedId]) return null;
-    const base = baskets[selectedId];
-
-    let simHoldings = base.holdings.map(h => ({ ...h, isModded: false }));
-
-    mods.forEach(mod => {
-      if (mod.override_type === 'modify') {
-        const idx = simHoldings.findIndex(h => h.code === mod.stock_code);
-        if (idx !== -1) {
-          if (mod.allocation !== null) simHoldings[idx].allocation = mod.allocation;
-          if (mod.buy_price !== null) simHoldings[idx].buy_price = mod.buy_price;
-          if (mod.cmp !== null) simHoldings[idx].cmp = mod.cmp;
-          const perf = ((simHoldings[idx].cmp - simHoldings[idx].buy_price) / simHoldings[idx].buy_price) * 100;
-          simHoldings[idx].performance = isNaN(perf) ? 0 : perf;
-          simHoldings[idx].isModded = true;
-        }
-      } else if (mod.override_type === 'add') {
-        const bp = mod.buy_price || 0;
-        const cmp = mod.cmp || 0;
-        const perf = bp > 0 ? ((cmp - bp)/bp)*100 : 0;
-        simHoldings.push({
-          code: mod.stock_code,
-          formula: 'Custom',
-          theme: baskets[selectedId]?.name?.replace(/^NIA\s*/,'').trim() || 'Custom',
-          allocation: mod.allocation || 0,
-          buy_price: bp,
-          cmp: cmp,
-          performance: perf,
-          contribution: (perf * (mod.allocation || 0))/100,
-          isModded: true,
-          isNew: true
-        });
-      } else if (mod.override_type === 'delete') {
-        simHoldings = simHoldings.filter(h => h.code !== mod.stock_code);
-      }
+    const simHoldings = holdings.map(h => {
+      const bp  = h.buy_price || 0;
+      const cmp = h.cmp || 0;
+      const perf = bp > 0 ? ((cmp - bp) / bp) * 100 : 0;
+      const holdingDays = h.buy_date
+        ? Math.floor((Date.now() - new Date(h.buy_date).getTime()) / 86_400_000)
+        : null;
+      return {
+        code:        h.stock_code,
+        allocation:  h.allocation || 0,
+        buy_price:   bp,
+        buy_date:    h.buy_date || null,
+        holdingDays,
+        cmp:         cmp,
+        performance: perf,
+      };
     });
 
     let totalAlloc = simHoldings.reduce((sum, h) => sum + h.allocation, 0);
-    let basketReturn = 0;
+    let portfolioReturn = 0;
     if (totalAlloc > 0) {
-      basketReturn = simHoldings.reduce((sum, h) => sum + (h.performance * h.allocation), 0) / totalAlloc;
+      portfolioReturn = simHoldings.reduce((sum, h) => sum + (h.performance * h.allocation), 0) / totalAlloc;
     } else if (simHoldings.length > 0) {
-      basketReturn = simHoldings.reduce((sum, h) => sum + h.performance, 0) / simHoldings.length;
+      portfolioReturn = simHoldings.reduce((sum, h) => sum + h.performance, 0) / simHoldings.length;
     }
 
-    return { holdings: simHoldings, basket_return: basketReturn, total_allocation: totalAlloc };
-  }, [baskets, selectedId, mods]);
+    return { holdings: simHoldings, portfolio_return: portfolioReturn, total_allocation: totalAlloc };
+  }, [holdings]);
 
   useEffect(() => {
-    if (!simulatedPortfolio || !simulatedPortfolio.holdings.length) {
+    if (!simulatedPortfolio.holdings.length) {
        setSimReturnData(null);
        return;
     }
@@ -348,22 +278,24 @@ function SimulatorPortfolio() {
 
     const timer = setTimeout(async () => {
       const today = new Date().toISOString().split('T')[0];
-      try {
-        const cmpRes = await axios.get(`${API_BASE}/stocks/history?code=${modalCode}&date=${today}`);
-        if (!cancelled && cmpRes.data.price > 0) {
-          setEditMod(prev => ({ ...prev, cmp: cmpRes.data.price }));
-        }
-      } catch (err) { console.error('CMP fetch error', err); }
 
+      // Fire CMP + buy-price lookups together instead of one after another —
+      // on a cold cache each call can take a few seconds, so awaiting them
+      // sequentially could double the wait for no reason.
+      const requests = [
+        axios.get(`${API_BASE}/stocks/history?code=${modalCode}&date=${today}`)
+          .then(res => { if (!cancelled && res.data.price > 0) setEditMod(prev => ({ ...prev, cmp: res.data.price })); })
+          .catch(err => console.error('CMP fetch error', err)),
+      ];
       if (modalDate) {
-        try {
-          const bpRes = await axios.get(`${API_BASE}/stocks/history?code=${modalCode}&date=${modalDate}`);
-          if (!cancelled && bpRes.data.price > 0) {
-            setEditMod(prev => ({ ...prev, buy_price: bpRes.data.price }));
-          }
-        } catch (err) { console.error('Buy price fetch error', err); }
+        requests.push(
+          axios.get(`${API_BASE}/stocks/history?code=${modalCode}&date=${modalDate}`)
+            .then(res => { if (!cancelled && res.data.price > 0) setEditMod(prev => ({ ...prev, buy_price: res.data.price })); })
+            .catch(err => console.error('Buy price fetch error', err))
+        );
       }
 
+      await Promise.all(requests);
       if (!cancelled) setFetchingPrice(false);
     }, 600);
 
@@ -371,31 +303,14 @@ function SimulatorPortfolio() {
   }, [modalCode, modalDate]);
 
   if (loading) return <div style={{ textAlign: 'center', marginTop: '4rem' }}><h3 className="text-gradient">Loading Simulator...</h3></div>;
-  if (!simulatedPortfolio) return null;
-
-  // Match selected PF basket to webportal basket by name similarity
-  const pfBasketShortName = (baskets[selectedId]?.name || '').replace(/^NIA\s*/i, '').trim().toLowerCase();
-  const basketPeriodReturn = Object.values(allBasketPeriodReturns).find(wb => {
-    const wn = (wb.name || '').toLowerCase();
-    return wn === pfBasketShortName || wn.includes(pfBasketShortName) || pfBasketShortName.includes(wn) ||
-      pfBasketShortName.split(/\s+/).filter(w => w.length > 2).every(w => wn.includes(w));
-  }) || null;
-
-  const actualReturn = baskets[selectedId].stats.basket_return;
-  const simReturn = simulatedPortfolio.basket_return;
-  // Use the same value shown on the Simulated Return card for the alpha diff.
-  // simReturnData.absolute_return is the displayed simulated return (10L + SIPs model);
-  // fall back to the useMemo weighted return while that API call is still in flight.
-  const displayedSimReturn = simReturnData ? simReturnData.absolute_return : simReturn;
-  const diff = displayedSimReturn - actualReturn;
 
   const handleEditClick = (h) => {
     setEditMod({
-      basket_id: selectedId,
       stock_code: h.code,
-      override_type: h.isNew ? 'add' : 'modify',
+      override_type: 'modify',
       allocation: h.allocation,
       buy_price: h.buy_price,
+      buy_date: h.buy_date ?? null,
       cmp: h.cmp
     });
     setModalDate('');
@@ -405,11 +320,11 @@ function SimulatorPortfolio() {
 
   const handleAddNew = () => {
     setEditMod({
-      basket_id: selectedId,
       stock_code: '',
       override_type: 'add',
       allocation: 0,
       buy_price: 0,
+      buy_date: null,
       cmp: 0
     });
     setModalDate('');
@@ -437,16 +352,12 @@ function SimulatorPortfolio() {
     return <span style={{ marginLeft: '4px', color: 'var(--primary)' }}>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>;
   };
 
-  const getFilteredSorted = (holdings) => {
-    let result = [...holdings];
+  const getFilteredSorted = (holdingsList) => {
+    let result = [...holdingsList];
 
     if (filters.code.trim()) {
       const q = filters.code.trim().toLowerCase();
       result = result.filter(h => h.code && h.code.toLowerCase().includes(q));
-    }
-    if (filters.theme.trim()) {
-      const q = filters.theme.trim().toLowerCase();
-      result = result.filter(h => h.theme && h.theme.toLowerCase().includes(q));
     }
     if (filters.performance.trim()) {
       const threshold = parseFloat(filters.performance);
@@ -476,48 +387,31 @@ function SimulatorPortfolio() {
           <ArrowLeft size={16} /> Back
         </button>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
         <div>
           <h2 style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Target color="var(--secondary)" /> Simulator
+            <Target color="var(--secondary)" /> My Virtual Portfolio
           </h2>
-          {/* Period selector — above basket dropdown */}
-          <div style={{ display: 'flex', gap: '2px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', padding: '3px', marginBottom: '8px', width: 'fit-content' }}>
-            {PERIOD_OPTIONS.map(p => (
-              <button
-                key={p}
-                onClick={() => setPeriod(p)}
-                style={{
-                  padding: '3px 10px', fontSize: '0.75rem', fontWeight: period === p ? 700 : 400,
-                  background: period === p ? 'rgba(99,102,241,0.35)' : 'transparent',
-                  color: period === p ? '#a5b4fc' : 'var(--text-muted)',
-                  border: 'none', borderRadius: '6px', cursor: 'pointer', transition: 'all 0.15s',
-                }}
-              >
-                {p}
-              </button>
-            ))}
-          </div>
-          <select
-            value={selectedId}
-            onChange={(e) => setSelectedId(e.target.value)}
-            style={{ minWidth: '250px' }}
-          >
-            {Object.values(baskets).map(b => (
-              <option key={b.id} value={b.id}>{b.name}</option>
-            ))}
-          </select>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '20px', marginBottom: '24px' }}>
-        <div className="glass-panel" style={{ textAlign: 'center' }}>
-          <p className="text-muted" style={{ marginBottom: '8px' }}>Actual Return</p>
-          <h1 className={actualReturn >= 0 ? "text-gradient" : ""} style={{ color: actualReturn < 0 ? 'var(--negative)' : 'inherit', margin: 0 }}>
-            {actualReturn > 0 ? '+' : ''}{actualReturn.toFixed(2)}%
-          </h1>
-        </div>
+      <div
+        className="glass-panel"
+        style={{
+          marginBottom: '24px',
+          padding: '14px 18px',
+          border: '1px solid rgba(99,102,241,0.25)',
+          background: 'rgba(99,102,241,0.06)',
+          fontSize: '0.85rem',
+          color: 'var(--text-main)',
+          lineHeight: 1.5,
+        }}
+      >
+        This portfolio belongs only to you. It isn't linked to any basket or model portfolio —
+        it's built entirely from the stocks <strong>you</strong> choose to add below, and only you can see or edit it.
+      </div>
 
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '24px' }}>
         <div className="glass-panel" style={{ textAlign: 'center', border: '1px solid var(--primary)', background: 'var(--primary-glow)' }}>
           <p className="text-muted" style={{ marginBottom: '8px', color: 'var(--text-main)' }}>Simulated Return</p>
           <h1 style={{ color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -538,33 +432,9 @@ function SimulatorPortfolio() {
             </button>
           )}
         </div>
-
-        <div className="glass-panel" style={{ textAlign: 'center' }}>
-          <p className="text-muted" style={{ marginBottom: '8px' }}>Alpha Difference</p>
-          <h1 style={{ color: diff >= 0 ? 'var(--positive)' : 'var(--negative)', margin: 0 }}>
-            {calculatingReturn
-              ? <RotateCcw size={24} style={{ animation: 'spin 1s linear infinite' }} />
-              : <>{diff > 0 ? '+' : ''}{diff.toFixed(2)}%</>}
-          </h1>
-        </div>
-
-        <div className="glass-panel" style={{ textAlign: 'center', border: '1px solid rgba(99,102,241,0.3)' }}>
-          <p className="text-muted" style={{ marginBottom: '8px' }}>{period} Return</p>
-          <h1 style={{ margin: 0, color: basketPeriodReturn ? (basketPeriodReturn.net >= 0 ? 'var(--positive)' : 'var(--negative)') : 'var(--text-muted)' }}>
-            {fetchingPeriod ? <RotateCcw size={24} style={{ animation: 'spin 1s linear infinite' }} />
-              : basketPeriodReturn
-                ? <>{basketPeriodReturn.net > 0 ? '+' : ''}{basketPeriodReturn.net.toFixed(2)}%</>
-                : '—'}
-          </h1>
-          {basketPeriodReturn && (
-            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '6px' }}>
-              {basketPeriodReturn.base_date} → {basketPeriodReturn.latest_date}
-            </div>
-          )}
-        </div>
       </div>
 
-      <HistoricComparison basketId={selectedId} refreshKey={histRefreshKey} />
+      <HistoricComparison refreshKey={histRefreshKey} />
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -606,7 +476,6 @@ function SimulatorPortfolio() {
             {/* Sort Headers */}
             <tr>
               <th style={{ whiteSpace: 'nowrap', padding: '6px 8px', color: 'var(--text-muted)', fontWeight: 500 }}>#</th>
-              <th style={{ whiteSpace: 'nowrap', padding: '6px 8px' }}>Status</th>
               <th
                 onClick={() => handleSort('code')}
                 style={{ cursor: 'pointer', userSelect: 'none', whiteSpace: 'nowrap', padding: '6px 8px', position: 'sticky', left: 0, background: 'var(--surface)', zIndex: 2 }}
@@ -638,13 +507,18 @@ function SimulatorPortfolio() {
               >
                 SimRet%<SortIcon colKey="performance" />
               </th>
+              <th
+                onClick={() => handleSort('holdingDays')}
+                style={{ cursor: 'pointer', userSelect: 'none', whiteSpace: 'nowrap', padding: '6px 8px' }}
+              >
+                Holding Days<SortIcon colKey="holdingDays" />
+              </th>
               <th style={{ padding: '6px 8px' }}>Act.</th>
             </tr>
 
             {/* Filter Row */}
             {showFilters && (
               <tr style={{ background: 'rgba(99,102,241,0.08)' }}>
-                <th />
                 <th />
                 <th style={{ padding: '6px 8px' }}>
                   <input
@@ -668,11 +542,12 @@ function SimulatorPortfolio() {
                     style={{ width: '100%', padding: '4px 8px', fontSize: '0.8rem' }}
                   />
                 </th>
+                <th />
                 <th style={{ padding: '6px 8px' }}>
                   <button
                     className="btn"
                     style={{ padding: '4px 8px', fontSize: '0.75rem', width: '100%' }}
-                    onClick={() => setFilters({ code: '', theme: '', performance: '' })}
+                    onClick={() => setFilters({ code: '', performance: '' })}
                   >
                     Clear
                   </button>
@@ -682,16 +557,11 @@ function SimulatorPortfolio() {
           </thead>
           <tbody>
             {getFilteredSorted(simulatedPortfolio.holdings).map((h, idx) => (
-              <tr key={h.code} style={{ background: h.isModded ? (h.isNew ? 'rgba(99, 102, 241, 0.15)' : 'rgba(255, 255, 255, 0.08)') : 'transparent' }}>
+              <tr key={h.code}>
                 <td style={{ padding: '5px 8px', whiteSpace: 'nowrap', color: 'var(--text-muted)', fontSize: '0.72rem', textAlign: 'right' }}>
                   {idx + 1}
                 </td>
-                <td style={{ padding: '5px 8px', whiteSpace: 'nowrap' }}>
-                  {h.isNew && <span className="badge positive" style={{ fontSize: '0.7rem', padding: '1px 6px' }}>Added</span>}
-                  {h.isModded && !h.isNew && <span className="badge" style={{ background: 'var(--primary)', color: '#fff', fontSize: '0.7rem', padding: '1px 6px' }}>Modified</span>}
-                  {!h.isModded && <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>—</span>}
-                </td>
-                <td style={{ padding: '5px 8px', position: 'sticky', left: 0, background: h.isModded ? (h.isNew ? 'rgba(30,30,80,0.98)' : 'rgba(30,30,50,0.98)') : 'var(--surface)', zIndex: 1, whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '5px 8px', position: 'sticky', left: 0, background: 'var(--surface)', zIndex: 1, whiteSpace: 'nowrap' }}>
                   <strong style={{ fontSize: '0.8rem' }}>{h.code}</strong>
                 </td>
 
@@ -701,33 +571,37 @@ function SimulatorPortfolio() {
                 <td style={{ padding: '5px 8px', whiteSpace: 'nowrap', color: h.performance >= 0 ? 'var(--positive)' : 'var(--negative)', fontWeight: 600 }}>
                   {h.performance > 0 ? '+' : ''}{h.performance.toFixed(2)}%
                 </td>
+                <td style={{ padding: '5px 8px', whiteSpace: 'nowrap' }}>
+                  {h.holdingDays != null ? `${h.holdingDays} days` : '—'}
+                </td>
                 <td style={{ padding: '5px 8px', display: 'flex', gap: '4px' }}>
                   <button className="btn btn-secondary" style={{ padding: '3px 5px' }} onClick={() => handleEditClick(h)} title="Edit">
                     <Edit2 size={13} />
                   </button>
-                  {h.isModded && (
-                    <button className="btn" style={{ padding: '3px 5px', color: 'var(--negative)', borderColor: 'var(--negative)' }} onClick={() => confirmRemoveMod(h.code)} title="Revert">
-                      <RotateCcw size={13} />
-                    </button>
-                  )}
-                  <button className="btn" style={{ padding: '3px 5px', color: 'var(--negative)', borderColor: 'var(--negative)' }} onClick={() => confirmDeleteStock(h.code)} title="Delete from Simulator">
+                  <button className="btn" style={{ padding: '3px 5px', color: 'var(--negative)', borderColor: 'var(--negative)' }} onClick={() => confirmDeleteStock(h.code)} title="Delete from Virtual Portfolio">
                     <X size={13} />
                   </button>
                 </td>
               </tr>
             ))}
+            {simulatedPortfolio.holdings.length === 0 && (
+              <tr>
+                <td colSpan={8} style={{ padding: '24px 8px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                  Your virtual portfolio is empty. Click "Add Stock" to get started.
+                </td>
+              </tr>
+            )}
             {(() => {
               const cashPct = 100 - (simulatedPortfolio.total_allocation || 0);
               if (cashPct <= 0) return null;
               return (
                 <tr style={{ borderTop: '2px solid rgba(255,255,255,0.08)', background: 'rgba(234,179,8,0.06)' }}>
                   <td style={{ padding: '5px 8px', color: 'var(--text-muted)', fontSize: '0.72rem', textAlign: 'right' }}>—</td>
-                  <td style={{ padding: '5px 8px' }} />
                   <td style={{ padding: '5px 8px', position: 'sticky', left: 0, background: 'rgba(20,18,10,0.98)', zIndex: 1, whiteSpace: 'nowrap' }}>
                     <strong style={{ fontSize: '0.8rem', color: '#fbbf24' }}>CASH</strong>
                   </td>
                   <td style={{ padding: '5px 8px', whiteSpace: 'nowrap', color: '#fbbf24', fontWeight: 600 }}>{cashPct.toFixed(1)}%</td>
-                  <td colSpan={4} style={{ padding: '5px 8px', color: 'var(--text-muted)', fontSize: '0.78rem' }}>Uninvested allocation</td>
+                  <td colSpan={5} style={{ padding: '5px 8px', color: 'var(--text-muted)', fontSize: '0.78rem' }}>Uninvested allocation</td>
                 </tr>
               );
             })()}
@@ -845,7 +719,7 @@ function SimulatorPortfolio() {
               </button>
             </div>
             <p style={{ color: 'var(--text-muted)', marginBottom: '24px', fontSize: '0.9rem' }}>
-              Choose the format to export <strong style={{ color: 'var(--text-main)' }}>{baskets[selectedId]?.name}</strong>:
+              Choose the format to export <strong style={{ color: 'var(--text-main)' }}>your virtual portfolio</strong>:
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
               <button
@@ -856,7 +730,7 @@ function SimulatorPortfolio() {
                 <Download size={28} />
                 <div>
                   <div style={{ fontWeight: 700, fontSize: '1rem' }}>Excel</div>
-                  <div style={{ fontSize: '0.75rem', opacity: 0.8, marginTop: '4px' }}>Summary + Holdings + Historical Comparison</div>
+                  <div style={{ fontSize: '0.75rem', opacity: 0.8, marginTop: '4px' }}>Summary + Holdings + Historical Performance</div>
                 </div>
               </button>
               <button
@@ -899,7 +773,7 @@ function SimulatorPortfolio() {
         <div className="modal-overlay" onClick={() => setModalOpen(false)}>
           <div className="modal-content glass-panel" onClick={e => e.stopPropagation()}>
             <h3 style={{ marginBottom: '24px' }}>
-              {editMod.override_type === 'add' ? 'Add New Stock to Simulator' : `Modify ${editMod.stock_code}`}
+              {editMod.override_type === 'add' ? 'Add New Stock to Virtual Portfolio' : `Modify ${editMod.stock_code}`}
             </h3>
 
             {editMod.override_type === 'add' && (

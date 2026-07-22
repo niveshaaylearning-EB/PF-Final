@@ -15,7 +15,7 @@ from persistence import (
     _load_buy_price_data, _save_buy_price_data,
     _load_portfolios, _save_portfolios,
 )
-from price_engine import fetch_live_batch, fetch_live_single, _NSE_HEADERS, _get_via_proxies
+from price_engine import fetch_live_batch, fetch_live_single, fetch_performance_batch, _NSE_HEADERS, _get_via_proxies
 
 router = APIRouter()
 
@@ -32,9 +32,37 @@ async def get_live_all():
     return await fetch_live_batch()
 
 
+@router.get("/api/performance")
+async def get_performance_batch(codes: str):
+    """
+    Multi-tenure performance for a comma-separated list of NSE codes:
+    {code: {"1M": pct, "3M": pct, "6M": pct, "1Y": pct, "2Y": pct, "3Y": pct, "5Y": pct}}
+    A tenure is null for a code if there isn't enough price history to cover it
+    (e.g. a recently-listed stock has no 5Y bar yet) -- the frontend separately
+    gates which tenures it *shows* per stock based on the user's holding period.
+    """
+    code_list = [c.strip().upper() for c in codes.split(",") if c.strip()]
+    if not code_list:
+        return {}
+    return await fetch_performance_batch(code_list)
+
+
 @router.get("/api/live/{nse_code}")
-async def get_live_single(nse_code: str):
-    code  = nse_code.strip().upper()
+async def get_live_single(nse_code: str, fast: bool = False):
+    """`fast=true` is for callers that only need CMP/OHLC for a single,
+    typically-not-already-tracked stock (e.g. the what-if "Add Hypothetical
+    Stock" flow) -- skips both the Market Cap/PE cascade AND the whole-
+    portfolio batch cache check. That batch check is normally free (serves a
+    warm cache instantly), but when the cache is cold (fresh server start, or
+    just past its TTL with nobody having loaded a dashboard yet) it triggers
+    a full refresh of every tracked stock, which can take 10+ seconds --
+    wasted work for a stock this flow expects to be a cache miss anyway.
+    """
+    code = nse_code.strip().upper()
+    if fast:
+        result = await fetch_live_single(code, skip_mc_pe=True)
+        return result or {"cmp": None, "close1M": None, "open1M": None, "high1M": None, "low1M": None}
+
     cache = await fetch_live_batch()
     if code in cache and cache[code].get("cmp") is not None:
         return cache[code]

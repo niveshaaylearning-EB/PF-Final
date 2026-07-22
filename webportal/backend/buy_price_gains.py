@@ -11,7 +11,7 @@ import urllib.parse
 from datetime import datetime, timezone
 
 import httpx
-from fastapi import APIRouter, BackgroundTasks, Body, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Body, HTTPException, Request
 
 from config import YF_HEADERS, YF_SYMBOL_MAP
 from persistence import (
@@ -22,6 +22,7 @@ from persistence import (
     _save_gains,
     _load_undo_snapshots, _save_undo_snapshots,
     _auto_save_rollback, _push_undo_snapshot,
+    _require_admin,
 )
 
 router = APIRouter()
@@ -122,11 +123,17 @@ def _current_series_buy_events(
     buy_events: list[tuple[str, float]],
     sell_events: list[tuple[str, float]],
 ) -> list[tuple[str, float]]:
-    """Return buy events for the current active series.
-
-    Both buyEvents and sellEvents are stored as delta weights.
-    Resets the active series when net weight reaches zero (full exit).
-    Returns (date, delta_weight) pairs for the weighted-avg buy-price formula.
+    """Return (date, remaining_weight) for every buy lot still open in the
+    CURRENT series. Each sell consumes the OLDEST unconsumed lot(s) first
+    (FIFO), reducing their remaining weight -- mirrors the same matching
+    _compute_fifo_gains_for_series already uses for realized/sold gains, so
+    the open-position buy price and the sold-position realized gain are
+    finally based on one consistent lot-consumption model, instead of this
+    function silently treating every buy lot as still fully held even after
+    a later partial sell has consumed part of it. A full exit (every lot's
+    remaining hits ~0) naturally "resets" the series because the next buy
+    simply appends to what is by then an empty list -- no separate reset
+    flag needed.
     """
     combined = (
         [(d, "buy",  q) for d, q in buy_events] +
@@ -134,22 +141,21 @@ def _current_series_buy_events(
     )
     combined.sort(key=lambda e: _date_to_ts(e[0]))
 
-    net: float = 0.0
-    series: list[tuple[str, float]] = []
-
+    lots: list[dict] = []
     for date_str, etype, qty in combined:
         if etype == "buy":
-            if net <= 0.001:            # fresh entry after full exit
-                series = []
-            series.append((date_str, round(qty, 6)))
-            net += qty
-        else:                           # sell
-            net = max(0.0, net - qty)
-            if net <= 0.001:            # fully exited — close series
-                series = []
-                net = 0.0
+            lots.append({"date": date_str, "remaining": round(qty, 6)})
+        else:                           # sell — FIFO-consume oldest lots first
+            to_consume = qty
+            for lot in lots:
+                if to_consume <= 1e-6:
+                    break
+                take = min(lot["remaining"], to_consume)
+                lot["remaining"] = round(lot["remaining"] - take, 6)
+                to_consume = round(to_consume - take, 6)
+            lots = [l for l in lots if l["remaining"] > 1e-6]
 
-    return series
+    return [(l["date"], l["remaining"]) for l in lots]
 
 
 async def _fetch_ohlc_yahoo(nse_code: str, ts: int) -> tuple[float | None, str | None]:
@@ -393,11 +399,25 @@ async def _fetch_ohlc_avg(nse_code: str, date_str: str) -> tuple[float | None, s
     return await _fetch_ohlc_screener(nse_code, dt)
 
 
+@router.get("/api/ohlc-lookup/{nse_code}")
+async def ohlc_lookup(nse_code: str, date: str):
+    """Ad-hoc OHLC average lookup for an arbitrary date -- powers the client-side
+    what-if simulator's buy-date-change preview. Read-only, nothing persisted,
+    no admin gate (mirrors GET /api/live/{nse_code})."""
+    code = nse_code.strip().upper()
+    try:
+        price, fallback_date = await _fetch_ohlc_avg(code, date.strip())
+    except ValueError:
+        raise HTTPException(status_code=422, detail="Invalid date format; expected 'DD Mon YYYY'")
+    return {"nseCode": code, "date": date.strip(), "price": price, "fallbackDate": fallback_date}
+
+
 @router.post("/api/set-ohlc-price")
-async def set_ohlc_price(body: dict):
+async def set_ohlc_price(body: dict, request: Request):
     """Manually override a buyOHLC or sellOHLC price for a specific stock and date.
     Body: {basket, code, date, price, type} where type is 'buy' or 'sell'.
     Regenerates gains_statement.json after saving."""
+    _require_admin(request)
     basket = body.get("basket", "")
     code   = body.get("code", "")
     date   = body.get("date", "")
@@ -425,10 +445,11 @@ async def set_ohlc_price(body: dict):
 
 
 @router.post("/api/refetch-buy-ohlc/{basket}/{code}")
-async def refetch_buy_ohlc(basket: str, code: str):
+async def refetch_buy_ohlc(basket: str, code: str, request: Request):
     """Force re-fetch OHLC for ALL buy event dates of a stock, overwriting stored values.
     Also re-fetches sell OHLC for its sell event dates.
     Regenerates gains_statement.json after update."""
+    _require_admin(request)
     bp_data   = _load_buy_price_data()
     basket_bp = bp_data.get(basket, {})
     det       = basket_bp.get(code)
@@ -483,8 +504,9 @@ async def refetch_buy_ohlc(basket: str, code: str):
 
 
 @router.get("/api/calc-buy-price/{key}/{nse}")
-async def calc_buy_price(key: str, nse: str):
+async def calc_buy_price(key: str, nse: str, request: Request):
     """Calculate weighted avg buy price for one stock from its buy events."""
+    _require_admin(request)
     bp_data = _load_buy_price_data()
     det = bp_data.get(key, {}).get(nse, {})
     buy_events_str = det.get("buyEvents") or ""
@@ -552,8 +574,9 @@ async def calc_buy_price(key: str, nse: str):
 
 
 @router.post("/api/calc-all-baskets")
-async def calc_all_baskets():
+async def calc_all_baskets(request: Request):
     """Calculate and persist weighted avg buy prices for every stock with buy events across all baskets."""
+    _require_admin(request)
     bp_data    = _load_buy_price_data()
     portfolios = _load_portfolios()
     results    = {}  # key → { nse: buyPrice | "error" }
@@ -707,18 +730,17 @@ def _compute_fifo_gains_for_series(
         remaining_qty = sum(l["remaining"] for l in buy_queue)
         sell_type = "Full Exit" if remaining_qty < 0.05 else "Partial Sell"
 
-        # Buy price method:
-        #   Full Exit  → weighted avg of ALL series buy events (matches _wavg_cost_basis used in sold stocks tab)
-        #   Partial Sell → FIFO-weighted avg of lots consumed (already correct in `lots`)
-        if sell_type == "Full Exit":
-            wt_buy_price = _wavg_cost_basis(buy_events, buy_ohlc)
-        else:
-            lots_with_price = [l for l in lots if l["buyPrice"] is not None]
-            total_w_bp = sum(l["weight"] for l in lots_with_price)
-            wt_buy_price = (
-                round(sum(l["buyPrice"] * l["weight"] for l in lots_with_price) / total_w_bp, 4)
-                if total_w_bp > 0 else None
-            )
+        # Buy price: FIFO-weighted avg of the lots THIS sell actually consumed
+        # (`lots`, built above from buy_queue's live remaining state). Used
+        # uniformly for Full Exit and Partial Sell alike -- a Full Exit that
+        # was preceded by an earlier partial sell in the same series must not
+        # re-include the weight that sell already consumed and reported.
+        lots_with_price = [l for l in lots if l["buyPrice"] is not None]
+        total_w_bp = sum(l["weight"] for l in lots_with_price)
+        wt_buy_price = (
+            round(sum(l["buyPrice"] * l["weight"] for l in lots_with_price) / total_w_bp, 4)
+            if total_w_bp > 0 else None
+        )
 
         gains.append({
             "sellDate":            sell_date,
@@ -1065,7 +1087,8 @@ async def get_undo_count(basket: str):
 
 
 @router.post("/api/undo/{basket}")
-async def undo_basket(basket: str, background_tasks: BackgroundTasks):
+async def undo_basket(basket: str, background_tasks: BackgroundTasks, request: Request):
+    _require_admin(request)
     snaps = _load_undo_snapshots()
     basket_snaps = snaps.get(basket, [])
     if not basket_snaps:
@@ -1093,7 +1116,8 @@ async def undo_basket(basket: str, background_tasks: BackgroundTasks):
 
 
 @router.put("/api/basket/{key}")
-async def save_basket(key: str, body: dict, background_tasks: BackgroundTasks):
+async def save_basket(key: str, body: dict, background_tasks: BackgroundTasks, request: Request):
+    _require_admin(request)
     if key not in BASKET_DISPLAY_NAMES:
         raise HTTPException(status_code=404, detail=f"Unknown basket: {key}")
     _auto_save_rollback()
@@ -1149,8 +1173,9 @@ async def get_gains_statement():
 
 
 @router.post("/api/gains-statement/refresh")
-async def refresh_gains_statement():
+async def refresh_gains_statement(request: Request):
     """Recompute FIFO gains from current buy_price_data.json and persist."""
+    _require_admin(request)
     gains = _compute_all_gains()
     _save_gains(gains)
     total = sum(len(v) for v in gains.values())
@@ -1158,9 +1183,10 @@ async def refresh_gains_statement():
 
 
 @router.post("/api/gains-statement/backfill-sell-ohlc")
-async def backfill_sell_ohlc():
+async def backfill_sell_ohlc(request: Request):
     """Fetch missing sellOHLC prices for all sell event dates across all baskets,
     then regenerate gains_statement.json."""
+    _require_admin(request)
     bp_data = _load_buy_price_data()
     filled = 0
 

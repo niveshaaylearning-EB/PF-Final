@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getEmail, getToken, ADMIN_EMAILS } from '../utils/auth.js';
+import { getTheme, setTheme, THEME_CHANGE_EVENT } from '../utils/theme.js';
 
 const EDIT_ALLOWED = ADMIN_EMAILS;
 const BAR_H = 44;
@@ -10,15 +11,41 @@ const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hos
 const WP_BASE  = IS_LOCAL
   ? `http://${window.location.hostname}:8001`
   : `${window.location.origin}/wp/`;
+const WP_ORIGIN = IS_LOCAL ? `http://${window.location.hostname}:8001` : window.location.origin;
+const THEME_SYNC_TYPE = 'nia-theme-sync';
 
 export default function ActualPortfolio() {
   const navigate = useNavigate();
   const [headerBottom, setHeaderBottom] = useState(120);
   const [loaded, setLoaded] = useState(false);
+  const iframeRef = useRef(null);
 
   useEffect(() => {
     const header = document.querySelector('header');
     if (header) setHeaderBottom(Math.ceil(header.getBoundingClientRect().bottom));
+  }, []);
+
+  // Keep the embedded webportal iframe's theme live-synced with the outer
+  // app: push our theme into it whenever it changes (rather than only at
+  // iframe-load time, since the iframe's `src` never changes after mount),
+  // and accept theme changes made via the toggle inside the iframe itself.
+  useEffect(() => {
+    const pushTheme = (theme) => {
+      iframeRef.current?.contentWindow?.postMessage({ type: THEME_SYNC_TYPE, theme }, WP_ORIGIN);
+    };
+    const onOuterThemeChange = (e) => pushTheme(e.detail);
+    const onMessage = (e) => {
+      if (e.origin !== WP_ORIGIN) return;
+      if (e.data?.type === THEME_SYNC_TYPE && (e.data.theme === 'light' || e.data.theme === 'dark')) {
+        setTheme(e.data.theme);
+      }
+    };
+    window.addEventListener(THEME_CHANGE_EVENT, onOuterThemeChange);
+    window.addEventListener('message', onMessage);
+    return () => {
+      window.removeEventListener(THEME_CHANGE_EVENT, onOuterThemeChange);
+      window.removeEventListener('message', onMessage);
+    };
   }, []);
 
   const iframeTop = headerBottom + BAR_H;
@@ -30,7 +57,7 @@ export default function ActualPortfolio() {
   // detection AND every authenticated upload inside the iframe silently fail
   // (empty Authorization header -> 403) even when the edit flag says "yes".
   const token = getToken() || '';
-  const WEBPORTAL_URL = `${WP_BASE}?u=${encodeURIComponent(email)}&edit=${canEdit ? '1' : '0'}&t=${encodeURIComponent(token)}`;
+  const WEBPORTAL_URL = `${WP_BASE}?u=${encodeURIComponent(email)}&edit=${canEdit ? '1' : '0'}&t=${encodeURIComponent(token)}&theme=${getTheme()}`;
 
   return (
     <>
@@ -44,8 +71,8 @@ export default function ActualPortfolio() {
         left: 0,
         width: '100vw',
         height: BAR_H,
-        background: '#0b0f19',
-        borderBottom: '1px solid rgba(255,255,255,0.08)',
+        background: 'var(--bg-color)',
+        borderBottom: '1px solid var(--panel-border)',
         display: 'flex',
         alignItems: 'center',
         padding: '0 16px',
@@ -73,7 +100,7 @@ export default function ActualPortfolio() {
           left: 0,
           width: '100vw',
           height: `calc(100vh - ${iframeTop}px)`,
-          background: '#0b0f19',
+          background: 'var(--bg-color)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -84,8 +111,8 @@ export default function ActualPortfolio() {
           <div style={{
             width: 40,
             height: 40,
-            border: '3px solid rgba(255,255,255,0.1)',
-            borderTop: '3px solid #6366f1',
+            border: '3px solid var(--panel-border)',
+            borderTop: '3px solid var(--primary)',
             borderRadius: '50%',
             animation: 'spin 0.8s linear infinite',
           }} />
@@ -98,9 +125,15 @@ export default function ActualPortfolio() {
 
       {/* Full-viewport iframe — starts below the sub-bar */}
       <iframe
+        ref={iframeRef}
         src={WEBPORTAL_URL}
         title="Actual Portfolio Dashboard"
-        onLoad={() => setLoaded(true)}
+        onLoad={() => {
+          setLoaded(true);
+          // Covers the case where the outer theme changed while the iframe
+          // was still loading (its src param would already be stale by then).
+          iframeRef.current?.contentWindow?.postMessage({ type: THEME_SYNC_TYPE, theme: getTheme() }, WP_ORIGIN);
+        }}
         style={{
           position: 'fixed',
           top: iframeTop,

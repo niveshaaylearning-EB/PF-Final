@@ -457,13 +457,11 @@ class RationaleCreate(BaseModel):
     stock_code: str
     rationale_text: str
 
-class SimulationModCreate(BaseModel):
-    basket_id: str
+class SimulationHoldingCreate(BaseModel):
     stock_code: str
-    override_type: str # 'add', 'modify', 'remove', 'delete'
-    formula: Optional[str] = None
     allocation: Optional[float] = None
     buy_price: Optional[float] = None
+    buy_date: Optional[str] = None   # YYYY-MM-DD
     cmp: Optional[float] = None
 
 class SimulationSipCreate(BaseModel):

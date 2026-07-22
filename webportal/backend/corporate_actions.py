@@ -277,6 +277,21 @@ async def list_corporate_actions(request: Request):
     return _load_ca()
 
 
+@router.get("/api/corporate-actions/status/{basket}/{code}")
+async def corporate_action_status(basket: str, code: str):
+    """Read-only, no admin gate: just enough for the what-if simulator (used by
+    non-admins too) to warn "this stock has a pending/approved corporate action
+    -- buy prices before the ex-date may look inconsistent until it's resolved"
+    without exposing full record detail like list_corporate_actions does."""
+    code = code.strip().upper()
+    records = [
+        {"type": r["type"], "exDate": r["exDate"], "ratio": r.get("ratio"), "status": r["status"]}
+        for r in _load_ca()
+        if r["basketKey"] == basket and r["nseCode"] == code and r["status"] in ("pending_review", "approved")
+    ]
+    return {"records": records}
+
+
 @router.post("/api/corporate-actions")
 async def create_corporate_action(request: Request, body: dict = Body(...)):
     admin_email = _require_admin(request)

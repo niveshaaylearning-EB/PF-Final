@@ -29,7 +29,7 @@ const BASKET_OPTIONS = [
 ];
 
 const fmt = (v) => v == null ? '—' : '₹' + Number(v).toLocaleString('en-IN', { maximumFractionDigits: 2 });
-const clr = (v) => v == null ? '#94a3b8' : v > 0 ? '#10b981' : v < 0 ? '#ef4444' : '#94a3b8';
+const clr = (v) => v == null ? 'var(--text-secondary)' : v > 0 ? '#10b981' : v < 0 ? '#ef4444' : 'var(--text-secondary)';
 
 function getBpColVal(field, row) {
   switch (field) {
@@ -92,12 +92,12 @@ function computeSeries(buyStr, sellStr, prevBuyStr, prevSellStr) {
 const EventCell = ({ value, readOnly, onChange }) => {
   if (readOnly) {
     return (
-      <div style={{ fontSize: '0.78rem', color: '#94a3b8', whiteSpace: 'pre-line', lineHeight: 1.6 }}>
+      <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', whiteSpace: 'pre-line', lineHeight: 1.6 }}>
         {value || '—'}
       </div>
     );
   }
-  if (!value && !onChange) return <span style={{ color: '#475569' }}>—</span>;
+  if (!value && !onChange) return <span style={{ color: 'var(--text-secondary)' }}>—</span>;
   return (
     <textarea
       className="bp-edit-textarea"
@@ -218,7 +218,11 @@ export default function BuyPricePage() {
     setSaving(true);
     setSaveMsg('Undoing…');
     try {
-      const resp = await fetch(`${API_BASE}/undo/${basketKey}`, { method: 'POST' });
+      const undoToken = getAuthToken();
+      const resp = await fetch(`${API_BASE}/undo/${basketKey}`, {
+        method: 'POST',
+        headers: undoToken ? { Authorization: `Bearer ${undoToken}` } : {},
+      });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.detail || 'Undo failed');
       setUndoCount(data.remainingUndos);
@@ -518,58 +522,60 @@ export default function BuyPricePage() {
     {historyRow && (
       <div
         onClick={() => setHistoryRow(null)}
-        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.72)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        style={{ position: 'fixed', inset: 0, background: 'var(--modal-overlay-bg)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
         <div
           onClick={e => e.stopPropagation()}
-          style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '12px', padding: '1.5rem', minWidth: '500px', maxWidth: '680px', maxHeight: '80vh', overflowY: 'auto' }}
+          style={{ background: 'var(--modal-bg)', border: '1px solid var(--panel-border-hover)', borderRadius: '12px', padding: '1.5rem', minWidth: '500px', maxWidth: '680px', maxHeight: '80vh', overflowY: 'auto' }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.2rem' }}>
             <div>
-              <span style={{ fontWeight: 700, color: '#e2e8f0', fontSize: '1rem' }}>{historyRow.nseCode}</span>
-              <span style={{ color: '#94a3b8', marginLeft: '0.6rem', fontSize: '0.88rem' }}>{historyRow.securityName}</span>
+              <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1rem' }}>{historyRow.nseCode}</span>
+              <span style={{ color: 'var(--text-secondary)', marginLeft: '0.6rem', fontSize: '0.88rem' }}>{historyRow.securityName}</span>
             </div>
-            <button onClick={() => setHistoryRow(null)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '1.3rem', lineHeight: 1, padding: 0 }}>&times;</button>
+            <button onClick={() => setHistoryRow(null)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1.3rem', lineHeight: 1, padding: 0 }}>&times;</button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
             {historyRow.series.map((s, i) => (
-              <div key={i} style={{ background: '#0f172a', borderRadius: '8px', padding: '0.8rem 1rem', border: '1px solid ' + (s.closed ? '#1e3a5f' : '#1e4d3a') }}>
+              <div key={i} style={{ background: 'var(--input-bg)', borderRadius: '8px', padding: '0.8rem 1rem', border: '1px solid ' + (s.closed ? '#1e3a5f' : '#1e4d3a') }}>
                 <div style={{ fontWeight: 600, color: '#60a5fa', fontSize: '0.8rem', marginBottom: '0.55rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   {ordinal(i + 1)} Buy-Sell Cycle
-                  <span style={{ fontWeight: 400, fontSize: '0.72rem', color: s.closed ? '#64748b' : '#10b981', background: s.closed ? '#1e293b' : '#052e16', borderRadius: '4px', padding: '1px 6px' }}>
+                  <span style={{ fontWeight: 400, fontSize: '0.72rem', color: s.closed ? 'var(--text-secondary)' : '#10b981', background: s.closed ? 'var(--hover-bg)' : 'rgba(16,185,129,0.12)', borderRadius: '4px', padding: '1px 6px' }}>
                     {s.closed ? 'Closed' : 'Active'}
                   </span>
                 </div>
                 {s.closed ? (
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
-                      <div style={{ color: '#64748b', fontSize: '0.7rem', marginBottom: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Buy Events</div>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '0.7rem', marginBottom: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Buy Events</div>
                       <div style={{ color: '#86efac', fontSize: '0.82rem', whiteSpace: 'pre-line', lineHeight: 1.75 }}>{s.buys.join('\n') || '—'}</div>
                     </div>
                     <div>
-                      <div style={{ color: '#64748b', fontSize: '0.7rem', marginBottom: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Sell Events</div>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '0.7rem', marginBottom: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Sell Events</div>
                       <div style={{ color: '#fca5a5', fontSize: '0.82rem', whiteSpace: 'pre-line', lineHeight: 1.75 }}>{s.sells.join('\n') || '—'}</div>
                     </div>
                   </div>
                 ) : (
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
-                      <div style={{ color: '#64748b', fontSize: '0.7rem', marginBottom: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Buy Events</div>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '0.7rem', marginBottom: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Buy Events</div>
                       <textarea
                         className="bp-edit-textarea"
                         value={historyEdits.buyText}
                         onChange={e => setHistoryEdits(prev => ({ ...prev, buyText: e.target.value }))}
                         rows={Math.max(2, historyEdits.buyText.split('\n').filter(l => l.trim()).length + 1)}
+                        disabled={!userIsAdmin}
                         style={{ width: '100%', boxSizing: 'border-box', color: '#86efac' }}
                       />
                     </div>
                     <div>
-                      <div style={{ color: '#64748b', fontSize: '0.7rem', marginBottom: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Sell Events</div>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '0.7rem', marginBottom: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Sell Events</div>
                       <textarea
                         className="bp-edit-textarea"
                         value={historyEdits.sellText}
                         onChange={e => setHistoryEdits(prev => ({ ...prev, sellText: e.target.value }))}
                         rows={Math.max(2, historyEdits.sellText.split('\n').filter(l => l.trim()).length + 1)}
+                        disabled={!userIsAdmin}
                         style={{ width: '100%', boxSizing: 'border-box', color: '#fca5a5' }}
                       />
                     </div>
@@ -579,7 +585,7 @@ export default function BuyPricePage() {
             ))}
           </div>
           <div style={{ marginTop: '1.2rem', display: 'flex', justifyContent: 'flex-end', gap: '0.6rem' }}>
-            {historyRow.series.some(s => !s.closed) && (
+            {userIsAdmin && historyRow.series.some(s => !s.closed) && (
               <button
                 onClick={handleHistorySave}
                 style={{ padding: '0.4rem 1rem', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', border: '1px solid rgba(99,102,241,0.4)', background: 'rgba(99,102,241,0.15)', color: '#818cf8' }}
@@ -589,7 +595,7 @@ export default function BuyPricePage() {
             )}
             <button
               onClick={() => setHistoryRow(null)}
-              style={{ padding: '0.4rem 1rem', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: '#94a3b8' }}
+              style={{ padding: '0.4rem 1rem', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', border: '1px solid var(--border-color)', background: 'var(--hover-bg)', color: 'var(--text-secondary)' }}
             >
               Close
             </button>
@@ -603,7 +609,7 @@ export default function BuyPricePage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <button
             onClick={() => { window.location.href = '/wp/' + window.location.search; }}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 0.9rem', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 600, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#94a3b8', cursor: 'pointer' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 0.9rem', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 600, background: 'var(--hover-bg)', border: '1px solid var(--panel-border-hover)', color: 'var(--text-secondary)', cursor: 'pointer' }}
           >
             ← Back
           </button>
@@ -637,16 +643,18 @@ export default function BuyPricePage() {
               <option key={o.key} value={o.key}>{o.label}</option>
             ))}
           </select>
-          <button
-            className="bp-save-btn"
-            onClick={handleUndo}
-            disabled={undoCount === 0 || saving}
-            title={`Undo last action (${undoCount}/10 available)`}
-            style={{ background: 'rgba(251,191,36,0.1)', color: undoCount === 0 ? '#475569' : '#fbbf24', borderColor: 'rgba(251,191,36,0.25)' }}
-          >
-            <i className="fa-solid fa-rotate-left" style={{ marginRight: '0.35rem' }} />
-            Undo {undoCount > 0 ? `(${undoCount})` : ''}
-          </button>
+          {userIsAdmin && (
+            <button
+              className="bp-save-btn"
+              onClick={handleUndo}
+              disabled={undoCount === 0 || saving}
+              title={`Undo last action (${undoCount}/10 available)`}
+              style={{ background: 'rgba(251,191,36,0.1)', color: undoCount === 0 ? 'var(--text-secondary)' : '#fbbf24', borderColor: 'rgba(251,191,36,0.25)' }}
+            >
+              <i className="fa-solid fa-rotate-left" style={{ marginRight: '0.35rem' }} />
+              Undo {undoCount > 0 ? `(${undoCount})` : ''}
+            </button>
+          )}
           {saveMsg && <span className="bp-save-msg">{saveMsg}</span>}
 
           <button
@@ -654,29 +662,35 @@ export default function BuyPricePage() {
             onClick={exportBuyPriceXlsx}
             disabled={rows.length === 0}
             title="Export buy price data to Excel"
-            style={{ background: 'rgba(16,185,129,0.1)', color: rows.length === 0 ? '#475569' : '#10b981', borderColor: 'rgba(16,185,129,0.25)' }}
+            style={{ background: 'rgba(16,185,129,0.1)', color: rows.length === 0 ? 'var(--text-secondary)' : '#10b981', borderColor: 'rgba(16,185,129,0.25)' }}
           >
             <i className="fa-solid fa-file-arrow-down" style={{ marginRight: '0.35rem' }} />
             Export Excel
           </button>
 
-          <button
-            className="bp-save-btn"
-            title="Rebuild sold records from event log — fixes wrong weights, actions, and duplicates"
-            onClick={() => {
-              if (!window.confirm(`Rebuild sold records for ${BASKET_OPTIONS.find(o => o.key === basketKey)?.label}?\nThis will correct wrong weights, actions, and remove duplicates.`)) return;
-              fetch(`${API_BASE}/rebuild-sold/${basketKey}`, { method: 'POST' })
-                .then(r => r.json())
-                .then(d => alert(`Done. ${d.recordCount} records rebuilt. Refresh the dashboard to see updated data.`))
-                .catch(() => alert('Rebuild failed.'));
-            }}
-            style={{ background: 'rgba(239,68,68,0.08)', color: '#f87171', borderColor: 'rgba(239,68,68,0.25)', fontSize: '0.76rem' }}
-          >
-            <i className="fa-solid fa-wrench" style={{ marginRight: '0.35rem' }} />
-            Fix Sold Records
-          </button>
+          {userIsAdmin && (
+            <button
+              className="bp-save-btn"
+              title="Rebuild sold records from event log — fixes wrong weights, actions, and duplicates"
+              onClick={() => {
+                if (!window.confirm(`Rebuild sold records for ${BASKET_OPTIONS.find(o => o.key === basketKey)?.label}?\nThis will correct wrong weights, actions, and remove duplicates.`)) return;
+                const token = getAuthToken();
+                fetch(`${API_BASE}/rebuild-sold/${basketKey}`, {
+                  method: 'POST',
+                  headers: token ? { Authorization: `Bearer ${token}` } : {},
+                })
+                  .then(r => r.json())
+                  .then(d => alert(`Done. ${d.recordCount} records rebuilt. Refresh the dashboard to see updated data.`))
+                  .catch(() => alert('Rebuild failed.'));
+              }}
+              style={{ background: 'rgba(239,68,68,0.08)', color: '#f87171', borderColor: 'rgba(239,68,68,0.25)', fontSize: '0.76rem' }}
+            >
+              <i className="fa-solid fa-wrench" style={{ marginRight: '0.35rem' }} />
+              Fix Sold Records
+            </button>
+          )}
 
-          <RollbackButtons btnStyle="bp" />
+          {userIsAdmin && <RollbackButtons btnStyle="bp" />}
 
           {userIsAdmin && (
             <>
@@ -692,7 +706,7 @@ export default function BuyPricePage() {
                 onClick={() => rebalanceFileRef.current?.click()}
                 disabled={uploadingRebalance}
                 title="Upload rebalance Excel to update buy/sell events and weights (Admin only)"
-                style={{ background: 'rgba(99,102,241,0.1)', color: uploadingRebalance ? '#475569' : '#818cf8', borderColor: 'rgba(99,102,241,0.25)' }}
+                style={{ background: 'rgba(99,102,241,0.1)', color: uploadingRebalance ? 'var(--text-secondary)' : '#818cf8', borderColor: 'rgba(99,102,241,0.25)' }}
               >
                 <i className={`fa-solid ${uploadingRebalance ? 'fa-spinner fa-spin' : 'fa-upload'}`} style={{ marginRight: '0.35rem' }} />
                 {uploadingRebalance ? 'Uploading…' : 'Upload Rebalance'}
@@ -710,7 +724,7 @@ export default function BuyPricePage() {
             title="Most recently uploaded rebalance file for this basket"
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-              fontSize: '0.72rem', fontWeight: 500, color: '#94a3b8',
+              fontSize: '0.72rem', fontWeight: 500, color: 'var(--text-secondary)',
               background: 'rgba(148,163,184,0.08)', border: '1px solid rgba(148,163,184,0.2)',
               borderRadius: '999px', padding: '0.15rem 0.65rem',
             }}
@@ -737,7 +751,7 @@ export default function BuyPricePage() {
           <i className="fa-solid fa-triangle-exclamation" style={{ color: '#fbbf24', marginTop: '0.1rem', flexShrink: 0 }} />
           <div style={{ flex: 1 }}>
             <strong style={{ color: '#fbbf24' }}>Next-Trading-Day Prices Used</strong>
-            <div style={{ color: '#94a3b8', marginTop: '0.3rem', lineHeight: 1.6 }}>
+            <div style={{ color: 'var(--text-secondary)', marginTop: '0.3rem', lineHeight: 1.6 }}>
               {Object.entries(ohlcFallbacks).map(([nse, info]) => {
                 const parts = [
                   ...Object.entries(info.buyFallbacks || {}).map(([req, act]) => `Buy ${req} → ${act}`),
@@ -745,7 +759,7 @@ export default function BuyPricePage() {
                 ];
                 return parts.length > 0 ? (
                   <div key={nse}>
-                    <strong style={{ color: '#e2e8f0' }}>{nse}</strong>
+                    <strong style={{ color: 'var(--text-primary)' }}>{nse}</strong>
                     {info.securityName ? ` (${info.securityName})` : ''}{': '}
                     {parts.join(', ')}
                   </div>
@@ -755,7 +769,7 @@ export default function BuyPricePage() {
           </div>
           <button
             onClick={() => setFallbackDismissed(true)}
-            style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '1rem', padding: '0', flexShrink: 0 }}
+            style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem', padding: '0', flexShrink: 0 }}
             title="Dismiss"
           >&times;</button>
         </div>
@@ -827,15 +841,16 @@ export default function BuyPricePage() {
                         value={row.nseCode}
                         onChange={e => handleNseChange(idx_orig, e.target.value)}
                         onBlur={e => handleNseChange(idx_orig, e.target.value.trim().toUpperCase())}
-                        style={{ fontWeight: 600, color: '#e2e8f0', width: '8rem' }}
+                        disabled={!userIsAdmin}
+                        style={{ fontWeight: 600, color: 'var(--text-primary)', width: '8rem' }}
                       />
                     </td>
                     <td style={{ textAlign: 'left' }}>
-                      <span style={{ color: '#e2e8f0' }}>{row.securityName || '—'}</span>
+                      <span style={{ color: 'var(--text-primary)' }}>{row.securityName || '—'}</span>
                       <button
                         onClick={() => openHistory(row, series, idx_orig)}
                         title="View / edit buy & sell events"
-                        style={{ marginLeft: '0.4rem', background: 'none', border: '1px solid #475569', borderRadius: '3px', color: '#94a3b8', fontSize: '0.65rem', cursor: 'pointer', padding: '1px 4px', lineHeight: 1.3, fontWeight: 600, letterSpacing: '0.02em' }}
+                        style={{ marginLeft: '0.4rem', background: 'none', border: '1px solid #475569', borderRadius: '3px', color: 'var(--text-secondary)', fontSize: '0.65rem', cursor: 'pointer', padding: '1px 4px', lineHeight: 1.3, fontWeight: 600, letterSpacing: '0.02em' }}
                       >H</button>
                     </td>
                     <td>
@@ -843,6 +858,7 @@ export default function BuyPricePage() {
                         className="bp-edit-input"
                         value={row.segment}
                         onChange={e => updateRow(idx_orig, 'segment', e.target.value)}
+                        disabled={!userIsAdmin}
                         style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', width: '7rem' }}
                       />
                     </td>
@@ -851,6 +867,7 @@ export default function BuyPricePage() {
                         className="bp-edit-input"
                         value={row.allocation}
                         onChange={e => updateRow(idx_orig, 'allocation', e.target.value)}
+                        disabled={!userIsAdmin}
                         style={{ width: '4.5rem', textAlign: 'right' }}
                         placeholder="0.00"
                       />
@@ -867,17 +884,21 @@ export default function BuyPricePage() {
                       {ret != null ? (ret * 100).toFixed(2) + '%' : '—'}
                     </td>
                     <td className="bp-action-cell">
-                      <button
-                        className="bp-row-btn bp-row-add"
-                        title="Add stock below"
-                        onClick={() => { setRows(prev => { const next = [...prev]; next.splice(idx_orig + 1, 0, { nseCode: '', securityName: '', segment: '', allocation: '', buyEvents: '', sellEvents: '', prevBuyEvents: '', prevSellEvents: '', buyPrice: null }); return next; }); }}
-                      >+</button>
-                      <button
-                        className="bp-row-btn bp-row-remove"
-                        title="Remove this stock"
-                        onClick={() => { setRows(prev => prev.filter((_, i) => i !== idx_orig)); }}
-                        style={{ marginLeft: '4px' }}
-                      >−</button>
+                      {userIsAdmin && (
+                        <>
+                          <button
+                            className="bp-row-btn bp-row-add"
+                            title="Add stock below"
+                            onClick={() => { setRows(prev => { const next = [...prev]; next.splice(idx_orig + 1, 0, { nseCode: '', securityName: '', segment: '', allocation: '', buyEvents: '', sellEvents: '', prevBuyEvents: '', prevSellEvents: '', buyPrice: null }); return next; }); }}
+                          >+</button>
+                          <button
+                            className="bp-row-btn bp-row-remove"
+                            title="Remove this stock"
+                            onClick={() => { setRows(prev => prev.filter((_, i) => i !== idx_orig)); }}
+                            style={{ marginLeft: '4px' }}
+                          >−</button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 );

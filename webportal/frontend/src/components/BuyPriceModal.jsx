@@ -45,7 +45,7 @@ export default function BuyPriceModal({ basketKey, basketMeta, onClose }) {
               <tbody>
                 {entries.map(([nse, info]) => (
                   <tr key={nse}>
-                    <td style={{ fontWeight: 600, color: '#e2e8f0' }}>{nse}</td>
+                    <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{nse}</td>
                     <td style={{ textAlign: 'left' }}>
                       {info.securityName || (
                         <span style={{ color: 'var(--text-secondary)', fontStyle: 'italic', fontSize: '0.8rem' }}>Auto-fetch</span>

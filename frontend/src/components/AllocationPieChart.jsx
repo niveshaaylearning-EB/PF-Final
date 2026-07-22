@@ -12,7 +12,7 @@ const CustomTooltip = ({ active, payload }) => {
   const d = payload[0].payload;
   return (
     <div style={{
-      background: 'rgba(15,20,40,0.95)', border: '1px solid rgba(255,255,255,0.12)',
+      background: 'var(--tooltip-bg)', border: '1px solid var(--panel-border)',
       borderRadius: '8px', padding: '10px 14px', fontSize: '0.82rem',
     }}>
       <div style={{ fontWeight: 700, marginBottom: '4px', color: d.color }}>{d.name}</div>

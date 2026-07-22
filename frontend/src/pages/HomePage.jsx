@@ -1,18 +1,49 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { TrendingUp, Activity, Search, BarChart2, AlertTriangle, Target, ShieldCheck, Calendar, Users } from 'lucide-react';
+import { TrendingUp, Activity, Search, BarChart2, AlertTriangle, Target, ShieldCheck, Calendar, Users, X } from 'lucide-react';
 import axios from 'axios';
 import { isAdmin, getEmail, getFirstName } from '../utils/auth';
 
 import { API_BASE } from '../config.js';
 
+const RESULTS_POPUP_DISMISS_KEY = 'nia_results_popup_dismissed';
 
 function HomePage() {
   const [alerts, setAlerts] = useState([]);
+  const [resultsTomorrow, setResultsTomorrow] = useState([]);
+  const [showResultsPopup, setShowResultsPopup] = useState(false);
 
   useEffect(() => {
     axios.get(`${API_BASE}/alerts`).then(r => setAlerts(r.data || [])).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    axios.get(`${API_BASE}/portfolio/results-calendar`).then(r => {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = tomorrow.toISOString().slice(0, 10);
+      const events = (r.data || []).filter(e => e.date === tomorrowStr);
+      setResultsTomorrow(events);
+
+      if (events.length === 0) return;
+      // Only pop up once per distinct set of tomorrow's results -- if the admin
+      // already saw and closed this exact list, don't nag again on every visit,
+      // but a new/changed stock list (or a new day) shows it again.
+      const signature = `${tomorrowStr}|${events.map(e => e.stock_code).sort().join(',')}`;
+      let dismissed = '';
+      try { dismissed = localStorage.getItem(RESULTS_POPUP_DISMISS_KEY) || ''; } catch { /* ignore */ }
+      if (dismissed !== signature) setShowResultsPopup(true);
+    }).catch(() => {});
+  }, []);
+
+  const dismissResultsPopup = () => {
+    setShowResultsPopup(false);
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().slice(0, 10);
+    const signature = `${tomorrowStr}|${resultsTomorrow.map(e => e.stock_code).sort().join(',')}`;
+    try { localStorage.setItem(RESULTS_POPUP_DISMISS_KEY, signature); } catch { /* ignore */ }
+  };
 
   const targetHits   = alerts.filter(a => a.type === 'target_hit');
   const stoplossHits = alerts.filter(a => a.type === 'stoploss_hit');
@@ -88,6 +119,95 @@ function HomePage() {
         </div>
       )}
 
+      {/* ── Tomorrow's results banner ── */}
+      {resultsTomorrow.length > 0 && (
+        <div style={{
+          margin: '12px 0', padding: '14px 18px',
+          background: 'var(--primary-glow)', border: '1px solid var(--primary)',
+          borderRadius: '12px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: 'var(--primary)', marginBottom: '10px' }}>
+            <Calendar size={18} />
+            {resultsTomorrow.length} Stock{resultsTomorrow.length > 1 ? 's' : ''} Reporting Results Tomorrow
+          </div>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            {resultsTomorrow.map((e, i) => (
+              <Link key={i} to="/calendar" style={{ textDecoration: 'none' }}>
+                <div style={{
+                  background: 'var(--primary-glow)', border: '1px solid var(--primary)',
+                  borderRadius: '8px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer',
+                }}>
+                  <strong style={{ color: 'var(--primary)' }}>{e.stock_code}</strong>
+                  <span style={{ color: 'var(--text-muted)', marginLeft: '6px', fontSize: '0.73rem' }}>
+                    {e.baskets?.join(', ')}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Tomorrow's results popup ── */}
+      {showResultsPopup && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 2000,
+          background: 'var(--modal-overlay-bg)', display: 'flex',
+          alignItems: 'center', justifyContent: 'center', padding: '1rem',
+        }}>
+          <div className="glass-panel" style={{
+            maxWidth: '440px', width: '100%', padding: '24px', position: 'relative',
+          }}>
+            <button
+              onClick={dismissResultsPopup}
+              style={{
+                position: 'absolute', top: '14px', right: '14px', background: 'none',
+                border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px',
+              }}
+              aria-label="Close"
+            >
+              <X size={18} />
+            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+              <div style={{ background: 'var(--primary-glow)', padding: '10px', borderRadius: '10px', display: 'flex' }}>
+                <Calendar color="var(--primary)" size={22} />
+              </div>
+              <h3 style={{ margin: 0, color: 'var(--text-main)' }}>
+                Results Tomorrow
+              </h3>
+            </div>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '14px' }}>
+              {resultsTomorrow.length === 1
+                ? 'The following stock in your portfolio reports financial results tomorrow:'
+                : 'The following stocks in your portfolio report financial results tomorrow:'}
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '18px' }}>
+              {resultsTomorrow.map((e, i) => (
+                <div key={i} style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  background: 'var(--hover-overlay)', border: '1px solid var(--panel-border)',
+                  borderRadius: '8px', padding: '8px 12px',
+                }}>
+                  <div>
+                    <strong style={{ color: 'var(--text-main)' }}>{e.stock_code}</strong>
+                    <span style={{ color: 'var(--text-muted)', marginLeft: '8px', fontSize: '0.78rem' }}>
+                      {e.baskets?.join(', ')}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={dismissResultsPopup}
+              className="btn btn-primary"
+              style={{ width: '100%', padding: '10px', fontWeight: 600 }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ── Floating background orbs ── */}
       <div aria-hidden="true" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
         <div style={{
@@ -129,42 +249,19 @@ function HomePage() {
               borderRadius: '20px', padding: '5px 16px', letterSpacing: '0.02em',
             }}>
               Welcome back,&nbsp;
-              <strong style={{ color: '#a5b4fc' }}>
+              <strong style={{ color: 'var(--primary)' }}>
                 {getFirstName()}
               </strong>
             </span>
           </div>
         )}
 
-        {/* ── Hero title ── */}
-        <div style={{ textAlign: 'center', margin: '2.5rem 0 3.5rem' }}>
-          <h1 style={{
-            fontSize: 'clamp(2.4rem, 5vw, 3.8rem)',
-            fontWeight: 700,
-            background: 'linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 35%, #6ee7b7 70%, #a5b4fc 100%)',
-            backgroundSize: '250% 250%',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            animation: 'titleReveal 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both, gradientDrift 6s ease-in-out infinite 1s',
-            marginBottom: '1rem',
-          }}>
-            Portfolio Intelligence
-          </h1>
-          <p style={{
-            color: 'var(--text-muted)', fontSize: '1.1rem',
-            maxWidth: '560px', margin: '0 auto', lineHeight: 1.7,
-            animation: 'subtitleFade 0.7s ease 0.45s both',
-          }}>
-            Select a module below to analyze performance, track intelligence, or simulate scenario models.
-          </p>
-        </div>
-
         {/* ── Feature cards ── */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
           gap: '24px',
+          marginTop: '2.5rem',
         }}>
           <Link to="/actual" style={{ textDecoration: 'none' }} className="glass-panel home-card home-card-d1">
             <div style={{ background: 'rgba(99,102,241,0.12)', padding: '16px', borderRadius: '12px', display: 'inline-block', marginBottom: '16px', boxShadow: '0 0 20px rgba(99,102,241,0.2)' }}>

@@ -4,8 +4,12 @@ import NseAutocomplete from './NseAutocomplete.jsx';
 import ColumnFilter from './ColumnFilter.jsx';
 
 // Formula and PE Ratio removed per user request
+// 'Performance' is a stable header key internally (SORT_KEY/getColVal/column
+// filters all key off it) -- the actual displayed text gets a "(<tenure>)"
+// suffix appended at render time, so switching tenure never resets an active
+// sort/filter on this column the way changing the key string itself would.
 const TABLE_HEADERS = [
-  'NSE Code', 'Allocation', 'Performance (1M)', 'Contribution (1M)',
+  'NSE Code', 'Allocation', 'Performance', 'Contribution (1M)',
   'Buy Price', 'CMP', 'Market Cap (Cr)', 'Open 1M', 'Close 1M',
   'High 1M', 'Low 1M', 'Absolute Returns', 'Holding Days', 'CMP Status', 'Actions',
 ];
@@ -16,10 +20,23 @@ const TABLE_HEADERS_IPO = [
   'High 1M', 'Low 1M', 'Absolute Returns', 'Holding Days', 'Actions',
 ];
 
+// Tenures available in the selector, and the minimum holding period (in
+// days) required for each to show a value instead of "—". 1M has no
+// minimum -- it's shown from day one, same as before this feature existed.
+const TENURE_OPTIONS = ['1M', '3M', '6M', '1Y', '2Y', '3Y', '5Y'];
+const TENURE_MIN_DAYS = { '1M': 0, '3M': 91, '6M': 182, '1Y': 365, '2Y': 730, '3Y': 1095, '5Y': 1825 };
+
+function getTenurePerformance(row, tenure, perfByTenure) {
+  const minDays = TENURE_MIN_DAYS[tenure] ?? 0;
+  if (minDays > 0 && (row.holdingDays == null || row.holdingDays < minDays)) return null;
+  const perf = perfByTenure?.[row.nseCode]?.[tenure];
+  return perf != null ? perf : null;
+}
+
 const SORT_KEY = {
   'NSE Code':        'nseCode',
   'Allocation':      'allocation',
-  'Performance (1M)': 'performance',
+  'Performance':     'tenurePerformance',
   'Contribution (1M)': 'contribution',
   'Buy Price':       'buyPrice',
   'Listing Price':   'buyPrice',
@@ -57,6 +74,7 @@ function getColVal(field, row) {
     case 'nseCode':         return row.nseCode || '';
     case 'allocation':      return row.allocation != null ? (row.allocation * 100).toFixed(2) + '%' : '';
     case 'performance':     return row.performance != null ? (row.performance * 100).toFixed(2) + '%' : '';
+    case 'tenurePerformance': return row.tenurePerformance != null ? (row.tenurePerformance * 100).toFixed(2) + '%' : '';
     case 'contribution':    return row.contribution != null ? (row.contribution * 100).toFixed(2) + '%' : '';
     case 'buyPrice':        return row.buyPrice != null ? String(row.buyPrice) : '';
     case 'cmp':             return row.cmp != null ? String(row.cmp) : '';
@@ -75,7 +93,7 @@ function DataRow({
   row, idx, searchTerm, nseSymbols, isIPO, showOHLC, readOnly,
   onNseChange, onAllocChange, onBuyPriceChange, onListingDateChange,
   onAddRow, onRemoveRow,
-  onInfoHover, onInfoLeave,
+  onInfoClick, onRemoveSimAdded,
 }) {
   const buyPriceRef = useRef(null);
 
@@ -87,7 +105,8 @@ function DataRow({
   const matchSearch  = !lowerSearch || lowerNse.includes(lowerSearch);
   const dimRow       = lowerSearch && !matchSearch;
   const highlightRow = lowerSearch && matchSearch;
-  const trClass      = dimRow ? 'search-dim' : highlightRow ? 'search-highlight' : '';
+  const simClass     = row._simAdded ? ' whatif-sim-row' : (row._simEdited || row._simDeleted || row._simReduced) ? ' whatif-sim-row-touched' : '';
+  const trClass      = (dimRow ? 'search-dim' : highlightRow ? 'search-highlight' : '') + simClass;
 
   const handleAllocBlur = (e) => { onAllocChange(idx, e.target.value); };
 
@@ -97,31 +116,37 @@ function DataRow({
   };
   const handleBuyPriceKeyDown = (e) => { if (e.key === 'Enter') e.target.blur(); };
 
-  const handleInfoEnter = (e) => {
-    const rect   = e.currentTarget.getBoundingClientRect();
-    const approxH = 160;
-    const top  = (rect.bottom + approxH + 8 > window.innerHeight)
-      ? Math.max(8, rect.top - approxH - 8)
-      : rect.bottom + 6;
-    const left = Math.min(rect.left, window.innerWidth - 310);
-    onInfoHover(row.nseCode || '', left, top);
-  };
-
   const allocDisplay    = row.allocation != null ? (row.allocation * 100).toFixed(2) : '';
   const buyPriceDisplay = row.buyPrice   != null ? row.buyPrice : '';
+
+  const simBadge = (row._simEdited || row._simDeleted || row._simAdded || row._simReduced) && (
+    <span className="whatif-sim-badge" title={row._simDeleted ? 'Excluded in simulation' : row._simReduced ? 'Weight reduced in simulation' : 'Simulated value'}>
+      SIM
+    </span>
+  );
 
   return (
     <tr className={trClass} data-row-index={idx}>
       {/* NSE Code */}
       <td className="nse-code editable-nse pt-sticky-col" style={{ position: 'sticky', left: 0, zIndex: 1, overflow: 'visible' }}>
-        <button className="stock-info-btn" onMouseEnter={handleInfoEnter} onMouseLeave={onInfoLeave} title="Portfolio history">
-          <i className="fa-solid fa-circle-info" />
-        </button>
-        <NseAutocomplete
-          initialValue={row.nseCode || ''}
-          onCommit={(val) => onNseChange(idx, val)}
-          symbols={nseSymbols}
-        />
+        {row._simAdded ? (
+          <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{row.nseCode}</span>
+        ) : (
+          <>
+            {!isIPO && (
+              <button className="stock-info-btn" onClick={() => onInfoClick(row.nseCode || '')} title="Rebalancing History / What-If Simulator">
+                <i className="fa-solid fa-circle-info" />
+              </button>
+            )}
+            <NseAutocomplete
+              initialValue={row.nseCode || ''}
+              onCommit={(val) => onNseChange(idx, val)}
+              symbols={nseSymbols}
+              disabled={readOnly}
+            />
+          </>
+        )}
+        {simBadge}
       </td>
 
       {/* Listing Date — IPO only */}
@@ -132,6 +157,7 @@ function DataRow({
             defaultValue={row.listingDate || ''}
             placeholder="DD Mon YYYY"
             onBlur={e => onListingDateChange && onListingDateChange(idx, e.target.value.trim())}
+            disabled={readOnly}
             style={{ width: '7.5rem', fontSize: '0.82rem' }}
           />
         </td>
@@ -140,21 +166,27 @@ function DataRow({
       {/* Allocation — hidden for IPO */}
       {!isIPO && (
         <td className="editable-alloc">
-          <div className="alloc-wrapper">
-            <input
-              type="number" className="cell-edit alloc-edit"
-              defaultValue={allocDisplay}
-              step="0.01" min="0" max="100" placeholder="0.00"
-              onBlur={handleAllocBlur}
-            />
-            <span className="alloc-suffix">%</span>
-          </div>
+          {row._simAdded ? (
+            <span style={{ color: 'var(--text-primary)' }}>{allocDisplay}%</span>
+          ) : (
+            <div className="alloc-wrapper">
+              <input
+                key={`alloc-${row.nseCode}-${row.allocation}`}
+                type="number" className="cell-edit alloc-edit"
+                defaultValue={allocDisplay}
+                step="0.01" min="0" max="100" placeholder="0.00"
+                onBlur={handleAllocBlur}
+                disabled={readOnly}
+              />
+              <span className="alloc-suffix">%</span>
+            </div>
+          )}
         </td>
       )}
 
-      {/* Performance */}
-      <td className={`${getColorClass(row.performance)} perf-display`}>
-        {lv(formatPercent(row.performance))}
+      {/* Performance (selected tenure) */}
+      <td className={`${getColorClass(row.tenurePerformance)} perf-display`}>
+        {lv(formatPercent(row.tenurePerformance))}
       </td>
 
       {/* Contribution */}
@@ -164,20 +196,26 @@ function DataRow({
 
       {/* Buy Price / Listing Price */}
       <td className="editable-alloc">
-        <div className="alloc-wrapper">
-          <span className="alloc-suffix" style={{ left: '0.4rem', right: 'auto' }}>₹</span>
-          <input
-            ref={buyPriceRef}
-            type="number"
-            className="cell-edit buyprice-edit"
-            defaultValue={buyPriceDisplay}
-            step="0.01" min="0"
-            placeholder="—"
-            onBlur={handleBuyPriceBlur}
-            onKeyDown={handleBuyPriceKeyDown}
-            style={{ paddingLeft: '1.4rem', paddingRight: '0.4rem' }}
-          />
-        </div>
+        {row._simAdded ? (
+          <span style={{ color: 'var(--text-primary)' }}>{formatRupee(row.buyPrice)}</span>
+        ) : (
+          <div className="alloc-wrapper">
+            <span className="alloc-suffix" style={{ left: '0.4rem', right: 'auto' }}>₹</span>
+            <input
+              key={`bp-${row.nseCode}-${row.buyPrice}`}
+              ref={buyPriceRef}
+              type="number"
+              className="cell-edit buyprice-edit"
+              defaultValue={buyPriceDisplay}
+              step="0.01" min="0"
+              placeholder="—"
+              onBlur={handleBuyPriceBlur}
+              onKeyDown={handleBuyPriceKeyDown}
+              disabled={readOnly}
+              style={{ paddingLeft: '1.4rem', paddingRight: '0.4rem' }}
+            />
+          </div>
+        )}
       </td>
 
       {/* CMP */}
@@ -216,8 +254,14 @@ function DataRow({
 
       {/* Actions */}
       <td className="action-cell">
-        {!readOnly && <button className="row-action-btn row-add-btn"    title="Add new stock" onClick={() => onAddRow(idx)}>+</button>}
-        {!readOnly && <button className="row-action-btn row-remove-btn" title="Remove stock"   onClick={() => onRemoveRow(idx)}>&minus;</button>}
+        {row._simAdded ? (
+          <button className="row-action-btn row-remove-btn" title="Remove simulated stock" onClick={() => onRemoveSimAdded(row._simId)}>&minus;</button>
+        ) : (
+          <>
+            {!readOnly && <button className="row-action-btn row-add-btn"    title="Add new stock" onClick={() => onAddRow(idx)}>+</button>}
+            {!readOnly && <button className="row-action-btn row-remove-btn" title="Remove stock"   onClick={() => onRemoveRow(idx)}>&minus;</button>}
+          </>
+        )}
       </td>
     </tr>
   );
@@ -227,15 +271,23 @@ export default function PortfolioTable({
   rows, searchTerm, nseSymbols, isIPO, readOnly = false,
   onNseChange, onAllocChange, onBuyPriceChange, onListingDateChange,
   onAddRow, onRemoveRow,
-  onInfoHover, onInfoLeave,
+  onInfoClick, onRemoveSimAdded,
   totalContribution, avgMarketCap, medianPE,
+  tenure = '1M', onTenureChange, perfByTenure,
 }) {
-  const [sortKey,   setSortKey]   = useState(null);
-  const [sortDir,   setSortDir]   = useState('asc');
+  const [sortKey,   setSortKey]   = useState('allocation');
+  const [sortDir,   setSortDir]   = useState('desc');
   const [showOHLC,  setShowOHLC]  = useState(false);
   const [colFilters,  setColFilters]  = useState({});
   const [openFilter,  setOpenFilter]  = useState(null);
   const [filterPos,   setFilterPos]   = useState({ top: 0, left: 0 });
+
+  // Precompute the selected tenure's (holding-period-gated) value once per
+  // render so DataRow/getColVal/sorting/filtering all just read a plain field.
+  rows = useMemo(
+    () => rows.map(r => ({ ...r, tenurePerformance: getTenurePerformance(r, tenure, perfByTenure) })),
+    [rows, tenure, perfByTenure]
+  );
 
   const handleSort = (key) => {
     if (sortKey === key) {
@@ -284,12 +336,13 @@ export default function PortfolioTable({
   const totalAllocation = rows.reduce((s, r) => s + (r.allocation || 0), 0);
   const headers = (isIPO ? TABLE_HEADERS_IPO : TABLE_HEADERS).filter(h => showOHLC || !OHLC_LABELS.has(h));
   const colCount = headers.length;
+  const headerLabel = (h) => h === 'Performance' ? `Performance (${tenure})` : h;
 
   if (rows.length === 0) {
     return (
       <div className="table-container">
         <table className="portfolio-table">
-          <thead><tr>{headers.map(h => <th key={h}>{h}</th>)}</tr></thead>
+          <thead><tr>{headers.map(h => <th key={h}>{headerLabel(h)}</th>)}</tr></thead>
           <tbody>
             <tr>
               <td colSpan={colCount} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
@@ -305,6 +358,21 @@ export default function PortfolioTable({
   return (
     <>
     <div className="ohlc-toggle-bar">
+      {onTenureChange && (
+        <div className="pt-tenure-select">
+          <span className="pt-tenure-label">Performance:</span>
+          {TENURE_OPTIONS.map(t => (
+            <button
+              key={t}
+              className={`pt-tenure-pill${t === tenure ? ' active' : ''}`}
+              onClick={() => onTenureChange(t)}
+              title={`Show ${t} performance (available once a stock has been held long enough)`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+      )}
       <button className="ohlc-toggle-btn" onClick={() => setShowOHLC(v => !v)}>
         {showOHLC ? '▲ Hide Details' : '▼ Show Details'}
       </button>
@@ -321,7 +389,7 @@ export default function PortfolioTable({
                 return (
                   <th key={h} style={{ whiteSpace: 'nowrap', userSelect: 'none' }}>
                     <div className="cf-th-inner">
-                      <span onClick={() => handleSort(col)} style={{ cursor: 'pointer' }}>{h}</span>
+                      <span onClick={() => handleSort(col)} style={{ cursor: 'pointer' }}>{headerLabel(h)}</span>
                       <span style={{ fontSize: '0.6em', color: isSorted ? '#a5b4fc' : '#3a4f6a', marginLeft: '0.1em' }}>
                         {isSorted ? (sortDir === 'asc' ? '▲' : '▼') : '⇅'}
                       </span>
@@ -331,7 +399,7 @@ export default function PortfolioTable({
                   </th>
                 );
               }
-              return <th key={h}>{h}</th>;
+              return <th key={h}>{headerLabel(h)}</th>;
             })}
           </tr>
         </thead>
@@ -346,8 +414,8 @@ export default function PortfolioTable({
               onListingDateChange={onListingDateChange}
               onAddRow={onAddRow}
               onRemoveRow={onRemoveRow}
-              onInfoHover={onInfoHover}
-              onInfoLeave={onInfoLeave}
+              onInfoClick={onInfoClick}
+              onRemoveSimAdded={onRemoveSimAdded}
             />
           ))}
 
