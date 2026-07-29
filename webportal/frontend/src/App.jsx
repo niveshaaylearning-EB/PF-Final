@@ -1,7 +1,7 @@
 import { API_BASE } from './api/base.js';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import './App.css';
-import { fetchBasket, fetchLiveData, fetchLiveStock, saveBasket, fetchBasketStockMap, fetchPerformanceBatch } from './api/client.js';
+import { fetchBasket, fetchLiveData, fetchLiveStock, saveBasket, fetchBasketStockMap, fetchBasketWeightMap, fetchPerformanceBatch } from './api/client.js';
 
 import Header, { BASKET_OPTIONS } from './components/Header.jsx';
 import KPIPanel         from './components/KPIPanel.jsx';
@@ -10,6 +10,7 @@ import InsightsSidebar  from './components/InsightsSidebar.jsx';
 import ConfirmModal     from './components/ConfirmModal.jsx';
 import WhatIfModal from './components/WhatIfModal.jsx';
 import WhatIfAddStockBar from './components/WhatIfAddStockBar.jsx';
+import WhatIfSellStockBar from './components/WhatIfSellStockBar.jsx';
 import WhatIfImpactBanner from './components/WhatIfImpactBanner.jsx';
 import { EMPTY_SLOT, mergeSimForDisplay, computeWhatIf, buildTouchedDetails } from './whatIfCalc.js';
 import LoadProgress     from './components/LoadProgress.jsx';
@@ -19,6 +20,8 @@ import CalculateReturnPage   from './components/CalculateReturnPage.jsx';
 import PLStatementPage       from './components/PLStatementPage.jsx';
 import CorporateActionsPage  from './components/CorporateActionsPage.jsx';
 import DashboardView         from './components/DashboardView.jsx';
+import WatchlistPage         from './components/WatchlistPage.jsx';
+import { computeTenureReturn, getLatestIndexDate } from './utils/tenureReturn.js';
 
 // ── Formatters ───────────────────────────────────────────────────────────────
 export const formatPercent = (v) =>
@@ -152,10 +155,21 @@ const dateToTs = (dateStr) => {
 const buildHistoryFromDetails = (buyPriceDetails) => {
   const history = {};
   for (const [nse, det] of Object.entries(buyPriceDetails || {})) {
-    const buys  = parseEventLines(det?.buyEvents);
-    const sells = parseEventLines(det?.sellEvents);
-    if (!buys.length && !sells.length) continue;
+    const buys      = parseEventLines(det?.buyEvents);
+    const sells     = parseEventLines(det?.sellEvents);
+    // A stock fully exited and later re-bought starts a fresh "current"
+    // series, with its earlier buy/sell history moved into prevBuyEvents/
+    // prevSellEvents (same fields the P&L Statement's gains engine reads --
+    // see _compute_all_gains in buy_price_gains.py). Without these, a stock
+    // that was ever fully sold and re-entered shows only its latest buys
+    // here, with its real sell history invisible even though it's already
+    // shown correctly on the P&L Statement page.
+    const prevBuys  = parseEventLines(det?.prevBuyEvents);
+    const prevSells = parseEventLines(det?.prevSellEvents);
+    if (!buys.length && !sells.length && !prevBuys.length && !prevSells.length) continue;
     const combined = [
+      ...prevBuys.map(e  => ({ date: e.date, note: `Buy ${e.qty}% (prev)`,  _ts: dateToTs(e.date) })),
+      ...prevSells.map(e => ({ date: e.date, note: `Sell ${e.qty}% (prev)`, _ts: dateToTs(e.date) })),
       ...buys.map(e  => ({ date: e.date, note: `Buy ${e.qty}%`,  _ts: dateToTs(e.date) })),
       ...sells.map(e => ({ date: e.date, note: `Sell ${e.qty}%`, _ts: dateToTs(e.date) })),
     ].sort((a, b) => a._ts - b._ts);
@@ -223,6 +237,7 @@ export default function App() {
   const [fallbackDismissed, setFallbackDismissed] = useState(false);
   const [indexHistory,      setIndexHistory]      = useState(null);
   const [basketStockMap,    setBasketStockMap]    = useState(null);
+  const [basketWeightMap,   setBasketWeightMap]   = useState(null);
   const [perfByTenure,      setPerfByTenure]      = useState({}); // {nseCode: {"1M":pct, "3M":pct, ...}}
   const [selectedTenure,    setSelectedTenure]    = useState('1M');
 
@@ -239,6 +254,11 @@ export default function App() {
   // Load {basketKey: [nseCode,...]} once for cross-basket search + overlap %
   useEffect(() => {
     fetchBasketStockMap().then(setBasketStockMap).catch(() => {});
+  }, []);
+
+  // Load {basketKey: {nseCode: allocation}} once for the weight-based overlap panel
+  useEffect(() => {
+    fetchBasketWeightMap().then(setBasketWeightMap).catch(() => {});
   }, []);
 
   // Load index history once for since-inception calculation
@@ -519,7 +539,8 @@ export default function App() {
   const simBefore = useMemo(() => computeWhatIf(displayRows, EMPTY_SLOT), [displayRows]);
   const simDetails = useMemo(() => buildTouchedDetails(displayRows, simSlot), [displayRows, simSlot]);
   const hasSimulation = simSlot.added.length > 0 || simSlot.deletedNse.length > 0 ||
-    Object.keys(simSlot.editedBuys).length > 0 || Object.keys(simSlot.weightReductions || {}).length > 0;
+    Object.keys(simSlot.editedBuys).length > 0 || Object.keys(simSlot.editedSells || {}).length > 0 ||
+    Object.keys(simSlot.weightReductions || {}).length > 0;
 
   // ── Cross-basket search: which OTHER baskets hold a stock matching the search ──
   const crossBasketMatches = useMemo(() => {
@@ -557,8 +578,53 @@ export default function App() {
       .filter(o => o.common > 0)
       .sort((a, b) => b.pct - a.pct);
   }, [basketStockMap, basketKey]);
+
+  // ── Basket overlap by weight: same idea as basketOverlap above, but instead
+  // of "what % of stock COUNT also appears in basket X", this compares each
+  // shared stock's weight IN BOTH baskets and takes the smaller of the two --
+  // e.g. Stock A at 5% here and 8% in basket X only counts as 5% shared,
+  // since that's the amount actually "duplicated" between the two (the extra
+  // 3% in basket X is X's own, uncontested exposure). Summing that min() across
+  // every shared stock gives a true two-sided overlap, not a one-sided "how much
+  // of MY money is in stocks X also holds regardless of how much X holds them" figure.
+  const basketWeightOverlap = useMemo(() => {
+    if (!basketWeightMap || !basketWeightMap[basketKey]) return [];
+    const current = basketWeightMap[basketKey]; // {nseCode: allocation}
+    const totalAlloc = Object.values(current).reduce((s, w) => s + (w || 0), 0);
+    if (totalAlloc <= 0) return [];
+    return Object.entries(basketWeightMap)
+      // IPO_Recommendations is a watchlist, not a real portfolio -- it has no
+      // genuine allocation concept (every real entry sits at 0%), so any
+      // nonzero value there is a data artifact, not an actual weighted
+      // position. Excluded here entirely rather than compared against.
+      .filter(([key]) => key !== basketKey && key !== 'IPO_Recommendations')
+      .map(([key, otherWeights]) => {
+        // Per stock, keep BOTH raw weights -- no combined/derived single
+        // number here. min() is only used to rank/size the bar itself.
+        const commonStocks = [];
+        let sharedWeight = 0;
+        for (const [code, myWeight] of Object.entries(current)) {
+          const otherWeight = otherWeights[code];
+          if (myWeight > 0 && otherWeight > 0) {
+            sharedWeight += Math.min(myWeight, otherWeight);
+            commonStocks.push({ code, myWeight, otherWeight });
+          }
+        }
+        commonStocks.sort((a, b) => a.code.localeCompare(b.code));
+        return {
+          key,
+          pct: Math.round((sharedWeight / totalAlloc) * 1000) / 10,
+          weightPct: Math.round(sharedWeight * 1000) / 10,
+          totalPct: Math.round(totalAlloc * 1000) / 10,
+          commonStocks,
+        };
+      })
+      .filter(o => o.weightPct > 0)
+      .sort((a, b) => b.pct - a.pct);
+  }, [basketWeightMap, basketKey]);
+
   const resetSimulation = useCallback(() => {
-    setSimOverlay(prev => ({ ...prev, [basketKey]: { editedBuys: {}, deletedNse: [], added: [], weightReductions: {} } }));
+    setSimOverlay(prev => ({ ...prev, [basketKey]: { editedBuys: {}, deletedNse: [], added: [], weightReductions: {}, sold: [] } }));
   }, [basketKey]);
 
   // ── Derived KPI metrics ──────────────────────────────────────────────────────
@@ -588,6 +654,15 @@ export default function App() {
     if (!inception) return null;
     return (latest - inception) / inception;
   })();
+
+  // Tenure-aware KPI return -- follows the same "Performance:" selector used
+  // by the Holdings table/Top Movers, but reads from the basket's own index
+  // history (same series "Since Inception" and Calculate Return use), so the
+  // figure is always as of the latest date data was actually uploaded, not
+  // today's calendar date.
+  const indexData = indexHistory?.[basketKey]?.data;
+  const tenureReturn   = useMemo(() => computeTenureReturn(indexData, selectedTenure), [indexData, selectedTenure]);
+  const latestDataDate = useMemo(() => getLatestIndexDate(indexData), [indexData]);
 
   // ── Row editing handlers ─────────────────────────────────────────────────────
   const handleNseChange = useCallback(async (idx, newCode) => {
@@ -724,6 +799,8 @@ export default function App() {
           onPLStatement={() => { window.location.href = '/wp/pl-statement' + window.location.search; }}
           onCorporateActions={() => { window.location.href = '/wp/corporate-actions' + window.location.search; }}
           readOnly={READ_ONLY}
+          tenure={selectedTenure}
+          latestDataDate={latestDataDate}
         />
 
         {crossBasketMatches.length > 0 && (
@@ -747,7 +824,8 @@ export default function App() {
         )}
 
         <KPIPanel
-          totalContribution={totalContribution}
+          tenureReturn={tenureReturn}
+          tenureLabel={selectedTenure}
           totalAbsReturn={totalAbsReturn}
           avgMarketCap={avgMarketCap}
           medianPE={medianPE}
@@ -769,6 +847,9 @@ export default function App() {
             <i className="fa-solid fa-table" /> Holdings
             {loadProgress && <span className="dv-tab-badge">{loadProgress.loaded}/{loadProgress.total}</span>}
           </button>
+          <button className={`dv-tab${dashView === 'watchlist' ? ' active' : ''}`} onClick={() => setDashView('watchlist')}>
+            <i className="fa-solid fa-binoculars" /> Watchlist
+          </button>
         </div>
 
         {dashView === 'overview' ? (
@@ -779,8 +860,13 @@ export default function App() {
             isIPO={isIPO}
             onViewHoldings={() => setDashView('holdings')}
             basketOverlap={basketOverlap}
+            basketWeightOverlap={basketWeightOverlap}
             onGoToBasket={handleBasketChange}
           />
+        ) : dashView === 'watchlist' ? (
+          // Centralized, NOT basket-scoped: same data regardless of which
+          // basket is currently selected -- shared across every user/analyst.
+          <WatchlistPage nseSymbols={nseSymbols} />
         ) : (
           <div className="holdings-view">
             {/* Insight cards — full-width row above table */}
@@ -824,13 +910,21 @@ export default function App() {
                 perfByTenure={perfByTenure}
               />
               {!isIPO && (
-                <WhatIfAddStockBar
-                  basketKey={basketKey}
-                  rows={displayRows}
-                  nseSymbols={nseSymbols}
-                  simOverlay={simOverlay}
-                  setSimOverlay={setSimOverlay}
-                />
+                <div className="whatif-sim-row">
+                  <WhatIfAddStockBar
+                    basketKey={basketKey}
+                    rows={displayRows}
+                    nseSymbols={nseSymbols}
+                    simOverlay={simOverlay}
+                    setSimOverlay={setSimOverlay}
+                  />
+                  <WhatIfSellStockBar
+                    basketKey={basketKey}
+                    rows={displayRows}
+                    simOverlay={simOverlay}
+                    setSimOverlay={setSimOverlay}
+                  />
+                </div>
               )}
             </div>
           </div>

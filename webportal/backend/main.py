@@ -120,6 +120,9 @@ app.include_router(_portfolio_report_router)
 from rollback import router as _rollback_router
 app.include_router(_rollback_router)
 
+from watchlist import router as _watchlist_router
+app.include_router(_watchlist_router)
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Serve React frontend (SPA) from ../frontend/dist

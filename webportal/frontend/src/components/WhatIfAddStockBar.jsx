@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { formatRupee } from '../App.jsx';
-import { EMPTY_SLOT, computeWhatIf, toIsoDate, fromIsoDate } from '../whatIfCalc.js';
+import { EMPTY_SLOT, computeWhatIf, toIsoDate, fromIsoDate, applySellToSlot } from '../whatIfCalc.js';
 import { fetchLiveStock, fetchOhlcLookup } from '../api/client.js';
 import NseAutocomplete from './NseAutocomplete.jsx';
 
@@ -16,7 +16,8 @@ import NseAutocomplete from './NseAutocomplete.jsx';
 export default function WhatIfAddStockBar({ basketKey, rows, nseSymbols, simOverlay, setSimOverlay }) {
   const slot = simOverlay[basketKey] || EMPTY_SLOT;
   const hasSimulation = slot.added.length > 0 || slot.deletedNse.length > 0 ||
-    Object.keys(slot.editedBuys).length > 0 || Object.keys(slot.weightReductions || {}).length > 0;
+    Object.keys(slot.editedBuys).length > 0 || Object.keys(slot.editedSells || {}).length > 0 ||
+    Object.keys(slot.weightReductions || {}).length > 0;
 
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState({ nseCode: '', weight: '', buyDate: '', ohlc: '' });
@@ -93,19 +94,38 @@ export default function WhatIfAddStockBar({ basketKey, rows, nseSymbols, simOver
   const reduceInvalid = makeRoomMode === 'reduce' && !!makeRoomCode &&
     (reduceByNum <= 0 || reduceByNum > selectedStockPct + 0.0001);
 
+  // "Today" in this app's "DD Mon YYYY" convention -- a Reduce make-room pick
+  // locks in the trimmed stock's gain/loss at CMP right now, same as an
+  // instant partial sell, so its sell date is always today.
+  const todayDdMonYyyy = fromIsoDate(new Date().toISOString().slice(0, 10));
+
   // Draft slot with the pending make-room action applied, so the headroom
-  // check below reflects the room it would actually free up.
+  // check below reflects the room it would actually free up. Reduce goes
+  // through applySellToSlot (not a bare weightReductions write) so the
+  // trimmed stock's gain gets locked in as a sold lot -- see soldLotStats in
+  // whatIfCalc.js -- instead of just vanishing once its weight hits zero.
+  // Replace intentionally skips this: fully swapping a stock out means it
+  // never happened, no gain to bank.
   const draftSlot = (() => {
     if (makeRoomMode === 'replace' && makeRoomCode) {
       return { ...slot, deletedNse: [...slot.deletedNse, makeRoomCode] };
     }
     if (makeRoomMode === 'reduce' && makeRoomCode && reduceByNum > 0 && !reduceInvalid) {
-      return { ...slot, weightReductions: { ...slot.weightReductions, [makeRoomCode]: reduceByNum } };
+      const makeRoomRow = rows.find(r => r.nseCode === makeRoomCode);
+      return applySellToSlot(slot, {
+        nseCode: makeRoomCode, weightSold: reduceByNum, sellDate: todayDdMonYyyy,
+        sellPrice: makeRoomRow?.cmp ?? null, buyPrice: makeRoomRow?.buyPrice ?? null, full: false,
+      });
     }
     return slot;
   })();
 
-  const after = computeWhatIf(rows, draftSlot);
+  // skipCashTopUp: this is a PREVIEW of room freed by the pending make-room
+  // action, before the new stock has actually been added to the slot. Without
+  // this, computeWhatIf's cash auto-top-up (meant for confirmed sells) would
+  // immediately refill the gap just freed here into LIQUIDCASE, so by the
+  // time the cap check runs there'd be no room left for the incoming stock.
+  const after = computeWhatIf(rows, draftSlot, { skipCashTopUp: true });
   const liveTotalPct = after.totalAllocation * 100;
   const draftWeight  = parseFloat(form.weight) || 0;
   const overCap      = draftWeight > 0 && liveTotalPct + draftWeight > 100.0001;
@@ -115,7 +135,7 @@ export default function WhatIfAddStockBar({ basketKey, rows, nseSymbols, simOver
     return { ...prev, [basketKey]: patchFn(prevSlot) };
   });
 
-  const resetAll = () => setSimOverlay(prev => ({ ...prev, [basketKey]: { editedBuys: {}, deletedNse: [], added: [], weightReductions: {} } }));
+  const resetAll = () => setSimOverlay(prev => ({ ...prev, [basketKey]: { editedBuys: {}, deletedNse: [], added: [], weightReductions: {}, sold: [] } }));
 
   const removeAdded = (id) => patchSlot(prevSlot => ({ ...prevSlot, added: prevSlot.added.filter(a => a.id !== id) }));
 
@@ -162,11 +182,15 @@ export default function WhatIfAddStockBar({ basketKey, rows, nseSymbols, simOver
       const live = await fetchLiveStock(code, { fast: true });
       const id = `${code}-${Math.random().toString(36).slice(2, 9)}`;
       patchSlot(prevSlot => {
-        const next = { ...prevSlot };
+        let next = { ...prevSlot };
         if (makeRoomMode === 'replace' && makeRoomCode) {
           next.deletedNse = [...next.deletedNse, makeRoomCode];
         } else if (makeRoomMode === 'reduce' && makeRoomCode) {
-          next.weightReductions = { ...next.weightReductions, [makeRoomCode]: reduceByNum };
+          const makeRoomRow = rows.find(r => r.nseCode === makeRoomCode);
+          next = applySellToSlot(next, {
+            nseCode: makeRoomCode, weightSold: reduceByNum, sellDate: todayDdMonYyyy,
+            sellPrice: makeRoomRow?.cmp ?? null, buyPrice: makeRoomRow?.buyPrice ?? null, full: false,
+          });
         }
         next.added = [...next.added, {
           id, nseCode: code, weight, buyDate, ohlc,

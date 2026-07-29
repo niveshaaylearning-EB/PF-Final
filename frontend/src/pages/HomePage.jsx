@@ -45,8 +45,10 @@ function HomePage() {
     try { localStorage.setItem(RESULTS_POPUP_DISMISS_KEY, signature); } catch { /* ignore */ }
   };
 
-  const targetHits   = alerts.filter(a => a.type === 'target_hit');
-  const stoplossHits = alerts.filter(a => a.type === 'stoploss_hit');
+  const targetHits    = alerts.filter(a => a.type === 'target_hit');
+  const stoplossHits  = alerts.filter(a => a.type === 'stoploss_hit');
+  const wlReviewDue   = alerts.filter(a => a.type === 'watchlist_review_due');
+  const wlTargetHit   = alerts.filter(a => a.type === 'watchlist_target_hit');
 
   return (
     <div className="animate-slide-up">
@@ -111,6 +113,68 @@ function HomePage() {
                     CMP <strong>₹{a.cmp?.toFixed(2)}</strong>
                     {' · '}Target <strong style={{ color: 'var(--positive)' }}>₹{a.target_price?.toFixed(2)}</strong>
                     {' · '}<span style={{ color: 'var(--positive)' }}>+{a.pct?.toFixed(1)}% above</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Watchlist alert banners: next-review date reached / target price hit ── */}
+      {wlTargetHit.length > 0 && (
+        <div style={{
+          margin: '12px 0', padding: '14px 18px',
+          background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.35)',
+          borderRadius: '12px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: 'var(--primary)', marginBottom: '10px' }}>
+            <Target size={18} />
+            {wlTargetHit.length} Watchlist Target{wlTargetHit.length > 1 ? 's' : ''} Reached
+          </div>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            {wlTargetHit.map((a, i) => (
+              <Link key={i} to={`/actual`} style={{ textDecoration: 'none' }}>
+                <div style={{
+                  background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)',
+                  borderRadius: '8px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer',
+                }}>
+                  <strong style={{ color: 'var(--primary)'}}>{a.ticker}</strong>
+                  <span style={{ color: 'var(--text-muted)', marginLeft: '6px', fontSize: '0.73rem' }}>{a.company}</span>
+                  <div style={{ fontSize: '0.73rem', marginTop: '2px' }}>
+                    CMP <strong>₹{a.cmp?.toFixed?.(2) ?? a.cmp}</strong>
+                    {' · '}Target <strong style={{ color: 'var(--primary)'}}>₹{a.targetPrice}</strong>
+                    {a.analyst && <> {' · '}<span style={{ color: 'var(--text-muted)' }}>{a.analyst}</span></>}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {wlReviewDue.length > 0 && (
+        <div style={{
+          margin: '12px 0', padding: '14px 18px',
+          background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.35)',
+          borderRadius: '12px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: 'var(--accent-amber)', marginBottom: '10px' }}>
+            <Calendar size={18} />
+            {wlReviewDue.length} Watchlist Review{wlReviewDue.length > 1 ? 's' : ''} Due
+          </div>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            {wlReviewDue.map((a, i) => (
+              <Link key={i} to={`/actual`} style={{ textDecoration: 'none' }}>
+                <div style={{
+                  background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.25)',
+                  borderRadius: '8px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer',
+                }}>
+                  <strong style={{ color: 'var(--accent-amber)'}}>{a.ticker}</strong>
+                  <span style={{ color: 'var(--text-muted)', marginLeft: '6px', fontSize: '0.73rem' }}>{a.company}</span>
+                  <div style={{ fontSize: '0.73rem', marginTop: '2px' }}>
+                    Was due <strong style={{ color: 'var(--accent-amber)'}}>{a.nextReview}</strong>
+                    {a.analyst && <> {' · '}<span style={{ color: 'var(--text-muted)' }}>{a.analyst}</span></>}
                   </div>
                 </div>
               </Link>

@@ -243,7 +243,59 @@ function BasketOverlapPanel({ overlap, onGoToBasket }) {
   );
 }
 
-export default function DashboardView({ rows, avgMarketCap, medianPE, isIPO, onViewHoldings, basketOverlap, onGoToBasket }) {
+function BasketWeightOverlapPanel({ overlap, onGoToBasket }) {
+  const [expandedKey, setExpandedKey] = useState(null);
+  const maxPct = Math.max(...overlap.map(o => o.pct), 0.0001);
+  return (
+    <Panel title="Basket Overlap by Weight">
+      <div className="dv-barlist-sub">% of this basket's total allocation sitting in stocks each other basket also holds — click the % to see which</div>
+      <div className="dv-barlist">
+        {overlap.map((o, i) => {
+          const label = BASKET_OPTIONS.find(b => b.key === o.key)?.label || o.key;
+          const pct = maxPct > 0 ? (o.pct / maxPct) * 100 : 0;
+          const isExpanded = expandedKey === o.key;
+          return (
+            <div key={o.key}>
+              <div className="dv-bar-row dv-bar-row--wide">
+                <span className="dv-bar-rank">{i + 1}</span>
+                <span className="dv-bar-name" style={{ cursor: onGoToBasket ? 'pointer' : 'default' }}
+                  onClick={() => onGoToBasket && onGoToBasket(o.key)} title="Go to this basket">
+                  {label}
+                </span>
+                <div className="dv-bar-track">
+                  <div className="dv-bar dv-bar--neutral" style={{ width: pct + '%' }} />
+                </div>
+                <span
+                  className="dv-bar-val dv-bar-val--clickable"
+                  onClick={() => setExpandedKey(isExpanded ? null : o.key)}
+                  title={`${o.weightPct.toFixed(1)}% of this basket's ${o.totalPct.toFixed(1)}% total allocation`}
+                >
+                  {o.pct.toFixed(1)}% {isExpanded ? '▲' : '▼'}
+                </span>
+              </div>
+              {isExpanded && (
+                <div className="dv-overlap-detail">
+                  <div className="dv-overlap-detail-head">
+                    <span>Stock</span><span>This Basket</span><span>{label}</span>
+                  </div>
+                  {o.commonStocks.map(s => (
+                    <div key={s.code} className="dv-overlap-detail-row">
+                      <span className="dv-overlap-detail-code">{s.code}</span>
+                      <span>{(s.myWeight * 100).toFixed(1)}%</span>
+                      <span>{(s.otherWeight * 100).toFixed(1)}%</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </Panel>
+  );
+}
+
+export default function DashboardView({ rows, avgMarketCap, medianPE, isIPO, onViewHoldings, basketOverlap, basketWeightOverlap, onGoToBasket }) {
   const validPerf = rows.filter(r => r.performance != null && isFinite(r.performance));
   const validCont = rows.filter(r => r.contribution != null && isFinite(r.contribution));
 
@@ -266,10 +318,15 @@ export default function DashboardView({ rows, avgMarketCap, medianPE, isIPO, onV
         {!isIPO && <BarListPanel title="Top Draggers (1M)" items={topDraggers} valueKey="contribution" subtitle="By drag on portfolio" />}
       </div>
 
-      {/* Row 3: Basket Overlap */}
-      {basketOverlap && basketOverlap.length > 0 && (
-        <div className="dv-row-bottom">
-          <BasketOverlapPanel overlap={basketOverlap} onGoToBasket={onGoToBasket} />
+      {/* Row 3: Basket Overlap -- by stock count, and (separately) by weight */}
+      {((basketOverlap && basketOverlap.length > 0) || (basketWeightOverlap && basketWeightOverlap.length > 0)) && (
+        <div className="dv-row-overlap">
+          {basketOverlap && basketOverlap.length > 0 && (
+            <BasketOverlapPanel overlap={basketOverlap} onGoToBasket={onGoToBasket} />
+          )}
+          {basketWeightOverlap && basketWeightOverlap.length > 0 && (
+            <BasketWeightOverlapPanel overlap={basketWeightOverlap} onGoToBasket={onGoToBasket} />
+          )}
         </div>
       )}
     </div>

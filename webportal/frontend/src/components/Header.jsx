@@ -1,6 +1,16 @@
 import { useEffect, useState, useRef } from 'react';
 import RollbackButtons from './RollbackButtons.jsx';
 import { getTheme, toggleTheme, THEME_SYNC_TYPE } from '../utils/theme.js';
+import { TENURE_FULL_LABELS } from '../utils/tenureReturn.js';
+
+// Formats an ISO 'YYYY-MM-DD' date string as "24 July 2026" without going
+// through the Date constructor, so there's no local-timezone off-by-one.
+function formatIsoDateLong(iso) {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return `${+d} ${months[+m - 1]} ${y}`;
+}
 
 export const BASKET_OPTIONS = [
   { key: 'Mid_Small_Cap',        label: 'Mid & Small Cap'      },
@@ -19,11 +29,17 @@ export default function Header({
   canUndo, onUndo,
   onBuyPrice, onCalculateReturn, onPLStatement, onCorporateActions,
   readOnly = false,
+  tenure = '1M', latestDataDate = null,
 }) {
   const [dateStr,      setDateStr]      = useState('');
   const [actionsOpen,  setActionsOpen]  = useState(false);
   const [theme,        setThemeState]   = useState(getTheme());
   const actionsRef = useRef(null);
+
+  // "As on" shows the latest date this basket actually has data for -- not
+  // today's calendar date -- falling back to today only while that data is
+  // still loading (data-date momentarily unknown, never a real "no data").
+  const asOfStr = latestDataDate ? formatIsoDateLong(latestDataDate) : dateStr;
 
   useEffect(() => {
     // Keeps this icon correct when the theme changes because the outer
@@ -51,10 +67,10 @@ export default function Header({
         <div className="db-title-row">
           <h1 className="db-title">Actual Portfolio</h1>
           <span className="db-perf-badge">
-            <i className="fa-solid fa-chart-line" /> Past 1 Month Trailing Returns
+            <i className="fa-solid fa-chart-line" /> Past {TENURE_FULL_LABELS[tenure] || '1 Month'} Trailing Returns
           </span>
         </div>
-        <p className="db-subtitle">As on {dateStr}</p>
+        <p className="db-subtitle">As on {asOfStr}</p>
       </div>
 
       {/* Right controls */}
@@ -86,7 +102,7 @@ export default function Header({
         {/* Date chip */}
         <div className="date-display">
           <i className="fa-regular fa-calendar" />
-          <span>{dateStr}</span>
+          <span>{asOfStr}</span>
         </div>
 
         {/* Theme toggle */}

@@ -16,6 +16,41 @@ from routers.stocks import _stock_hist_price_cache, _STOCK_HIST_PRICE_TTL
 
 router = APIRouter()
 
+_LIQUIDCASE_CODE = "LIQUIDCASE"
+
+
+def _reconcile_liquidcase_sim(db: Session, user: str) -> None:
+    """Whenever a user's virtual portfolio doesn't add up to 100% allocation,
+    park the unallocated remainder in LIQUIDCASE (cash-equivalent liquid ETF,
+    0% return) instead of leaving it as an untracked gap. Unlike real basket
+    holdings, this is a pure scratch simulation, so the cash row is kept in
+    sync both ways -- it grows, shrinks, or disappears as other allocations
+    change."""
+    others = db.query(database.SimulationMod).filter(
+        database.SimulationMod.user_email == user,
+        database.SimulationMod.stock_code != _LIQUIDCASE_CODE,
+    ).all()
+    residual = round(100.0 - sum(h.allocation or 0 for h in others), 4)
+
+    cash_row = db.query(database.SimulationMod).filter(
+        database.SimulationMod.user_email == user,
+        database.SimulationMod.stock_code == _LIQUIDCASE_CODE,
+    ).first()
+
+    if residual <= 0.01:
+        if cash_row:
+            db.delete(cash_row)
+        return
+
+    if cash_row:
+        cash_row.allocation = residual
+    else:
+        db.add(database.SimulationMod(
+            user_email=user, stock_code=_LIQUIDCASE_CODE,
+            allocation=residual, buy_price=1.0, cmp=1.0, buy_date=None,
+        ))
+
+
 class SimulatorCalculateRequest(BaseModel):
     holdings: list
     sips: list
@@ -240,6 +275,8 @@ def upsert_simulation_holding(item: SimulationHoldingCreate, request: Request, d
         )
         db.add(db_obj)
 
+    db.flush()
+    _reconcile_liquidcase_sim(db, user)
     db.commit()
     return {"status": "success"}
 
@@ -250,6 +287,8 @@ def delete_simulation_holding(stock_code: str, request: Request, db: Session = D
         database.SimulationMod.user_email == user,
         database.SimulationMod.stock_code == stock_code.upper()
     ).delete()
+    db.flush()
+    _reconcile_liquidcase_sim(db, user)
     db.commit()
     return {"status": "success"}
 

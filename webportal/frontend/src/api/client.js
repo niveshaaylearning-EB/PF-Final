@@ -6,7 +6,8 @@ const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hos
 const BASE = IS_LOCAL ? '/api' : '/wp/api';
 
 export const fetchBaskets   = ()    => fetch(`${BASE}/baskets`).then(r => r.json());
-export const fetchBasketStockMap = () => fetch(`${BASE}/basket-stock-map`).then(r => r.json());
+export const fetchBasketStockMap  = () => fetch(`${BASE}/basket-stock-map`).then(r => r.json());
+export const fetchBasketWeightMap = () => fetch(`${BASE}/basket-weight-map`).then(r => r.json());
 export const fetchBasket    = (key) => fetch(`${BASE}/basket/${key}`).then(r => r.json());
 export const fetchLiveData  = ()    => fetch(`${BASE}/live`).then(r => r.json());
 export const fetchPerformanceBatch = (codes) =>
@@ -29,3 +30,34 @@ export const saveBasket = (key, stocks, soldStocks, buyPriceDetails) => {
     body:    JSON.stringify({ stocks, soldStocks, buyPriceDetails }),
   }).then(r => r.json());
 };
+
+// ── Watchlist (centralized research pipeline, shared across all users) ──────
+const _authHeaders = () => {
+  const token = getAuthToken();
+  return { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) };
+};
+const _asJson = async (res) => {
+  const data = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(data?.detail || `Request failed (${res.status})`);
+  return data;
+};
+
+export const fetchWatchlist     = ()  => fetch(`${BASE}/watchlist`).then(r => r.json());
+export const fetchWatchlistMeta = ()  => fetch(`${BASE}/watchlist/meta`).then(r => r.json());
+
+export const addWatchlistCompany = (ticker, company) =>
+  fetch(`${BASE}/watchlist`, {
+    method: 'POST', headers: _authHeaders(),
+    body: JSON.stringify({ ticker, company: company || null }),
+  }).then(_asJson);
+
+export const updateWatchlistCompany = (id, patch) =>
+  fetch(`${BASE}/watchlist/${id}`, {
+    method: 'PUT', headers: _authHeaders(), body: JSON.stringify(patch),
+  }).then(_asJson);
+
+export const refreshWatchlistCompany = (id) =>
+  fetch(`${BASE}/watchlist/${id}/refresh`, { method: 'POST', headers: _authHeaders() }).then(_asJson);
+
+export const deleteWatchlistCompany = (id) =>
+  fetch(`${BASE}/watchlist/${id}`, { method: 'DELETE', headers: _authHeaders() }).then(_asJson);

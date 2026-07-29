@@ -453,6 +453,46 @@ async def _startup_prewarm():
     bg_thread = threading.Thread(target=_calendar_bg_refresh_worker, daemon=True, name="results-calendar-refresh")
     bg_thread.start()
 
+    # Watchlist trigger check: next-review date reached, or target price hit
+    # (whichever first) -- emails the analyst once per trigger and feeds the
+    # /api/alerts homepage banner (see routers/alerts_market.py). Every 6h
+    # rather than once/day since a target price can be hit intraday.
+    def _watchlist_alert_bg_worker():
+        _time.sleep(60)
+        while True:
+            try:
+                print("[BG] Running watchlist trigger check...")
+                import watchlist as _wl_module
+                _wl_module.check_and_notify_watchlist_triggers()
+                print("[BG] Watchlist trigger check finished.")
+            except Exception as bg_err:
+                print(f"[BG] Error in watchlist trigger check: {bg_err}")
+            _time.sleep(6 * 3600)
+
+    wl_bg_thread = threading.Thread(target=_watchlist_alert_bg_worker, daemon=True, name="watchlist-alert-check")
+    wl_bg_thread.start()
+
+    # Result/corporate-action reminder: emails Monika + each event's assigned
+    # basket analyst(s) exactly one day before the date, for active holdings
+    # only (see routers/results_calendar.py: check_and_notify_upcoming_events).
+    def _results_calendar_reminder_bg_worker():
+        _time.sleep(90)
+        while True:
+            try:
+                print("[BG] Running results-calendar reminder check...")
+                db = database.SessionLocal()
+                try:
+                    check_and_notify_upcoming_events(db)
+                finally:
+                    db.close()
+                print("[BG] Results-calendar reminder check finished.")
+            except Exception as bg_err:
+                print(f"[BG] Error in results-calendar reminder check: {bg_err}")
+            _time.sleep(6 * 3600)
+
+    rc_bg_thread = threading.Thread(target=_results_calendar_reminder_bg_worker, daemon=True, name="results-calendar-reminder")
+    rc_bg_thread.start()
+
 class RationaleCreate(BaseModel):
     stock_code: str
     rationale_text: str
@@ -660,7 +700,7 @@ app.include_router(_rebalance_alerts_router)
 
 # (SPA fallback moved to the end of the file)
 
-from routers.results_calendar import router as _results_calendar_router, _refresh_results_calendar_data
+from routers.results_calendar import router as _results_calendar_router, _refresh_results_calendar_data, check_and_notify_upcoming_events
 app.include_router(_results_calendar_router)
 
 # ── Actual Portfolio proxy — moved to routers/actual_portfolio_bridge.py ─────

@@ -11,7 +11,7 @@ function KPICard({ label, value, valueCls, sub, sub2 }) {
   );
 }
 
-export default function KPIPanel({ totalContribution, totalAbsReturn, avgMarketCap, medianPE, activeStocks, totalAllocation, rows }) {
+export default function KPIPanel({ tenureReturn, tenureLabel, totalAbsReturn, avgMarketCap, medianPE, activeStocks, totalAllocation, rows }) {
   const mcFormatted = avgMarketCap > 0
     ? (avgMarketCap >= 100000
         ? '₹' + (avgMarketCap / 100000).toFixed(2) + ' L Cr'
@@ -19,10 +19,16 @@ export default function KPIPanel({ totalContribution, totalAbsReturn, avgMarketC
     : '-';
 
   const totalRows = rows?.length || 0;
+  const tenurePct = tenureReturn?.pct ?? null;
 
   return (
     <div className="kpi-strip kpi-strip--4">
-      <KPICard label="1M Returns"       value={formatPercent(totalContribution)}  valueCls={getColorClass(totalContribution)}  sub="Weighted contribution" />
+      <KPICard
+        label={`${tenureLabel || '1M'} Returns`}
+        value={tenurePct != null ? formatPercent(tenurePct) : '-'}
+        valueCls={getColorClass(tenurePct)}
+        sub={tenureReturn ? `Basket index return since ${tenureReturn.baseDate}` : 'Basket index return'}
+      />
       <KPICard label="Since Inception"  value={totalAbsReturn != null ? formatPercent(totalAbsReturn) : '-'} valueCls={getColorClass(totalAbsReturn)} sub="Basket index absolute return" />
       <KPICard label="Active Stocks"    value={activeStocks}      sub={`of ${totalRows} total`} valueCls="neutral" />
       <KPICard label="Total Allocation" value={totalAllocation > 0 ? (totalAllocation * 100).toFixed(1) + '%' : '-'} valueCls={Math.abs(totalAllocation - 1) < 0.005 ? 'positive' : 'neutral'} sub="Sum of weights" />

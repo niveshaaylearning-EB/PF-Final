@@ -166,15 +166,16 @@ function SimulatorPortfolio() {
     const code = editMod?.stock_code?.toUpperCase()?.trim();
     const newAlloc = parseFloat(editMod?.allocation || 0);
 
-    // Find if the stock already exists in the current simulated holdings
-    const existingHolding = simulatedPortfolio?.holdings?.find(h => h.code === code);
-    const oldAlloc = existingHolding ? parseFloat(existingHolding.allocation || 0) : 0;
+    // Calculate what the new total allocation would be, excluding both the
+    // stock being edited (its new value is added back in below) and the
+    // auto-managed LIQUIDCASE row -- that row absorbs/releases the gap on
+    // save, so it shouldn't count against the 100% cap on a real stock's edit.
+    const currentTotal = (simulatedPortfolio?.holdings || [])
+      .filter(h => h.code !== 'LIQUIDCASE' && h.code !== code)
+      .reduce((sum, h) => sum + (h.allocation || 0), 0);
+    const projectedTotal = currentTotal + newAlloc;
 
-    // Calculate what the new total allocation would be
-    const currentTotal = simulatedPortfolio?.total_allocation || 0;
-    const projectedTotal = currentTotal - oldAlloc + newAlloc;
-
-    if (projectedTotal > 100) {
+    if (code !== 'LIQUIDCASE' && projectedTotal > 100) {
       setAllocationError(`Overall allocation cannot exceed 100%. Current total would be ${projectedTotal.toFixed(1)}%. Please reduce the allocation.`);
       return;
     }
@@ -557,12 +558,14 @@ function SimulatorPortfolio() {
           </thead>
           <tbody>
             {getFilteredSorted(simulatedPortfolio.holdings).map((h, idx) => (
-              <tr key={h.code}>
+              <tr key={h.code} style={h.code === 'LIQUIDCASE' ? { background: 'rgba(234,179,8,0.06)' } : undefined}>
                 <td style={{ padding: '5px 8px', whiteSpace: 'nowrap', color: 'var(--text-muted)', fontSize: '0.72rem', textAlign: 'right' }}>
                   {idx + 1}
                 </td>
-                <td style={{ padding: '5px 8px', position: 'sticky', left: 0, background: 'var(--surface)', zIndex: 1, whiteSpace: 'nowrap' }}>
-                  <strong style={{ fontSize: '0.8rem' }}>{h.code}</strong>
+                <td style={{ padding: '5px 8px', position: 'sticky', left: 0, background: h.code === 'LIQUIDCASE' ? 'rgba(20,18,10,0.98)' : 'var(--surface)', zIndex: 1, whiteSpace: 'nowrap' }}>
+                  <strong style={{ fontSize: '0.8rem', color: h.code === 'LIQUIDCASE' ? '#fbbf24' : undefined }}>
+                    {h.code === 'LIQUIDCASE' ? 'CASH (LIQUIDCASE)' : h.code}
+                  </strong>
                 </td>
 
                 <td style={{ padding: '5px 8px', whiteSpace: 'nowrap' }}>{h.allocation.toFixed(1)}%</td>
@@ -591,20 +594,6 @@ function SimulatorPortfolio() {
                 </td>
               </tr>
             )}
-            {(() => {
-              const cashPct = 100 - (simulatedPortfolio.total_allocation || 0);
-              if (cashPct <= 0) return null;
-              return (
-                <tr style={{ borderTop: '2px solid rgba(255,255,255,0.08)', background: 'rgba(234,179,8,0.06)' }}>
-                  <td style={{ padding: '5px 8px', color: 'var(--text-muted)', fontSize: '0.72rem', textAlign: 'right' }}>—</td>
-                  <td style={{ padding: '5px 8px', position: 'sticky', left: 0, background: 'rgba(20,18,10,0.98)', zIndex: 1, whiteSpace: 'nowrap' }}>
-                    <strong style={{ fontSize: '0.8rem', color: '#fbbf24' }}>CASH</strong>
-                  </td>
-                  <td style={{ padding: '5px 8px', whiteSpace: 'nowrap', color: '#fbbf24', fontWeight: 600 }}>{cashPct.toFixed(1)}%</td>
-                  <td colSpan={5} style={{ padding: '5px 8px', color: 'var(--text-muted)', fontSize: '0.78rem' }}>Uninvested allocation</td>
-                </tr>
-              );
-            })()}
           </tbody>
         </table>
       </div>

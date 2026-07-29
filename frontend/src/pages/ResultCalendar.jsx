@@ -1,8 +1,131 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Calendar, CalendarPlus, Search, ArrowLeft, AlertCircle, Filter, Loader2 } from 'lucide-react';
+import { Calendar, CalendarPlus, Search, ArrowLeft, AlertCircle, Filter, Loader2, Users, X } from 'lucide-react';
 import { API_BASE } from '../config.js';
+import { isAdmin } from '../utils/auth.js';
+
+// Color per event type/category -- results stay the original blue, each
+// corporate-action category gets its own accent so the two are easy to
+// tell apart in the table at a glance. Uses theme-aware CSS variables (not
+// hardcoded hex) so this reads correctly in both dark and light mode --
+// dark-mode-tuned pastels like #a5b4fc/#34d399 drop to under 2:1 contrast
+// against the light theme's cream background.
+const TYPE_COLORS = {
+  result:          { color: 'var(--primary)',      bg: 'rgba(99,102,241,0.12)',  border: 'rgba(99,102,241,0.25)' },
+  Dividend:        { color: 'var(--positive)',      bg: 'rgba(16,185,129,0.12)',  border: 'rgba(16,185,129,0.25)' },
+  Bonus:           { color: 'var(--positive)',      bg: 'rgba(16,185,129,0.12)',  border: 'rgba(16,185,129,0.25)' },
+  'Stock Split':   { color: 'var(--accent-amber)',  bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.25)' },
+  'Rights Issue':  { color: 'var(--accent-amber)',  bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.25)' },
+  Buyback:         { color: 'var(--accent-amber)',  bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.25)' },
+  Demerger:        { color: 'var(--negative)',      bg: 'rgba(239,68,68,0.12)',   border: 'rgba(239,68,68,0.25)' },
+  'Merger/Scheme':  { color: 'var(--negative)',      bg: 'rgba(239,68,68,0.12)',   border: 'rgba(239,68,68,0.25)' },
+  'Corporate Action': { color: 'var(--text-muted)', bg: 'rgba(255,255,255,0.06)', border: 'rgba(255,255,255,0.12)' },
+};
+
+function EventTypeBadge({ event }) {
+  const label = event.type === 'result' ? 'Result' : (event.action_category || 'Corporate Action');
+  const c = TYPE_COLORS[event.type === 'result' ? 'result' : (event.action_category || 'Corporate Action')]
+    || TYPE_COLORS['Corporate Action'];
+  return (
+    <span style={{
+      display: 'inline-block', fontSize: '0.72rem', fontWeight: 600, padding: '2px 9px',
+      borderRadius: '10px', background: c.bg, border: `1px solid ${c.border}`, color: c.color, whiteSpace: 'nowrap',
+    }}>
+      {label}
+    </span>
+  );
+}
+
+// ── Admin: manage which analyst(s) get the 1-day-before reminder email ──────
+function AnalystContactsPanel({ baskets, onClose }) {
+  const [basket, setBasket]   = useState(baskets[0] || '');
+  const [contacts, setContacts] = useState([]);
+  const [name, setName]   = useState('');
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [busy, setBusy]   = useState(false);
+
+  const load = () => {
+    axios.get(`${API_BASE}/results-calendar/analyst-contacts`)
+      .then(res => setContacts(res.data || []))
+      .catch(() => setContacts([]));
+  };
+  useEffect(() => { load(); }, []);
+
+  const basketContacts = contacts.filter(c => c.basket_name === basket);
+
+  const handleAdd = async () => {
+    if (!basket) { setError('Pick a basket first.'); return; }
+    if (!name.trim() || !email.trim()) { setError('Name and email are both required.'); return; }
+    setBusy(true); setError('');
+    try {
+      await axios.post(`${API_BASE}/results-calendar/analyst-contacts`, { basket_name: basket, name, email });
+      setName(''); setEmail('');
+      load();
+    } catch (e) {
+      setError(e.response?.data?.detail || 'Could not add this analyst.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${API_BASE}/results-calendar/analyst-contacts/${id}`);
+      load();
+    } catch (_) {}
+  };
+
+  return (
+    <div className="whatif-overlay" onClick={onClose}>
+      <div className="whatif-modal" style={{ width: 'min(480px, 94vw)' }} onClick={e => e.stopPropagation()}>
+        <div className="whatif-header">
+          <span className="sit-symbol" style={{ background: 'transparent', border: 'none', padding: 0 }}>
+            Main Research Analyst -- Reminder Recipients
+          </span>
+          <button className="whatif-close" onClick={onClose}>&times;</button>
+        </div>
+        <div className="whatif-body">
+          <div className="whatif-section-title" style={{ marginTop: 0 }}>Basket</div>
+          <select value={basket} onChange={e => setBasket(e.target.value)} style={{ width: '100%', marginBottom: '0.75rem' }}>
+            {baskets.map(b => <option key={b} value={b}>{b}</option>)}
+          </select>
+
+          <div className="whatif-section-title">Assigned analysts (get emailed 1 day before)</div>
+          {basketContacts.length === 0 && (
+            <div className="sit-no-data" style={{ marginBottom: '0.5rem' }}>No analyst assigned to this basket yet.</div>
+          )}
+          {basketContacts.map(c => (
+            <div key={c.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.4rem 0.6rem', marginBottom: '0.35rem', borderRadius: '8px', background: 'rgba(255,255,255,0.04)' }}>
+              <span style={{ fontSize: '0.85rem' }}><strong>{c.name}</strong> <span style={{ color: 'var(--text-muted)' }}>({c.email})</span></span>
+              <button className="btn" style={{ padding: '2px 6px', color: 'var(--negative)', borderColor: 'var(--negative)' }} onClick={() => handleDelete(c.id)} title="Remove">
+                <X size={13} />
+              </button>
+            </div>
+          ))}
+
+          <div className="whatif-section-title">Add analyst</div>
+          <div className="input-group" style={{ display: 'inline-block', marginRight: '0.5rem' }}>
+            <label>Name</label>
+            <input value={name} onChange={e => setName(e.target.value)} />
+          </div>
+          <div className="input-group" style={{ display: 'inline-block' }}>
+            <label>Email</label>
+            <input value={email} onChange={e => setEmail(e.target.value)} placeholder="name@niveshaay.com" />
+          </div>
+          {error && <div className="whatif-warn" style={{ marginTop: '0.5rem' }}>{error}</div>}
+        </div>
+        <div className="whatif-footer">
+          <button className="btn btn-secondary" onClick={onClose}>Close</button>
+          <button className="btn btn-secondary" disabled={busy} onClick={handleAdd}>
+            {busy ? 'Adding…' : 'Add Analyst'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function ResultCalendar() {
   const navigate = useNavigate();
@@ -11,6 +134,7 @@ export default function ResultCalendar() {
   const [events, setEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBasket, setSelectedBasket] = useState('All');
+  const [analystPanelOpen, setAnalystPanelOpen] = useState(false);
 
   useEffect(() => {
     axios.get(`${API_BASE}/portfolio/results-calendar`)
@@ -70,7 +194,8 @@ export default function ResultCalendar() {
     const end = new Date(start);
     end.setDate(end.getDate() + 1);
 
-    const text = encodeURIComponent(`${event.stock_code} Results`);
+    const label = event.type === 'result' ? 'Results' : (event.action_category || 'Corporate Action');
+    const text = encodeURIComponent(`${event.stock_code} ${label}`);
     const details = encodeURIComponent(
       `${event.stock_name} (${event.stock_code}) — ${event.purpose || 'Financial results'}.\n` +
       `Basket${event.baskets.length > 1 ? 's' : ''}: ${event.baskets.join(', ')}`
@@ -93,7 +218,20 @@ export default function ResultCalendar() {
         <div>
           <h2 className="text-gradient" style={{ margin: 0, fontSize: '1.6rem' }}>Result Calendar</h2>
         </div>
+        {isAdmin() && (
+          <button
+            className="btn btn-secondary"
+            onClick={() => setAnalystPanelOpen(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', marginLeft: 'auto' }}
+          >
+            <Users size={16} /> Manage Analyst Reminders
+          </button>
+        )}
       </div>
+
+      {analystPanelOpen && (
+        <AnalystContactsPanel baskets={allBaskets.filter(b => b !== 'All')} onClose={() => setAnalystPanelOpen(false)} />
+      )}
 
       {/* Main Section */}
       <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px' }}>
@@ -103,7 +241,8 @@ export default function ResultCalendar() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
             <div>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', margin: 0 }}>
-                Earnings and board meetings scheduled for holdings present in your baskets.
+                Earnings, board meetings and corporate actions (dividends, bonuses, splits, buybacks, demergers)
+                scheduled for active holdings present in your baskets.
               </p>
             </div>
 
@@ -169,8 +308,9 @@ export default function ResultCalendar() {
                   <tr>
                     <th>Stock Name</th>
                     <th>Code</th>
+                    <th>Type</th>
                     <th>Baskets</th>
-                    <th>Result Date</th>
+                    <th>Date</th>
                     <th style={{ textAlign: 'right' }}>Remaining Days</th>
                     <th style={{ textAlign: 'center' }}>Calendar</th>
                   </tr>
@@ -187,11 +327,11 @@ export default function ResultCalendar() {
                       badgeBg = 'rgba(16, 185, 129, 0.12)';
                       badgeBorder = 'rgba(16, 185, 129, 0.25)';
                     } else if (daysLeft <= 7) {
-                      badgeColor = '#f59e0b';
+                      badgeColor = 'var(--accent-amber)';
                       badgeBg = 'rgba(245, 158, 11, 0.12)';
                       badgeBorder = 'rgba(245, 158, 11, 0.25)';
                     } else if (daysLeft <= 30) {
-                      badgeColor = '#a5b4fc';
+                      badgeColor = 'var(--primary)';
                       badgeBg = 'rgba(99, 102, 241, 0.12)';
                       badgeBorder = 'rgba(99, 102, 241, 0.25)';
                     }
@@ -202,6 +342,7 @@ export default function ResultCalendar() {
                           {event.stock_name}
                         </td>
                         <td style={{ fontFamily: 'monospace', fontWeight: 600 }}>{event.stock_code}</td>
+                        <td title={event.purpose}><EventTypeBadge event={event} /></td>
                         <td>
                           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                             {event.baskets.map(b => (

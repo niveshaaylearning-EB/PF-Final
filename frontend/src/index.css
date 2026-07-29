@@ -16,6 +16,7 @@
   --positive-bg: rgba(16, 185, 129, 0.15);
   --negative: #ef4444;
   --negative-bg: rgba(239, 68, 68, 0.15);
+  --accent-amber: #fbbf24;
 
   --glass-bg: rgba(20, 27, 45, 0.4);
   --glass-blur: blur(12px);
@@ -43,7 +44,7 @@
   --panel-bg: rgba(255, 253, 247, 0.82);
   --panel-border: rgba(74, 58, 40, 0.14);
   --text-main: #2a2118;
-  --text-muted: #6f6152;
+  --text-muted: #544639;
 
   --primary: #1e4d8c;
   --primary-glow: rgba(30, 77, 140, 0.25);
@@ -53,6 +54,7 @@
   --positive-bg: rgba(60, 107, 58, 0.13);
   --negative: #a3402e;
   --negative-bg: rgba(163, 64, 46, 0.13);
+  --accent-amber: #92660a;
 
   --glass-bg: rgba(255, 253, 247, 0.65);
   --glass-blur: blur(12px);

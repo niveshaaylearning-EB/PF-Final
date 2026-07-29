@@ -105,7 +105,7 @@ function DataRow({
   const matchSearch  = !lowerSearch || lowerNse.includes(lowerSearch);
   const dimRow       = lowerSearch && !matchSearch;
   const highlightRow = lowerSearch && matchSearch;
-  const simClass     = row._simAdded ? ' whatif-sim-row' : (row._simEdited || row._simDeleted || row._simReduced) ? ' whatif-sim-row-touched' : '';
+  const simClass     = row._simAdded ? ' whatif-sim-row' : (row._simEdited || row._simDeleted || row._simReduced || row._simCashTopped) ? ' whatif-sim-row-touched' : '';
   const trClass      = (dimRow ? 'search-dim' : highlightRow ? 'search-highlight' : '') + simClass;
 
   const handleAllocBlur = (e) => { onAllocChange(idx, e.target.value); };
@@ -119,8 +119,13 @@ function DataRow({
   const allocDisplay    = row.allocation != null ? (row.allocation * 100).toFixed(2) : '';
   const buyPriceDisplay = row.buyPrice   != null ? row.buyPrice : '';
 
-  const simBadge = (row._simEdited || row._simDeleted || row._simAdded || row._simReduced) && (
-    <span className="whatif-sim-badge" title={row._simDeleted ? 'Excluded in simulation' : row._simReduced ? 'Weight reduced in simulation' : 'Simulated value'}>
+  const simBadge = (row._simEdited || row._simDeleted || row._simAdded || row._simReduced || row._simCashTopped) && (
+    <span className="whatif-sim-badge" title={
+      row._simDeleted ? 'Excluded in simulation'
+      : row._simReduced ? 'Weight reduced in simulation'
+      : row._simCashTopped ? 'Absorbed freed-up allocation from a simulated sell'
+      : 'Simulated value'
+    }>
       SIM
     </span>
   );

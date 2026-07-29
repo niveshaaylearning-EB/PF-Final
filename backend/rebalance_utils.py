@@ -145,6 +145,15 @@ def parse_excel(excel_path: str) -> dict:
                 w,
             ))
 
+        # Cash-code tickers (incl. LIQUIDCASE) are stripped above, so if a
+        # rebalance date's remaining holdings don't sum to 100%, park the
+        # unallocated remainder in LIQUIDCASE rather than leaving it untracked.
+        for date_str, rows_for_date in by_date.items():
+            total_weight = sum(w for _, _, _, w in rows_for_date)
+            residual = 100.0 - total_weight
+            if residual > 0.01:
+                rows_for_date.append(('LIQUIDCASE', 'Liquid Cash', 'Cash', round(residual, 4)))
+
         rebalance_dates = sorted(by_date.keys())
         result[basket_name] = {
             'rebalance_dates': rebalance_dates,

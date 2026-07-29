@@ -217,6 +217,22 @@ class BasketAnalyst(Base):
     updated_by   = Column(String, nullable=True)
     updated_at   = Column(String, nullable=True)
 
+class BasketAnalystContact(Base):
+    """Analyst(s) assigned to a basket for result/corporate-action reminder
+    emails -- distinct from BasketAnalyst's single free-text display name
+    above (unrelated, unused elsewhere). Multiple rows per basket_name are
+    expected. Keyed by the same basket display-name string the Results
+    Calendar itself produces (see routers/results_calendar.py's
+    stocks_map), so no extra name-mapping is needed between this app's two
+    basket-naming systems (main-backend BasketHistory vs webportal)."""
+    __tablename__ = "basket_analyst_contacts"
+    id          = Column(Integer, primary_key=True, index=True)
+    basket_name = Column(String, index=True)
+    name        = Column(String)
+    email       = Column(String, index=True)
+    added_by    = Column(String, nullable=True)
+    added_at    = Column(String, nullable=True)
+
 class AllowedEmail(Base):
     __tablename__ = "allowed_emails"
     id            = Column(Integer, primary_key=True, index=True)

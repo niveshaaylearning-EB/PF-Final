@@ -36,8 +36,19 @@ _MAX_ROLLBACK_PTS = 5
 _ACTIVITY_LOG_FILE = Path(__file__).parent / "activity_log.json"
 
 # ── In-memory JSON cache — files are read once then served from RAM ───────────
-# Invalidated immediately on every write so stale data is never served.
+# Invalidated immediately on every write so stale data is never served --
+# WITHIN this process. This module also runs as a second, fully independent
+# copy inside backend/main.py's importlib-mounted /wp sub-app (separate
+# globals entirely), so a real sell made through one process's API (e.g. the
+# standalone webportal on :8001) would otherwise sit invisible to the other
+# (e.g. the main app's Basket Comparison/Result Calendar, reading through the
+# :8000-mounted copy) until THAT process restarts -- not just for a cache
+# TTL's worth of time, but indefinitely. _portfolios_mem_mtime compares
+# against the file's on-disk mtime on every load, so any process picks up a
+# change made by any other process within roughly a disk-write's worth of
+# latency, not "never".
 _portfolios_mem:  dict | None = None
+_portfolios_mem_mtime: float | None = None
 _buy_price_mem:   dict | None = None
 _rh_mem:          dict | None = None
 
@@ -84,14 +95,23 @@ def _log_activity(action: str, user: str, details: dict):
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _load_portfolios() -> dict:
-    global _portfolios_mem
-    if _portfolios_mem is not None:
+    global _portfolios_mem, _portfolios_mem_mtime
+    try:
+        disk_mtime = _PORTFOLIOS_FILE.stat().st_mtime if _PORTFOLIOS_FILE.exists() else None
+    except OSError:
+        disk_mtime = None
+
+    if _portfolios_mem is not None and disk_mtime == _portfolios_mem_mtime:
         return _portfolios_mem
+
     if _PORTFOLIOS_FILE.exists():
         with open(_PORTFOLIOS_FILE, "r", encoding="utf-8") as f:
             _portfolios_mem = json.load(f)
-            return _portfolios_mem
+        _portfolios_mem_mtime = disk_mtime
+        return _portfolios_mem
+
     _portfolios_mem = dict(PORTFOLIOS_DATA)
+    _portfolios_mem_mtime = None
     return _portfolios_mem
 
 
@@ -100,10 +120,58 @@ def _save_and_push(file_path: Path, data: dict) -> None:
     _common_save_json(str(file_path), data, f"webportal/backend/{file_path.name}", sync=False)
 
 
+_LIQUIDCASE_CODE = "LIQUIDCASE"
+_ALLOC_TOLERANCE = 0.001  # fraction (0.1%) -- ignore rounding noise from float weights
+
+
+def _liquidcase_fallback_price(data: dict) -> float:
+    """Best-effort buyPrice for a brand-new LIQUIDCASE row: reuse whatever
+    price another basket's existing LIQUIDCASE holding was bought at, since
+    it's the same instrument everywhere. Falls back to its approximate NAV."""
+    for holdings in data.values():
+        if not isinstance(holdings, list):
+            continue
+        for h in holdings:
+            if h.get("nseCode") == _LIQUIDCASE_CODE and h.get("buyPrice"):
+                return h["buyPrice"]
+    return 100.0
+
+
+def _reconcile_liquidcase(data: dict) -> dict:
+    """Whenever a basket's holdings don't sum to 100% allocation, park the
+    unallocated remainder in LIQUIDCASE (cash-equivalent liquid ETF) instead
+    of leaving it uninvested and untracked. Only tops up -- never trims an
+    over-100% basket down."""
+    for holdings in data.values():
+        if not isinstance(holdings, list) or not holdings:
+            continue
+        total = sum(h.get("allocation", 0) or 0 for h in holdings)
+        residual = 1.0 - total
+        if residual <= _ALLOC_TOLERANCE:
+            continue
+        cash_row = next((h for h in holdings if h.get("nseCode") == _LIQUIDCASE_CODE), None)
+        if cash_row:
+            cash_row["allocation"] = round((cash_row.get("allocation") or 0) + residual, 6)
+        else:
+            holdings.append({
+                "nseCode":   _LIQUIDCASE_CODE,
+                "allocation": round(residual, 6),
+                "buyPrice":  _liquidcase_fallback_price(data),
+            })
+    return data
+
+
 def _save_portfolios(data: dict) -> None:
-    global _portfolios_mem
+    global _portfolios_mem, _portfolios_mem_mtime
+    data = _reconcile_liquidcase(data)
     _portfolios_mem = data          # update memory cache immediately
     _save_and_push(_PORTFOLIOS_FILE, data)
+    try:
+        # Matches the mtime _load_portfolios will see post-write, so this
+        # process doesn't immediately re-read its own just-written file.
+        _portfolios_mem_mtime = _PORTFOLIOS_FILE.stat().st_mtime
+    except OSError:
+        _portfolios_mem_mtime = None
 
 
 def _load_buy_price_data() -> dict:

@@ -154,154 +154,6 @@
       "allocation": 0.05,
       "buyPrice": 675.73,
       "securityName": "HBL Engineering Ltd"
-    },
-    {
-      "nseCode": "TRANSRAILL",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "TATAPOWER",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "SWELECTES",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "SWSOLAR",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "CROMPTON",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "KEC",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "LIQUIDBEES",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "INOXWIND",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "EKC",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "IEX",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "SONACOMS",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "MAPMYINDIA",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "POWERINDIA",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "GREAVESCOT",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "APARINDS",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "GRAVITA",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "MTARTECH",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "SANGHVIMOV",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "PENIND",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "KSB",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "KPITTECH",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "BBL",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "EXIDEIND",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "RECLTD",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "TECHNOE",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "PRAJIND",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "PITTIENG",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "IONEXCHANG",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "TARIL",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "PREMIERENE",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "SHAKTIPUMP",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "ACMESOLAR",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "OSWALPUMPS",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "GENUSPOWER",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "WEBELSOLAR",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "KPIL",
-      "allocation": 0.0
-    },
-    {
-      "nseCode": "HPL",
-      "allocation": 0.0
     }
   ],
   "Mid_Small_Cap": [
@@ -2454,7 +2306,8 @@
       "action": "Wholly Sold",
       "weightSold": 5.0,
       "buyPrice": null,
-      "sellPrice": 108.7
+      "sellPrice": 108.7,
+      "allocation": 1.0
     },
     {
       "nseCode": "LIQUIDCASE",
@@ -3760,6 +3613,11 @@
       "buyPrice": 546.4611,
       "sellPrice": 528.62,
       "sellDate": "13 May 2026"
+    },
+    {
+      "nseCode": "LIQUIDCASE",
+      "allocation": 1.0,
+      "buyPrice": 114.03
     }
   ],
   "IPO_Basket_sold": [
@@ -3831,7 +3689,8 @@
       "securityName": "Zerodha Nifty 1D Rate Liquid ETF",
       "buyPrice": 112.3567,
       "sellPrice": 112.8,
-      "sellDate": "18 Feb 2026"
+      "sellDate": "18 Feb 2026",
+      "allocation": 1.0
     },
     {
       "nseCode": "GEMAROMA",
@@ -4337,7 +4196,8 @@
       "action": "Wholly Sold",
       "weightSold": 5.0,
       "buyPrice": 113.16,
-      "sellPrice": 104.14
+      "sellPrice": 104.14,
+      "allocation": 1.0
     },
     {
       "nseCode": "LIQUIDCASE",
@@ -4978,7 +4838,8 @@
       "action": "Partially Sold",
       "weightSold": 10.0,
       "buyPrice": null,
-      "sellPrice": 112.9
+      "sellPrice": 112.9,
+      "allocation": 1.0
     },
     {
       "nseCode": "LIQUIDCASE",
@@ -5610,6 +5471,11 @@
       "buyPrice": 783.9,
       "sellPrice": 204.7375,
       "sellDate": "20 May 2026"
+    },
+    {
+      "nseCode": "LIQUIDCASE",
+      "allocation": 1.0,
+      "buyPrice": 114.03
     }
   ],
   "Consumer_Trends_sold": [
@@ -5809,7 +5675,8 @@
       "action": "Wholly Sold",
       "weightSold": 5.0462,
       "buyPrice": 113.17,
-      "sellPrice": 102.66
+      "sellPrice": 102.66,
+      "allocation": 1.0
     },
     {
       "nseCode": "LIQUIDCASE",
@@ -6379,6 +6246,11 @@
       "nseCode": "KUSUMGAR",
       "allocation": 0,
       "buyPrice": 0
+    },
+    {
+      "nseCode": "LIQUIDCASE",
+      "allocation": 1.0,
+      "buyPrice": 114.03
     }
   ],
   "IPO_Recommendations_sold": []

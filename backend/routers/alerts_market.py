@@ -64,6 +64,15 @@ async def get_alerts(db: Session = Depends(get_db)):
                     'pct':          round((t.stoploss - cmp) / t.stoploss * 100, 2),
                 })
 
+    # Merge in Watchlist alerts (next-review date reached / target price hit) --
+    # lazy import since watchlist.py lives in webportal/backend, only reachable
+    # once backend/main.py has put that directory on sys.path (see its startup).
+    try:
+        import watchlist as _wl_module
+        alerts.extend(_wl_module.get_watchlist_alerts())
+    except Exception as e:
+        print(f"[alerts] watchlist merge failed: {e}")
+
     return alerts
 
 

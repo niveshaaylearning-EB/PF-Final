@@ -92,6 +92,11 @@ def _fetch_all_webportal_baskets() -> dict:
             if not nse:
                 continue
             alloc = float(stock.get("allocation") or 0) * 100  # webportal stores as 0-1 fraction
+            if alloc <= 0:
+                # Zero-allocation rows are stale/sold-but-not-removed leftovers
+                # (portfolios.json has historically accumulated a few of these) --
+                # not an active holding, so exclude from counts/averages/calendar.
+                continue
             bp    = float((bpd.get(nse) or {}).get("buyPrice") or stock.get("buyPrice") or 0)
             cmp_v = float((live_map.get(nse) or {}).get("cmp") or 0)
             perf  = round(((cmp_v - bp) / bp * 100) if bp > 0 else 0, 2)

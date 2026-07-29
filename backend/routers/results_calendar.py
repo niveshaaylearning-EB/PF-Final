@@ -11,14 +11,36 @@ import re
 import time as _time
 from datetime import datetime
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Request
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 import database
+from auth import is_admin_email
 from main import get_db, _io_pool, yf
 from routers.actual_portfolio_bridge import _fetch_all_webportal_baskets
 
 router = APIRouter()
+
+def _classify_corporate_action(subject: str) -> str:
+    """Buckets an NSE corporate-action 'subject' free-text string into a
+    human label for display/email -- e.g. 'Dividend - Rs 13 Per Share' -> 'Dividend'."""
+    s = subject.lower()
+    if 'dividend' in s:
+        return 'Dividend'
+    if 'bonus' in s:
+        return 'Bonus'
+    if 'split' in s or 'sub-division' in s or 'sub division' in s:
+        return 'Stock Split'
+    if 'rights' in s:
+        return 'Rights Issue'
+    if 'buyback' in s or 'buy back' in s:
+        return 'Buyback'
+    if 'demerger' in s:
+        return 'Demerger'
+    if 'amalgamation' in s or 'scheme' in s or 'merger' in s:
+        return 'Merger/Scheme'
+    return 'Corporate Action'
 
 _RESULTS_CACHE_FILE = os.path.join(os.path.dirname(__file__), '..', 'results_calendar_cache.json')
 _RESULTS_TTL = 12 * 3600      # 12 hours -- normal cache lifetime for a successful fetch
@@ -143,6 +165,7 @@ async def _refresh_results_calendar_data(db: Session) -> list:
                     "baskets": sorted(list(info["baskets"])),
                     "date": date_str,
                     "purpose": str(row.get('purpose', 'Financial Results')),
+                    "type": "result",
                 })
     except Exception as nse_err:
         print(f"[Results Calendar] NSE events fetch error: {nse_err}")
@@ -184,7 +207,7 @@ async def _refresh_results_calendar_data(db: Session) -> list:
                     seen_events.add((code, ds))
                     upcoming_events.append({"stock_code": code, "stock_name": stocks_map[code]["name"],
                                             "baskets": sorted(list(stocks_map[code]["baskets"])),
-                                            "date": ds, "purpose": "Financial Results"})
+                                            "date": ds, "purpose": "Financial Results", "type": "result"})
         except Exception as _e:
             print(f"[Results Calendar] NSE direct fetch error: {_e}")
             any_source_failed = True
@@ -233,7 +256,59 @@ async def _refresh_results_calendar_data(db: Session) -> list:
                 "baskets": sorted(list(info["baskets"])),
                 "date": date_str,
                 "purpose": "Financial Results",
+                "type": "result",
             })
+
+    # ── Source 3: NSE corporate actions (dividend/bonus/split/rights/buyback/
+    # demerger/etc.) — additive, not a fallback, so it always runs regardless
+    # of whether Sources 1/1b/2 found any results. Same 90-day forward window.
+    try:
+        import httpx as _hx
+        from datetime import date as _date, timedelta as _td
+        _today = _date.today()
+        _to    = (_today + _td(days=90)).strftime("%d-%m-%Y")
+        _from  = _today.strftime("%d-%m-%Y")
+        _hdrs  = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+                  "Referer": "https://www.nseindia.com/", "Accept": "*/*"}
+        seen_ca_events = set()  # (code, date, subject) dedup -- a stock can have >1 action on/near the same date
+        async with _hx.AsyncClient(headers=_hdrs, timeout=10, follow_redirects=True) as _c:
+            await _c.get("https://www.nseindia.com/")
+            _ca_r = await _c.get(
+                f"https://www.nseindia.com/api/corporates-corporateActions"
+                f"?index=equities&from_date={_from}&to_date={_to}"
+            )
+        if _ca_r.status_code != 200:
+            any_source_failed = True
+        else:
+            for item in _ca_r.json():
+                code = str(item.get("symbol", "")).strip().upper()
+                if code not in unique_codes:
+                    continue
+                subject = str(item.get("subject", "")).strip()
+                raw = str(item.get("exDate", "")).strip()
+                try:
+                    ds = datetime.strptime(raw, "%d-%b-%Y").strftime("%Y-%m-%d")
+                except Exception:
+                    continue
+                if ds < today_str:
+                    continue
+                ca_key = (code, ds, subject)
+                if ca_key in seen_ca_events:
+                    continue
+                seen_ca_events.add(ca_key)
+                info = stocks_map[code]
+                upcoming_events.append({
+                    "stock_code": code,
+                    "stock_name": info["name"],
+                    "baskets": sorted(list(info["baskets"])),
+                    "date": ds,
+                    "purpose": subject,
+                    "type": "corporate_action",
+                    "action_category": _classify_corporate_action(subject),
+                })
+    except Exception as _ca_err:
+        print(f"[Results Calendar] NSE corporate-actions fetch error: {_ca_err}")
+        any_source_failed = True
 
     upcoming_events.sort(key=lambda x: x["date"])
 
@@ -280,6 +355,19 @@ async def get_results_calendar(db: Session = Depends(get_db)):
             if (h.basket_id, code) not in hidden_set:
                 active_set.add((basket_name, code))
 
+        # Webportal-only baskets never appear in BasketHistory above, so
+        # without this their events would be filtered out entirely here
+        # even though _refresh_results_calendar_data() included them.
+        try:
+            for _key, _basket_obj in _fetch_all_webportal_baskets().items():
+                _label = _basket_obj.get("name", _key)
+                for _h in _basket_obj.get("holdings", []):
+                    _code = (_h.get("code") or "").strip().upper()
+                    if _code:
+                        active_set.add((_label, _code))
+        except Exception:
+            pass
+
         upcoming = []
         for e in cached['data']:
             if e['date'] < today_str:
@@ -296,3 +384,121 @@ async def get_results_calendar(db: Session = Depends(get_db)):
         return upcoming
 
     return await _refresh_results_calendar_data(db)
+
+
+# ── Analyst contacts (per basket) — receive the 1-day-before reminder ────────
+
+class AnalystContactCreate(BaseModel):
+    basket_name: str
+    name: str
+    email: str
+
+@router.get("/api/results-calendar/analyst-contacts")
+def list_analyst_contacts(db: Session = Depends(get_db)):
+    rows = db.query(database.BasketAnalystContact).order_by(database.BasketAnalystContact.basket_name).all()
+    return [{"id": r.id, "basket_name": r.basket_name, "name": r.name, "email": r.email} for r in rows]
+
+@router.post("/api/results-calendar/analyst-contacts")
+def add_analyst_contact(body: AnalystContactCreate, request: Request, db: Session = Depends(get_db)):
+    user = getattr(request.state, "user", None)
+    if not is_admin_email(user):
+        raise HTTPException(status_code=403, detail="Admin access required.")
+
+    email = body.email.strip().lower()
+    if not email or "@" not in email:
+        raise HTTPException(status_code=422, detail="A valid email is required.")
+    basket_name = body.basket_name.strip()
+    if not basket_name:
+        raise HTTPException(status_code=422, detail="Basket is required.")
+
+    existing = db.query(database.BasketAnalystContact).filter_by(basket_name=basket_name, email=email).first()
+    if existing:
+        raise HTTPException(status_code=409, detail=f"{email} is already assigned to {basket_name}.")
+
+    row = database.BasketAnalystContact(
+        basket_name=basket_name, name=body.name.strip() or email, email=email,
+        added_by=user, added_at=datetime.now().isoformat(),
+    )
+    db.add(row)
+    db.commit()
+    return {"id": row.id, "basket_name": row.basket_name, "name": row.name, "email": row.email}
+
+@router.delete("/api/results-calendar/analyst-contacts/{contact_id}")
+def delete_analyst_contact(contact_id: int, request: Request, db: Session = Depends(get_db)):
+    user = getattr(request.state, "user", None)
+    if not is_admin_email(user):
+        raise HTTPException(status_code=403, detail="Admin access required.")
+    db.query(database.BasketAnalystContact).filter_by(id=contact_id).delete()
+    db.commit()
+    return {"status": "success"}
+
+
+# ── 1-day-before reminder: email Monika + each event's assigned basket ───────
+# analyst(s). Mirrors webportal/backend/watchlist.py's
+# check_and_notify_watchlist_triggers() -- a per-event dedup flag on disk so
+# each (stock, date, purpose) only ever sends once, regardless of how often
+# the background thread runs.
+
+_NOTIFIED_FILE = os.path.join(os.path.dirname(__file__), '..', 'results_calendar_notified.json')
+_ALWAYS_NOTIFY = ("monika.bansal@niveshaay.com",)
+
+def _load_notified() -> dict:
+    try:
+        if os.path.exists(_NOTIFIED_FILE):
+            with open(_NOTIFIED_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+    except Exception as e:
+        print(f"[Results Calendar] Could not load notified-state: {e}")
+    return {}
+
+def _save_notified(data: dict) -> None:
+    try:
+        with open(_NOTIFIED_FILE, 'w', encoding='utf-8') as f:
+            json.dump(data, f)
+    except Exception as e:
+        print(f"[Results Calendar] Could not save notified-state: {e}")
+
+def check_and_notify_upcoming_events(db: Session) -> None:
+    from datetime import date, timedelta
+    from auth import _send_email
+
+    cached = _results_cache.get("calendar") or {}
+    events = cached.get("data") or []
+    tomorrow_str = (date.today() + timedelta(days=1)).isoformat()
+    due = [e for e in events if e["date"] == tomorrow_str]
+    if not due:
+        return
+
+    notified = _load_notified()
+    contacts_by_basket: dict = {}
+    for c in db.query(database.BasketAnalystContact).all():
+        contacts_by_basket.setdefault(c.basket_name, []).append(c.email)
+
+    changed = False
+    for e in due:
+        key = f"{e['stock_code']}|{e['date']}|{e.get('purpose', '')}"
+        if notified.get(key):
+            continue
+
+        recipients = set(_ALWAYS_NOTIFY)
+        for b in e["baskets"]:
+            recipients.update(contacts_by_basket.get(b, []))
+
+        label = e.get("purpose") or ("Financial Results" if e.get("type") == "result" else "Corporate action")
+        subject = f"[Reminder] {e['stock_code']} -- {label} tomorrow ({e['date']})"
+        body = (
+            f"{e['stock_name']} ({e['stock_code']}) -- held in: {', '.join(e['baskets'])}\n\n"
+            f"{label}\nDate: {e['date']} (tomorrow)\n\n"
+            f"Open the Result Calendar in the dashboard for details."
+        )
+        for to in recipients:
+            try:
+                _send_email(to, subject, body)
+            except Exception as err:
+                print(f"[Results Calendar] reminder email to {to} failed: {err}")
+
+        notified[key] = True
+        changed = True
+
+    if changed:
+        _save_notified(notified)

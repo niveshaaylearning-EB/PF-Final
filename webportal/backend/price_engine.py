@@ -1074,6 +1074,25 @@ async def get_basket_stock_map():
     }
 
 
+@router.get("/api/basket-weight-map")
+async def get_basket_weight_map():
+    """{basketKey: {nseCode: allocation}} for every basket -- powers the
+    weight-based basket-overlap panel (as opposed to basket-stock-map's
+    plain code list, used for the stock-count overlap panel). Allocation
+    is the raw 0-1 fraction. Unlike basket-stock-map, no positive-allocation
+    filter is needed here -- a 0%/stale entry just contributes 0 to any
+    weighted sum, so it's harmless to leave in."""
+    portfolios = _load_portfolios()
+    return {
+        key: {
+            s["nseCode"]: (s.get("allocation") or 0)
+            for s in portfolios.get(key, [])
+            if s.get("nseCode")
+        }
+        for key in BASKET_DISPLAY_NAMES
+    }
+
+
 @router.post("/api/debug/pdf-text")
 async def debug_pdf_text(file: UploadFile = File(...)):
     """Return raw text extracted from the PDF (for debugging only)."""

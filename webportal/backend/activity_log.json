@@ -1,5 +1,516 @@
 [
   {
+    "action": "watchlist_delete",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "29 Jul 2026 09:55 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "company": "Reliance Industries Limited"
+    }
+  },
+  {
+    "action": "watchlist_add",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "24 Jul 2026 13:13 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "company": "Reliance Industries Limited"
+    }
+  },
+  {
+    "action": "watchlist_delete",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "24 Jul 2026 07:56 UTC",
+    "details": {
+      "ticker": "INFY",
+      "company": "Infosys Limited"
+    }
+  },
+  {
+    "action": "watchlist_delete",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "24 Jul 2026 07:56 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "company": "Reliance Industries Limited"
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:59 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:59 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:59 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:59 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_add",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:55 UTC",
+    "details": {
+      "ticker": "INFY",
+      "company": "Infosys Limited"
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:54 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:54 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:54 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:54 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:54 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:54 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:54 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:54 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:54 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:54 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:54 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:54 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:47 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "portfolioTags"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:47 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "portfolioTags"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:47 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "targetPrice"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:46 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "nextReview"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_add",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:46 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "company": "Reliance Industries Limited"
+    }
+  },
+  {
+    "action": "watchlist_delete",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:45 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "company": "Reliance Industries Limited"
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:26 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "status"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "nextReview"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_add",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:16 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "company": "Reliance Industries Limited"
+    }
+  },
+  {
+    "action": "watchlist_delete",
+    "user": "unknown",
+    "ts": "23 Jul 2026 10:13 UTC",
+    "details": {
+      "ticker": "TCS",
+      "company": "Tata Consultancy Services Limited"
+    }
+  },
+  {
+    "action": "watchlist_add",
+    "user": "unknown",
+    "ts": "23 Jul 2026 10:12 UTC",
+    "details": {
+      "ticker": "TCS",
+      "company": "Tata Consultancy Services Limited"
+    }
+  },
+  {
+    "action": "watchlist_delete",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:06 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "company": "Reliance Industries Limited"
+    }
+  },
+  {
+    "action": "watchlist_add",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:06 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "company": "Reliance Industries Limited"
+    }
+  },
+  {
+    "action": "watchlist_delete",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:03 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "company": "RELIANCE"
+    }
+  },
+  {
+    "action": "watchlist_refresh",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:03 UTC",
+    "details": {
+      "ticker": "RELIANCE"
+    }
+  },
+  {
+    "action": "watchlist_update",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:03 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "fields": [
+        "riskScore",
+        "researchScore",
+        "status",
+        "thesis"
+      ]
+    }
+  },
+  {
+    "action": "watchlist_add",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "23 Jul 2026 10:03 UTC",
+    "details": {
+      "ticker": "RELIANCE",
+      "company": "RELIANCE"
+    }
+  },
+  {
     "action": "corporate_action_created",
     "user": "jay.chaudhari@niveshaay.com",
     "ts": "13 Jul 2026 08:09 UTC",
