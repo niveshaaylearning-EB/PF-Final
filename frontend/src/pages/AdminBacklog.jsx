@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Activity, LogIn, LogOut, Upload, RefreshCw, Clock, User, Layers, ArrowLeft, LayoutDashboard, CheckCircle2, UserPlus, ShieldCheck, ShieldX, Lock, KeyRound, Shield } from 'lucide-react';
+import { Activity, LogIn, LogOut, Upload, RefreshCw, Clock, User, Layers, ArrowLeft, LayoutDashboard, CheckCircle2, UserPlus, ShieldCheck, ShieldX, Lock, KeyRound, Shield, Mail } from 'lucide-react';
 
 import { API_BASE as API } from '../config.js';
 
@@ -202,6 +202,8 @@ const AUTH_EVENT_META = {
   account_locked:         { label: 'Account Locked',   color: '#f59e0b',          Icon: Lock        },
   password_changed:       { label: 'Password Changed', color: '#38bdf8',          Icon: KeyRound    },
   login_failed:           { label: 'Login Failed',     color: '#f87171',          Icon: ShieldX     },
+  results_calendar_reminder_sent:   { label: 'Reminder Email Sent',   color: 'var(--positive)', Icon: Mail },
+  results_calendar_reminder_failed: { label: 'Reminder Email Failed', color: '#f87171',         Icon: Mail },
 };
 
 function authEventDetails(ev) {

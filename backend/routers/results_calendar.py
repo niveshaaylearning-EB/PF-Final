@@ -42,6 +42,22 @@ def _classify_corporate_action(subject: str) -> str:
         return 'Merger/Scheme'
     return 'Corporate Action'
 
+# BasketHistory.basket_id (the main app's own "Actual Portfolio" holdings
+# tracking) uses an older/abbreviated name for a few baskets that doesn't
+# match what the webportal side calls the exact same basket -- confirmed by
+# querying BasketHistory's distinct basket_id values directly (only these 3
+# actually differ; everything else already matches). Without normalizing,
+# a stock held in both systems' records of one basket shows up as if it were
+# in two different portfolios (e.g. "Tech Stack, Techstack").
+_LEGACY_BASKET_NAME_ALIASES = {
+    "Tech Stack":  "Techstack",
+    "Trends Trio": "Trends Triology",
+    "Mid & Small": "Mid & Small Cap",
+}
+
+def _normalize_basket_name(name: str) -> str:
+    return _LEGACY_BASKET_NAME_ALIASES.get(name, name)
+
 _RESULTS_CACHE_FILE = os.path.join(os.path.dirname(__file__), '..', 'results_calendar_cache.json')
 _RESULTS_TTL = 12 * 3600      # 12 hours -- normal cache lifetime for a successful fetch
 _RESULTS_RETRY_TTL = 15 * 60  # 15 minutes -- short-lived cache when a source errored, so a
@@ -98,7 +114,7 @@ async def _refresh_results_calendar_data(db: Session) -> list:
         # Skip if hidden/deleted/sold
         if (h.basket_id, code) in hidden_set:
             continue
-        basket_name = re.sub(r'^NIA\s*', '', h.basket_id).strip()
+        basket_name = _normalize_basket_name(re.sub(r'^NIA\s*', '', h.basket_id).strip())
         if code not in stocks_map:
             stocks_map[code] = {
                 "name": h.stock_name or code,
@@ -351,7 +367,7 @@ async def get_results_calendar(db: Session = Depends(get_db)):
             code = h.stock_code.strip().upper()
             if not code:
                 continue
-            basket_name = re.sub(r'^NIA\s*', '', h.basket_id).strip()
+            basket_name = _normalize_basket_name(re.sub(r'^NIA\s*', '', h.basket_id).strip())
             if (h.basket_id, code) not in hidden_set:
                 active_set.add((basket_name, code))
 
@@ -460,7 +476,7 @@ def _save_notified(data: dict) -> None:
 
 def check_and_notify_upcoming_events(db: Session) -> None:
     from datetime import date, timedelta
-    from auth import _send_email
+    from auth import _send_email, _log_audit
 
     cached = _results_cache.get("calendar") or {}
     events = cached.get("data") or []
@@ -491,11 +507,14 @@ def check_and_notify_upcoming_events(db: Session) -> None:
             f"{label}\nDate: {e['date']} (tomorrow)\n\n"
             f"Open the Result Calendar in the dashboard for details."
         )
+        reminder_note = f"{e['stock_code']} -- {label} reminder for {e['date']}"
         for to in recipients:
             try:
                 _send_email(to, subject, body)
+                _log_audit(to, "results_calendar_reminder_sent", reminder_note)
             except Exception as err:
                 print(f"[Results Calendar] reminder email to {to} failed: {err}")
+                _log_audit(to, "results_calendar_reminder_failed", f"{reminder_note}: {err}")
 
         notified[key] = True
         changed = True

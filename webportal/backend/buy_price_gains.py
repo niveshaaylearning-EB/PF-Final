@@ -221,7 +221,12 @@ async def _fetch_open_price_yahoo_sym(sym: str, ts: int) -> float | None:
 
 
 async def _fetch_open_price_for_listing(nse_code: str, date_str: str) -> float | None:
-    """Opening price on listing date — tries YF_SYMBOL_MAP override, then .NS, then -SM.NS."""
+    """Opening price on listing date — tries YF_SYMBOL_MAP override, then .NS,
+    then -SM.NS (Yahoo's small-cap/SME suffix). If Yahoo has nothing at all for
+    the code (common for very fresh or BSE-only/illiquid SME IPO listings),
+    falls back to the same Google Finance / Screener.in OHLC-average chain the
+    general ohlc-lookup endpoint already uses -- an approximate day-of-listing
+    reference price beats leaving buyPrice permanently empty."""
     dt = None
     for fmt in ("%d %b %Y", "%d-%b-%Y", "%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y"):
         try:
@@ -232,13 +237,22 @@ async def _fetch_open_price_for_listing(nse_code: str, date_str: str) -> float |
     if dt is None:
         return None
     ts = int(dt.replace(tzinfo=timezone.utc).timestamp())
+
     if nse_code in YF_SYMBOL_MAP:
-        return await _fetch_open_price_yahoo_sym(YF_SYMBOL_MAP[nse_code], ts)
-    # Try .NS first, then SME fallback
-    val = await _fetch_open_price_yahoo_sym(f"{nse_code}.NS", ts)
+        val = await _fetch_open_price_yahoo_sym(YF_SYMBOL_MAP[nse_code], ts)
+    else:
+        # Try .NS first, then SME fallback
+        val = await _fetch_open_price_yahoo_sym(f"{nse_code}.NS", ts)
+        if val is None:
+            val = await _fetch_open_price_yahoo_sym(f"{nse_code}-SM.NS", ts)
     if val is not None:
         return val
-    return await _fetch_open_price_yahoo_sym(f"{nse_code}-SM.NS", ts)
+
+    val, _ = await _fetch_ohlc_google(nse_code, dt)
+    if val is not None:
+        return val
+    val, _ = await _fetch_ohlc_screener(nse_code, dt)
+    return val
 
 
 async def _backfill_ipo_listing_prices() -> None:
@@ -923,6 +937,37 @@ async def _fetch_listing_date_nse(symbol: str) -> str | None:
         return None
 
 
+async def _fetch_listing_date_yahoo(symbol: str) -> str | None:
+    """Fallback for when NSE's own site blocks this server outright (it does,
+    unconditionally, from this host -- even the plain homepage 403s before any
+    API call is attempted, unlike Yahoo/Google/Screener which all work fine).
+    Yahoo's chart `meta.firstTradeDate` is the exchange's first-trade Unix
+    timestamp for the symbol -- a reliable stand-in for listing date. Tries
+    YF_SYMBOL_MAP override, then .NS, then -SM.NS, mirroring the same ladder
+    _fetch_open_price_for_listing already uses for the price side."""
+    async def _first_trade_date(sym: str) -> str | None:
+        try:
+            async with httpx.AsyncClient(timeout=10, headers={"User-Agent": "Mozilla/5.0"},
+                                          follow_redirects=True) as client:
+                r = await client.get(
+                    f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(sym)}"
+                    "?range=5y&interval=1d"
+                )
+            if r.status_code != 200:
+                return None
+            result = ((r.json().get("chart") or {}).get("result")) or []
+            if not result:
+                return None
+            ts = (result[0].get("meta") or {}).get("firstTradeDate")
+            return datetime.utcfromtimestamp(ts).strftime("%d-%b-%Y") if ts else None
+        except Exception:
+            return None
+
+    if symbol in YF_SYMBOL_MAP:
+        return await _first_trade_date(YF_SYMBOL_MAP[symbol])
+    return (await _first_trade_date(f"{symbol}.NS")) or (await _first_trade_date(f"{symbol}-SM.NS"))
+
+
 async def _backfill_ipo_listing_dates() -> None:
     """Background: fetch & persist missing listing dates for IPO_Recommendations stocks."""
     try:
@@ -939,7 +984,7 @@ async def _backfill_ipo_listing_dates() -> None:
                 continue
             if (basket_bp.get(code) or {}).get("listingDate"):
                 continue  # already cached
-            ld = await _fetch_listing_date_nse(code)
+            ld = await _fetch_listing_date_nse(code) or await _fetch_listing_date_yahoo(code)
             if ld:
                 if code not in basket_bp:
                     basket_bp[code] = {}

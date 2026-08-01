@@ -313,6 +313,12 @@ async def add_watchlist_company(item: WatchlistAddRequest, request: Request):
         "thesis": "", "competitiveAdvantages": "", "growthDrivers": "", "keyRisks": "",
         "industryTailwinds": "", "valuationSummary": "", "analystNotes": "",
         "portfolioTags": [], "pinned": False,
+        # Who actually created this entry, captured once at add-time -- distinct
+        # from "analyst" (a reassignable "who's currently working this" field
+        # anyone can edit later). addedBy/addedAt are never touched by
+        # update_watchlist_company below, so editing/reassigning an entry can
+        # never overwrite who originally added it.
+        "addedBy": email, "addedAt": datetime.now(timezone.utc).isoformat(),
         "dateAdded": _today(), "lastUpdated": _today(), "nextReview": None,
     }
     for k, v in fetched.items():

@@ -290,7 +290,7 @@
     {
       "nseCode": "E2E",
       "allocation": 0.05,
-      "buyPrice": 3113.06
+      "buyPrice": 311.31
     }
   ],
   "IPO_Basket": [
@@ -526,7 +526,7 @@
     {
       "nseCode": "E2E",
       "allocation": 0.06,
-      "buyPrice": 2932.7,
+      "buyPrice": 293.27,
       "securityName": "E2E Networks Ltd"
     }
   ],
@@ -604,7 +604,7 @@
     {
       "nseCode": "E2E",
       "allocation": 0.07,
-      "buyPrice": 2131.94
+      "buyPrice": 213.19
     },
     {
       "nseCode": "SHADOWFAX",
@@ -870,7 +870,7 @@
     {
       "nseCode": "E2E",
       "allocation": 0.07,
-      "buyPrice": 2554.18,
+      "buyPrice": 255.42,
       "securityName": "E2E Networks Ltd"
     },
     {
@@ -6210,7 +6210,7 @@
     {
       "nseCode": "DANISH",
       "allocation": 0,
-      "buyPrice": 0
+      "buyPrice": 700
     },
     {
       "nseCode": "GCHOTELS",
@@ -6230,7 +6230,7 @@
     {
       "nseCode": "544531",
       "allocation": 0,
-      "buyPrice": 0
+      "buyPrice": 191
     },
     {
       "nseCode": "EMMVEE",
@@ -6240,17 +6240,12 @@
     {
       "nseCode": "CMRGREEN",
       "allocation": 0,
-      "buyPrice": 0
+      "buyPrice": 268
     },
     {
       "nseCode": "KUSUMGAR",
       "allocation": 0,
-      "buyPrice": 0
-    },
-    {
-      "nseCode": "LIQUIDCASE",
-      "allocation": 1.0,
-      "buyPrice": 114.03
+      "buyPrice": 569
     }
   ],
   "IPO_Recommendations_sold": []

@@ -141,8 +141,17 @@ def _reconcile_liquidcase(data: dict) -> dict:
     """Whenever a basket's holdings don't sum to 100% allocation, park the
     unallocated remainder in LIQUIDCASE (cash-equivalent liquid ETF) instead
     of leaving it uninvested and untracked. Only tops up -- never trims an
-    over-100% basket down."""
-    for holdings in data.values():
+    over-100% basket down.
+
+    Skips IPO_Recommendations (and its _sold counterpart): that basket is a
+    growing equal-weighted watchlist of recent IPOs, not a capital-weighted
+    portfolio -- every stock in it is intentionally seeded at allocation: 0
+    (see App.jsx's isIPO equal-weight display), so this rule would otherwise
+    see ~0% "allocated" on every save and dump ~100% into a LIQUIDCASE row
+    that has no business being there."""
+    for basket_key, holdings in data.items():
+        if basket_key.startswith("IPO_Recommendations"):
+            continue
         if not isinstance(holdings, list) or not holdings:
             continue
         total = sum(h.get("allocation", 0) or 0 for h in holdings)

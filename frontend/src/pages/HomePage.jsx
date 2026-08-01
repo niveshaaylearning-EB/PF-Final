@@ -72,9 +72,9 @@ function HomePage() {
                   background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)',
                   borderRadius: '8px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer',
                 }}>
-                  <strong style={{ color: '#f87171' }}>{a.stock_code}</strong>
-                  <span style={{ color: 'var(--text-muted)', marginLeft: '6px', fontSize: '0.73rem' }}>
-                    {a.basket_name.replace('NIA ', '')}
+                  <strong style={{ color: 'var(--text-main)' }}>{a.stock_code}</strong>
+                  <span style={{ color: 'var(--text-main)', marginLeft: '6px', fontSize: '0.73rem' }}>
+                    ({a.basket_name.replace('NIA ', '')})
                   </span>
                   <div style={{ fontSize: '0.73rem', marginTop: '2px' }}>
                     CMP <strong>₹{a.cmp?.toFixed(2)}</strong>
@@ -105,9 +105,9 @@ function HomePage() {
                   background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.25)',
                   borderRadius: '8px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer',
                 }}>
-                  <strong style={{ color: 'var(--positive)' }}>{a.stock_code}</strong>
-                  <span style={{ color: 'var(--text-muted)', marginLeft: '6px', fontSize: '0.73rem' }}>
-                    {a.basket_name.replace('NIA ', '')}
+                  <strong style={{ color: 'var(--text-main)' }}>{a.stock_code}</strong>
+                  <span style={{ color: 'var(--text-main)', marginLeft: '6px', fontSize: '0.73rem' }}>
+                    ({a.basket_name.replace('NIA ', '')})
                   </span>
                   <div style={{ fontSize: '0.73rem', marginTop: '2px' }}>
                     CMP <strong>₹{a.cmp?.toFixed(2)}</strong>
@@ -139,12 +139,12 @@ function HomePage() {
                   background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)',
                   borderRadius: '8px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer',
                 }}>
-                  <strong style={{ color: 'var(--primary)'}}>{a.ticker}</strong>
-                  <span style={{ color: 'var(--text-muted)', marginLeft: '6px', fontSize: '0.73rem' }}>{a.company}</span>
+                  <strong style={{ color: 'var(--text-main)'}}>{a.ticker}</strong>
+                  <span style={{ color: 'var(--text-main)', marginLeft: '6px', fontSize: '0.73rem' }}>{a.company}</span>
                   <div style={{ fontSize: '0.73rem', marginTop: '2px' }}>
                     CMP <strong>₹{a.cmp?.toFixed?.(2) ?? a.cmp}</strong>
                     {' · '}Target <strong style={{ color: 'var(--primary)'}}>₹{a.targetPrice}</strong>
-                    {a.analyst && <> {' · '}<span style={{ color: 'var(--text-muted)' }}>{a.analyst}</span></>}
+                    {a.analyst && <> {' · '}<span style={{ color: 'var(--text-main)' }}>{a.analyst}</span></>}
                   </div>
                 </div>
               </Link>
@@ -170,11 +170,11 @@ function HomePage() {
                   background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.25)',
                   borderRadius: '8px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer',
                 }}>
-                  <strong style={{ color: 'var(--accent-amber)'}}>{a.ticker}</strong>
-                  <span style={{ color: 'var(--text-muted)', marginLeft: '6px', fontSize: '0.73rem' }}>{a.company}</span>
+                  <strong style={{ color: 'var(--text-main)'}}>{a.ticker}</strong>
+                  <span style={{ color: 'var(--text-main)', marginLeft: '6px', fontSize: '0.73rem' }}>{a.company}</span>
                   <div style={{ fontSize: '0.73rem', marginTop: '2px' }}>
                     Was due <strong style={{ color: 'var(--accent-amber)'}}>{a.nextReview}</strong>
-                    {a.analyst && <> {' · '}<span style={{ color: 'var(--text-muted)' }}>{a.analyst}</span></>}
+                    {a.analyst && <> {' · '}<span style={{ color: 'var(--text-main)' }}>{a.analyst}</span></>}
                   </div>
                 </div>
               </Link>
@@ -201,9 +201,18 @@ function HomePage() {
                   background: 'var(--primary-glow)', border: '1px solid var(--primary)',
                   borderRadius: '8px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer',
                 }}>
-                  <strong style={{ color: 'var(--primary)' }}>{e.stock_code}</strong>
-                  <span style={{ color: 'var(--text-muted)', marginLeft: '6px', fontSize: '0.73rem' }}>
-                    {e.baskets?.join(', ')}
+                  {/* The stock code itself is the most important thing to read in this
+                      pill, so it gets the strongest available contrast (--text-main:
+                      near-white in dark mode, near-black in light mode) rather than
+                      --primary -- --primary is the SAME base hue as this pill's own
+                      background/border (primary-glow), so accent-colored text on its
+                      own accent-tinted pill reads as barely-differentiated indigo-on-
+                      indigo, especially at this small a size. Same reasoning for the
+                      basket-list span below: --text-muted is calibrated for a neutral
+                      page background, not a saturated tinted pill. */}
+                  <strong style={{ color: 'var(--text-main)' }}>{e.stock_code}</strong>
+                  <span style={{ color: 'var(--text-main)', marginLeft: '6px', fontSize: '0.73rem' }}>
+                    ({e.baskets?.join(', ')})
                   </span>
                 </div>
               </Link>
@@ -255,7 +264,7 @@ function HomePage() {
                   <div>
                     <strong style={{ color: 'var(--text-main)' }}>{e.stock_code}</strong>
                     <span style={{ color: 'var(--text-muted)', marginLeft: '8px', fontSize: '0.78rem' }}>
-                      {e.baskets?.join(', ')}
+                      ({e.baskets?.join(', ')})
                     </span>
                   </div>
                 </div>

@@ -1,5 +1,54 @@
 [
   {
+    "action": "corporate_action_auto_scan",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "01 Aug 2026 05:50 UTC",
+    "details": {
+      "createdCount": 1,
+      "checkedStocks": 81
+    }
+  },
+  {
+    "action": "corporate_action_approved",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "01 Aug 2026 05:50 UTC",
+    "details": {
+      "id": "42f78c02-b831-4765-a7e1-c78696bb268a",
+      "type": "split",
+      "nseCode": "E2E"
+    }
+  },
+  {
+    "action": "corporate_action_approved",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "01 Aug 2026 05:50 UTC",
+    "details": {
+      "id": "5bed0768-5a0a-44ec-89f7-5f8a935d05f1",
+      "type": "split",
+      "nseCode": "E2E"
+    }
+  },
+  {
+    "action": "corporate_action_approved",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "01 Aug 2026 05:50 UTC",
+    "details": {
+      "id": "8ff79311-7e13-446b-bc49-becf7d47c861",
+      "type": "split",
+      "nseCode": "E2E"
+    }
+  },
+  {
+    "action": "corporate_action_approved",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "01 Aug 2026 05:40 UTC",
+    "details": {
+      "id": "8dfd76a2-7221-4846-8dc6-83de20e3d93a",
+      "type": "split",
+      "nseCode": "E2E"
+    }
+  },
+  {
     "action": "watchlist_delete",
     "user": "jay.chaudhari@niveshaay.com",
     "ts": "29 Jul 2026 09:55 UTC",

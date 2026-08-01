@@ -361,7 +361,7 @@ function DetailModal({ record, meta, onClose, onSave, onDelete, onRefresh }) {
 
           {saveError && <div className="whatif-warn" style={{ marginTop: '0.75rem' }}>{saveError}</div>}
           <div className="sit-no-data" style={{ marginTop: '0.75rem' }}>
-            Added {record.dateAdded} &middot; Last updated {record.lastUpdated}
+            Added by {record.addedBy || record.analyst || 'unknown'} on {record.dateAdded} &middot; Last updated {record.lastUpdated}
             {saving && ' · saving…'}
             {!saving && justSaved && <span style={{ color: '#34d399' }}> · Saved ✓</span>}
           </div>

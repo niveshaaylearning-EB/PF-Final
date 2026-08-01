@@ -870,7 +870,7 @@ export default function App() {
         ) : (
           <div className="holdings-view">
             {/* Insight cards — full-width row above table */}
-            <InsightsSidebar rows={simAgg.overlaid} isIPO={isIPO} />
+            <InsightsSidebar rows={simAgg.overlaid} isIPO={isIPO} perfByTenure={perfByTenure} tenure={selectedTenure} />
 
             {/* OHLC Fallback Banner */}
             {!fallbackDismissed && Object.keys(ohlcFallbacks).length > 0 && (

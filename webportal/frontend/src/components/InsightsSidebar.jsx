@@ -40,23 +40,35 @@ function InsightCard({ title, subtitle, items, valueKey, accent }) {
   );
 }
 
-export default function InsightsSidebar({ rows, isIPO }) {
-  const validPerf = rows.filter(r => r.performance  != null && isFinite(r.performance));
-  const validCont = rows.filter(r => r.contribution != null && isFinite(r.contribution));
+export default function InsightsSidebar({ rows, isIPO, perfByTenure, tenure }) {
+  const tenureLabel = tenure || '1M';
+  // 1M keeps using row.performance -- its own live open1M/close1M-derived
+  // figure, already correct and independently verified. Every OTHER tenure
+  // comes from perfByTenure (the multi-tenure batch fetch), since rows never
+  // carry a baked-in non-1M performance field. Contribution is recomputed
+  // from allocation × that tenure's performance rather than reusing
+  // row.contribution, which is always the 1M figure regardless of tenure.
+  const withTenure = rows.map(r => {
+    const perf = tenureLabel === '1M' ? r.performance : perfByTenure?.[r.nseCode]?.[tenureLabel];
+    const contribution = (perf != null && r.allocation != null) ? r.allocation * perf : null;
+    return { ...r, _tenurePerf: perf, _tenureContribution: contribution };
+  });
+  const validPerf = withTenure.filter(r => r._tenurePerf != null && isFinite(r._tenurePerf));
+  const validCont = withTenure.filter(r => r._tenureContribution != null && isFinite(r._tenureContribution));
 
-  const topGainers  = [...validPerf].sort((a, b) => b.performance  - a.performance).slice(0, 5);
-  const topLosers   = [...validPerf].sort((a, b) => a.performance  - b.performance).slice(0, 5);
-  const topContribs = [...validCont].sort((a, b) => b.contribution - a.contribution).slice(0, 5);
-  const topDraggers = [...validCont].sort((a, b) => a.contribution - b.contribution).slice(0, 5);
+  const topGainers  = [...validPerf].sort((a, b) => b._tenurePerf - a._tenurePerf).slice(0, 5);
+  const topLosers   = [...validPerf].sort((a, b) => a._tenurePerf - b._tenurePerf).slice(0, 5);
+  const topContribs = [...validCont].sort((a, b) => b._tenureContribution - a._tenureContribution).slice(0, 5);
+  const topDraggers = [...validCont].sort((a, b) => a._tenureContribution - b._tenureContribution).slice(0, 5);
 
   return (
     <div className="insights-section">
       {!isIPO && (
         <div className="insights-grid">
-          <InsightCard title="Top Gainers"      subtitle="1M Perf"     items={topGainers}  valueKey="performance"  accent="green" />
-          <InsightCard title="Top Losers"       subtitle="1M Perf"     items={topLosers}   valueKey="performance"  accent="red"   />
-          <InsightCard title="Top Contributors" subtitle="Contribution" items={topContribs} valueKey="contribution" accent="green" />
-          <InsightCard title="Top Draggers"     subtitle="Contribution" items={topDraggers} valueKey="contribution" accent="red"   />
+          <InsightCard title="Top Gainers"      subtitle={`${tenureLabel} Perf`} items={topGainers}  valueKey="_tenurePerf"         accent="green" />
+          <InsightCard title="Top Losers"       subtitle={`${tenureLabel} Perf`} items={topLosers}   valueKey="_tenurePerf"         accent="red"   />
+          <InsightCard title="Top Contributors" subtitle="Contribution"         items={topContribs} valueKey="_tenureContribution" accent="green" />
+          <InsightCard title="Top Draggers"     subtitle="Contribution"         items={topDraggers} valueKey="_tenureContribution" accent="red"   />
         </div>
       )}
     </div>

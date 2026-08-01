@@ -13,11 +13,11 @@
     },
     "demerger": null,
     "source": "Yahoo Finance corporate action data (verify against official NSE announcement before approving)",
-    "status": "pending_review",
+    "status": "approved",
     "createdAt": "13 Jul 2026 13:39",
     "createdBy": "jay.chaudhari@niveshaay.com",
-    "approvedBy": null,
-    "approvedAt": null,
+    "approvedBy": "jay.chaudhari@niveshaay.com",
+    "approvedAt": "01 Aug 2026 11:10",
     "reversalOf": null,
     "comparisonReport": {
       "currentBuyPrice": 3113.065,
@@ -60,20 +60,20 @@
     },
     "demerger": null,
     "source": "Yahoo Finance corporate action data (verify against official NSE announcement before approving)",
-    "status": "pending_review",
+    "status": "approved",
     "createdAt": "13 Jul 2026 13:39",
     "createdBy": "jay.chaudhari@niveshaay.com",
-    "approvedBy": null,
-    "approvedAt": null,
+    "approvedBy": "jay.chaudhari@niveshaay.com",
+    "approvedAt": "01 Aug 2026 11:20",
     "reversalOf": null,
     "comparisonReport": {
-      "currentBuyPrice": 2786.8885,
-      "revisedBuyPrice": 278.6889,
-      "difference": -2508.1996,
+      "currentBuyPrice": 2932.7008,
+      "revisedBuyPrice": 293.2701,
+      "difference": -2639.4307,
       "eligibleEvents": [
         {
           "date": "05 Sep 2024",
-          "weight": 8.0,
+          "weight": 4.0,
           "oldPrice": 2568.17,
           "newPrice": 256.817
         },
@@ -107,11 +107,11 @@
     },
     "demerger": null,
     "source": "Yahoo Finance corporate action data (verify against official NSE announcement before approving)",
-    "status": "pending_review",
+    "status": "approved",
     "createdAt": "13 Jul 2026 13:39",
     "createdBy": "jay.chaudhari@niveshaay.com",
-    "approvedBy": null,
-    "approvedAt": null,
+    "approvedBy": "jay.chaudhari@niveshaay.com",
+    "approvedAt": "01 Aug 2026 11:20",
     "reversalOf": null,
     "comparisonReport": {
       "currentBuyPrice": 2131.9357,
@@ -148,11 +148,11 @@
     },
     "demerger": null,
     "source": "Yahoo Finance corporate action data (verify against official NSE announcement before approving)",
-    "status": "pending_review",
+    "status": "approved",
     "createdAt": "13 Jul 2026 13:39",
     "createdBy": "jay.chaudhari@niveshaay.com",
-    "approvedBy": null,
-    "approvedAt": null,
+    "approvedBy": "jay.chaudhari@niveshaay.com",
+    "approvedAt": "01 Aug 2026 11:20",
     "reversalOf": null,
     "comparisonReport": {
       "currentBuyPrice": 2554.1786,
@@ -176,6 +176,59 @@
           "weight": 2.0,
           "oldPrice": 2925.825,
           "newPrice": 292.5825
+        }
+      ],
+      "ineligibleEvents": []
+    }
+  },
+  {
+    "id": "55e3a37a-a26f-468e-845b-ed35698e32ae",
+    "basketKey": "Green_Energy",
+    "nseCode": "POCL",
+    "securityName": "",
+    "type": "split",
+    "exDate": "21 Jul 2026",
+    "recordDate": "",
+    "ratio": {
+      "old": 5.0,
+      "new": 2.0
+    },
+    "demerger": null,
+    "source": "Auto-detected from Yahoo Finance (share ratio 5:2) -- verify against the official NSE/BSE announcement, and retype as Bonus Issue if that's what this actually was, before approving.",
+    "status": "pending_review",
+    "createdAt": "01 Aug 2026 11:20",
+    "createdBy": "jay.chaudhari@niveshaay.com",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reversalOf": null,
+    "comparisonReport": {
+      "currentBuyPrice": 1043.8517,
+      "revisedBuyPrice": 417.5407,
+      "difference": -626.311,
+      "eligibleEvents": [
+        {
+          "date": "04 Sep 2024",
+          "weight": 1.9101,
+          "oldPrice": 1036.89,
+          "newPrice": 414.756
+        },
+        {
+          "date": "29 Oct 2024",
+          "weight": 1.0,
+          "oldPrice": 882.79,
+          "newPrice": 353.116
+        },
+        {
+          "date": "10 Nov 2025",
+          "weight": 0.5,
+          "oldPrice": 1320.83,
+          "newPrice": 528.332
+        },
+        {
+          "date": "08 May 2026",
+          "weight": 0.0899,
+          "oldPrice": 1442.85,
+          "newPrice": 577.14
         }
       ],
       "ineligibleEvents": []

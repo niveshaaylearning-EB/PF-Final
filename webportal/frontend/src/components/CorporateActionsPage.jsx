@@ -73,7 +73,7 @@ function toApiBody(form) {
   return body;
 }
 
-function ComparisonReport({ report, type }) {
+function ComparisonReport({ report, type, editable, overrides, onOverrideChange, onOverrideClear }) {
   if (!report) return null;
   return (
     <div style={{ marginTop: '0.75rem', fontSize: '0.8rem' }}>
@@ -85,7 +85,9 @@ function ComparisonReport({ report, type }) {
 
       {report.eligibleEvents?.length > 0 && (
         <div style={{ marginBottom: '0.5rem' }}>
-          <div style={{ color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>Eligible buy events (adjusted):</div>
+          <div style={{ color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>
+            Eligible buy events (adjusted){editable ? ' — edit a price to override the auto-computed value:' : ':'}
+          </div>
           <table style={{ width: '100%', fontSize: '0.76rem' }}>
             <tbody>
               {report.eligibleEvents.map((e, i) => (
@@ -94,7 +96,31 @@ function ComparisonReport({ report, type }) {
                   <td style={{ color: 'var(--text-secondary)', padding: '0.1rem 0.5rem' }}>{e.weight}% wt</td>
                   <td style={{ color: '#f87171', padding: '0.1rem 0.5rem' }}>{fmt(e.oldPrice)}</td>
                   <td style={{ color: 'var(--text-secondary)', padding: '0.1rem 0.3rem' }}>→</td>
-                  <td style={{ color: '#34d399', padding: '0.1rem 0.5rem' }}>{fmt(e.newPrice)}</td>
+                  {editable ? (
+                    <td style={{ padding: '0.1rem 0.5rem' }}>
+                      <input
+                        type="number" step="0.01"
+                        value={overrides?.[e.date] ?? e.newPrice ?? ''}
+                        onChange={ev => onOverrideChange(e.date, ev.target.value)}
+                        style={{ width: '90px', fontSize: '0.76rem', padding: '0.15rem 0.3rem',
+                                 background: 'var(--card-bg)', border: '1px solid rgba(99,102,241,0.3)',
+                                 borderRadius: '4px', color: e.overridden || overrides?.[e.date] != null ? '#fbbf24' : '#34d399' }}
+                      />
+                      {(e.overridden || overrides?.[e.date] != null) && (
+                        <button
+                          onClick={() => onOverrideClear(e.date)}
+                          title="Reset to auto-computed price"
+                          style={{ marginLeft: '0.3rem', background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '0.72rem' }}
+                        >
+                          reset
+                        </button>
+                      )}
+                    </td>
+                  ) : (
+                    <td style={{ color: e.overridden ? '#fbbf24' : '#34d399', padding: '0.1rem 0.5rem' }}>
+                      {fmt(e.newPrice)}{e.overridden ? ' (manual)' : ''}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -148,6 +174,12 @@ function RecordCard({ rec, onChanged }) {
     exDate: rec.exDate, recordDate: rec.recordDate || '',
     ratio: rec.ratio || { old: '', new: '', existing: '', bonus: '' },
     demerger: rec.demerger || emptyForm().demerger,
+    // Per-date manual price corrections. Only dates the admin has actually
+    // touched go in here -- NOT every eligible date's current computed price
+    // -- otherwise saving would freeze every date's price at whatever the
+    // ratio/ex-date happened to compute at edit time, silently ignoring any
+    // later ratio change (since an override always wins over the formula).
+    priceOverrides: { ...(rec.priceOverrides || {}) },
   }));
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
@@ -167,8 +199,17 @@ function RecordCard({ rec, onChanged }) {
     finally { setBusy(false); }
   };
 
+  const setPriceOverride = (date, value) =>
+    setForm(f => ({ ...f, priceOverrides: { ...f.priceOverrides, [date]: value } }));
+  const clearPriceOverride = (date) =>
+    setForm(f => { const next = { ...f.priceOverrides }; delete next[date]; return { ...f, priceOverrides: next }; });
+
   const doRecalc = () => call(async () => {
     const body = { exDate: form.exDate, recordDate: form.recordDate };
+    const overrideEntries = Object.entries(form.priceOverrides || {})
+      .map(([date, val]) => [date, parseFloat(val)])
+      .filter(([, val]) => !isNaN(val) && val > 0);
+    body.priceOverrides = Object.fromEntries(overrideEntries);
     if (rec.type === 'split' || rec.type === 'bonus') body.ratio = {
       old: parseFloat(form.ratio.old) || undefined, new: parseFloat(form.ratio.new) || undefined,
       existing: parseFloat(form.ratio.existing) || undefined, bonus: parseFloat(form.ratio.bonus) || undefined,
@@ -219,7 +260,13 @@ function RecordCard({ rec, onChanged }) {
         </span>
       </div>
 
-      <ComparisonReport report={rec.comparisonReport} type={rec.type} />
+      <ComparisonReport
+        report={rec.comparisonReport} type={rec.type}
+        editable={editable && edit}
+        overrides={form.priceOverrides}
+        onOverrideChange={setPriceOverride}
+        onOverrideClear={clearPriceOverride}
+      />
 
       {editable && edit && (
         <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: 'var(--input-bg)', borderRadius: '8px' }}>
@@ -283,6 +330,8 @@ export default function CorporateActionsPage() {
   const [creating, setCreating] = useState(false);
   const [createErr, setCreateErr] = useState('');
   const [filter, setFilter] = useState('all');
+  const [scanning, setScanning] = useState(false);
+  const [scanMsg, setScanMsg] = useState('');
 
   useEffect(() => { setAdmin(_getAdminState()); }, []);
 
@@ -317,6 +366,27 @@ export default function CorporateActionsPage() {
     }
   };
 
+  const handleScan = async () => {
+    setScanning(true); setScanMsg('');
+    try {
+      const token = getAuthToken();
+      const resp = await fetch(`${API_BASE}/corporate-actions/scan`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.detail || 'Scan failed');
+      setScanMsg(data.createdCount > 0
+        ? `Found ${data.createdCount} new corporate action${data.createdCount === 1 ? '' : 's'} (from Yahoo Finance) — added below as pending review. Checked ${data.checkedStocks} stocks.`
+        : `No new corporate actions found. Checked ${data.checkedStocks} stocks. (Demergers aren't auto-detected — enter those manually below.)`);
+      await load();
+    } catch (err) {
+      setScanMsg(err.message);
+    } finally {
+      setScanning(false);
+    }
+  };
+
   if (admin === null) return null;
   if (!admin.isAdmin) {
     return (
@@ -338,7 +408,13 @@ export default function CorporateActionsPage() {
           <i className="fa-solid fa-code-branch" style={{ color: '#818cf8', marginRight: '0.5rem' }} />
           Corporate Actions
         </div>
+        <button style={btn('#818cf8')} disabled={scanning} onClick={handleScan}>
+          {scanning ? 'Scanning…' : 'Scan for New Corporate Actions'}
+        </button>
       </div>
+      {scanMsg && (
+        <div style={{ ...box, fontSize: '0.82rem', color: 'var(--text-secondary)', padding: '0.6rem 1rem' }}>{scanMsg}</div>
+      )}
 
       {/* Create form */}
       <form onSubmit={handleCreate} style={box}>

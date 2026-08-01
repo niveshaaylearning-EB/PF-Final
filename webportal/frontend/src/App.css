@@ -59,7 +59,16 @@
     --card-bg: rgba(255, 253, 247, 0.82);
     --border-color: rgba(74, 58, 40, 0.14);
     --text-primary: #2a2118;
-    --text-secondary: #544639;
+    /* Darker than a first pass at this brand brown (#544639) -- that value
+       is high-contrast on paper (~9.8:1 against the cream background) but
+       thin small-caption text (kpi-card-sub, db-subtitle, etc. at ~0.67-0.78rem
+       normal weight) still read as washed-out next to bold uppercase labels
+       right next to them at the same color, since thin strokes at small sizes
+       anti-alias away more of their apparent contrast than the raw ratio
+       suggests. Darkening further (and bumping those specific classes to
+       font-weight 500 below) fixes the perceived legibility, not just the
+       measured one. */
+    --text-secondary: #3d3226;
     --accent-blue: #1e4d8c;
     --accent-green: #3c6b3a;
     --accent-red: #a3402e;
@@ -2485,6 +2494,7 @@ tr.search-dim { opacity: 0.2; }
 .db-subtitle {
     color: var(--text-secondary);
     font-size: 0.78rem;
+    font-weight: 500;
     margin-top: 2px;
 }
 
@@ -2629,6 +2639,7 @@ tr.search-dim { opacity: 0.2; }
 
 .kpi-card-sub {
     font-size: 0.67rem;
+    font-weight: 500;
     color: var(--text-secondary);
     margin-top: 1px;
 }

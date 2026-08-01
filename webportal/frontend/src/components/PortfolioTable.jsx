@@ -441,7 +441,18 @@ export default function PortfolioTable({
           ) : (
             <tr className="summary-row pt-summary-row">
               <td style={{ fontWeight: 700, color: 'var(--text-secondary)', textAlign: 'right' }}>Total / Avg</td>
-              <td style={{ fontWeight: 700, color: 'var(--accent-blue)' }}>{formatPercent(totalAllocation)}</td>
+              <td className="editable-alloc">
+                {/* Mirrors the data rows' alloc-wrapper box (right-aligned
+                    58px number + separate % suffix) exactly, instead of a
+                    plain text node -- otherwise this never lands in the same
+                    horizontal position as the weight values above it. */}
+                <div className="alloc-wrapper">
+                  <span style={{ width: '58px', textAlign: 'right', fontWeight: 700, color: 'var(--accent-blue)' }}>
+                    {(totalAllocation * 100).toFixed(2)}
+                  </span>
+                  <span className="alloc-suffix" style={{ fontWeight: 700, color: 'var(--accent-blue)' }}>%</span>
+                </div>
+              </td>
               <td />{/* Performance */}
               <td style={{ fontWeight: 700 }} className={getColorClass(totalContribution)}>{formatPercent(totalContribution)}</td>
               <td colSpan={2} />{/* Buy Price + CMP */}

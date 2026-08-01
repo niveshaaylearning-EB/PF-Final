@@ -289078,5 +289078,98 @@
         }
       ]
     }
+  ],
+  "IPO_Recommendations": [
+    {
+      "ts": 1785328467.4994314,
+      "label": "before save 29 Jul 2026 18:04",
+      "stocks": [
+        {
+          "nseCode": "WAAREEENER",
+          "allocation": 0,
+          "buyPrice": 2500
+        },
+        {
+          "nseCode": "DANISH",
+          "allocation": 0,
+          "buyPrice": 0
+        },
+        {
+          "nseCode": "GCHOTELS",
+          "allocation": 0,
+          "buyPrice": 0
+        },
+        {
+          "nseCode": "SAMBHV",
+          "allocation": 0,
+          "buyPrice": 110
+        },
+        {
+          "nseCode": "EBGNG",
+          "allocation": 0,
+          "buyPrice": 355
+        },
+        {
+          "nseCode": "544531",
+          "allocation": 0,
+          "buyPrice": 191.0
+        },
+        {
+          "nseCode": "EMMVEE",
+          "allocation": 0,
+          "buyPrice": 217
+        },
+        {
+          "nseCode": "CMRGREEN",
+          "allocation": 0,
+          "buyPrice": 268.0
+        },
+        {
+          "nseCode": "KUSUMGAR",
+          "allocation": 0,
+          "buyPrice": 569.0
+        }
+      ],
+      "sold": [],
+      "buyPriceData": {
+        "544531": {
+          "listingDate": "30-Sep-2025",
+          "sellOHLC": {}
+        },
+        "WAAREEENER": {
+          "listingDate": "28-Oct-2024",
+          "sellOHLC": {}
+        },
+        "DANISH": {
+          "listingDate": "29-Oct-2024",
+          "sellOHLC": {}
+        },
+        "GCHOTELS": {
+          "listingDate": "27-Mar-2025",
+          "sellOHLC": {}
+        },
+        "SAMBHV": {
+          "listingDate": "02-Jul-2025",
+          "sellOHLC": {}
+        },
+        "EBGNG": {
+          "listingDate": "30-07-2025",
+          "sellOHLC": {}
+        },
+        "EMMVEE": {
+          "listingDate": "18-Nov-2025",
+          "sellOHLC": {}
+        },
+        "CMRGREEN": {
+          "listingDate": "10-Jun-2026",
+          "sellOHLC": {}
+        },
+        "KUSUMGAR": {
+          "listingDate": "15-Jul-2026",
+          "sellOHLC": {}
+        }
+      },
+      "rebalanceHistory": []
+    }
   ]
 }

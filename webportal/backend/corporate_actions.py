@@ -10,11 +10,14 @@ already-realized historical gain calculations (FIFO sell math in
 _compute_fifo_gains_for_series) are completely unaffected -- only the "current
 open position" buy price changes, and only after an admin approves it.
 """
+import asyncio
 import json
 import time
 import uuid
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import httpx
 from fastapi import APIRouter, BackgroundTasks, Body, HTTPException, Request
 
 from persistence import (
@@ -94,17 +97,135 @@ def _ca_overlay_for(basket: str, code: str) -> dict:
             continue
         eligible, _ = _eligible_and_ineligible(basket, code, rec["exDate"])
         eligible_dates = {d for d, _ in eligible}
+        overrides = rec.get("priceOverrides") or {}
         if rec["type"] in ("split", "bonus"):
             factor = _factor(rec)
             for d in eligible_dates:
                 if d in raw_ohlc:
-                    overlay[d] = round(raw_ohlc[d] / factor, 4)
+                    overlay[d] = overrides[d] if d in overrides else round(raw_ohlc[d] / factor, 4)
         elif rec["type"] == "demerger":
             parent_pct = rec["demerger"]["costAllocationPct"]["parent"] / 100
             for d in eligible_dates:
                 if d in raw_ohlc:
-                    overlay[d] = round(raw_ohlc[d] * parent_pct, 4)
+                    overlay[d] = overrides[d] if d in overrides else round(raw_ohlc[d] * parent_pct, 4)
     return overlay
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Auto-detection: scan every stock actually held across baskets for splits/
+# bonuses via Yahoo Finance's public chart-events feed (the same source the
+# existing hand-entered records already cite in their `source` field -- this
+# just automates that lookup instead of an admin doing it by hand). NSE's own
+# site blocks this server's outbound requests outright (even the homepage
+# 403s before any API call), so Yahoo is the only source that's actually
+# reachable here. Demergers aren't covered: Yahoo's feed has no way to
+# distinguish one from a large ordinary price move, and the cost-allocation
+# % a demerger record needs isn't in this feed at all -- that still requires
+# a human to notice the news and fill it in by hand via the create form above.
+# Yahoo's `splits` events don't distinguish a true face-value split from a
+# bonus issue (both are just a share-count ratio to it) -- since _factor()
+# computes the exact same price-adjustment divisor either way (old/new here
+# vs (existing+bonus)/existing for a manually-entered bonus), every detected
+# event is drafted as type="split" with ratio.old/new set to the numerator/
+# denominator; an admin can retype it as a bonus before approving if they
+# know that's what it actually was, with no change to the resulting math.
+_YF_SCAN_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept": "application/json",
+}
+_IST = timezone(timedelta(hours=5, minutes=30))
+SCAN_BASKETS = [k for k in BASKET_DISPLAY_NAMES if k != "IPO_Recommendations"]
+
+
+async def _fetch_recent_splits_yf(code: str, client: httpx.AsyncClient) -> list[dict]:
+    """Recent (6mo) split/bonus-as-split events for one NSE code, from Yahoo's
+    chart-events feed. Returns [] on any failure -- one stock's bad data/
+    network hiccup should never abort the whole scan."""
+    try:
+        resp = await client.get(
+            f"https://query1.finance.yahoo.com/v8/finance/chart/{code}.NS",
+            params={"range": "6mo", "interval": "1d", "events": "split,div"},
+        )
+        if resp.status_code != 200:
+            return []
+        result = ((resp.json().get("chart") or {}).get("result")) or []
+        if not result:
+            return []
+        splits = ((result[0].get("events") or {}).get("splits")) or {}
+        out = []
+        for s in splits.values():
+            num, den, ts = s.get("numerator"), s.get("denominator"), s.get("date")
+            if not num or not den or not ts:
+                continue
+            ex_date = datetime.fromtimestamp(ts, tz=_IST).strftime("%d %b %Y")
+            out.append({"exDate": ex_date, "old": num, "new": den, "splitRatio": s.get("splitRatio")})
+        return out
+    except Exception:
+        return []
+
+
+async def scan_for_new_actions(admin_email: str) -> dict:
+    """Fetch recent splits for every stock actually held across SCAN_BASKETS
+    and draft a pending_review record (identical shape/flow to a manually
+    created one) for any not already on file. Never auto-approves anything --
+    the admin still reviews/approves/rejects exactly as before."""
+    portfolios = _load_portfolios()
+    pairs = []
+    for basket in SCAN_BASKETS:
+        for stk in portfolios.get(basket, []):
+            code = (stk.get("nseCode") or "").strip().upper()
+            if code and code != "LIQUIDCASE":
+                pairs.append((basket, code))
+    unique_codes = {code for _, code in pairs}
+
+    splits_by_code: dict[str, list] = {}
+    sem = asyncio.Semaphore(10)
+
+    async def _lookup(code: str, client: httpx.AsyncClient):
+        async with sem:
+            splits_by_code[code] = await _fetch_recent_splits_yf(code, client)
+
+    async with httpx.AsyncClient(headers=_YF_SCAN_HEADERS, timeout=12.0, follow_redirects=True) as client:
+        await asyncio.gather(*(_lookup(code, client) for code in unique_codes))
+
+    existing = _load_ca()
+
+    def _already_known(basket: str, code: str, ex_date: str) -> bool:
+        return any(r["basketKey"] == basket and r["nseCode"] == code
+                   and r["exDate"] == ex_date and r["status"] != "rejected" for r in existing)
+
+    created = []
+    for basket, code in pairs:
+        for s in splits_by_code.get(code, []):
+            if _already_known(basket, code, s["exDate"]):
+                continue
+            ratio_label = s["splitRatio"] or f"{s['old']}:{s['new']}"
+            rec = {
+                "id": str(uuid.uuid4()),
+                "basketKey": basket, "nseCode": code, "securityName": "",
+                "type": "split",
+                "exDate": s["exDate"], "recordDate": "",
+                "ratio": {"old": s["old"], "new": s["new"]},
+                "demerger": None,
+                "priceOverrides": {},
+                "source": (f"Auto-detected from Yahoo Finance (share ratio {ratio_label}) -- verify against "
+                           "the official NSE/BSE announcement, and retype as Bonus Issue if that's what this "
+                           "actually was, before approving."),
+                "status": "pending_review",
+                "createdAt": time.strftime("%d %b %Y %H:%M"), "createdBy": admin_email,
+                "approvedBy": None, "approvedAt": None,
+                "reversalOf": None,
+            }
+            rec["comparisonReport"] = build_comparison_report(basket, code, rec)
+            existing.append(rec)
+            created.append(rec)
+
+    if created:
+        _save_ca(existing)
+        _log_activity("corporate_action_auto_scan", admin_email,
+                       {"createdCount": len(created), "checkedStocks": len(unique_codes)})
+
+    return {"checkedStocks": len(unique_codes), "checkedPairs": len(pairs), "created": created}
 
 
 def _weighted_avg(events: list, ohlc: dict) -> float | None:
@@ -133,21 +254,28 @@ def build_comparison_report(basket: str, code: str, rec: dict) -> dict:
     eligible, ineligible = _eligible_and_ineligible(basket, code, rec["exDate"])
     adjusted_ohlc = dict(raw_ohlc)
     detail = []
+    # Per-date manual corrections (admin-entered) -- take precedence over the
+    # ratio/cost-allocation math below for whichever dates they cover, so a
+    # single wrong data point (e.g. Yahoo misreported one day's OHLC) can be
+    # fixed by hand without distorting every other lot's auto-computed price.
+    overrides = rec.get("priceOverrides") or {}
 
     if rec["type"] in ("split", "bonus"):
         factor = _factor(rec)
         for d, q in eligible:
             if d in raw_ohlc:
-                new_price = round(raw_ohlc[d] / factor, 4)
+                new_price = overrides[d] if d in overrides else round(raw_ohlc[d] / factor, 4)
                 adjusted_ohlc[d] = new_price
-                detail.append({"date": d, "weight": q, "oldPrice": raw_ohlc[d], "newPrice": new_price})
+                detail.append({"date": d, "weight": q, "oldPrice": raw_ohlc[d], "newPrice": new_price,
+                               "overridden": d in overrides})
     elif rec["type"] == "demerger":
         parent_pct = rec["demerger"]["costAllocationPct"]["parent"] / 100
         for d, q in eligible:
             if d in raw_ohlc:
-                new_price = round(raw_ohlc[d] * parent_pct, 4)
+                new_price = overrides[d] if d in overrides else round(raw_ohlc[d] * parent_pct, 4)
                 adjusted_ohlc[d] = new_price
-                detail.append({"date": d, "weight": q, "oldPrice": raw_ohlc[d], "newPrice": new_price})
+                detail.append({"date": d, "weight": q, "oldPrice": raw_ohlc[d], "newPrice": new_price,
+                               "overridden": d in overrides})
 
     revised_price = _weighted_avg(series, adjusted_ohlc)
 
@@ -314,6 +442,7 @@ async def create_corporate_action(request: Request, body: dict = Body(...)):
         "exDate": body["exDate"], "recordDate": body.get("recordDate", ""),
         "ratio": body.get("ratio"),
         "demerger": body.get("demerger"),
+        "priceOverrides": body.get("priceOverrides") or {},
         "source": body.get("source", "manual entry"),
         "status": "pending_review",
         "createdAt": time.strftime("%d %b %Y %H:%M"), "createdBy": admin_email,
@@ -328,6 +457,22 @@ async def create_corporate_action(request: Request, body: dict = Body(...)):
     return rec
 
 
+@router.post("/api/corporate-actions/scan")
+async def scan_corporate_actions(request: Request):
+    """Admin-triggered: check every stock actually held across baskets for
+    recent splits/bonuses via Yahoo Finance, drafting a pending_review record
+    for anything not already on file. Nothing is auto-approved -- results
+    land in the normal review queue above."""
+    admin_email = _require_admin(request)
+    result = await scan_for_new_actions(admin_email)
+    return {
+        "checkedStocks": result["checkedStocks"],
+        "checkedPairs": result["checkedPairs"],
+        "createdCount": len(result["created"]),
+        "created": result["created"],
+    }
+
+
 @router.put("/api/corporate-actions/{ca_id}")
 async def update_corporate_action(ca_id: str, request: Request, body: dict = Body(...)):
     admin_email = _require_admin(request)
@@ -336,7 +481,7 @@ async def update_corporate_action(ca_id: str, request: Request, body: dict = Bod
     if rec["status"] not in ("pending_review", "approved"):
         raise HTTPException(400, f"Cannot edit a {rec['status']} corporate action.")
 
-    for field in ("securityName", "exDate", "recordDate", "ratio", "demerger", "source"):
+    for field in ("securityName", "exDate", "recordDate", "ratio", "demerger", "source", "priceOverrides"):
         if field in body:
             rec[field] = body[field]
 
