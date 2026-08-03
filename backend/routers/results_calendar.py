@@ -456,7 +456,32 @@ def delete_analyst_contact(contact_id: int, request: Request, db: Session = Depe
 # the background thread runs.
 
 _NOTIFIED_FILE = os.path.join(os.path.dirname(__file__), '..', 'results_calendar_notified.json')
-_ALWAYS_NOTIFY = ("monika.bansal@niveshaay.com",)
+_ALWAYS_NOTIFY = ("monika.bansal@niveshaay.com", "nukul.madaan@niveshaay.com")
+
+
+def _calendar_links(title: str, date_str: str, description: str) -> tuple[str, str]:
+    """Google Calendar + Outlook 'add event' deep links for a single all-day
+    event on `date_str` (YYYY-MM-DD). No API/auth needed on either side --
+    these just pre-fill each provider's own web "create event" form, which
+    the recipient still has to hit save on themselves."""
+    import urllib.parse as _urlparse
+    from datetime import datetime as _dt, timedelta as _td
+
+    day = _dt.strptime(date_str, "%Y-%m-%d").date()
+    next_day = day + _td(days=1)  # Google's all-day `dates` end is exclusive
+
+    google_url = "https://calendar.google.com/calendar/render?" + _urlparse.urlencode({
+        "action": "TEMPLATE",
+        "text": title,
+        "dates": f"{day.strftime('%Y%m%d')}/{next_day.strftime('%Y%m%d')}",
+        "details": description,
+    })
+    outlook_url = "https://outlook.live.com/calendar/0/deeplink/compose?" + _urlparse.urlencode({
+        "path": "/calendar/action/compose", "rru": "addevent",
+        "subject": title, "body": description,
+        "startdt": day.isoformat(), "enddt": next_day.isoformat(), "allday": "true",
+    })
+    return google_url, outlook_url
 
 def _load_notified() -> dict:
     try:
@@ -502,9 +527,14 @@ def check_and_notify_upcoming_events(db: Session) -> None:
 
         label = e.get("purpose") or ("Financial Results" if e.get("type") == "result" else "Corporate action")
         subject = f"[Reminder] {e['stock_code']} -- {label} tomorrow ({e['date']})"
+        description = f"{e['stock_name']} ({e['stock_code']}) -- {label}. Held in: {', '.join(e['baskets'])}."
+        google_url, outlook_url = _calendar_links(f"{e['stock_code']} -- {label}", e['date'], description)
         body = (
             f"{e['stock_name']} ({e['stock_code']}) -- held in: {', '.join(e['baskets'])}\n\n"
             f"{label}\nDate: {e['date']} (tomorrow)\n\n"
+            f"Add to your calendar:\n"
+            f"Google Calendar: {google_url}\n"
+            f"Outlook Calendar: {outlook_url}\n\n"
             f"Open the Result Calendar in the dashboard for details."
         )
         reminder_note = f"{e['stock_code']} -- {label} reminder for {e['date']}"

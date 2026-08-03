@@ -1,5 +1,85 @@
 [
   {
+    "user_email": "monika.bansal@niveshaay.com",
+    "event_type": "results_calendar_reminder_sent",
+    "details": "POCL -- Financial Results/Other business matters reminder for 2026-08-04",
+    "created_at": "2026-08-03T09:21:31.347148",
+    "ip_address": null,
+    "location": null
+  },
+  {
+    "user_email": "nukul.madaan@niveshaay.com",
+    "event_type": "results_calendar_reminder_sent",
+    "details": "POCL -- Financial Results/Other business matters reminder for 2026-08-04",
+    "created_at": "2026-08-03T09:21:30.013859",
+    "ip_address": null,
+    "location": null
+  },
+  {
+    "user_email": "monika.bansal@niveshaay.com",
+    "event_type": "results_calendar_reminder_sent",
+    "details": "KDDL -- Financial Results reminder for 2026-08-04",
+    "created_at": "2026-08-03T09:21:29.092285",
+    "ip_address": null,
+    "location": null
+  },
+  {
+    "user_email": "nukul.madaan@niveshaay.com",
+    "event_type": "results_calendar_reminder_sent",
+    "details": "KDDL -- Financial Results reminder for 2026-08-04",
+    "created_at": "2026-08-03T09:21:28.069851",
+    "ip_address": null,
+    "location": null
+  },
+  {
+    "user_email": "monika.bansal@niveshaay.com",
+    "event_type": "results_calendar_reminder_sent",
+    "details": "DEEDEV -- Financial Results/Other business matters reminder for 2026-08-04",
+    "created_at": "2026-08-03T09:21:26.676152",
+    "ip_address": null,
+    "location": null
+  },
+  {
+    "user_email": "nukul.madaan@niveshaay.com",
+    "event_type": "results_calendar_reminder_sent",
+    "details": "DEEDEV -- Financial Results/Other business matters reminder for 2026-08-04",
+    "created_at": "2026-08-03T09:21:25.324813",
+    "ip_address": null,
+    "location": null
+  },
+  {
+    "user_email": "monika.bansal@niveshaay.com",
+    "event_type": "results_calendar_reminder_sent",
+    "details": "AVALON -- Financial Results reminder for 2026-08-04",
+    "created_at": "2026-08-03T09:21:24.281596",
+    "ip_address": null,
+    "location": null
+  },
+  {
+    "user_email": "nukul.madaan@niveshaay.com",
+    "event_type": "results_calendar_reminder_sent",
+    "details": "AVALON -- Financial Results reminder for 2026-08-04",
+    "created_at": "2026-08-03T09:21:23.247906",
+    "ip_address": null,
+    "location": null
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "otp_requested",
+    "details": "Login OTP requested",
+    "created_at": "2026-08-03T09:20:01.836923",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "otp_requested",
+    "details": "Login OTP requested",
+    "created_at": "2026-08-01T12:45:06.463853",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
     "user_email": "jay.chaudhari@niveshaay.com",
     "event_type": "otp_requested",
     "details": "Login OTP requested",
