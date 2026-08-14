@@ -236,6 +236,8 @@ _ALLOWED_EMAIL_FILE = os.path.join(_BACKEND_DIR, "allowed_emails_data.json")
 _LOGIN_HISTORY_FILE  = os.path.join(_BACKEND_DIR, "login_history.json")
 _AUDIT_LOG_FILE      = os.path.join(_BACKEND_DIR, "audit_log.json")
 _STOCK_EVENTS_FILE   = os.path.join(_BACKEND_DIR, "stock_events.json")
+_SIMULATION_MODS_FILE = os.path.join(_BACKEND_DIR, "simulation_mods.json")
+_SIMULATION_SIPS_FILE = os.path.join(_BACKEND_DIR, "simulation_sips.json")
 
 def _save_json_push(filepath: str, data, sync: bool = False, raise_on_error: bool = False):
     rel_path = f"backend/{os.path.basename(filepath)}"
@@ -311,7 +313,8 @@ async def _startup_prewarm():
     if _gh_token and _gh_repo:
         import urllib.request as _ur_startup
         import base64 as _b64_startup
-        for _fname in ("allowed_emails_data.json", "login_history.json", "audit_log.json", "stock_events.json"):
+        for _fname in ("allowed_emails_data.json", "login_history.json", "audit_log.json", "stock_events.json",
+                       "simulation_mods.json", "simulation_sips.json"):
             try:
                 _api = f"https://api.github.com/repos/{_gh_repo}/contents/backend/{_fname}"
                 _hdrs = {"Authorization": f"Bearer {_gh_token}", "Accept": "application/vnd.github+json"}
@@ -389,6 +392,23 @@ async def _startup_prewarm():
                     event_type=rec.get("event_type",""), description=rec.get("description"),
                     old_value=rec.get("old_value"), new_value=rec.get("new_value"),
                     event_date=rec.get("event_date",""), user_email=rec.get("user_email")))
+        # Restore per-user simulator (virtual portfolio) holdings + SIPs -- this
+        # DB doesn't persist across deploys any more than the tables above do,
+        # so without this restore step each user's virtual portfolio would
+        # silently vanish on every redeploy even though nothing about their
+        # own login/session changed.
+        for rec in _load_json_file(_SIMULATION_MODS_FILE, []):
+            if rec.get("user_email") and rec.get("stock_code") and not db_s.query(database.SimulationMod).filter_by(
+                    user_email=rec.get("user_email"), stock_code=rec.get("stock_code")).first():
+                db_s.add(database.SimulationMod(
+                    user_email=rec.get("user_email"), stock_code=rec.get("stock_code"),
+                    allocation=rec.get("allocation"), buy_price=rec.get("buy_price"),
+                    buy_date=rec.get("buy_date"), cmp=rec.get("cmp")))
+        for rec in _load_json_file(_SIMULATION_SIPS_FILE, []):
+            if rec.get("user_email") and rec.get("sip_date") and not db_s.query(database.SimulationSip).filter_by(
+                    user_email=rec.get("user_email"), sip_date=rec.get("sip_date"), amount=rec.get("amount")).first():
+                db_s.add(database.SimulationSip(
+                    user_email=rec.get("user_email"), sip_date=rec.get("sip_date"), amount=rec.get("amount")))
         # Always ensure admins exist and are approved
         for adm in ADMIN_EMAILS:
             adm_row = db_s.query(database.AllowedEmail).filter_by(email=adm).first()
@@ -515,6 +535,49 @@ async def _startup_prewarm():
 
     rc_bg_thread = threading.Thread(target=_results_calendar_reminder_bg_worker, daemon=True, name="results-calendar-reminder")
     rc_bg_thread.start()
+
+    # Hourly CMP-only refresh during NSE market hours (Mon-Fri, 9:15 AM -
+    # 3:30 PM IST) -- covers both the actual portfolio (busts the webportal
+    # bridge's live-price cache so the next request re-fetches instead of
+    # serving up to an hour-old prices) and every user's Simulator holdings
+    # (updated directly here, since those are stored per-row and otherwise
+    # only refresh when a user happens to re-edit that exact stock). Buy
+    # price/allocation/everything else is left untouched -- CMP only.
+    def _hourly_cmp_refresh_bg_worker():
+        _time.sleep(60)
+        while True:
+            try:
+                now_ist = datetime.utcnow() + timedelta(hours=5, minutes=30)
+                is_weekday  = now_ist.weekday() < 5
+                in_hours    = (9, 15) <= (now_ist.hour, now_ist.minute) <= (15, 30)
+                if is_weekday and in_hours:
+                    print("[BG] Running hourly CMP refresh (market hours)...")
+                    import routers.actual_portfolio_bridge as _apb
+                    _apb._wp_all_cache["ts"] = 0.0  # force a fresh live fetch next request
+
+                    db = database.SessionLocal()
+                    try:
+                        codes = [r[0] for r in db.query(database.SimulationMod.stock_code).distinct().all()]
+                        updated = 0
+                        for code in codes:
+                            price = _get_nse_ltp(code)
+                            if price:
+                                db.query(database.SimulationMod).filter(
+                                    database.SimulationMod.stock_code == code
+                                ).update({"cmp": price})
+                                updated += 1
+                        db.commit()
+                    finally:
+                        db.close()
+                    print(f"[BG] Hourly CMP refresh finished ({updated}/{len(codes)} simulator stocks updated).")
+                else:
+                    print("[BG] Skipping hourly CMP refresh -- outside market hours.")
+            except Exception as bg_err:
+                print(f"[BG] Error in hourly CMP refresh: {bg_err}")
+            _time.sleep(3600)
+
+    cmp_bg_thread = threading.Thread(target=_hourly_cmp_refresh_bg_worker, daemon=True, name="hourly-cmp-refresh")
+    cmp_bg_thread.start()
 
 class RationaleCreate(BaseModel):
     stock_code: str

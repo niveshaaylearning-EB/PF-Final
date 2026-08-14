@@ -9,7 +9,6 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 import database
-from auth import is_admin_email
 from main import (
     get_db, _io_pool, yf, SimulationHoldingCreate, SimulationSipCreate,
 )
@@ -279,16 +278,18 @@ def reset_simulation(request: Request, db: Session = Depends(get_db)):
     db.commit()
     return {"status": "success"}
 
+_ALL_SIMULATORS_VIEWER = "jay.chaudhari@niveshaay.com"
+
 @router.get("/api/admin/all-simulators")
 def get_all_simulators(request: Request, db: Session = Depends(get_db)):
-    """Admin-only: every user's virtual-portfolio (simulator) holdings + SIPs,
-    grouped by user_email. Every other /api/simulator* route below is hard-scoped
-    to request.state.user with no way to see anyone else's data -- this is the
-    one deliberate admin-only exception, read-only, same _require_admin-style
-    gate as /api/allowed-emails."""
+    """Every user's virtual-portfolio (simulator) holdings + SIPs, grouped by
+    user_email. Every other /api/simulator* route below is hard-scoped to
+    request.state.user with no way to see anyone else's data -- this is the
+    one deliberate exception, read-only, restricted to a single named viewer
+    (not the general admin set) since it's other users' private data."""
     user = getattr(request.state, "user", None)
-    if not is_admin_email(user):
-        raise HTTPException(status_code=403, detail="Admin access required.")
+    if (user or "").lower().strip() != _ALL_SIMULATORS_VIEWER:
+        raise HTTPException(status_code=403, detail="Not authorized.")
 
     by_user: dict = {}
     for m in db.query(database.SimulationMod).all():

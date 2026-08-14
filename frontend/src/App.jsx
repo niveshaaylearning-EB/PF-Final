@@ -105,7 +105,7 @@ function Header() {
             Backlog
           </Link>
         )}
-        {loggedIn && isAdmin() && (
+        {loggedIn && (getEmail() || '').toLowerCase().trim() === 'jay.chaudhari@niveshaay.com' && (
           <Link
             to="/admin/simulators"
             className="btn btn-secondary"
@@ -176,7 +176,7 @@ function App() {
               <ProtectedRoute adminOnly><AdminBacklog /></ProtectedRoute>
             } />
             <Route path="/admin/simulators" element={
-              <ProtectedRoute adminOnly><AdminSimulators /></ProtectedRoute>
+              <ProtectedRoute allowedEmails={['jay.chaudhari@niveshaay.com']}><AdminSimulators /></ProtectedRoute>
             } />
           </Routes>
         </Suspense>
