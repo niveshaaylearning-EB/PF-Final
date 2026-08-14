@@ -79,6 +79,15 @@ class SimulationSip(Base):
     basket_id = Column(String, index=True, nullable=True)
 
 
+class SimulatorSettings(Base):
+    """Per-user Simulator preferences -- currently just the base/initial
+    investment amount (defaults to Rs 10L), editable per user instead of a
+    single hardcoded figure shared by everyone."""
+    __tablename__ = "simulator_settings"
+    user_email = Column(String, primary_key=True)
+    initial_investment = Column(Float, nullable=False, default=1000000.0)
+
+
 class NseStock(Base):
     __tablename__ = "nse_stocks"
     id = Column(Integer, primary_key=True, index=True)

@@ -1,20 +1,55 @@
 """Basket list + basic stock lookup/search/price-history endpoints."""
 import asyncio
+import io
 import re
 import time as _time
 from datetime import datetime, timedelta
 
 import pandas as pd
 import requests as _requests
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
 import database
 import sheet_service
+from auth import is_admin_email
 from main import get_db, _io_pool, yf, _get_nse_ltp
 from routers.actual_portfolio_bridge import _fetch_all_webportal_baskets
 
 router = APIRouter()
+
+_NSE_EQUITY_LIST_URL = "https://archives.nseindia.com/content/equities/EQUITY_L.csv"
+
+def sync_nse_stocks(db: Session, force: bool = False) -> int:
+    """Populate the NseStock table (powers the stock-search/autocomplete used by
+    the Simulator/virtual-portfolio "Add Stock" box) from NSE's public equity
+    list CSV. Skips if already populated unless force=True -- this table lives
+    in SQLite, which isn't backed up to GitHub like allowed_emails/stock_events
+    are (see main.py's startup restore block), so on a host where the DB doesn't
+    persist across deploys this needs to be re-run; called both from the
+    admin-triggered endpoint below and once at startup (main.py) so a freshly
+    empty table self-heals without anyone needing to remember a manual script.
+    Returns the number of rows inserted."""
+    if not force and db.query(database.NseStock).count() > 200:
+        return 0
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    }
+    resp = _requests.get(_NSE_EQUITY_LIST_URL, headers=headers, timeout=20)
+    resp.raise_for_status()
+    df = pd.read_csv(io.StringIO(resp.text))
+    existing_codes = {c for (c,) in db.query(database.NseStock.code).all()}
+    inserted = 0
+    for _, row in df.iterrows():
+        code = str(row.get("SYMBOL", "")).strip()
+        name = str(row.get("NAME OF COMPANY", "")).strip()
+        if code and name and code not in existing_codes:
+            db.add(database.NseStock(code=code, name=name))
+            existing_codes.add(code)
+            inserted += 1
+    db.commit()
+    return inserted
 
 @router.get("/api/baskets")
 def get_baskets():
@@ -32,6 +67,19 @@ def search_stocks(q: str = "", db: Session = Depends(get_db)):
         database.NseStock.code.ilike(f"%{q}%") | database.NseStock.name.ilike(f"%{q}%")
     ).limit(10).all()
     return [{"code": s.code, "name": s.name} for s in stocks]
+
+@router.post("/api/admin/sync-nse-stocks")
+def admin_sync_nse_stocks(request: Request, db: Session = Depends(get_db)):
+    """Admin-only: (re)populate the NseStock autocomplete table from NSE's
+    public equity list. Always force-refreshes (picks up new listings)."""
+    user = getattr(request.state, "user", None)
+    if not is_admin_email(user):
+        raise HTTPException(status_code=403, detail="Admin access required.")
+    try:
+        inserted = sync_nse_stocks(db, force=True)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Failed to fetch NSE equity list: {e}")
+    return {"ok": True, "inserted": inserted, "total": db.query(database.NseStock).count()}
 
 # ── Per-stock info cache (24 h TTL) ──────────────────────────────────────────
 _stock_info_cache: dict = {}

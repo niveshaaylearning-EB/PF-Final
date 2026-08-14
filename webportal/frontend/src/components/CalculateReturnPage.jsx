@@ -325,16 +325,16 @@ export default function CalculateReturnPage() {
               </tr>
               <tr>
                 <th className="cr-th-sub">Basket</th>
-                <th className="cr-th-sub">Benchmark</th>
+                <th className="cr-th-sub">Nifty SmallCap 100</th>
                 <th className="cr-th-sub">Basket</th>
-                <th className="cr-th-sub">Benchmark</th>
+                <th className="cr-th-sub">Nifty SmallCap 100</th>
                 {[
-                  ['absBasket',    'Basket',    'cr-th-sub'],
-                  ['absBenchmark', 'Benchmark', 'cr-th-sub'],
-                  ['absAlpha',     'Alpha',     'cr-th-sub cr-th-alpha'],
-                  ['cagrBasket',   'Basket',    'cr-th-sub'],
-                  ['cagrBenchmark','Benchmark', 'cr-th-sub'],
-                  ['cagrAlpha',    'Alpha',     'cr-th-sub cr-th-alpha'],
+                  ['absBasket',    'Basket',              'cr-th-sub'],
+                  ['absBenchmark', 'Nifty SmallCap 100',  'cr-th-sub'],
+                  ['absAlpha',     'Alpha',               'cr-th-sub cr-th-alpha'],
+                  ['cagrBasket',   'Basket',              'cr-th-sub'],
+                  ['cagrBenchmark','Nifty SmallCap 100',  'cr-th-sub'],
+                  ['cagrAlpha',    'Alpha',               'cr-th-sub cr-th-alpha'],
                 ].map(([col, label, cls]) => (
                   <th key={col} className={cls} style={{ userSelect: 'none' }}>
                     <div className="cf-th-inner" style={{ justifyContent: 'center' }}>

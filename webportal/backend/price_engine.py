@@ -170,9 +170,7 @@ def _compute_tenure_performance(bars: list) -> dict:
         result[tenure] = (last_close - start_open) / start_open
     return result
 
-async def _fetch_tenure_bars(code: str, client: httpx.AsyncClient) -> list:
-    """5 years of daily (timestamp, open, close) bars for one NSE stock."""
-    sym = YF_SYMBOL_MAP.get(code, f"{code}.NS")
+async def _fetch_tenure_bars_for_symbol(sym: str, client: httpx.AsyncClient) -> list:
     url = ("https://query1.finance.yahoo.com/v8/finance/chart/"
            + urllib.parse.quote(sym) + "?interval=1d&range=5y")
     try:
@@ -193,6 +191,20 @@ async def _fetch_tenure_bars(code: str, client: httpx.AsyncClient) -> list:
         return bars
     except Exception:
         return []
+
+
+async def _fetch_tenure_bars(code: str, client: httpx.AsyncClient) -> list:
+    """5 years of daily (timestamp, open, close) bars for one NSE stock.
+    Same symbol-resolution fallback as _fetch_yahoo_charts (the CMP/OHLC
+    fetch): standard CODE.NS first, then CODE-SM.NS (NSE/BSE SME listings)
+    if that returns nothing -- without this, an SME stock's CMP/OHLC would
+    load fine while its multi-tenure Performance column stayed stuck at "-"
+    forever, since only the primary .NS symbol was ever tried here."""
+    sym = YF_SYMBOL_MAP.get(code, f"{code}.NS")
+    bars = await _fetch_tenure_bars_for_symbol(sym, client)
+    if not bars and sym.endswith(".NS") and code not in YF_SYMBOL_MAP:
+        bars = await _fetch_tenure_bars_for_symbol(f"{code}-SM.NS", client)
+    return bars
 
 async def fetch_performance_batch(codes: list) -> dict:
     """{code: {tenure: pct|None}} for every code, using a 12h per-code cache."""

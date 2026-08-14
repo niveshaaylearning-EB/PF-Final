@@ -37,6 +37,7 @@ const ScreenerData        = lazy(() => import('./pages/ScreenerData'));
 const BasketComparison    = lazy(() => import('./pages/BasketComparison'));
 const LoginPage           = lazy(() => import('./pages/LoginPage'));
 const AdminBacklog        = lazy(() => import('./pages/AdminBacklog'));
+const AdminSimulators     = lazy(() => import('./pages/AdminSimulators'));
 const ResultCalendar      = lazy(() => import('./pages/ResultCalendar'));
 const RebalanceAlertPage  = lazy(() => import('./pages/RebalanceAlertPage'));
 const ApprovedEmailsPage  = lazy(() => import('./pages/ApprovedEmailsPage'));
@@ -104,6 +105,15 @@ function Header() {
             Backlog
           </Link>
         )}
+        {loggedIn && isAdmin() && (
+          <Link
+            to="/admin/simulators"
+            className="btn btn-secondary"
+            style={{ fontSize: '0.78rem', padding: '6px 12px', color: '#f59e0b', borderColor: 'rgba(245,158,11,0.4)' }}
+          >
+            Users' Sims
+          </Link>
+        )}
         <ThemeToggle />
         {loggedIn && (
           <>
@@ -164,6 +174,9 @@ function App() {
             } />
             <Route path="/admin" element={
               <ProtectedRoute adminOnly><AdminBacklog /></ProtectedRoute>
+            } />
+            <Route path="/admin/simulators" element={
+              <ProtectedRoute adminOnly><AdminSimulators /></ProtectedRoute>
             } />
           </Routes>
         </Suspense>

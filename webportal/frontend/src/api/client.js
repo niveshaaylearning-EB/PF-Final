@@ -18,6 +18,8 @@ export const fetchOhlcLookup = (nse, date) =>
   fetch(`${BASE}/ohlc-lookup/${encodeURIComponent(nse)}?date=${encodeURIComponent(date)}`).then(r => r.json());
 export const fetchCaStatus = (basket, code) =>
   fetch(`${BASE}/corporate-actions/status/${encodeURIComponent(basket)}/${encodeURIComponent(code)}`).then(r => r.json());
+export const fetchRebalanceSummary = (basket) =>
+  fetch(`${BASE}/rebalance-summary/${encodeURIComponent(basket)}`).then(r => r.json());
 
 export const saveBasket = (key, stocks, soldStocks, buyPriceDetails) => {
   const token = getAuthToken();

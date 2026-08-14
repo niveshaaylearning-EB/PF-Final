@@ -400,8 +400,11 @@ def _create_resulting_company_stock(rec: dict) -> None:
 # ─────────────────────────────────────────────────────────────────────────────
 
 @router.get("/api/corporate-actions")
-async def list_corporate_actions(request: Request):
-    _require_admin(request)
+async def list_corporate_actions():
+    """Read-only, no admin gate -- same pattern as get_basket/get_gains_statement/
+    get_ohlc_fallbacks: non-admins can view the corporate-actions log, but every
+    mutating route below (create/scan/update/approve/reject/reverse) still
+    requires _require_admin."""
     return _load_ca()
 
 

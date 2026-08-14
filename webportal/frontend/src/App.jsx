@@ -21,6 +21,8 @@ import PLStatementPage       from './components/PLStatementPage.jsx';
 import CorporateActionsPage  from './components/CorporateActionsPage.jsx';
 import DashboardView         from './components/DashboardView.jsx';
 import WatchlistPage         from './components/WatchlistPage.jsx';
+import RebalanceSummaryPage  from './components/RebalanceSummaryPage.jsx';
+import PerformanceSummaryPage from './components/PerformanceSummaryPage.jsx';
 import { computeTenureReturn, getLatestIndexDate } from './utils/tenureReturn.js';
 
 // ── Formatters ───────────────────────────────────────────────────────────────
@@ -783,6 +785,15 @@ export default function App() {
 
   const [dashView, setDashView] = useState('overview');
 
+  // Rebalance/Performance Summary tabs aren't meaningful for the equal-weighted
+  // IPO watchlist basket and are hidden for it -- fall back to Overview if the
+  // user was on one of them when switching to (or starting on) that basket.
+  useEffect(() => {
+    if (isIPO && (dashView === 'rebalance' || dashView === 'performance')) {
+      setDashView('overview');
+    }
+  }, [isIPO, dashView]);
+
   return (
     <>
       <div className="dashboard-container">
@@ -850,6 +861,16 @@ export default function App() {
           <button className={`dv-tab${dashView === 'watchlist' ? ' active' : ''}`} onClick={() => setDashView('watchlist')}>
             <i className="fa-solid fa-binoculars" /> Watchlist
           </button>
+          {!isIPO && (
+            <button className={`dv-tab${dashView === 'rebalance' ? ' active' : ''}`} onClick={() => setDashView('rebalance')}>
+              <i className="fa-solid fa-clock-rotate-left" /> Rebalance Summary
+            </button>
+          )}
+          {!isIPO && (
+            <button className={`dv-tab${dashView === 'performance' ? ' active' : ''}`} onClick={() => setDashView('performance')}>
+              <i className="fa-solid fa-magnifying-glass-chart" /> Performance Summary
+            </button>
+          )}
         </div>
 
         {dashView === 'overview' ? (
@@ -867,6 +888,20 @@ export default function App() {
           // Centralized, NOT basket-scoped: same data regardless of which
           // basket is currently selected -- shared across every user/analyst.
           <WatchlistPage nseSymbols={nseSymbols} />
+        ) : dashView === 'rebalance' ? (
+          <RebalanceSummaryPage
+            basketKey={basketKey}
+            basketLabel={BASKET_OPTIONS.find(b => b.key === basketKey)?.label || basketKey}
+          />
+        ) : dashView === 'performance' ? (
+          <PerformanceSummaryPage
+            rows={simAgg.overlaid}
+            isIPO={isIPO}
+            perfByTenure={perfByTenure}
+            tenure={selectedTenure}
+            tenureReturn={tenureReturn}
+            basketLabel={BASKET_OPTIONS.find(b => b.key === basketKey)?.label || basketKey}
+          />
         ) : (
           <div className="holdings-view">
             {/* Insight cards — full-width row above table */}
@@ -902,7 +937,6 @@ export default function App() {
                 onRemoveRow={handleRemoveRow}
                 onInfoClick={openWhatIf}
                 onRemoveSimAdded={handleRemoveSimAdded}
-                totalContribution={totalContribution}
                 avgMarketCap={avgMarketCap}
                 medianPE={medianPE}
                 tenure={selectedTenure}

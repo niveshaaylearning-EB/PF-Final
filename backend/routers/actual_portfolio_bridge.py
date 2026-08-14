@@ -119,11 +119,17 @@ def _fetch_all_webportal_baskets() -> dict:
         }
 
     # Only cache if we got valid CMP data — if all 0, webportal wasn't ready yet
-    # so don't cache (next request will retry and get real prices)
+    # so don't cache (next request will retry and get real prices). This guard
+    # used to read `total_holdings == 0 or valid_cmps > 0`, which is inverted
+    # from the comment's own stated intent: total_holdings == 0 is the WORSE
+    # failure (webportal returned no basket data at all, e.g. mid-startup
+    # race), yet that condition alone made the `or` true and cached the empty
+    # result anyway for the full 60-minute TTL -- confirmed live via a stale
+    # empty /api/baskets response that only cleared after a manual restart.
     total_holdings = sum(len(v.get("holdings", [])) for v in result.values())
     valid_cmps     = sum(1 for v in result.values()
                         for h in v.get("holdings", []) if h.get("cmp", 0) > 0)
-    if total_holdings == 0 or valid_cmps > 0:
+    if total_holdings > 0 and valid_cmps > 0:
         _wp_all_cache = {"data": result, "ts": now}
 
     return result

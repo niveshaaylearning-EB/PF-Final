@@ -4,11 +4,12 @@ import time as _time
 from datetime import datetime, timedelta
 
 import pandas as pd
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 import database
+from auth import is_admin_email
 from main import (
     get_db, _io_pool, yf, SimulationHoldingCreate, SimulationSipCreate,
 )
@@ -51,16 +52,49 @@ def _reconcile_liquidcase_sim(db: Session, user: str) -> None:
         ))
 
 
+_DEFAULT_INITIAL_INVESTMENT = 1000000.0
+
+
+@router.get("/api/simulator/settings")
+def get_simulator_settings(request: Request, db: Session = Depends(get_db)):
+    """This user's Simulator preferences -- currently just the base/initial
+    investment amount. Returns the Rs 10L default if they've never set one."""
+    user = request.state.user
+    row = db.query(database.SimulatorSettings).filter_by(user_email=user).first()
+    return {"initial_investment": row.initial_investment if row else _DEFAULT_INITIAL_INVESTMENT}
+
+
+class SimulatorSettingsUpdate(BaseModel):
+    initial_investment: float
+
+
+@router.post("/api/simulator/settings")
+def set_simulator_settings(body: SimulatorSettingsUpdate, request: Request, db: Session = Depends(get_db)):
+    user = request.state.user
+    if body.initial_investment is None or body.initial_investment <= 0:
+        raise HTTPException(status_code=422, detail="initial_investment must be a positive number.")
+    row = db.query(database.SimulatorSettings).filter_by(user_email=user).first()
+    if row:
+        row.initial_investment = body.initial_investment
+    else:
+        db.add(database.SimulatorSettings(user_email=user, initial_investment=body.initial_investment))
+    db.commit()
+    return {"status": "success", "initial_investment": body.initial_investment}
+
+
 class SimulatorCalculateRequest(BaseModel):
     holdings: list
     sips: list
 
 @router.post("/api/simulator/calculate-return")
-async def calculate_simulator_return(req: SimulatorCalculateRequest):
+async def calculate_simulator_return(req: SimulatorCalculateRequest, request: Request, db: Session = Depends(get_db)):
     """
-    Calculates absolute return based on 10L initial investment + SIPs.
+    Calculates absolute return based on the user's chosen initial investment
+    (Rs 10L by default, editable per user via /api/simulator/settings) + SIPs.
     """
-    INITIAL_INVESTMENT = 1000000.0
+    user = request.state.user
+    settings_row = db.query(database.SimulatorSettings).filter_by(user_email=user).first()
+    INITIAL_INVESTMENT = settings_row.initial_investment if settings_row else _DEFAULT_INITIAL_INVESTMENT
     holdings = req.holdings
     sips = req.sips
 
@@ -244,6 +278,30 @@ def reset_simulation(request: Request, db: Session = Depends(get_db)):
     db.query(database.SimulationSip).filter(database.SimulationSip.user_email == user).delete()
     db.commit()
     return {"status": "success"}
+
+@router.get("/api/admin/all-simulators")
+def get_all_simulators(request: Request, db: Session = Depends(get_db)):
+    """Admin-only: every user's virtual-portfolio (simulator) holdings + SIPs,
+    grouped by user_email. Every other /api/simulator* route below is hard-scoped
+    to request.state.user with no way to see anyone else's data -- this is the
+    one deliberate admin-only exception, read-only, same _require_admin-style
+    gate as /api/allowed-emails."""
+    user = getattr(request.state, "user", None)
+    if not is_admin_email(user):
+        raise HTTPException(status_code=403, detail="Admin access required.")
+
+    by_user: dict = {}
+    for m in db.query(database.SimulationMod).all():
+        by_user.setdefault(m.user_email, {"holdings": [], "sips": []})["holdings"].append({
+            "stock_code": m.stock_code, "allocation": m.allocation,
+            "buy_price": m.buy_price, "buy_date": m.buy_date, "cmp": m.cmp,
+        })
+    for s in db.query(database.SimulationSip).all():
+        by_user.setdefault(s.user_email, {"holdings": [], "sips": []})["sips"].append({
+            "id": s.id, "sip_date": s.sip_date, "amount": s.amount,
+        })
+    return by_user
+
 
 @router.get("/api/simulator")
 def get_simulation_holdings(request: Request, db: Session = Depends(get_db)):

@@ -9,7 +9,7 @@ import ColumnFilter from './ColumnFilter.jsx';
 // suffix appended at render time, so switching tenure never resets an active
 // sort/filter on this column the way changing the key string itself would.
 const TABLE_HEADERS = [
-  'NSE Code', 'Allocation', 'Performance', 'Contribution (1M)',
+  'NSE Code', 'Allocation', 'Performance', 'Contribution',
   'Buy Price', 'CMP', 'Market Cap (Cr)', 'Open 1M', 'Close 1M',
   'High 1M', 'Low 1M', 'Absolute Returns', 'Holding Days', 'CMP Status', 'Actions',
 ];
@@ -30,14 +30,34 @@ function getTenurePerformance(row, tenure, perfByTenure) {
   const minDays = TENURE_MIN_DAYS[tenure] ?? 0;
   if (minDays > 0 && (row.holdingDays == null || row.holdingDays < minDays)) return null;
   const perf = perfByTenure?.[row.nseCode]?.[tenure];
-  return perf != null ? perf : null;
+  if (perf != null) return perf;
+  // 1M has its own independently-reliable source: row.performance, computed
+  // from the live open1M/close1M pipeline that loads for every stock
+  // regardless of whether Yahoo's chart API can serve deep (3M+) history for
+  // it. perfByTenure's batch endpoint requests a 5y bar range up front, which
+  // some thinly-traded/SME-listed symbols (e.g. NSE/BSE SME board stocks)
+  // never return -- Yahoo caps those to `validRanges: ["1d","5d"]` regardless
+  // of what's requested -- silently leaving 1M null there too even though
+  // the app already has a perfectly good 1M figure from the other pipeline.
+  // Same fallback InsightsSidebar.jsx already uses for exactly this reason.
+  if (tenure === '1M' && row.performance != null) return row.performance;
+  return null;
+}
+
+// row.contribution is always the 1M figure (allocation × 1M performance,
+// set upstream) -- fine for callers that specifically want 1M, but the
+// Holdings table's own Contribution column should track whichever tenure is
+// selected, same as its Performance column already does.
+function getTenureContribution(row, tenure, perfByTenure) {
+  const perf = getTenurePerformance(row, tenure, perfByTenure);
+  return (perf != null && row.allocation != null) ? row.allocation * perf : null;
 }
 
 const SORT_KEY = {
   'NSE Code':        'nseCode',
   'Allocation':      'allocation',
   'Performance':     'tenurePerformance',
-  'Contribution (1M)': 'contribution',
+  'Contribution':    'tenureContribution',
   'Buy Price':       'buyPrice',
   'Listing Price':   'buyPrice',
   'CMP':             'cmp',
@@ -76,6 +96,7 @@ function getColVal(field, row) {
     case 'performance':     return row.performance != null ? (row.performance * 100).toFixed(2) + '%' : '';
     case 'tenurePerformance': return row.tenurePerformance != null ? (row.tenurePerformance * 100).toFixed(2) + '%' : '';
     case 'contribution':    return row.contribution != null ? (row.contribution * 100).toFixed(2) + '%' : '';
+    case 'tenureContribution': return row.tenureContribution != null ? (row.tenureContribution * 100).toFixed(2) + '%' : '';
     case 'buyPrice':        return row.buyPrice != null ? String(row.buyPrice) : '';
     case 'cmp':             return row.cmp != null ? String(row.cmp) : '';
     case 'marketCap':       return row.marketCap != null ? String(Math.round(row.marketCap)) : '';
@@ -194,9 +215,9 @@ function DataRow({
         {lv(formatPercent(row.tenurePerformance))}
       </td>
 
-      {/* Contribution */}
-      <td className={`${getColorClass(row.contribution)} contrib-display`}>
-        {lv(formatPercent(row.contribution))}
+      {/* Contribution (selected tenure) */}
+      <td className={`${getColorClass(row.tenureContribution)} contrib-display`}>
+        {lv(formatPercent(row.tenureContribution))}
       </td>
 
       {/* Buy Price / Listing Price */}
@@ -277,7 +298,7 @@ export default function PortfolioTable({
   onNseChange, onAllocChange, onBuyPriceChange, onListingDateChange,
   onAddRow, onRemoveRow,
   onInfoClick, onRemoveSimAdded,
-  totalContribution, avgMarketCap, medianPE,
+  avgMarketCap, medianPE,
   tenure = '1M', onTenureChange, perfByTenure,
 }) {
   const [sortKey,   setSortKey]   = useState('allocation');
@@ -290,7 +311,11 @@ export default function PortfolioTable({
   // Precompute the selected tenure's (holding-period-gated) value once per
   // render so DataRow/getColVal/sorting/filtering all just read a plain field.
   rows = useMemo(
-    () => rows.map(r => ({ ...r, tenurePerformance: getTenurePerformance(r, tenure, perfByTenure) })),
+    () => rows.map(r => ({
+      ...r,
+      tenurePerformance: getTenurePerformance(r, tenure, perfByTenure),
+      tenureContribution: getTenureContribution(r, tenure, perfByTenure),
+    })),
     [rows, tenure, perfByTenure]
   );
 
@@ -339,9 +364,21 @@ export default function PortfolioTable({
   }, [rows, sortKey, sortDir, colFilters]);
 
   const totalAllocation = rows.reduce((s, r) => s + (r.allocation || 0), 0);
+  const totalTenureContribution = rows.reduce((s, r) => s + (r.tenureContribution || 0), 0);
+  // IPO_Recommendations is equal(-ish)-weighted, not capital-weighted, so its
+  // summary row is labelled "Average" -- Performance there is a plain mean
+  // across stocks with a value this tenure, rather than a weighted figure.
+  const validTenurePerfs = rows.map(r => r.tenurePerformance).filter(v => v != null && isFinite(v));
+  const avgTenurePerformance = validTenurePerfs.length
+    ? validTenurePerfs.reduce((s, v) => s + v, 0) / validTenurePerfs.length
+    : null;
   const headers = (isIPO ? TABLE_HEADERS_IPO : TABLE_HEADERS).filter(h => showOHLC || !OHLC_LABELS.has(h));
   const colCount = headers.length;
-  const headerLabel = (h) => h === 'Performance' ? `Performance (${tenure})` : h;
+  const headerLabel = (h) => {
+    if (h === 'Performance')  return `Performance (${tenure})`;
+    if (h === 'Contribution') return `Contribution (${tenure})`;
+    return h;
+  };
 
   if (rows.length === 0) {
     return (
@@ -429,8 +466,8 @@ export default function PortfolioTable({
             <tr className="summary-row pt-summary-row">
               <td style={{ fontWeight: 700, color: 'var(--text-secondary)', paddingRight: '1.5rem', textAlign: 'right' }}>Average</td>
               <td />{/* Listing Date */}
-              <td />{/* Performance */}
-              <td />{/* Contribution */}
+              <td style={{ fontWeight: 700 }} className={getColorClass(avgTenurePerformance)}>{formatPercent(avgTenurePerformance)}</td>
+              <td style={{ fontWeight: 700 }} className={getColorClass(totalTenureContribution)}>{formatPercent(totalTenureContribution)}</td>
               <td colSpan={2} />{/* Listing Price + CMP */}
               {showOHLC && <td style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{formatRupee(Math.round(avgMarketCap))}</td>}
               {showOHLC && <td colSpan={4} />}
@@ -454,7 +491,7 @@ export default function PortfolioTable({
                 </div>
               </td>
               <td />{/* Performance */}
-              <td style={{ fontWeight: 700 }} className={getColorClass(totalContribution)}>{formatPercent(totalContribution)}</td>
+              <td style={{ fontWeight: 700 }} className={getColorClass(totalTenureContribution)}>{formatPercent(totalTenureContribution)}</td>
               <td colSpan={2} />{/* Buy Price + CMP */}
               {showOHLC && <td style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{formatRupee(Math.round(avgMarketCap))}</td>}
               {showOHLC && <td colSpan={4} />}

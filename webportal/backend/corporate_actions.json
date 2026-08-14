@@ -195,11 +195,11 @@
     },
     "demerger": null,
     "source": "Auto-detected from Yahoo Finance (share ratio 5:2) -- verify against the official NSE/BSE announcement, and retype as Bonus Issue if that's what this actually was, before approving.",
-    "status": "pending_review",
+    "status": "approved",
     "createdAt": "01 Aug 2026 11:20",
     "createdBy": "jay.chaudhari@niveshaay.com",
-    "approvedBy": null,
-    "approvedAt": null,
+    "approvedBy": "jay.chaudhari@niveshaay.com",
+    "approvedAt": "10 Aug 2026 07:26",
     "reversalOf": null,
     "comparisonReport": {
       "currentBuyPrice": 1043.8517,
@@ -210,25 +210,29 @@
           "date": "04 Sep 2024",
           "weight": 1.9101,
           "oldPrice": 1036.89,
-          "newPrice": 414.756
+          "newPrice": 414.756,
+          "overridden": false
         },
         {
           "date": "29 Oct 2024",
           "weight": 1.0,
           "oldPrice": 882.79,
-          "newPrice": 353.116
+          "newPrice": 353.116,
+          "overridden": false
         },
         {
           "date": "10 Nov 2025",
           "weight": 0.5,
           "oldPrice": 1320.83,
-          "newPrice": 528.332
+          "newPrice": 528.332,
+          "overridden": false
         },
         {
           "date": "08 May 2026",
           "weight": 0.0899,
           "oldPrice": 1442.85,
-          "newPrice": 577.14
+          "newPrice": 577.14,
+          "overridden": false
         }
       ],
       "ineligibleEvents": []

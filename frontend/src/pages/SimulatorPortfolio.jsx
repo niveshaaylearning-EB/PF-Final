@@ -31,6 +31,18 @@ function SimulatorPortfolio() {
   const [fetchingPrice, setFetchingPrice] = useState(false);
   const [exportModalOpen, setExportModalOpen] = useState(false);
 
+  // Base/initial investment -- per-user, persisted server-side, Rs 10L by default.
+  const [baseInvestment, setBaseInvestment] = useState(1000000);
+  const [editingBase, setEditingBase] = useState(false);
+  const [baseInput, setBaseInput] = useState('');
+  const [savingBase, setSavingBase] = useState(false);
+
+  // Add/Edit modal: let the user enter either an allocation % directly, or a
+  // rupee investment amount that gets converted to the equivalent allocation
+  // % against their chosen base investment (baseInvestment).
+  const [investInputMode, setInvestInputMode] = useState('pct'); // 'pct' | 'value'
+  const [investValueInput, setInvestValueInput] = useState('');
+
   // Universal confirmation dialog
   const [confirmDialog, setConfirmDialog] = useState({
     open: false, title: '', message: '', confirmText: 'Confirm',
@@ -49,14 +61,31 @@ function SimulatorPortfolio() {
 
   const fetchHoldings = async () => {
     try {
-      const [holdingsRes, sipsRes] = await Promise.all([
+      const [holdingsRes, sipsRes, settingsRes] = await Promise.all([
         axios.get(`${API_BASE}/simulator`),
         axios.get(`${API_BASE}/simulator/sips`),
+        axios.get(`${API_BASE}/simulator/settings`),
       ]);
       setHoldings(holdingsRes.data || []);
       setSips(sipsRes.data || []);
+      setBaseInvestment(settingsRes.data?.initial_investment ?? 1000000);
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const handleSaveBaseInvestment = async () => {
+    const parsed = parseFloat(baseInput);
+    if (!parsed || parsed <= 0) return;
+    setSavingBase(true);
+    try {
+      await axios.post(`${API_BASE}/simulator/settings`, { initial_investment: parsed });
+      setBaseInvestment(parsed);
+      setEditingBase(false);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setSavingBase(false);
     }
   };
 
@@ -264,13 +293,16 @@ function SimulatorPortfolio() {
     };
     compute();
     return () => { cancelled = true; };
-  }, [simulatedPortfolio, sips]);
+  }, [simulatedPortfolio, sips, baseInvestment]);
 
-  // Auto-fetch Buy Price + CMP whenever stock code or date changes in the Add modal.
-  // Uses a 600ms debounce and cancels stale requests to avoid race conditions
-  // (AutoCompleteInput calls onChange on every keystroke, so without this the "T"
-  //  and "TC" responses could overwrite the correct "TCS" response).
-  const modalCode = editMod?.override_type === 'add' ? (editMod?.stock_code || '') : '';
+  // Auto-fetch Buy Price + CMP whenever stock code or date changes in the
+  // Add/Modify modal (both modes -- modifying a holding can refresh its buy
+  // price for a corrected date or just pull the latest CMP the same way
+  // adding one does). Uses a 600ms debounce and cancels stale requests to
+  // avoid race conditions (AutoCompleteInput calls onChange on every
+  // keystroke, so without this the "T" and "TC" responses could overwrite
+  // the correct "TCS" response).
+  const modalCode = editMod?.stock_code || '';
   useEffect(() => {
     if (!modalCode || modalCode.length < 2) return;
 
@@ -314,8 +346,13 @@ function SimulatorPortfolio() {
       buy_date: h.buy_date ?? null,
       cmp: h.cmp
     });
-    setModalDate('');
+    // Pre-fill with the existing buy date so the auto-fetch effect below can
+    // refresh Buy Price/CMP for it immediately, same as the Add flow.
+    setModalDate(h.buy_date || '');
     setAllocationError('');
+    setInvestInputMode('pct');
+    setInvestValueInput('');
+    setFetchingPrice(false);
     setModalOpen(true);
   };
 
@@ -330,6 +367,9 @@ function SimulatorPortfolio() {
     });
     setModalDate('');
     setAllocationError('');
+    setFetchingPrice(false);
+    setInvestInputMode('pct');
+    setInvestValueInput('');
     setModalOpen(true);
   };
 
@@ -418,8 +458,63 @@ function SimulatorPortfolio() {
           <h1 style={{ color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             {calculatingReturn ? <RotateCcw size={24} style={{ animation: 'spin 1s linear infinite' }}/> : <>{simReturnData ? (simReturnData.absolute_return > 0 ? '+' : '') + simReturnData.absolute_return.toFixed(2) + '%' : '--'}</>}
           </h1>
+          <div style={{ fontSize: '0.75rem', marginTop: '8px', color: 'var(--text-main)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', flexWrap: 'wrap' }}>
+            <span style={{ opacity: 0.75 }}>Base Investment:</span>
+            {editingBase ? (
+              <>
+                <input
+                  type="number"
+                  autoFocus
+                  value={baseInput}
+                  onChange={e => setBaseInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') handleSaveBaseInvestment(); if (e.key === 'Escape') setEditingBase(false); }}
+                  style={{
+                    width: '110px', padding: '2px 6px', fontSize: '0.75rem',
+                    background: 'var(--panel-bg)', border: '1px solid var(--primary)',
+                    borderRadius: '4px', color: 'var(--text-main)',
+                  }}
+                />
+                <button
+                  onClick={handleSaveBaseInvestment}
+                  disabled={savingBase}
+                  style={{
+                    background: 'var(--panel-bg)', border: '1px solid var(--text-main)',
+                    color: 'var(--text-main)', cursor: 'pointer', fontWeight: 700, fontSize: '0.75rem',
+                    borderRadius: '5px', padding: '3px 10px',
+                  }}
+                >
+                  {savingBase ? 'Saving…' : 'Save'}
+                </button>
+                <button
+                  onClick={() => setEditingBase(false)}
+                  style={{
+                    background: 'transparent', border: '1px solid var(--text-main)', opacity: 0.7,
+                    color: 'var(--text-main)', cursor: 'pointer', fontSize: '0.75rem',
+                    borderRadius: '5px', padding: '3px 10px',
+                  }}
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <>
+                <strong style={{ color: 'var(--text-main)' }}>₹{baseInvestment.toLocaleString('en-IN')}</strong>
+                <button
+                  onClick={() => { setBaseInput(String(baseInvestment)); setEditingBase(true); }}
+                  title="Edit base investment"
+                  style={{
+                    background: 'var(--panel-bg)', border: '1px solid var(--text-main)',
+                    color: 'var(--text-main)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center',
+                    gap: '4px', padding: '3px 9px', borderRadius: '5px', fontSize: '0.72rem', fontWeight: 600,
+                  }}
+                >
+                  <Edit2 size={12} /> Edit
+                </button>
+              </>
+            )}
+          </div>
           {simReturnData && !calculatingReturn && (
-            <div style={{ fontSize: '0.75rem', marginTop: '8px', color: 'rgba(255,255,255,0.7)' }}>
+            <div style={{ fontSize: '0.75rem', marginTop: '8px', color: 'var(--text-main)', opacity: 0.75 }}>
                Invested: ₹{(simReturnData.total_invested).toLocaleString('en-IN')} &nbsp;|&nbsp;
                Current: ₹{(simReturnData.current_value).toLocaleString('en-IN')}
             </div>
@@ -609,7 +704,8 @@ function SimulatorPortfolio() {
               </button>
             </div>
             <p style={{ color: 'var(--text-muted)', marginBottom: '4px', fontSize: '0.82rem' }}>
-              Base Investment: <strong style={{ color: 'var(--text-main)' }}>₹10,00,000</strong>
+              Base Investment: <strong style={{ color: 'var(--text-main)' }}>₹{baseInvestment.toLocaleString('en-IN')}</strong>
+              &nbsp;<em style={{ fontStyle: 'normal', opacity: 0.7 }}>(editable above)</em>
               &nbsp;·&nbsp; SIP amount is split by each stock's current allocation weight.
               &nbsp;·&nbsp; If date falls on weekend/holiday, next trading session is used.
             </p>
@@ -766,36 +862,88 @@ function SimulatorPortfolio() {
             </h3>
 
             {editMod.override_type === 'add' && (
-              <>
-                <div className="input-group">
-                  <label>NSE Stock Code</label>
-                  <AutoCompleteInput
-                    value={editMod.stock_code}
-                    onChange={handleStockCodeChange}
-                    placeholder="e.g. RELIANCE"
-                  />
-                </div>
-                <div className="input-group">
-                  <label>Historical Purchase Date (up to 5 years back)</label>
-                  <input
-                    type="date"
-                    value={modalDate}
-                    max={new Date().toISOString().split("T")[0]}
-                    min={new Date(Date.now() - 5 * 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]}
-                    onChange={(e) => handleDateChange(e.target.value)}
-                  />
-                  <small style={{color: 'var(--text-muted)', display: 'block', marginTop: '4px'}}>
-                    {fetchingPrice
-                      ? '⏳ Fetching prices from NSE...'
-                      : 'Auto-fetches historic EOD buy price and current CMP. Both can be edited manually.'}
-                  </small>
-                </div>
-              </>
+              <div className="input-group">
+                <label>NSE Stock Code</label>
+                <AutoCompleteInput
+                  value={editMod.stock_code}
+                  onChange={handleStockCodeChange}
+                  placeholder="e.g. RELIANCE"
+                />
+              </div>
             )}
+            <div className="input-group">
+              <label>{editMod.override_type === 'add' ? 'Historical Purchase Date (up to 5 years back)' : 'Purchase Date'}</label>
+              <input
+                type="date"
+                value={modalDate}
+                max={new Date().toISOString().split("T")[0]}
+                min={new Date(Date.now() - 5 * 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]}
+                onChange={(e) => handleDateChange(e.target.value)}
+              />
+              <small style={{color: 'var(--text-muted)', display: 'block', marginTop: '4px'}}>
+                {fetchingPrice
+                  ? '⏳ Fetching prices from NSE...'
+                  : 'Auto-fetches historic EOD buy price and current CMP for this date. Both can be edited manually.'}
+              </small>
+            </div>
 
             <div className="input-group">
-              <label>Allocation (%)</label>
-              <input type="number" step="0.1" value={editMod.allocation || ''} onChange={e => setEditMod({...editMod, allocation: parseFloat(e.target.value)})} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <label style={{ margin: 0 }}>{investInputMode === 'pct' ? 'Allocation (%)' : 'Investment Value (₹)'}</label>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setInvestInputMode('pct')}
+                    style={{
+                      fontSize: '0.7rem', padding: '2px 8px', borderRadius: '5px', cursor: 'pointer',
+                      border: '1px solid ' + (investInputMode === 'pct' ? 'var(--primary)' : 'var(--border, rgba(255,255,255,0.15))'),
+                      background: investInputMode === 'pct' ? 'var(--primary-glow)' : 'transparent',
+                      color: investInputMode === 'pct' ? 'var(--primary)' : 'var(--text-muted)', fontWeight: 600,
+                    }}
+                  >
+                    % Allocation
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // Switching in: seed the ₹ field from whatever allocation % is
+                      // currently set, so it doesn't just reset to blank.
+                      const seeded = ((editMod.allocation || 0) / 100) * baseInvestment;
+                      setInvestValueInput(seeded ? String(Math.round(seeded)) : '');
+                      setInvestInputMode('value');
+                    }}
+                    style={{
+                      fontSize: '0.7rem', padding: '2px 8px', borderRadius: '5px', cursor: 'pointer',
+                      border: '1px solid ' + (investInputMode === 'value' ? 'var(--primary)' : 'var(--border, rgba(255,255,255,0.15))'),
+                      background: investInputMode === 'value' ? 'var(--primary-glow)' : 'transparent',
+                      color: investInputMode === 'value' ? 'var(--primary)' : 'var(--text-muted)', fontWeight: 600,
+                    }}
+                  >
+                    ₹ Investment
+                  </button>
+                </div>
+              </div>
+              {investInputMode === 'pct' ? (
+                <input type="number" step="0.1" value={editMod.allocation || ''} onChange={e => setEditMod({...editMod, allocation: parseFloat(e.target.value)})} />
+              ) : (
+                <>
+                  <input
+                    type="number"
+                    step="1"
+                    value={investValueInput}
+                    placeholder={`e.g. ${Math.round(baseInvestment * 0.05)}`}
+                    onChange={e => {
+                      setInvestValueInput(e.target.value);
+                      const val = parseFloat(e.target.value);
+                      const pct = (val > 0 && baseInvestment > 0) ? (val / baseInvestment) * 100 : 0;
+                      setEditMod(prev => ({ ...prev, allocation: pct }));
+                    }}
+                  />
+                  <small style={{ color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>
+                    ≈ {(editMod.allocation || 0).toFixed(2)}% of your ₹{baseInvestment.toLocaleString('en-IN')} base investment
+                  </small>
+                </>
+              )}
             </div>
 
             <div className="input-group">

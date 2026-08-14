@@ -27,7 +27,6 @@ _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import database
 from database import StockEvent
-import sheet_service
 # Lazy yfinance wrapper — defers the ~50MB import to first use, reducing startup memory
 class _LazyYF:
     _mod = None
@@ -114,9 +113,17 @@ async def _security_headers(request: Request, call_next):
 class JWTMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         path = request.url.path
-        # JWT check only for /api/* routes (not auth, not public endpoints)
-        _PUBLIC_API = {"/api/health", "/api/access-requests"}
-        if path.startswith("/api/") and path not in _PUBLIC_API:
+        # JWT check only for /api/* routes (not auth, not public endpoints).
+        # /api/access-requests is deliberately public only for POST (an
+        # unapproved user submitting a request has no token yet) -- GET on the
+        # same path lists pending requests for admins and must still go
+        # through the normal auth flow below to get request.state.user set,
+        # otherwise list_access_requests()'s own is_admin_email(None) check
+        # always 403s, even for a genuine admin with a valid token.
+        _PUBLIC_API = {"/api/health"}
+        _PUBLIC_METHOD_PATHS = {("POST", "/api/access-requests")}
+        if (path.startswith("/api/") and path not in _PUBLIC_API
+                and (request.method, path) not in _PUBLIC_METHOD_PATHS):
             if request.method != "OPTIONS":
                 header = request.headers.get("Authorization", "")
                 if not header.startswith("Bearer "):
@@ -412,12 +419,28 @@ async def _startup_prewarm():
                 pass
     _t.Thread(target=_periodic_dump, daemon=True).start()
 
+    # Self-heal the stock-search/autocomplete table (NseStock) if it's empty --
+    # unlike allowed_emails/stock_events, this table has no GitHub-JSON backup,
+    # so on any host where SQLite doesn't persist across deploys it would
+    # otherwise stay empty forever until someone remembered to run the old
+    # standalone tools/sync_nse.py script by hand.
+    def _nse_stocks_self_heal():
+        try:
+            from routers.stocks import sync_nse_stocks
+            _db = database.SessionLocal()
+            inserted = sync_nse_stocks(_db)
+            _db.close()
+            if inserted:
+                print(f"[startup] Seeded {inserted} NSE stock-search rows (table was empty).")
+        except Exception as e:
+            print(f"[startup] NSE stock-search self-heal failed: {e}")
+    _t.Thread(target=_nse_stocks_self_heal, daemon=True).start()
+
     loop = asyncio.get_running_loop()
     async def _warm():
         try:
             print("[prewarm] Warming all caches in parallel...")
             await asyncio.gather(
-                loop.run_in_executor(_io_pool, sheet_service.get_all_baskets),
                 loop.run_in_executor(_io_pool, _fetch_all_webportal_baskets),
                 loop.run_in_executor(_io_pool, _fetch_index_history),
                 return_exceptions=True,

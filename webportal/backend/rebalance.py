@@ -32,6 +32,74 @@ from live_data import _fetch_rebalance_prices
 
 router = APIRouter()
 
+@router.get("/api/rebalance-summary/{basket}")
+async def get_rebalance_summary(basket: str):
+    """Day-wise rebalance summary for one basket: what was added/removed/
+    reweighted on each date, derived directly from every stock's buyEvents/
+    sellEvents (+ prevBuyEvents/prevSellEvents) in buy_price_data.json.
+
+    This is the single source of truth for every change to a basket's
+    composition -- both Excel-upload rebalances (rebalance.py's confirm flow
+    writes here via _add_event) AND direct manual edits to a stock's event
+    history (the BuyPricePage "H" editor), which only touch buyEvents/
+    sellEvents and never touch rebalance_history.json. An earlier version of
+    this endpoint read rebalance_history.json directly and silently missed
+    every manually-edited change (e.g. an admin correcting a buy date/weight
+    by hand) -- walking the actual event log instead means nothing can be
+    missed regardless of which admin action produced it.
+
+    Per stock: replay buy/sell events in date order tracking a running
+    cumulative weight -- a buy from ~0 is an "add", a sell to ~0 is a
+    "remove", anything else is a "reweight" from/to. Read-only, no admin gate
+    (matches every other basket-read endpoint in this app)."""
+    if basket not in BASKET_DISPLAY_NAMES:
+        raise HTTPException(status_code=404, detail=f"Unknown basket: {basket}")
+
+    bp_basket = _load_buy_price_data().get(basket, {})
+    by_date: dict[str, dict[str, list]] = {}
+
+    def _bucket(date_str: str) -> dict:
+        return by_date.setdefault(date_str, {"added": [], "removed": [], "reweighted": []})
+
+    for code, det in bp_basket.items():
+        sec_name = det.get("securityName", "") or ""
+        combined = (
+            [(d, q, "buy")  for d, q in _parse_buy_events(det.get("prevBuyEvents")  or "")] +
+            [(d, q, "sell") for d, q in _parse_buy_events(det.get("prevSellEvents") or "")] +
+            [(d, q, "buy")  for d, q in _parse_buy_events(det.get("buyEvents")      or "")] +
+            [(d, q, "sell") for d, q in _parse_buy_events(det.get("sellEvents")     or "")]
+        )
+        combined.sort(key=lambda e: _date_to_ts(e[0]))
+
+        cum = 0.0
+        for date_str, qty, etype in combined:
+            old_cum = cum
+            if etype == "buy":
+                cum = round(cum + qty, 4)
+                if old_cum <= 0.01:
+                    _bucket(date_str)["added"].append({"nseCode": code, "securityName": sec_name, "weight": cum})
+                else:
+                    _bucket(date_str)["reweighted"].append({"nseCode": code, "securityName": sec_name, "from": old_cum, "to": cum})
+            else:
+                cum = round(max(0.0, cum - qty), 4)
+                if cum <= 0.01:
+                    _bucket(date_str)["removed"].append({"nseCode": code, "securityName": sec_name, "weight": old_cum})
+                else:
+                    _bucket(date_str)["reweighted"].append({"nseCode": code, "securityName": sec_name, "from": old_cum, "to": cum})
+
+    summary = []
+    for date_str, groups in by_date.items():
+        summary.append({
+            "date": date_str,
+            "added": sorted(groups["added"], key=lambda x: x["nseCode"]),
+            "removed": sorted(groups["removed"], key=lambda x: x["nseCode"]),
+            "reweighted": sorted(groups["reweighted"], key=lambda x: x["nseCode"]),
+        })
+
+    summary.sort(key=lambda s: _date_to_ts(s["date"]), reverse=True)
+    return summary
+
+
 @router.post("/api/trigger-rebalance")
 async def trigger_rebalance(background_tasks: BackgroundTasks, request: Request, basket: str = Form(...)):
     _require_admin(request)

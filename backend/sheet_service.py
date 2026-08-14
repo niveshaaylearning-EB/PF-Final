@@ -907,27 +907,22 @@ def get_all_baskets():
     return results
 
 
-# ── Background refresh thread ─────────────────────────────────────────────────
-# Proactively refreshes basket caches every 4.5 minutes so the 5-minute TTL
-# never actually expires from a user's perspective. Users always get a warm cache;
-# they never trigger a cold sheet fetch themselves.
-
+# ── Background cleanup thread ──────────────────────────────────────────────────
+# Used to also re-fetch every basket from the Google Sheet here every 4.5
+# minutes, but that Sheet was retired once the webportal + its own rebalance-
+# upload flow became the real source of truth for basket composition (Overview/
+# Holdings now read from routers/actual_portfolio_bridge.py's
+# _fetch_all_webportal_baskets() instead -- see historic.py/alerts_market.py/
+# main.py's prewarm). That refetch loop was actively harmful, not just idle:
+# it wrote stale Sheet-derived buy_price/allocation/cmp values into
+# BasketHistory every cycle, and its "new stock?" detection misfired
+# constantly, logging thousands of bogus "Stock first appeared" StockEvent
+# rows into the admin Activity Backlog (confirmed 5000+ of them, all with no
+# user attribution since they're not user-driven). Only the unrelated hidden-
+# stock cleanup below is still needed, so that's all this thread does now.
 def _background_refresh():
     while True:
-        time.sleep(270)   # 4.5 min — just before the 5-min basket TTL expires
-        print("[BG] Refreshing basket caches...")
-        for sheet in BASKET_SHEETS:
-            try:
-                # Force expiry so fetch_basket re-fetches from the sheet
-                with _cache_rlock:
-                    if sheet in _cache:
-                        _cache[sheet]['time'] = 0
-                fetch_basket(sheet)
-            except Exception as e:
-                print(f"[BG] Refresh error for {sheet}: {e}")
-        # Bust the assembled cache so the next API call gets fresh data
-        with _assembled_lock:
-            _assembled_cache['time'] = 0
+        time.sleep(270)   # 4.5 min
         # Cleanup expired 'deleted' hidden stocks (>7 days old)
         try:
             _cleanup_db = SessionLocal()
@@ -946,7 +941,6 @@ def _background_refresh():
         finally:
             if '_cleanup_db' in dir():
                 _cleanup_db.close()
-        print("[BG] All baskets refreshed.")
 
-_bg_thread = threading.Thread(target=_background_refresh, daemon=True, name="basket-refresh")
+_bg_thread = threading.Thread(target=_background_refresh, daemon=True, name="hidden-stock-cleanup")
 _bg_thread.start()

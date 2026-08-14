@@ -8,6 +8,16 @@ import { API_BASE } from '../config.js';
 
 const RESULTS_POPUP_DISMISS_KEY = 'nia_results_popup_dismissed';
 
+// The results-calendar API mixes two different event kinds under one list --
+// actual results (type: 'result') and other NSE corporate actions (type:
+// 'corporate_action', with action_category already classified server-side,
+// e.g. 'Dividend'/'Bonus'/'Stock Split') -- so this label is what tells them
+// apart in the UI instead of every entry being mislabeled as a "result".
+function eventTypeLabel(e) {
+  if (e.type === 'result') return 'Result';
+  return e.action_category || 'Corporate Action';
+}
+
 function HomePage() {
   const [alerts, setAlerts] = useState([]);
   const [resultsTomorrow, setResultsTomorrow] = useState([]);
@@ -192,7 +202,7 @@ function HomePage() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: 'var(--primary)', marginBottom: '10px' }}>
             <Calendar size={18} />
-            {resultsTomorrow.length} Stock{resultsTomorrow.length > 1 ? 's' : ''} Reporting Results Tomorrow
+            {resultsTomorrow.length} Stock{resultsTomorrow.length > 1 ? 's' : ''} with Events Tomorrow
           </div>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             {resultsTomorrow.map((e, i) => (
@@ -212,7 +222,7 @@ function HomePage() {
                       page background, not a saturated tinted pill. */}
                   <strong style={{ color: 'var(--text-main)' }}>{e.stock_code}</strong>
                   <span style={{ color: 'var(--text-main)', marginLeft: '6px', fontSize: '0.73rem' }}>
-                    ({e.baskets?.join(', ')})
+                    ({eventTypeLabel(e)} · {e.baskets?.join(', ')})
                   </span>
                 </div>
               </Link>
@@ -246,13 +256,13 @@ function HomePage() {
                 <Calendar color="var(--primary)" size={22} />
               </div>
               <h3 style={{ margin: 0, color: 'var(--text-main)' }}>
-                Results Tomorrow
+                Events Tomorrow
               </h3>
             </div>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '14px' }}>
               {resultsTomorrow.length === 1
-                ? 'The following stock in your portfolio reports financial results tomorrow:'
-                : 'The following stocks in your portfolio report financial results tomorrow:'}
+                ? 'The following stock in your portfolio has an event tomorrow (see label below):'
+                : 'The following stocks in your portfolio have an event tomorrow (see label beside each):'}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '18px' }}>
               {resultsTomorrow.map((e, i) => (
@@ -264,7 +274,7 @@ function HomePage() {
                   <div>
                     <strong style={{ color: 'var(--text-main)' }}>{e.stock_code}</strong>
                     <span style={{ color: 'var(--text-muted)', marginLeft: '8px', fontSize: '0.78rem' }}>
-                      ({e.baskets?.join(', ')})
+                      ({eventTypeLabel(e)} · {e.baskets?.join(', ')})
                     </span>
                   </div>
                 </div>

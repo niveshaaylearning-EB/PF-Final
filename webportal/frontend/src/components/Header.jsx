@@ -118,8 +118,10 @@ export default function Header({
         {/* Rollback — edit-only users */}
         {!readOnly && <RollbackButtons btnStyle="header" />}
 
-        {/* Portfolio Actions dropdown — edit-only users */}
-        {!readOnly && <div className="db-actions-wrap" ref={actionsRef}>
+        {/* Portfolio Actions dropdown — visible to everyone; each destination
+            page gates its own mutating actions (upload/edit/approve) to
+            admins internally and shows read-only content to everyone else. */}
+        <div className="db-actions-wrap" ref={actionsRef}>
           <button className="db-actions-btn" onClick={() => setActionsOpen(v => !v)}>
             <i className="fa-solid fa-sliders" />
             Portfolio Actions
@@ -141,7 +143,7 @@ export default function Header({
               </button>
             </div>
           )}
-        </div>}
+        </div>
       </div>
     </header>
   );

@@ -168,7 +168,7 @@ function ComparisonReport({ report, type, editable, overrides, onOverrideChange,
   );
 }
 
-function RecordCard({ rec, onChanged }) {
+function RecordCard({ rec, onChanged, isAdmin }) {
   const [edit, setEdit] = useState(false);
   const [form, setForm] = useState(() => ({
     exDate: rec.exDate, recordDate: rec.recordDate || '',
@@ -240,7 +240,7 @@ function RecordCard({ rec, onChanged }) {
     if (!resp.ok) throw new Error((await resp.json()).detail || 'Reverse failed');
   });
 
-  const editable = rec.status === 'pending_review' || rec.status === 'approved';
+  const editable = isAdmin && (rec.status === 'pending_review' || rec.status === 'approved');
   const dm = form.demerger;
 
   return (
@@ -313,12 +313,14 @@ function RecordCard({ rec, onChanged }) {
 
       {err && <div style={{ color: '#ef4444', fontSize: '0.78rem', marginTop: '0.5rem' }}>{err}</div>}
 
-      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
-        {editable && <button style={btn('var(--text-secondary)')} disabled={busy} onClick={() => setEdit(v => !v)}>{edit ? 'Close edit' : 'Edit'}</button>}
-        {rec.status === 'pending_review' && <button style={btn('#10b981')} disabled={busy} onClick={doApprove}>Approve</button>}
-        {rec.status === 'pending_review' && <button style={btn('#ef4444')} disabled={busy} onClick={doReject}>Reject</button>}
-        {rec.status === 'approved' && <button style={btn('#f87171')} disabled={busy} onClick={doReverse}>Reverse</button>}
-      </div>
+      {isAdmin && (
+        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+          {editable && <button style={btn('var(--text-secondary)')} disabled={busy} onClick={() => setEdit(v => !v)}>{edit ? 'Close edit' : 'Edit'}</button>}
+          {rec.status === 'pending_review' && <button style={btn('#10b981')} disabled={busy} onClick={doApprove}>Approve</button>}
+          {rec.status === 'pending_review' && <button style={btn('#ef4444')} disabled={busy} onClick={doReject}>Reject</button>}
+          {rec.status === 'approved' && <button style={btn('#f87171')} disabled={busy} onClick={doReverse}>Reverse</button>}
+        </div>
+      )}
     </div>
   );
 }
@@ -343,7 +345,7 @@ export default function CorporateActionsPage() {
     if (resp.ok) setRecords(await resp.json());
   }, []);
 
-  useEffect(() => { if (admin?.isAdmin) load(); }, [admin, load]);
+  useEffect(() => { if (admin) load(); }, [admin, load]);
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -388,14 +390,7 @@ export default function CorporateActionsPage() {
   };
 
   if (admin === null) return null;
-  if (!admin.isAdmin) {
-    return (
-      <div style={{ padding: '2rem', color: 'var(--text-secondary)' }}>
-        <button style={btn('var(--text-secondary)')} onClick={() => { window.location.href = '/wp/' + window.location.search; }}>← Back</button>
-        <div style={{ marginTop: '1rem' }}>Admin access required to view Corporate Actions.</div>
-      </div>
-    );
-  }
+  const isAdmin = admin.isAdmin;
 
   const filtered = filter === 'all' ? records : records.filter(r => r.status === filter);
   const counts = records.reduce((acc, r) => { acc[r.status] = (acc[r.status] || 0) + 1; return acc; }, {});
@@ -408,15 +403,18 @@ export default function CorporateActionsPage() {
           <i className="fa-solid fa-code-branch" style={{ color: '#818cf8', marginRight: '0.5rem' }} />
           Corporate Actions
         </div>
-        <button style={btn('#818cf8')} disabled={scanning} onClick={handleScan}>
-          {scanning ? 'Scanning…' : 'Scan for New Corporate Actions'}
-        </button>
+        {isAdmin && (
+          <button style={btn('#818cf8')} disabled={scanning} onClick={handleScan}>
+            {scanning ? 'Scanning…' : 'Scan for New Corporate Actions'}
+          </button>
+        )}
       </div>
       {scanMsg && (
         <div style={{ ...box, fontSize: '0.82rem', color: 'var(--text-secondary)', padding: '0.6rem 1rem' }}>{scanMsg}</div>
       )}
 
-      {/* Create form */}
+      {/* Create form — admin only */}
+      {isAdmin && (
       <form onSubmit={handleCreate} style={box}>
         <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>Create corporate action</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.6rem', marginBottom: '0.6rem' }}>
@@ -482,6 +480,7 @@ export default function CorporateActionsPage() {
         {createErr && <div style={{ color: '#ef4444', fontSize: '0.8rem', marginBottom: '0.5rem' }}>{createErr}</div>}
         <button type="submit" style={btn('#818cf8')} disabled={creating}>{creating ? 'Creating…' : 'Create (pending review)'}</button>
       </form>
+      )}
 
       {/* Filter tabs */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
@@ -494,7 +493,7 @@ export default function CorporateActionsPage() {
       </div>
 
       {filtered.length === 0 && <div style={{ color: 'var(--text-secondary)', fontSize: '0.84rem' }}>No corporate actions in this view.</div>}
-      {filtered.map(rec => <RecordCard key={rec.id} rec={rec} onChanged={load} />)}
+      {filtered.map(rec => <RecordCard key={rec.id} rec={rec} onChanged={load} isAdmin={isAdmin} />)}
     </div>
   );
 }

@@ -10,12 +10,12 @@ from sqlalchemy import func as _sqf
 from sqlalchemy.orm import Session
 
 import database
-import sheet_service
 from auth import is_admin_email
 from main import (
     get_db, _io_pool, yf, _historic_cache, _HISTORIC_TTL,
     _historic_sim_cache, _HIST_SIM_VER, _save_disk_cache, RationaleCreate,
 )
+from routers.actual_portfolio_bridge import _fetch_all_webportal_baskets
 from routers.benchmarks import _BENCHMARKS, _fetch_bench_close_max
 
 router = APIRouter()
@@ -28,7 +28,7 @@ async def get_basket_historic(basket_id: str, db: Session = Depends(get_db)):
         return cached['data']
 
     loop    = asyncio.get_running_loop()
-    baskets = await loop.run_in_executor(_io_pool, sheet_service.get_all_baskets)
+    baskets = await loop.run_in_executor(_io_pool, _fetch_all_webportal_baskets)
     if basket_id not in baskets:
         raise HTTPException(status_code=404, detail="Basket not found")
 

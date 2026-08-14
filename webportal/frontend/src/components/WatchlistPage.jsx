@@ -463,12 +463,22 @@ function WatchlistTable({ rows, visibleCols, onOpenDetail, onTogglePin, onDelete
                           : <span className="wl-tag-badge-empty">—</span>)
                     : c.key === 'upside' || c.key === 'roe' || c.key === 'roce' || c.key === 'revenueCagr' || c.key === 'profitCagr'
                       ? <span className={colorForPct(row[c.key])}>{fmtNum(row[c.key], '%')}</span>
-                      : c.key === 'marketCap' ? fmtNum(row.marketCap != null ? Math.round(row.marketCap).toLocaleString('en-IN') : null)
+                      // marketCap is pre-formatted with toLocaleString (adds commas, e.g.
+                      // "11,127"), and ticker/sector/industry/analyst etc. are plain
+                      // strings -- none of these are valid input to fmtNum, which treats
+                      // anything isNaN() (true for every non-numeric string) as missing
+                      // and renders "—" even when the real value is right there. Only
+                      // genuinely numeric fields (pe, debtEquity, fcf, ...) should go
+                      // through fmtNum; everything else falls back to getColVal, which
+                      // already formats every column correctly (it backs sorting/search).
+                      : c.key === 'marketCap' ? (row.marketCap != null ? Math.round(row.marketCap).toLocaleString('en-IN') : '—')
                       : c.key === 'cmp' || c.key === 'fairValue' || c.key === 'week52High' || c.key === 'week52Low'
                         ? (row[c.key] != null ? `₹${row[c.key]}` : '—')
                         : c.key === 'promoterHolding' || c.key === 'institutionalHolding'
                           ? fmtNum(row[c.key], '%')
-                          : fmtNum(row[c.key])}
+                          : c.key === 'ticker' || c.key === 'sector' || c.key === 'industry' || c.key === 'analyst'
+                            ? (getColVal(c.key, row) || '—')
+                            : fmtNum(row[c.key])}
                 </td>
               ))}
               <td>

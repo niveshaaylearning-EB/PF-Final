@@ -394,17 +394,82 @@ async def _fetch_ohlc_screener(nse_code: str, dt: datetime) -> tuple[float | Non
     return None, None
 
 
+async def _fetch_ohlc_nse_bhavcopy(nse_code: str, dt: datetime) -> float | None:
+    """OHLC avg for one stock on an EXACT date, from NSE's own daily bhavcopy
+    CSV archive -- tried as a same-date alternative to Yahoo specifically
+    when Yahoo doesn't have that exact day (data gap, illiquid stock, etc.),
+    before ever accepting a shifted next-trading-day substitute. Same
+    requests-with-browser-headers approach already proven to get past NSE's
+    blocking in price_engine.py's _fetch_bhavcopy_prices -- unlike the plain
+    nseindia.com site/API, which 403s this server outright.
+    Returns None on any failure, including weekends/holidays where NSE simply
+    has no bhavcopy file for that date -- the caller already has a
+    next-trading-day fallback ready to use in that case."""
+    try:
+        import io
+        import pandas as pd
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Referer": "https://www.nseindia.com/",
+        }
+        url = f"https://archives.nseindia.com/products/content/sec_bhavdata_full_{dt.strftime('%d%m%Y')}.csv"
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            r = await client.get(url, headers=headers)
+        if r.status_code != 200:
+            return None
+        df = pd.read_csv(io.StringIO(r.text))
+        if df is None or df.empty:
+            return None
+        df.columns = [c.strip() for c in df.columns]
+        df["SYMBOL"] = df["SYMBOL"].str.strip()
+        match = df[df["SYMBOL"] == nse_code.upper()]
+        if match.empty:
+            return None
+        row = match.iloc[0]
+
+        def _f(col):
+            try:
+                v = float(row.get(col, 0) or 0)
+                return v if v > 0 else None
+            except Exception:
+                return None
+
+        o, h, l, c = _f("OPEN_PRICE"), _f("HIGH_PRICE"), _f("LOW_PRICE"), _f("CLOSE_PRICE")
+        if None in (o, h, l, c):
+            return None
+        return round((o + h + l + c) / 4, 4)
+    except Exception:
+        return None
+
+
 async def _fetch_ohlc_avg(nse_code: str, date_str: str) -> tuple[float | None, str | None]:
-    """Fetch OHLC avg (O+H+L+C)/4 — Yahoo Finance first, Google Finance second,
-    Screener.in last resort (for BSE-only / pre-listing stocks not on NSE).
+    """Fetch OHLC avg (O+H+L+C)/4 — Yahoo Finance first (exact date), then NSE's
+    own bhavcopy for that same exact date if Yahoo didn't have it, THEN Google
+    Finance, then Screener.in last resort (for BSE-only / pre-listing stocks
+    not on NSE) if still nothing. A next-trading-day substitute (from Yahoo,
+    Google, or Screener) is only ever accepted once both Yahoo and NSE have
+    been tried for the exact requested date and neither has it.
     Returns (price, fallback_date) where fallback_date is the actual date used when
     it differs from the requested date (i.e. next-trading-day fallback)."""
     dt = datetime.strptime(date_str, "%d %b %Y")
     ts = int(dt.replace(tzinfo=timezone.utc).timestamp())
 
     val, fallback = await _fetch_ohlc_yahoo(nse_code, ts)
+    if val is not None and fallback is None:
+        return val, None  # exact-date match from Yahoo -- done, no fallback needed
+
+    # Yahoo either found nothing at all, or only a shifted/next-trading-day
+    # bar -- before accepting a substitute date, try NSE's own bhavcopy for
+    # the EXACT requested date. NSE and Yahoo don't always have gaps on the
+    # same days, so this catches cases Yahoo alone would have shifted.
+    nse_val = await _fetch_ohlc_nse_bhavcopy(nse_code, dt)
+    if nse_val is not None:
+        return nse_val, None  # exact date, from NSE -- no fallback needed
+
     if val is not None:
-        return val, fallback
+        return val, fallback  # accept Yahoo's next-trading-day substitute
 
     val, fallback = await _fetch_ohlc_google(nse_code, dt)
     if val is not None:
@@ -610,14 +675,16 @@ async def calc_all_baskets(request: Request):
             sell_ev_str = det.get("sellEvents") or ""
             buy_ev_all  = _parse_buy_events(buy_ev_str)
             sell_ev_all = _parse_buy_events(sell_ev_str)
-            if buy_ev_all:
-                allocation = _compute_allocation(buy_ev_all, sell_ev_all)
-                if nse in stk_map:
-                    stk_map[nse]["allocation"] = allocation
-                else:
-                    new_stk = {"nseCode": nse, "allocation": allocation}
-                    basket_stks.append(new_stk)
-                    stk_map[nse] = new_stk
+            # Only ever UPDATE an existing active-holding entry's allocation here --
+            # never fabricate one. buy_price_data.json keeps every stock this basket
+            # has EVER held (including fully-exited historical positions), so a stock
+            # missing from stk_map is either a legitimately-removed past holding or
+            # something rebalance.py hasn't added yet -- either way, adding it here
+            # created zero-allocation "ghost" entries in portfolios.json on every call
+            # (mirrors the correct skip-if-not-active behavior _recalc_basket_buy_prices
+            # already uses below).
+            if buy_ev_all and nse in stk_map:
+                stk_map[nse]["allocation"] = _compute_allocation(buy_ev_all, sell_ev_all)
 
             events = _current_series_buy_events(buy_ev_all, sell_ev_all)
             if not events:
@@ -659,12 +726,10 @@ async def calc_all_baskets(request: Request):
                 weighted_sum = sum(qty * avg for (_, qty), avg in zip(events, ohlc_avgs))
                 buy_price    = round(weighted_sum / total_qty, 2)
 
-                # Save into portfolios
+                # Save into portfolios -- same "never fabricate a new active
+                # holding" rule as the allocation sync above.
                 if nse in stk_map:
                     stk_map[nse]["buyPrice"] = buy_price
-                else:
-                    basket_stks.append({"nseCode": nse, "allocation": 0, "buyPrice": buy_price})
-                    stk_map[nse] = basket_stks[-1]
 
                 results[key][nse] = buy_price
                 total_ok += 1

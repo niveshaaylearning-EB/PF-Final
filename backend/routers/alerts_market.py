@@ -12,6 +12,7 @@ import sheet_service
 from auth import get_location_from_ip, is_admin_email
 from common.admin import ADMIN_EMAILS
 from main import get_db, _io_pool, _historic_cache, _dump_audit_log
+from routers.actual_portfolio_bridge import _fetch_all_webportal_baskets
 
 router = APIRouter()
 
@@ -24,7 +25,7 @@ async def get_alerts(db: Session = Depends(get_db)):
     or breached their stoploss based on current CMP.
     """
     loop    = asyncio.get_running_loop()
-    baskets = await loop.run_in_executor(_io_pool, sheet_service.get_all_baskets)
+    baskets = await loop.run_in_executor(_io_pool, _fetch_all_webportal_baskets)
 
     alerts = []
     for basket_id, basket in baskets.items():
