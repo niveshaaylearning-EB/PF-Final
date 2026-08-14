@@ -635,10 +635,67 @@ def admin_sync_to_github(request: Request, db: Session = Depends(get_db)):
                  "description": r.description, "old_value": r.old_value, "new_value": r.new_value,
                  "event_date": r.event_date, "user_email": getattr(r, "user_email", None)} for r in rows]
 
+    def _simulation_mods_data(db_):
+        rows = db_.query(database.SimulationMod).all()
+        return [{"user_email": r.user_email, "stock_code": r.stock_code, "allocation": r.allocation,
+                 "buy_price": r.buy_price, "buy_date": r.buy_date, "cmp": r.cmp} for r in rows]
+
+    def _simulation_sips_data(db_):
+        rows = db_.query(database.SimulationSip).all()
+        return [{"user_email": r.user_email, "sip_date": r.sip_date, "amount": r.amount} for r in rows]
+
     results["files"]["allowed_emails_data.json"] = _direct_push("allowed_emails_data.json", _allowed_emails_data)
     results["files"]["login_history.json"]        = _direct_push("login_history.json",        _login_history_data)
     results["files"]["audit_log.json"]             = _direct_push("audit_log.json",             _audit_log_data)
     results["files"]["stock_events.json"]          = _direct_push("stock_events.json",          _stock_events_data)
+    # Per-user virtual portfolios -- admin-only export (backup, not a user-facing
+    # read endpoint), same visibility boundary as the existing /admin/simulators
+    # page: only admin can trigger this or see the resulting file.
+    results["files"]["simulation_mods.json"]       = _direct_push("simulation_mods.json",       _simulation_mods_data)
+    results["files"]["simulation_sips.json"]        = _direct_push("simulation_sips.json",       _simulation_sips_data)
+
+    # ── Webportal's own JSON-file-backed data ──────────────────────────────────
+    # These already have their own save-time auto-push (webportal/backend/
+    # persistence.py's _save_and_push), but that depends on GITHUB_TOKEN/
+    # GITHUB_REPO being set in the webportal process too and has not reliably
+    # reached GitHub in practice. Force-pushing them here as well, from the one
+    # admin action, means "sync everything" no longer depends on that passing
+    # silently -- it's read straight off disk and pushed the same way as the
+    # tables above.
+    _wp_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'webportal', 'backend')
+
+    def _direct_push_file(filename: str) -> str:
+        path = os.path.join(_wp_dir, filename)
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                raw = json.load(f)
+        except Exception as e:
+            return f"error: could not read {filename}: {e}"
+        try:
+            content = json.dumps(raw, indent=2, ensure_ascii=False)
+            api_url = f"https://api.github.com/repos/{repo}/contents/webportal/backend/{filename}"
+            hdrs = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
+                    "Content-Type": "application/json", "X-GitHub-Api-Version": "2022-11-28"}
+            try:
+                with _sync_ur.urlopen(_sync_ur.Request(api_url, headers=hdrs), timeout=8) as r:
+                    sha = json.loads(r.read())["sha"]
+            except Exception as e:
+                sha = None
+                results.setdefault("warnings", []).append(f"GET webportal/{filename}: {e}")
+            body = json.dumps({"message": f"auto: update webportal/{filename}",
+                               "content": _sync_b64.b64encode(content.encode()).decode(),
+                               **({"sha": sha} if sha else {})}).encode()
+            with _sync_ur.urlopen(_sync_ur.Request(api_url, data=body, headers=hdrs, method="PUT"), timeout=15) as r:
+                resp_data = json.loads(r.read())
+                new_sha = resp_data.get("content", {}).get("sha", "?")
+                return f"ok:{new_sha[:8]}"
+        except Exception as e:
+            return f"error: {e}"
+
+    for _wp_file in ("watchlist.json", "buy_price_data.json", "portfolios.json",
+                      "corporate_actions.json", "historical_index.json", "gains_statement.json"):
+        results["files"][f"webportal/{_wp_file}"] = _direct_push_file(_wp_file)
+
     return results
 
 
