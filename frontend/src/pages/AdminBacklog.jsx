@@ -130,7 +130,7 @@ const eventColor = (type) => {
   if (type.includes('add') || type.includes('buy')) return 'var(--positive)';
   if (type.includes('sell') || type.includes('delete') || type.includes('remove')) return '#f87171';
   if (type.includes('edit') || type.includes('update') || type.includes('chang')) return '#f59e0b';
-  return '#818cf8';
+  return 'var(--primary)';
 };
 
 function EventsTab({ data }) {
@@ -168,7 +168,7 @@ function EventsTab({ data }) {
               </TD>
               <TD><Badge text={e.event_type || '—'} color={eventColor(e.event_type)} /></TD>
               <TD>
-                <span style={{ color: '#818cf8', fontSize: '0.79rem' }}>
+                <span style={{ color: 'var(--primary)', fontSize: '0.79rem' }}>
                   {e.basket_id ? e.basket_id.replace('NIA ', '') : '—'}
                 </span>
               </TD>
@@ -195,8 +195,8 @@ function EventsTab({ data }) {
 const AUTH_EVENT_META = {
   login:                  { label: 'Login',            color: 'var(--positive)',  Icon: LogIn       },
   logout:                 { label: 'Logout',           color: '#f87171',          Icon: LogOut      },
-  registration_requested: { label: 'Access Requested', color: '#a78bfa',          Icon: UserPlus    },
-  registration_completed: { label: 'Account Created',  color: '#60a5fa',          Icon: UserPlus    },
+  registration_requested: { label: 'Access Requested', color: 'var(--primary)',          Icon: UserPlus    },
+  registration_completed: { label: 'Account Created',  color: 'var(--primary)',          Icon: UserPlus    },
   admin_approved_user:    { label: 'Approved',         color: 'var(--positive)',  Icon: ShieldCheck },
   admin_rejected_user:    { label: 'Rejected',         color: '#f87171',          Icon: ShieldX     },
   account_locked:         { label: 'Account Locked',   color: '#f59e0b',          Icon: Lock        },
@@ -464,7 +464,7 @@ export default function AdminBacklog() {
               {counts[t.id] > 0 && (
                 <span style={{
                   background: active ? 'rgba(99,102,241,0.3)' : 'rgba(255,255,255,0.08)',
-                  color: active ? '#a5b4fc' : 'var(--text-muted)',
+                  color: active ? 'var(--primary)' : 'var(--text-muted)',
                   borderRadius: '10px', padding: '0 6px', fontSize: '0.7rem', fontWeight: 700,
                 }}>{counts[t.id]}</span>
               )}

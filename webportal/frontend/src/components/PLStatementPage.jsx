@@ -415,7 +415,7 @@ export default function PLStatementPage() {
             <button onClick={() => setShowFilters(v => !v)} style={{
               padding: '0.32rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer',
               border: '1px solid var(--border)', background: anyColFilter ? 'rgba(59,130,246,0.15)' : 'var(--card-bg)',
-              color: anyColFilter ? '#60a5fa' : 'var(--text-secondary)',
+              color: anyColFilter ? 'var(--accent-blue)' : 'var(--text-secondary)',
             }}>
               {anyColFilter ? '⊘ Filters On' : '⊙ Filters'}
             </button>
@@ -431,7 +431,7 @@ export default function PLStatementPage() {
             }}>+ Add Row</button>
             <button onClick={exportXlsx} disabled={displayRows.length === 0} style={{
               padding: '0.32rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer',
-              border: '1px solid #60a5fa', background: 'rgba(59,130,246,0.1)', color: '#60a5fa',
+              border: '1px solid var(--accent-blue)', background: 'rgba(59,130,246,0.1)', color: 'var(--accent-blue)',
               opacity: displayRows.length === 0 ? 0.4 : 1,
             }}>↓ Export Excel</button>
           </div>
@@ -444,7 +444,7 @@ export default function PLStatementPage() {
             <span className="pl-chip pl-chip-gain">{summary.gains} gain{summary.gains !== 1 ? 's' : ''}</span>
             <span className="pl-chip pl-chip-loss">{summary.losses} loss{summary.losses !== 1 ? 'es' : ''}</span>
             <span className={`pl-chip ${summary.avg >= 0 ? 'pl-chip-gain' : 'pl-chip-loss'}`}>Avg {fmtPct(summary.avg)}</span>
-            {viewMode === 'active' && <span className="pl-chip" style={{ background:'rgba(59,130,246,0.12)',color:'#60a5fa',border:'1px solid rgba(59,130,246,0.3)' }}>Active Portfolio Only</span>}
+            {viewMode === 'active' && <span className="pl-chip" style={{ background:'rgba(59,130,246,0.12)',color:'var(--accent-blue)',border:'1px solid rgba(59,130,246,0.3)' }}>Active Portfolio Only</span>}
           </div>
         )}
 
@@ -500,7 +500,7 @@ export default function PLStatementPage() {
                       style={{ userSelect: 'none', whiteSpace: 'nowrap' }}>
                       <div className="cf-th-inner" style={{ justifyContent: right ? 'flex-end' : 'flex-start' }}>
                         <span onClick={() => handleSort(col)} style={{ cursor: 'pointer' }}>{label}</span>
-                        <span style={{ fontSize: '0.6em', color: isSorted ? '#60a5fa' : '#3a4f6a', marginLeft: '0.1em' }}>
+                        <span style={{ fontSize: '0.6em', color: isSorted ? 'var(--accent-blue)' : '#3a4f6a', marginLeft: '0.1em' }}>
                           {isSorted ? (sortDir === 'asc' ? '▲' : '▼') : '⇅'}
                         </span>
                         <button className={`cf-trigger${isFiltered ? ' on' : ''}`}

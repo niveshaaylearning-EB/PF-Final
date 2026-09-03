@@ -149,10 +149,10 @@ export default function BasketComparison() {
                     borderTop: isOverall ? '2px solid rgba(255,255,255,0.1)' : '1px solid rgba(255,255,255,0.05)',
                     background: isOverall ? 'rgba(99,102,241,0.06)' : isActive ? 'rgba(99,102,241,0.10)' : 'transparent',
                   }}>
-                    <td style={{ padding: '10px 16px', fontWeight: 700, color: isOverall ? 'var(--primary)' : isActive ? '#a5b4fc' : 'var(--text-main)', whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '10px 16px', fontWeight: 700, color: isOverall ? 'var(--primary)' : isActive ? 'var(--primary)' : 'var(--text-main)', whiteSpace: 'nowrap' }}>
                       {isOverall ? 'Since Inception' : p}
                       {isActive && !isOverall && (
-                        <span style={{ marginLeft: '6px', fontSize: '0.65rem', color: '#a5b4fc', background: 'rgba(99,102,241,0.25)', padding: '1px 5px', borderRadius: '8px' }}>selected</span>
+                        <span style={{ marginLeft: '6px', fontSize: '0.65rem', color: 'var(--primary)', background: 'rgba(99,102,241,0.25)', padding: '1px 5px', borderRadius: '8px' }}>selected</span>
                       )}
                     </td>
                     {baskets.map((b) => {

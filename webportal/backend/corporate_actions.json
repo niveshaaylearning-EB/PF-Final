@@ -237,5 +237,137 @@
       ],
       "ineligibleEvents": []
     }
+  },
+  {
+    "id": "7d8b9cda-5138-40db-af5a-d6b81dfd5228",
+    "basketKey": "Green_Energy",
+    "nseCode": "TDPOWERSYS",
+    "securityName": "",
+    "type": "split",
+    "exDate": "24 Aug 2026",
+    "recordDate": "",
+    "ratio": {
+      "old": 2.0,
+      "new": 1.0
+    },
+    "demerger": null,
+    "priceOverrides": {},
+    "source": "Auto-detected from Yahoo Finance (share ratio 2:1) -- verify against the official NSE/BSE announcement, and retype as Bonus Issue if that's what this actually was, before approving.",
+    "status": "approved",
+    "createdAt": "25 Aug 2026 06:22",
+    "createdBy": "jay.chaudhari@niveshaay.com",
+    "approvedBy": "nukul.madaan@niveshaay.com",
+    "approvedAt": "25 Aug 2026 06:47",
+    "reversalOf": null,
+    "comparisonReport": {
+      "currentBuyPrice": 179.6566,
+      "revisedBuyPrice": 89.8283,
+      "difference": -89.8283,
+      "eligibleEvents": [
+        {
+          "date": "16 Nov 2021",
+          "weight": 2.8716,
+          "oldPrice": 74.45,
+          "newPrice": 37.225,
+          "overridden": false
+        },
+        {
+          "date": "11 Aug 2022",
+          "weight": 1.0,
+          "oldPrice": 121.86,
+          "newPrice": 60.93,
+          "overridden": false
+        },
+        {
+          "date": "14 Jan 2025",
+          "weight": 1.0,
+          "oldPrice": 403.41,
+          "newPrice": 201.705,
+          "overridden": false
+        },
+        {
+          "date": "08 May 2026",
+          "weight": 0.1284,
+          "oldPrice": 1240.05,
+          "newPrice": 620.025,
+          "overridden": false
+        }
+      ],
+      "ineligibleEvents": []
+    }
+  },
+  {
+    "id": "5dd0b9a6-13a9-4018-98e5-9ac422819739",
+    "basketKey": "Mid_Small_Cap",
+    "nseCode": "TDPOWERSYS",
+    "securityName": "",
+    "type": "split",
+    "exDate": "24 Aug 2026",
+    "recordDate": "",
+    "ratio": {
+      "old": 2.0,
+      "new": 1.0
+    },
+    "demerger": null,
+    "priceOverrides": {},
+    "source": "Auto-detected from Yahoo Finance (share ratio 2:1) -- verify against the official NSE/BSE announcement, and retype as Bonus Issue if that's what this actually was, before approving.",
+    "status": "approved",
+    "createdAt": "25 Aug 2026 06:22",
+    "createdBy": "jay.chaudhari@niveshaay.com",
+    "approvedBy": "nukul.madaan@niveshaay.com",
+    "approvedAt": "25 Aug 2026 06:47",
+    "reversalOf": null,
+    "comparisonReport": {
+      "currentBuyPrice": 325.775,
+      "revisedBuyPrice": 162.8875,
+      "difference": -162.8875,
+      "eligibleEvents": [
+        {
+          "date": "04 Mar 2025",
+          "weight": 2.5,
+          "oldPrice": 325.775,
+          "newPrice": 162.8875,
+          "overridden": false
+        }
+      ],
+      "ineligibleEvents": []
+    }
+  },
+  {
+    "id": "26a9b0b7-2505-4664-b3fb-849e4c0d72de",
+    "basketKey": "Trends_Triology",
+    "nseCode": "TDPOWERSYS",
+    "securityName": "",
+    "type": "split",
+    "exDate": "24 Aug 2026",
+    "recordDate": "",
+    "ratio": {
+      "old": 2.0,
+      "new": 1.0
+    },
+    "demerger": null,
+    "priceOverrides": {},
+    "source": "Auto-detected from Yahoo Finance (share ratio 2:1) -- verify against the official NSE/BSE announcement, and retype as Bonus Issue if that's what this actually was, before approving.",
+    "status": "approved",
+    "createdAt": "25 Aug 2026 06:22",
+    "createdBy": "jay.chaudhari@niveshaay.com",
+    "approvedBy": "nukul.madaan@niveshaay.com",
+    "approvedAt": "25 Aug 2026 06:47",
+    "reversalOf": null,
+    "comparisonReport": {
+      "currentBuyPrice": 1318.27,
+      "revisedBuyPrice": 659.135,
+      "difference": -659.135,
+      "eligibleEvents": [
+        {
+          "date": "18 May 2026",
+          "weight": 3.0,
+          "oldPrice": 1318.27,
+          "newPrice": 659.135,
+          "overridden": false
+        }
+      ],
+      "ineligibleEvents": []
+    }
   }
 ]

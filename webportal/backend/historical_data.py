@@ -55,6 +55,56 @@ async def post_daily_values(body: dict, request: Request):
     return {"ok": True, "date": date_str, "saved": saved}
 
 
+@router.post("/api/admin/smallcase-login/start")
+async def smallcase_login_start(body: dict, request: Request):
+    """Admin-only: begin smallcase login with a phone number (triggers their OTP SMS)."""
+    _require_admin(request)
+    phone = (body.get("phone") or "").strip()
+    if not phone:
+        raise HTTPException(status_code=400, detail="phone is required")
+    import smallcase_login
+    return await smallcase_login.start_login(phone, auth_header=request.headers.get("Authorization"))
+
+
+@router.post("/api/admin/smallcase-login/verify")
+async def smallcase_login_verify(body: dict, request: Request):
+    """Admin-only: complete smallcase login with the OTP code."""
+    _require_admin(request)
+    otp = (body.get("otp") or "").strip()
+    if not otp:
+        raise HTTPException(status_code=400, detail="otp is required")
+    import smallcase_login
+    return await smallcase_login.verify_otp(otp, auth_header=request.headers.get("Authorization"))
+
+
+@router.get("/api/admin/smallcase-login/status")
+async def smallcase_login_check(request: Request):
+    """Admin-only: is there currently a valid logged-in smallcase session?"""
+    _require_admin(request)
+    import smallcase_login
+    return {"logged_in": await smallcase_login.login_status(auth_header=request.headers.get("Authorization"))}
+
+
+@router.post("/api/admin/smallcase-login/close-browser")
+async def smallcase_login_close(request: Request):
+    """Admin-only: release our hold on the browser profile so it can be
+    opened directly elsewhere (e.g. a manual login window on the same
+    profile) without a lock conflict."""
+    _require_admin(request)
+    import smallcase_login
+    return await smallcase_login.close_browser(auth_header=request.headers.get("Authorization"))
+
+
+@router.post("/api/admin/smallcase-fetch-daily")
+async def smallcase_fetch_daily(request: Request):
+    """Admin-only: using the saved smallcase session, pull the latest daily
+    index + benchmark values for every mapped basket and append any new dates
+    to historical_index.json."""
+    _require_admin(request)
+    import smallcase_login
+    return await smallcase_login.fetch_daily_values(auth_header=request.headers.get("Authorization"))
+
+
 @router.post("/api/import-excel-history")
 async def import_excel_history(request: Request, basket: str = Form(...), file: UploadFile = File(...)):
     """Import historical index values from an Excel file for a specific basket.

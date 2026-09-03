@@ -538,7 +538,7 @@ export default function BuyPricePage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
             {historyRow.series.map((s, i) => (
               <div key={i} style={{ background: 'var(--input-bg)', borderRadius: '8px', padding: '0.8rem 1rem', border: '1px solid ' + (s.closed ? '#1e3a5f' : '#1e4d3a') }}>
-                <div style={{ fontWeight: 600, color: '#60a5fa', fontSize: '0.8rem', marginBottom: '0.55rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ fontWeight: 600, color: 'var(--accent-blue)', fontSize: '0.8rem', marginBottom: '0.55rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   {ordinal(i + 1)} Buy-Sell Cycle
                   <span style={{ fontWeight: 400, fontSize: '0.72rem', color: s.closed ? 'var(--text-secondary)' : '#10b981', background: s.closed ? 'var(--hover-bg)' : 'rgba(16,185,129,0.12)', borderRadius: '4px', padding: '1px 6px' }}>
                     {s.closed ? 'Closed' : 'Active'}
@@ -588,7 +588,7 @@ export default function BuyPricePage() {
             {userIsAdmin && historyRow.series.some(s => !s.closed) && (
               <button
                 onClick={handleHistorySave}
-                style={{ padding: '0.4rem 1rem', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', border: '1px solid rgba(99,102,241,0.4)', background: 'rgba(99,102,241,0.15)', color: '#818cf8' }}
+                style={{ padding: '0.4rem 1rem', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', border: '1px solid rgba(99,102,241,0.4)', background: 'rgba(99,102,241,0.15)', color: 'var(--accent-blue)' }}
               >
                 Save Changes
               </button>
@@ -614,7 +614,7 @@ export default function BuyPricePage() {
             ← Back
           </button>
           <div className="bp-page-title">
-            <i className="fa-solid fa-receipt" style={{ color: '#60a5fa', marginRight: '0.6rem' }} />
+            <i className="fa-solid fa-receipt" style={{ color: 'var(--accent-blue)', marginRight: '0.6rem' }} />
             Buy Price Data
           </div>
         </div>
@@ -706,7 +706,7 @@ export default function BuyPricePage() {
                 onClick={() => rebalanceFileRef.current?.click()}
                 disabled={uploadingRebalance}
                 title="Upload rebalance Excel to update buy/sell events and weights (Admin only)"
-                style={{ background: 'rgba(99,102,241,0.1)', color: uploadingRebalance ? 'var(--text-secondary)' : '#818cf8', borderColor: 'rgba(99,102,241,0.25)' }}
+                style={{ background: 'rgba(99,102,241,0.1)', color: uploadingRebalance ? 'var(--text-secondary)' : 'var(--accent-blue)', borderColor: 'rgba(99,102,241,0.25)' }}
               >
                 <i className={`fa-solid ${uploadingRebalance ? 'fa-spinner fa-spin' : 'fa-upload'}`} style={{ marginRight: '0.35rem' }} />
                 {uploadingRebalance ? 'Uploading…' : 'Upload Rebalance'}
@@ -729,7 +729,7 @@ export default function BuyPricePage() {
               borderRadius: '999px', padding: '0.15rem 0.65rem',
             }}
           >
-            <i className="fa-solid fa-file-excel" style={{ color: '#818cf8' }} />
+            <i className="fa-solid fa-file-excel" style={{ color: 'var(--accent-blue)' }} />
             {lastRebalanceFile}
           </span>
         )}
@@ -811,7 +811,7 @@ export default function BuyPricePage() {
                     <th key={col} style={{ textAlign: right ? 'right' : 'left', whiteSpace: 'nowrap', userSelect: 'none' }}>
                       <div className="cf-th-inner" style={{ justifyContent: right ? 'flex-end' : 'flex-start' }}>
                         <span onClick={() => { setBpSortKey(col); setBpSortDir(d => bpSortKey === col && d === 'asc' ? 'desc' : 'asc'); }} style={{ cursor: 'pointer' }}>{label}</span>
-                        <span style={{ fontSize: '0.6em', color: isSorted ? '#60a5fa' : '#3a4f6a' }}>
+                        <span style={{ fontSize: '0.6em', color: isSorted ? 'var(--accent-blue)' : '#3a4f6a' }}>
                           {isSorted ? (bpSortDir === 'asc' ? '▲' : '▼') : '⇅'}
                         </span>
                         <button className={`cf-trigger${isFiltered ? ' on' : ''}`}
@@ -914,7 +914,7 @@ export default function BuyPricePage() {
                     <td colSpan={3} style={{ textAlign: 'right', fontWeight: 700, color: 'var(--text-primary)', paddingRight: '0.75rem', fontSize: '0.82rem' }}>
                       Total Weight
                     </td>
-                    <td style={{ fontWeight: 700, color: '#60a5fa', fontSize: '0.88rem' }}>
+                    <td style={{ fontWeight: 700, color: 'var(--accent-blue)', fontSize: '0.88rem' }}>
                       {totalW.toFixed(2)}%
                     </td>
                     <td colSpan={4} />

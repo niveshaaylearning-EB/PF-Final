@@ -67,3 +67,8 @@ desktop.ini
 
 # ── Local-only launcher (not pushed to GitHub) ────────────────────────────────
 start.bat
+
+# ── smallcase login session (local browser profile, never committed) ─────────
+webportal/backend/smallcase_session_profile/
+webportal/backend/smallcase_debug_*.png
+webportal/backend/smallcase_debug_*.html

@@ -120,7 +120,7 @@ h2 { font-size: 1.8rem; margin-bottom: 1rem; }
 h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-muted); }
 
 .text-gradient {
-  background: linear-gradient(135deg, #a5b4fc, #c4b5fd);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

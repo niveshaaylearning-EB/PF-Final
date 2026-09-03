@@ -157,7 +157,7 @@ function ComparisonReport({ report, type, editable, overrides, onOverrideChange,
                 <tr key={i}>
                   <td style={{ color: 'var(--text-secondary)', padding: '0.1rem 0.5rem 0.1rem 0' }}>{e.date}</td>
                   <td style={{ color: 'var(--text-secondary)', padding: '0.1rem 0.5rem' }}>parent wt {e.parentWeight}%</td>
-                  <td style={{ color: '#818cf8', padding: '0.1rem 0.5rem' }}>resulting buy price {fmt(e.resultingBuyPrice)}</td>
+                  <td style={{ color: 'var(--accent-blue)', padding: '0.1rem 0.5rem' }}>resulting buy price {fmt(e.resultingBuyPrice)}</td>
                 </tr>
               ))}
             </tbody>
@@ -307,7 +307,7 @@ function RecordCard({ rec, onChanged, isAdmin }) {
               </div>
             </div>
           )}
-          <button style={btn('#818cf8')} disabled={busy} onClick={doRecalc}>Recalculate</button>
+          <button style={btn('var(--accent-blue)')} disabled={busy} onClick={doRecalc}>Recalculate</button>
         </div>
       )}
 
@@ -400,11 +400,11 @@ export default function CorporateActionsPage() {
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.2rem' }}>
         <button style={btn('var(--text-secondary)')} onClick={() => { window.location.href = '/wp/' + window.location.search; }}>← Back</button>
         <div style={{ fontWeight: 700, fontSize: '1.15rem', color: 'var(--text-primary)' }}>
-          <i className="fa-solid fa-code-branch" style={{ color: '#818cf8', marginRight: '0.5rem' }} />
+          <i className="fa-solid fa-code-branch" style={{ color: 'var(--accent-blue)', marginRight: '0.5rem' }} />
           Corporate Actions
         </div>
         {isAdmin && (
-          <button style={btn('#818cf8')} disabled={scanning} onClick={handleScan}>
+          <button style={btn('var(--accent-blue)')} disabled={scanning} onClick={handleScan}>
             {scanning ? 'Scanning…' : 'Scan for New Corporate Actions'}
           </button>
         )}
@@ -478,7 +478,7 @@ export default function CorporateActionsPage() {
         )}
 
         {createErr && <div style={{ color: '#ef4444', fontSize: '0.8rem', marginBottom: '0.5rem' }}>{createErr}</div>}
-        <button type="submit" style={btn('#818cf8')} disabled={creating}>{creating ? 'Creating…' : 'Create (pending review)'}</button>
+        <button type="submit" style={btn('var(--accent-blue)')} disabled={creating}>{creating ? 'Creating…' : 'Create (pending review)'}</button>
       </form>
       )}
 
@@ -486,7 +486,7 @@ export default function CorporateActionsPage() {
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
         {['all', 'pending_review', 'approved', 'rejected', 'reversed'].map(s => (
           <button key={s} onClick={() => setFilter(s)}
-            style={{ ...btn(filter === s ? '#818cf8' : 'var(--text-secondary)'), fontWeight: filter === s ? 700 : 500 }}>
+            style={{ ...btn(filter === s ? 'var(--accent-blue)' : 'var(--text-secondary)'), fontWeight: filter === s ? 700 : 500 }}>
             {s === 'all' ? 'All' : s.replace('_', ' ')} {s !== 'all' ? `(${counts[s] || 0})` : `(${records.length})`}
           </button>
         ))}

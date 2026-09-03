@@ -522,7 +522,7 @@ function SimulatorPortfolio() {
           {simReturnData?.sip_details?.length > 0 && !calculatingReturn && (
             <button
               onClick={() => setSipModalOpen(true)}
-              style={{ marginTop: '8px', fontSize: '0.7rem', background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#a5b4fc', borderRadius: '6px', padding: '3px 10px', cursor: 'pointer' }}
+              style={{ marginTop: '8px', fontSize: '0.7rem', background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: 'var(--primary)', borderRadius: '6px', padding: '3px 10px', cursor: 'pointer' }}
             >
               View SIP Breakdown →
             </button>
@@ -736,7 +736,7 @@ function SimulatorPortfolio() {
                       {detail?.stocks?.length > 0 && (
                         <button
                           onClick={() => setSipExpandedIdx(isExpanded ? null : i)}
-                          style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.25)', color: '#a5b4fc', borderRadius: '4px', fontSize: '0.7rem', padding: '2px 8px', cursor: 'pointer' }}
+                          style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.25)', color: 'var(--primary)', borderRadius: '4px', fontSize: '0.7rem', padding: '2px 8px', cursor: 'pointer' }}
                         >
                           {isExpanded ? 'Hide' : 'Details'}
                         </button>
@@ -764,7 +764,7 @@ function SimulatorPortfolio() {
                                 <td style={{ padding: '3px 6px', fontWeight: 700, color: 'var(--text-main)' }}>{st.code}</td>
                                 <td style={{ padding: '3px 6px', textAlign: 'right', color: 'var(--text-muted)' }}>{st.allocation.toFixed(1)}%</td>
                                 <td style={{ padding: '3px 6px', textAlign: 'right' }}>₹{st.price.toLocaleString('en-IN')}</td>
-                                <td style={{ padding: '3px 6px', textAlign: 'right', color: '#a5b4fc' }}>₹{st.amount_invested.toLocaleString('en-IN')}</td>
+                                <td style={{ padding: '3px 6px', textAlign: 'right', color: 'var(--primary)' }}>₹{st.amount_invested.toLocaleString('en-IN')}</td>
                                 <td style={{ padding: '3px 6px', textAlign: 'right', color: 'var(--text-muted)' }}>{st.shares.toFixed(3)}</td>
                               </tr>
                             ))}

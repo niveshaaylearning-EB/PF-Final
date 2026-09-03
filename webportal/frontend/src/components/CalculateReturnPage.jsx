@@ -1,6 +1,7 @@
 import { API_BASE, getAuthToken } from '../api/base.js';
 import { useState, useEffect, useMemo } from 'react';
 import DailyValuesPanel from './DailyValuesPanel.jsx';
+import SmallcaseLoginModal from './SmallcaseLoginModal.jsx';
 import RollbackButtons from './RollbackButtons.jsx';
 import ColumnFilter from './ColumnFilter.jsx';
 
@@ -83,6 +84,7 @@ export default function CalculateReturnPage() {
   const [confirmInfo,     setConfirmInfo]     = useState(null);
   const [pendingRows,     setPendingRows]     = useState([]);
   const [showDailyPanel,  setShowDailyPanel]  = useState(false);
+  const [showSmallcaseLogin, setShowSmallcaseLogin] = useState(false);
   const [crSortKey,    setCrSortKey]    = useState(null);
   const [crSortDir,    setCrSortDir]    = useState('asc');
   const [crColFilters, setCrColFilters] = useState({});
@@ -253,11 +255,22 @@ export default function CalculateReturnPage() {
             >
               <i className="fa-solid fa-calendar-plus" /> Add Daily Values
             </button>
+            <button
+              onClick={() => setShowSmallcaseLogin(true)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '0.4rem',
+                padding: '0.5rem 1.1rem', borderRadius: '8px', fontSize: '0.88rem', fontWeight: 600,
+                background: 'transparent', border: '1.5px solid var(--accent-blue)', color: 'var(--accent-blue)', cursor: 'pointer',
+              }}
+            >
+              <i className="fa-solid fa-right-to-bracket" /> smallcase Login
+            </button>
           </div>
         )}
       </div>
 
       {userIsAdmin && showDailyPanel && <DailyValuesPanel onClose={() => setShowDailyPanel(false)} onSaved={fetchHistData} />}
+      {userIsAdmin && showSmallcaseLogin && <SmallcaseLoginModal onClose={() => setShowSmallcaseLogin(false)} />}
 
       {/* Controls */}
       <div className="cr-controls-card">
@@ -309,7 +322,7 @@ export default function CalculateReturnPage() {
                 <th rowSpan={2} className="cr-th-main" style={{ userSelect: 'none' }}>
                   <div className="cf-th-inner">
                     <span onClick={() => { setCrSortKey('label'); setCrSortDir(d => crSortKey === 'label' && d === 'asc' ? 'desc' : 'asc'); }} style={{ cursor: 'pointer' }}>Basket</span>
-                    <span style={{ fontSize: '0.6em', color: crSortKey === 'label' ? '#60a5fa' : '#3a4f6a' }}>
+                    <span style={{ fontSize: '0.6em', color: crSortKey === 'label' ? 'var(--accent-blue)' : '#3a4f6a' }}>
                       {crSortKey === 'label' ? (crSortDir === 'asc' ? '▲' : '▼') : '⇅'}
                     </span>
                     <button className={`cf-trigger${crColFilters['label'] != null ? ' on' : ''}`}
@@ -339,7 +352,7 @@ export default function CalculateReturnPage() {
                   <th key={col} className={cls} style={{ userSelect: 'none' }}>
                     <div className="cf-th-inner" style={{ justifyContent: 'center' }}>
                       <span onClick={() => handleCrSort(col, crSortKey === col && crSortDir === 'asc' ? 'desc' : 'asc')} style={{ cursor: 'pointer' }}>{label}</span>
-                      <span style={{ fontSize: '0.6em', color: crSortKey === col ? '#60a5fa' : '#3a4f6a' }}>
+                      <span style={{ fontSize: '0.6em', color: crSortKey === col ? 'var(--accent-blue)' : '#3a4f6a' }}>
                         {crSortKey === col ? (crSortDir === 'asc' ? '▲' : '▼') : '⇅'}
                       </span>
                       <button className={`cf-trigger${crColFilters[col] != null ? ' on' : ''}`}

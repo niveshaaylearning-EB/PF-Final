@@ -432,7 +432,7 @@ export default function PortfolioTable({
                   <th key={h} style={{ whiteSpace: 'nowrap', userSelect: 'none' }}>
                     <div className="cf-th-inner">
                       <span onClick={() => handleSort(col)} style={{ cursor: 'pointer' }}>{headerLabel(h)}</span>
-                      <span style={{ fontSize: '0.6em', color: isSorted ? '#a5b4fc' : '#3a4f6a', marginLeft: '0.1em' }}>
+                      <span style={{ fontSize: '0.6em', color: isSorted ? 'var(--accent-blue)' : '#3a4f6a', marginLeft: '0.1em' }}>
                         {isSorted ? (sortDir === 'asc' ? '▲' : '▼') : '⇅'}
                       </span>
                       <button className={`cf-trigger${isFiltered ? ' on' : ''}`}

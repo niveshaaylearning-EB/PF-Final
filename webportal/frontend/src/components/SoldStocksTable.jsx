@@ -102,7 +102,7 @@ function SoldRow({ row, idx, onBuyChange, onSellChange, onRemove }) {
 }
 
 const SI = ({ col, sortKey, sortDir }) => (
-  <span style={{ marginLeft: '0.3em', fontSize: '0.62em', color: sortKey === col ? '#60a5fa' : '#3a4f6a', verticalAlign: 'middle' }}>
+  <span style={{ marginLeft: '0.3em', fontSize: '0.62em', color: sortKey === col ? 'var(--accent-blue)' : '#3a4f6a', verticalAlign: 'middle' }}>
     {sortKey === col ? (sortDir === 'asc' ? '▲' : '▼') : '⇅'}
   </span>
 );
@@ -194,7 +194,7 @@ export default function SoldStocksTable({ rows, activeNseCodes = new Set(), onCh
         <button onClick={() => setShowFilters(v => !v)} style={{
           padding: '0.28rem 0.65rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
           border: '1px solid var(--border)', background: anyFilter ? 'rgba(59,130,246,0.15)' : 'var(--card-bg)',
-          color: anyFilter ? '#60a5fa' : 'var(--text-secondary)',
+          color: anyFilter ? 'var(--accent-blue)' : 'var(--text-secondary)',
         }}>
           {anyFilter ? '⊘ Filters On' : '⊙ Filters'}
         </button>

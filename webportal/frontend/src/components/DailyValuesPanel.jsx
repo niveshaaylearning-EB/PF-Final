@@ -229,7 +229,7 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
         {/* ── Excel Import (always visible) ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem', padding: '1rem 1.1rem', background: 'rgba(139,92,246,0.05)', borderRadius: '12px', border: '1px solid rgba(139,92,246,0.15)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.1rem' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '0.07em' }}>📊 Import from Excel</span>
+            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-blue)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>📊 Import from Excel</span>
             <span style={{ fontSize: '0.72rem', color: '#4ade80', fontWeight: 600 }}>— only new dates added, existing never overwritten</span>
           </div>
           <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'flex-end', flexWrap: 'wrap' }}>
@@ -246,7 +246,7 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
               {xlFiles.length > 0 && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
                   {xlFiles.map((f, i) => (
-                    <span key={i} style={{ fontSize: '0.72rem', background: 'rgba(139,92,246,0.15)', color: '#c4b5fd', borderRadius: '5px', padding: '0.1rem 0.45rem' }}>{f.name}</span>
+                    <span key={i} style={{ fontSize: '0.72rem', background: 'rgba(139,92,246,0.15)', color: 'var(--accent-blue)', borderRadius: '5px', padding: '0.1rem 0.45rem' }}>{f.name}</span>
                   ))}
                 </div>
               )}
@@ -293,7 +293,7 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#8b5cf6', boxShadow: '0 0 6px #8b5cf6' }} />
-            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--accent-blue)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Date
             </span>
           </div>
@@ -308,7 +308,7 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
           />
           <span style={{
             fontSize: '0.78rem', fontWeight: 600, whiteSpace: 'nowrap',
-            color: filledCount > 0 ? '#a78bfa' : 'var(--text-secondary)',
+            color: filledCount > 0 ? 'var(--accent-blue)' : 'var(--text-secondary)',
             background: filledCount > 0 ? 'rgba(139,92,246,0.15)' : 'transparent',
             padding: filledCount > 0 ? '0.2rem 0.6rem' : '0',
             borderRadius: '20px', transition: 'all 0.2s',
@@ -406,7 +406,7 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
             disabled={saving}
             style={{
               padding: '0.68rem 2rem', borderRadius: '9px', fontSize: '0.97rem', fontWeight: 700,
-              background: saving ? 'rgba(139,92,246,0.35)' : 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%)',
+              background: saving ? 'rgba(139,92,246,0.35)' : 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 50%, var(--accent-blue) 100%)',
               border: '1px solid rgba(139,92,246,0.4)',
               color: saving ? 'rgba(255,255,255,0.5)' : '#fff',
               cursor: saving ? 'default' : 'pointer',
@@ -422,8 +422,8 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
         {/* ── Audit Trail ── */}
         <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
-            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#a78bfa', boxShadow: '0 0 5px #a78bfa' }} />
-            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-blue)', boxShadow: '0 0 5px var(--accent-blue)' }} />
+            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--accent-blue)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Audit Trail — Last 7 Days
             </span>
           </div>
@@ -443,7 +443,7 @@ export default function DailyValuesPanel({ onClose, onSaved }) {
                     borderBottom: '1px solid rgba(139,92,246,0.15)',
                     display: 'flex', alignItems: 'center', gap: '0.5rem',
                   }}>
-                    <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#c4b5fd' }}>{fmtDate(d)}</span>
+                    <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--accent-blue)' }}>{fmtDate(d)}</span>
                     <span style={{ fontSize: '0.72rem', color: '#6d28d9', background: 'rgba(109,40,217,0.2)', padding: '0.1rem 0.45rem', borderRadius: '10px', fontWeight: 600 }}>
                       {auditByDate[d].length} basket{auditByDate[d].length > 1 ? 's' : ''}
                     </span>

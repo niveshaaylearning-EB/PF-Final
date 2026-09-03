@@ -119,7 +119,7 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
             <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)' }}>
-              <i className="fa-solid fa-code-branch" style={{ color: '#818cf8', marginRight: '0.5rem' }} />
+              <i className="fa-solid fa-code-branch" style={{ color: 'var(--accent-blue)', marginRight: '0.5rem' }} />
               Review Rebalance — {previewData.basket}
             </div>
             <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
@@ -143,7 +143,7 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
             {[1, 2].map(n => (
               <div key={n} style={{
                 width: '8px', height: '8px', borderRadius: '50%',
-                background: slide === n ? '#818cf8' : 'rgba(99,102,241,0.25)',
+                background: slide === n ? 'var(--accent-blue)' : 'rgba(99,102,241,0.25)',
                 transition: 'background 0.2s',
               }} />
             ))}
@@ -206,7 +206,7 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
           {displaySlide === 2 && (
             <>
               <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginBottom: '0.9rem' }}>
-                <i className="fa-solid fa-scale-balanced" style={{ color: '#818cf8', marginRight: '0.4rem' }} />
+                <i className="fa-solid fa-scale-balanced" style={{ color: 'var(--accent-blue)', marginRight: '0.4rem' }} />
                 Review weight changes for the rebalance. All fields are editable before confirming.
               </div>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -231,7 +231,7 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
                       </td>
                       <td style={cellStyle}>
                         <input
-                          style={{ ...inputStyle, color: '#818cf8', fontWeight: 700, width: '8rem' }}
+                          style={{ ...inputStyle, color: 'var(--accent-blue)', fontWeight: 700, width: '8rem' }}
                           value={row.nseCode}
                           onChange={e => updateSlide2(i, 'nseCode', e.target.value.toUpperCase())}
                         />
@@ -301,7 +301,7 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
               <button
                 onClick={() => setSlide(1)}
                 style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.25)',
-                         color: '#818cf8', borderRadius: '8px', padding: '0.5rem 1.1rem',
+                         color: 'var(--accent-blue)', borderRadius: '8px', padding: '0.5rem 1.1rem',
                          cursor: 'pointer', fontSize: '0.84rem', fontWeight: 600 }}
               >
                 <i className="fa-solid fa-arrow-left" style={{ marginRight: '0.4rem' }} />
@@ -313,7 +313,7 @@ export default function RebalanceUploadModal({ previewData, onClose, onConfirmed
               <button
                 onClick={() => setSlide(2)}
                 style={{ background: 'rgba(99,102,241,0.18)', border: '1px solid rgba(99,102,241,0.35)',
-                         color: '#818cf8', borderRadius: '8px', padding: '0.5rem 1.2rem',
+                         color: 'var(--accent-blue)', borderRadius: '8px', padding: '0.5rem 1.2rem',
                          cursor: 'pointer', fontSize: '0.84rem', fontWeight: 600 }}
               >
                 Next

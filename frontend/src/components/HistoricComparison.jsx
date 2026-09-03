@@ -93,7 +93,7 @@ export default function HistoricComparison({ refreshKey }) {
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                  <span style={{ fontSize: '1.15rem', fontWeight: 700, color: '#a5b4fc' }}>{p}</span>
+                  <span style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--primary)' }}>{p}</span>
                   <span style={{
                     fontSize: '0.65rem',
                     color: 'var(--primary)',
@@ -153,7 +153,7 @@ export default function HistoricComparison({ refreshKey }) {
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                    <span style={{ fontSize: '1.15rem', fontWeight: 700, color: '#c4b5fd' }}>{p}</span>
+                    <span style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--primary)' }}>{p}</span>
                     <span style={{
                       fontSize: '0.65rem',
                       color: 'var(--secondary)',

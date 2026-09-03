@@ -120,7 +120,7 @@ export default function HistoricAnalytics({ basketId }) {
             {benchNames.map((name, bi) => (
               <React.Fragment key={name}>
                 <tr>
-                  <td style={{ padding: '8px 12px', fontWeight: 500, whiteSpace: 'nowrap', borderBottom: '1px solid rgba(255,255,255,0.06)', color: '#a5b4fc' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 500, whiteSpace: 'nowrap', borderBottom: '1px solid rgba(255,255,255,0.06)', color: 'var(--primary)' }}>
                     {name} (Net)
                   </td>
                   {periods.map(p => {
