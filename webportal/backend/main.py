@@ -124,6 +124,47 @@ from watchlist import router as _watchlist_router
 app.include_router(_watchlist_router)
 
 
+# Daily smallcase auto-fetch: pulls each basket's latest index + benchmark
+# values into historical_index.json once a day, using whatever session is
+# already saved on disk (smallcase_session_profile/) -- no OTP involved here,
+# since there's no admin present to type one in. If that session has expired,
+# this just logs a warning and skips; an admin re-logging in via the
+# "smallcase Login" button restores it for the next run. Runs in THIS
+# process specifically (not backend/main.py) because Playwright's browser
+# launch only works when cwd matches this file's own directory -- see
+# smallcase_login.py's module docstring for the full story.
+#
+# Scheduled as a task on the app's OWN event loop (asyncio.create_task at
+# startup), NOT a separate OS thread with its own asyncio.new_event_loop()
+# -- smallcase_login.py's module-level asyncio.Lock() and browser/page state
+# are singletons that bind to whichever event loop first awaits them. A
+# background thread's independent loop grabbing that lock first (its 60s
+# initial delay meant it usually won the race against a real button click)
+# permanently bound it to that thread's loop, which then closed -- so every
+# subsequent real HTTP request's attempt to acquire the SAME lock on the
+# main loop failed with "bound to a different event loop", turning genuine
+# "Fetch Latest Daily Values" clicks into 500s. Running on the main loop
+# throughout avoids ever having two loops touch this shared state at all.
+async def _smallcase_daily_fetch_loop():
+    await asyncio.sleep(60)
+    while True:
+        try:
+            import smallcase_login
+            if not await smallcase_login.login_status():
+                print("[BG] smallcase daily fetch skipped -- not logged in (session expired or never started).")
+            else:
+                print("[BG] Running daily smallcase fetch...")
+                result = await smallcase_login.fetch_daily_values()
+                print(f"[BG] smallcase daily fetch finished: {result}")
+        except Exception as bg_err:
+            print(f"[BG] Error in smallcase daily fetch: {bg_err}")
+        await asyncio.sleep(86400)
+
+@app.on_event("startup")
+async def _start_smallcase_daily_fetch():
+    asyncio.get_event_loop().create_task(_smallcase_daily_fetch_loop())
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Serve React frontend (SPA) from ../frontend/dist
 # ─────────────────────────────────────────────────────────────────────────────

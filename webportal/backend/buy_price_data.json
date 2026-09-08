@@ -4,7 +4,7 @@
       "securityName": "Waaree Energies Ltd",
       "segment": "Renewable/Clean Energy",
       "buyEvents": "29 Oct 2024 * 5\n10 Dec 2024 * 2\n08 May 2026 * 0.1284",
-      "sellEvents": "30 Jan 2025 * 2\n13 May 2026 * 0.1284\n31 Jul 2026 * 0.5",
+      "sellEvents": "30 Jan 2025 * 2\n13 May 2026 * 0.1284\n31 Jul 2026 * 0.5\n04 Sep 2026 * 0.5",
       "buyOHLC": {
         "28 Oct 2024": 2440.82,
         "09 Dec 2024": 2945.92,
@@ -16,7 +16,8 @@
         "29 Jan 2025": 2158.01,
         "13 May 2026": 3103.5,
         "30 Jan 2025": 2206.46,
-        "31 Jul 2026": 2661.8749
+        "31 Jul 2026": 2661.8749,
+        "04 Sep 2026": 2610.4
       },
       "prevBuyEvents": "",
       "prevSellEvents": ""
@@ -91,7 +92,7 @@
       "securityName": "Borosil Renewables Ltd",
       "segment": "Renewable/Clean Energy",
       "buyEvents": "10 Dec 2024 * 4\n14 Jan 2025 * 2\n08 May 2026 * 0.154",
-      "sellEvents": "13 May 2026 * 0.154\n31 Jul 2026 * 1",
+      "sellEvents": "13 May 2026 * 0.154\n31 Jul 2026 * 1\n04 Sep 2026 * 1",
       "buyOHLC": {
         "27 Apr 2021": 232.59,
         "09 Dec 2024": 564.06,
@@ -111,7 +112,8 @@
         "19 Jan 2022": 620.65,
         "14 Mar 2023": 452.21,
         "19 Jul 2024": 481.15,
-        "31 Jul 2026": 558.0
+        "31 Jul 2026": 558.0,
+        "04 Sep 2026": 497.8125
       },
       "prevBuyEvents": "23 Mar 2021 * 12.5",
       "prevSellEvents": "31 May 2021 * 5\n19 Jan 2022 * 2.5\n14 Mar 2023 * 1\n19 Jul 2024 * 4"
@@ -182,7 +184,7 @@
       "securityName": "Skipper Ltd",
       "segment": "Power Infrastructure",
       "buyEvents": "01 Sep 2023 * 4\n01 Feb 2024 * 1",
-      "sellEvents": "08 May 2026 * 2.3716\n13 May 2026 * 0.1284",
+      "sellEvents": "08 May 2026 * 2.3716\n13 May 2026 * 0.1284\n04 Sep 2026 * 1",
       "buyOHLC": {
         "31 Aug 2023": 217.91,
         "31 Jan 2024": 254.59,
@@ -191,7 +193,8 @@
       },
       "sellOHLC": {
         "08 May 2026": 469.79,
-        "13 May 2026": 448.21
+        "13 May 2026": 448.21,
+        "04 Sep 2026": 568.0
       },
       "prevBuyEvents": "",
       "prevSellEvents": ""
@@ -212,8 +215,8 @@
         "16 Mar 2026": 1910.27,
         "31 Jul 2026": 2576.625
       },
-      "prevBuyEvents": "23 May 2025 * 3\n08 May 2026 * 0.0513",
-      "prevSellEvents": "16 Mar 2026 * 1\n13 May 2026 * 0.0513\n31 Jul 2026 * 2"
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
     },
     "ENRIN": {
       "securityName": "Siemens Energy India Ltd",
@@ -247,8 +250,8 @@
         "13 May 2026": 4574.57,
         "31 Jul 2026": 4063.375
       },
-      "prevBuyEvents": "16 Mar 2026 * 3\n08 May 2026 * 1.577",
-      "prevSellEvents": "13 May 2026 * 0.077\n31 Jul 2026 * 4.5"
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
     },
     "SYRMA": {
       "securityName": "Syrma SGS Technology Ltd",
@@ -338,8 +341,8 @@
         "18 Apr 2022": 473.78,
         "31 Jul 2026": 2317.5
       },
-      "prevBuyEvents": "17 Oct 2022 * 5\n08 May 2026 * 0.0513",
-      "prevSellEvents": "19 Jul 2024 * 1.5\n16 Mar 2026 * 1.5\n13 May 2026 * 0.0513\n31 Jul 2026 * 2"
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
     },
     "ATHERENERG": {
       "securityName": "Ather Energy Ltd",
@@ -397,13 +400,14 @@
     "QPOWER": {
       "securityName": "Quality Power Electrical Equipments Ltd",
       "segment": "Power Trading & Consultancy",
-      "buyEvents": "16 Mar 2026 * 2\n08 May 2026 * 0.0513\n10 Aug 2026 * 2",
+      "buyEvents": "16 Mar 2026 * 2\n08 May 2026 * 0.0513\n10 Aug 2026 * 2\n04 Sep 2026 * 1",
       "sellEvents": "13 May 2026 * 0.0513",
       "buyOHLC": {
         "15 Mar 2026": 787.92,
         "08 May 2026": 1278.55,
         "16 Mar 2026": 787.92,
-        "10 Aug 2026": 1177.725
+        "10 Aug 2026": 1177.725,
+        "04 Sep 2026": 1464.2
       },
       "sellOHLC": {
         "13 May 2026": 1227.62
@@ -448,14 +452,14 @@
         "04 Aug 2026": 321.5875,
         "31 Jul 2026": 347.125
       },
-      "prevBuyEvents": "10 Nov 2025 * 3.5\n08 May 2026 * 0.0899",
-      "prevSellEvents": "13 May 2026 * 0.0899\n31 Jul 2026 * 0.5\n04 Aug 2026 * 3"
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
     },
     "GANECOS": {
       "securityName": "Ganesha Ecosphere Ltd",
       "segment": "Recycling",
       "buyEvents": "18 Apr 2022 * 5\n17 Oct 2022 * 1\n08 May 2026 * 1.0513",
-      "sellEvents": "23 Jul 2025 * 2\n10 Nov 2025 * 2\n13 May 2026 * 0.0513",
+      "sellEvents": "23 Jul 2025 * 2\n10 Nov 2025 * 2\n13 May 2026 * 0.0513\n04 Sep 2026 * 1.5",
       "buyOHLC": {
         "16 Apr 2022": 730.95,
         "16 Oct 2022": 767.96,
@@ -468,7 +472,8 @@
         "09 Nov 2025": 1086.02,
         "13 May 2026": 1017.7,
         "23 Jul 2025": 1484.9,
-        "10 Nov 2025": 1086.02
+        "10 Nov 2025": 1086.02,
+        "04 Sep 2026": 1002.35
       },
       "prevBuyEvents": "",
       "prevSellEvents": ""
@@ -536,14 +541,15 @@
     "INOXINDIA": {
       "securityName": "INOX India Ltd",
       "segment": "Industrials",
-      "buyEvents": "15 Apr 2026 * 3\n08 May 2026 * 0.077",
+      "buyEvents": "15 Apr 2026 * 3\n08 May 2026 * 0.077\n04 Sep 2026 * 2",
       "sellEvents": "13 May 2026 * 0.077",
       "buyOHLC": {
         "26 Feb 2025": 964.62,
         "14 Apr 2026": 1467.75,
         "08 May 2026": 1507.225,
         "15 Apr 2026": 1467.75,
-        "27 Feb 2025": 964.62
+        "27 Feb 2025": 964.62,
+        "04 Sep 2026": 2249.7
       },
       "sellOHLC": {
         "18 Nov 2025": 1225.7,
@@ -556,8 +562,8 @@
     "LIQUIDCASE": {
       "securityName": "Zerodha Nifty 1D Rate Liquid ETF",
       "segment": "Mutual Fund Scheme",
-      "buyEvents": "13 May 2026 * 5\n31 Jul 2026 * 4\n04 Aug 2026 * 3",
-      "sellEvents": "10 Aug 2026 * 7",
+      "buyEvents": "",
+      "sellEvents": "",
       "buyOHLC": {
         "13 May 2026": 114.0275,
         "04 Sep 2024": 105.68,
@@ -575,10 +581,11 @@
         "31 Jul 2025": 110.66,
         "16 Mar 2026": 113.16,
         "15 Apr 2026": 113.62,
-        "10 Aug 2026": 115.4025
+        "10 Aug 2026": 115.4025,
+        "04 Sep 2026": 115.8025
       },
-      "prevBuyEvents": "04 Sep 2024 * 5.5\n30 Jan 2025 * 4.5\n23 Jul 2025 * 4\n10 Nov 2025 * 3\n03 Feb 2026 * 6",
-      "prevSellEvents": "10 Dec 2024 * 2\n14 Jan 2025 * 3.5\n23 May 2025 * 4.5\n31 Jul 2025 * 4\n16 Mar 2026 * 6\n15 Apr 2026 * 3"
+      "prevBuyEvents": "13 May 2026 * 5\n31 Jul 2026 * 4\n04 Aug 2026 * 3",
+      "prevSellEvents": "10 Aug 2026 * 7\n04 Sep 2026 * 5"
     },
     "SWELECTES": {
       "securityName": "SWELECTES",
@@ -827,10 +834,10 @@
     },
     "SANGHVIMOV": {
       "securityName": "SANGHVIMOV",
-      "buyEvents": "23 Mar 2021 * 10\n15 Feb 2023 * 1.5\n10 Aug 2026 * 3",
-      "sellEvents": "19 Jan 2022 * 2\n18 Apr 2022 * 2\n08 Aug 2024 * 4.5\n04 Sep 2024 * 3",
-      "prevBuyEvents": "",
-      "prevSellEvents": "",
+      "buyEvents": "",
+      "sellEvents": "",
+      "prevBuyEvents": "23 Mar 2021 * 10\n15 Feb 2023 * 1.5\n10 Aug 2026 * 3",
+      "prevSellEvents": "19 Jan 2022 * 2\n18 Apr 2022 * 2\n08 Aug 2024 * 4.5\n04 Sep 2024 * 3\n31 Jul 2026 * 3",
       "buyOHLC": {
         "23 Mar 2021": 54.66,
         "15 Feb 2023": 189.73,
@@ -840,7 +847,8 @@
         "19 Jan 2022": 114.35,
         "18 Apr 2022": 102.12,
         "08 Aug 2024": 420.93,
-        "04 Sep 2024": 418.09
+        "04 Sep 2024": 418.09,
+        "31 Jul 2026": 423.0625
       },
       "segment": "BSE Services"
     },
@@ -1142,6 +1150,30 @@
       "sellEvents": "",
       "buyOHLC": {
         "31 Jul 2026": 459.3375
+      },
+      "sellOHLC": {},
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
+    },
+    "DHOOTTRANS": {
+      "securityName": "Dhoot Transmission Ltd",
+      "segment": "BSE IPO",
+      "buyEvents": "04 Sep 2026 * 3",
+      "sellEvents": "",
+      "buyOHLC": {
+        "04 Sep 2026": 1616.45
+      },
+      "sellOHLC": {},
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
+    },
+    "FLUOROCHEM": {
+      "securityName": "Gujarat Fluorochemicals Ltd",
+      "segment": "BSE 500",
+      "buyEvents": "04 Sep 2026 * 3",
+      "sellEvents": "",
+      "buyOHLC": {
+        "04 Sep 2026": 4676.1
       },
       "sellOHLC": {},
       "prevBuyEvents": "",

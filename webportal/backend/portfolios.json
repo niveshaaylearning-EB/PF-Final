@@ -1,9 +1,25 @@
 {
   "Green_Energy": [
     {
+      "nseCode": "DHOOTTRANS",
+      "allocation": 0.03,
+      "buyPrice": 1616.45
+    },
+    {
+      "nseCode": "VAML",
+      "allocation": 0.02,
+      "buyPrice": 459.34
+    },
+    {
+      "nseCode": "EMMVEE",
+      "allocation": 0.03,
+      "buyPrice": 230.58,
+      "securityName": "Emmvee Photovoltaic Power Ltd"
+    },
+    {
       "nseCode": "WAAREEENER",
-      "allocation": 0.045,
-      "buyPrice": 2731.41,
+      "allocation": 0.04,
+      "buyPrice": 2772.7,
       "securityName": "Waaree Energies Ltd"
     },
     {
@@ -19,27 +35,70 @@
       "securityName": "TD Power Systems Ltd"
     },
     {
-      "nseCode": "EMMVEE",
-      "allocation": 0.03,
-      "buyPrice": 230.58,
-      "securityName": "Emmvee Photovoltaic Power Ltd"
-    },
-    {
       "nseCode": "BORORENEW",
-      "allocation": 0.05,
-      "buyPrice": 580.12,
+      "allocation": 0.04,
+      "buyPrice": 578.16,
       "securityName": "Borosil Renewables Ltd"
     },
     {
-      "nseCode": "VEDL",
-      "allocation": 0.02,
-      "buyPrice": 601.19,
-      "securityName": "Vedanta Ltd"
+      "nseCode": "EBGNG",
+      "allocation": 0.05,
+      "buyPrice": 335.98,
+      "securityName": "GNG Electronics Ltd"
     },
     {
-      "nseCode": "VAML",
-      "allocation": 0.02,
-      "buyPrice": 459.34
+      "nseCode": "POCL",
+      "allocation": 0.035,
+      "buyPrice": 417.54,
+      "securityName": "Pondy Oxides and Chemicals Ltd"
+    },
+    {
+      "nseCode": "GANECOS",
+      "allocation": 0.015,
+      "buyPrice": 976.6,
+      "securityName": "Ganesha Ecosphere Ltd"
+    },
+    {
+      "nseCode": "ENRIN",
+      "allocation": 0.05,
+      "buyPrice": 2657.01,
+      "securityName": "Siemens Energy India Ltd"
+    },
+    {
+      "nseCode": "SKIPPER",
+      "allocation": 0.015,
+      "buyPrice": 268.06,
+      "securityName": "Skipper Ltd"
+    },
+    {
+      "nseCode": "ATHERENERG",
+      "allocation": 0.05,
+      "buyPrice": 912.29,
+      "securityName": "Ather Energy Ltd"
+    },
+    {
+      "nseCode": "SBCL",
+      "allocation": 0.07,
+      "buyPrice": 574.74,
+      "securityName": "Shivalik Bimetal Controls Ltd"
+    },
+    {
+      "nseCode": "QPOWER",
+      "allocation": 0.05,
+      "buyPrice": 1084.13,
+      "securityName": "Quality Power Electrical Equipments Ltd"
+    },
+    {
+      "nseCode": "INOXINDIA",
+      "allocation": 0.05,
+      "buyPrice": 1781.14,
+      "securityName": "INOX India Ltd"
+    },
+    {
+      "nseCode": "HBLENGINE",
+      "allocation": 0.05,
+      "buyPrice": 675.73,
+      "securityName": "HBL Engineering Ltd"
     },
     {
       "nseCode": "SYRMA",
@@ -54,30 +113,6 @@
       "securityName": "Avalon Technologies Ltd"
     },
     {
-      "nseCode": "SKIPPER",
-      "allocation": 0.025,
-      "buyPrice": 252.75,
-      "securityName": "Skipper Ltd"
-    },
-    {
-      "nseCode": "ENRIN",
-      "allocation": 0.05,
-      "buyPrice": 2657.01,
-      "securityName": "Siemens Energy India Ltd"
-    },
-    {
-      "nseCode": "SBCL",
-      "allocation": 0.07,
-      "buyPrice": 574.74,
-      "securityName": "Shivalik Bimetal Controls Ltd"
-    },
-    {
-      "nseCode": "ATHERENERG",
-      "allocation": 0.05,
-      "buyPrice": 912.29,
-      "securityName": "Ather Energy Ltd"
-    },
-    {
       "nseCode": "SANSERA",
       "allocation": 0.045,
       "buyPrice": 1991.26,
@@ -90,33 +125,15 @@
       "securityName": "Jash Engineering Ltd"
     },
     {
+      "nseCode": "VEDL",
+      "allocation": 0.02,
+      "buyPrice": 601.19,
+      "securityName": "Vedanta Ltd"
+    },
+    {
       "nseCode": "SANGHVIMOV",
       "allocation": 0.03,
       "buyPrice": 509.85
-    },
-    {
-      "nseCode": "QPOWER",
-      "allocation": 0.04,
-      "buyPrice": 989.11,
-      "securityName": "Quality Power Electrical Equipments Ltd"
-    },
-    {
-      "nseCode": "POCL",
-      "allocation": 0.035,
-      "buyPrice": 417.54,
-      "securityName": "Pondy Oxides and Chemicals Ltd"
-    },
-    {
-      "nseCode": "GANECOS",
-      "allocation": 0.03,
-      "buyPrice": 860.58,
-      "securityName": "Ganesha Ecosphere Ltd"
-    },
-    {
-      "nseCode": "EBGNG",
-      "allocation": 0.05,
-      "buyPrice": 335.98,
-      "securityName": "GNG Electronics Ltd"
     },
     {
       "nseCode": "NEOGEN",
@@ -125,21 +142,9 @@
       "securityName": "Neogen Chemicals Ltd"
     },
     {
-      "nseCode": "LIQUIDCASE",
-      "allocation": 0.05,
-      "buyPrice": 115.3
-    },
-    {
-      "nseCode": "INOXINDIA",
+      "nseCode": "FLUOROCHEM",
       "allocation": 0.03,
-      "buyPrice": 1468.76,
-      "securityName": "INOX India Ltd"
-    },
-    {
-      "nseCode": "HBLENGINE",
-      "allocation": 0.05,
-      "buyPrice": 675.73,
-      "securityName": "HBL Engineering Ltd"
+      "buyPrice": 4676.1
     }
   ],
   "Mid_Small_Cap": [

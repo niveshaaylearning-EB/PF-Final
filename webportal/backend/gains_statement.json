@@ -51,6 +51,22 @@
           ],
           "weightedGainPct": 10.86,
           "weightedAvgBuyPrice": 2401.09
+        },
+        {
+          "sellDate": "04 Sep 2026",
+          "sellWeight": 0.5,
+          "sellPrice": 2610.4,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "29 Oct 2024",
+              "weight": 0.5,
+              "buyPrice": 2401.09,
+              "gainPct": 8.72
+            }
+          ],
+          "weightedGainPct": 8.72,
+          "weightedAvgBuyPrice": 2401.09
         }
       ]
     },
@@ -316,6 +332,22 @@
           ],
           "weightedGainPct": -5.1,
           "weightedAvgBuyPrice": 588.0
+        },
+        {
+          "sellDate": "04 Sep 2026",
+          "sellWeight": 1.0,
+          "sellPrice": 497.8125,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "10 Dec 2024",
+              "weight": 1.0,
+              "buyPrice": 588.0,
+              "gainPct": -15.34
+            }
+          ],
+          "weightedGainPct": -15.34,
+          "weightedAvgBuyPrice": 588.0
         }
       ]
     },
@@ -539,68 +571,24 @@
           ],
           "weightedGainPct": 95.05,
           "weightedAvgBuyPrice": 229.79
+        },
+        {
+          "sellDate": "04 Sep 2026",
+          "sellWeight": 1.0,
+          "sellPrice": 568.0,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "01 Sep 2023",
+              "weight": 1.0,
+              "buyPrice": 229.79,
+              "gainPct": 147.18
+            }
+          ],
+          "weightedGainPct": 147.18,
+          "weightedAvgBuyPrice": 229.79
         }
       ]
-    },
-    "POWERMECH": {
-      "securityName": "Power Mech Projects Ltd",
-      "prevSeriesGains": [
-        {
-          "sellDate": "16 Mar 2026",
-          "sellWeight": 1.0,
-          "sellPrice": 1910.27,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "23 May 2025",
-              "weight": 1.0,
-              "buyPrice": 3258.92,
-              "gainPct": -41.38
-            }
-          ],
-          "weightedGainPct": -41.38,
-          "weightedAvgBuyPrice": 3258.92
-        },
-        {
-          "sellDate": "13 May 2026",
-          "sellWeight": 0.0513,
-          "sellPrice": 2402.25,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "23 May 2025",
-              "weight": 0.0513,
-              "buyPrice": 3258.92,
-              "gainPct": -26.29
-            }
-          ],
-          "weightedGainPct": -26.29,
-          "weightedAvgBuyPrice": 3258.92
-        },
-        {
-          "sellDate": "31 Jul 2026",
-          "sellWeight": 2.0,
-          "sellPrice": 2576.625,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "23 May 2025",
-              "weight": 1.9487,
-              "buyPrice": 3258.92,
-              "gainPct": -20.94
-            },
-            {
-              "buyDate": "08 May 2026",
-              "weight": 0.0513,
-              "buyPrice": 2600.45,
-              "gainPct": -0.92
-            }
-          ],
-          "weightedGainPct": -20.43,
-          "weightedAvgBuyPrice": 3242.0302
-        }
-      ],
-      "currentSeriesGains": []
     },
     "ENRIN": {
       "securityName": "Siemens Energy India Ltd",
@@ -623,50 +611,6 @@
           "weightedAvgBuyPrice": 2540.12
         }
       ]
-    },
-    "THERMAX": {
-      "securityName": "Thermax Limited",
-      "prevSeriesGains": [
-        {
-          "sellDate": "13 May 2026",
-          "sellWeight": 0.077,
-          "sellPrice": 4574.57,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "16 Mar 2026",
-              "weight": 0.077,
-              "buyPrice": 3269.1,
-              "gainPct": 39.93
-            }
-          ],
-          "weightedGainPct": 39.93,
-          "weightedAvgBuyPrice": 3269.1
-        },
-        {
-          "sellDate": "31 Jul 2026",
-          "sellWeight": 4.5,
-          "sellPrice": 4063.375,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "16 Mar 2026",
-              "weight": 2.923,
-              "buyPrice": 3269.1,
-              "gainPct": 24.3
-            },
-            {
-              "buyDate": "08 May 2026",
-              "weight": 1.577,
-              "buyPrice": 4528.125,
-              "gainPct": -10.26
-            }
-          ],
-          "weightedGainPct": 12.19,
-          "weightedAvgBuyPrice": 3710.3183
-        }
-      ],
-      "currentSeriesGains": []
     },
     "SYRMA": {
       "securityName": "Syrma SGS Technology Ltd",
@@ -787,82 +731,6 @@
           "weightedAvgBuyPrice": 340.39
         }
       ]
-    },
-    "FIEMIND": {
-      "securityName": "Fiem Industries Ltd",
-      "prevSeriesGains": [
-        {
-          "sellDate": "19 Jul 2024",
-          "sellWeight": 1.5,
-          "sellPrice": 1340.04,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "17 Oct 2022",
-              "weight": 1.5,
-              "buyPrice": 786.53,
-              "gainPct": 70.37
-            }
-          ],
-          "weightedGainPct": 70.37,
-          "weightedAvgBuyPrice": 786.53
-        },
-        {
-          "sellDate": "16 Mar 2026",
-          "sellWeight": 1.5,
-          "sellPrice": 1992.25,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "17 Oct 2022",
-              "weight": 1.5,
-              "buyPrice": 786.53,
-              "gainPct": 153.3
-            }
-          ],
-          "weightedGainPct": 153.3,
-          "weightedAvgBuyPrice": 786.53
-        },
-        {
-          "sellDate": "13 May 2026",
-          "sellWeight": 0.0513,
-          "sellPrice": 2210.8,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "17 Oct 2022",
-              "weight": 0.0513,
-              "buyPrice": 786.53,
-              "gainPct": 181.08
-            }
-          ],
-          "weightedGainPct": 181.08,
-          "weightedAvgBuyPrice": 786.53
-        },
-        {
-          "sellDate": "31 Jul 2026",
-          "sellWeight": 2.0,
-          "sellPrice": 2317.5,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "17 Oct 2022",
-              "weight": 1.9487,
-              "buyPrice": 786.53,
-              "gainPct": 194.65
-            },
-            {
-              "buyDate": "08 May 2026",
-              "weight": 0.0513,
-              "buyPrice": 2281.4,
-              "gainPct": 1.58
-            }
-          ],
-          "weightedGainPct": 189.7,
-          "weightedAvgBuyPrice": 824.8734
-        }
-      ],
-      "currentSeriesGains": []
     },
     "ATHERENERG": {
       "securityName": "Ather Energy Ltd",
@@ -1006,66 +874,6 @@
         }
       ]
     },
-    "JAINREC": {
-      "securityName": "Jain Resource Recycling Ltd",
-      "prevSeriesGains": [
-        {
-          "sellDate": "13 May 2026",
-          "sellWeight": 0.0899,
-          "sellPrice": 558.0,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "10 Nov 2025",
-              "weight": 0.0899,
-              "buyPrice": 404.55,
-              "gainPct": 37.93
-            }
-          ],
-          "weightedGainPct": 37.93,
-          "weightedAvgBuyPrice": 404.55
-        },
-        {
-          "sellDate": "31 Jul 2026",
-          "sellWeight": 0.5,
-          "sellPrice": 347.125,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "10 Nov 2025",
-              "weight": 0.5,
-              "buyPrice": 404.55,
-              "gainPct": -14.19
-            }
-          ],
-          "weightedGainPct": -14.19,
-          "weightedAvgBuyPrice": 404.55
-        },
-        {
-          "sellDate": "04 Aug 2026",
-          "sellWeight": 3.0,
-          "sellPrice": 321.5875,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "10 Nov 2025",
-              "weight": 2.9101,
-              "buyPrice": 404.55,
-              "gainPct": -20.51
-            },
-            {
-              "buyDate": "08 May 2026",
-              "weight": 0.0899,
-              "buyPrice": 544.575,
-              "gainPct": -40.95
-            }
-          ],
-          "weightedGainPct": -21.12,
-          "weightedAvgBuyPrice": 408.7461
-        }
-      ],
-      "currentSeriesGains": []
-    },
     "GANECOS": {
       "securityName": "Ganesha Ecosphere Ltd",
       "prevSeriesGains": [],
@@ -1117,6 +925,28 @@
           ],
           "weightedGainPct": 39.23,
           "weightedAvgBuyPrice": 730.95
+        },
+        {
+          "sellDate": "04 Sep 2026",
+          "sellWeight": 1.5,
+          "sellPrice": 1002.35,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "18 Apr 2022",
+              "weight": 0.9487,
+              "buyPrice": 730.95,
+              "gainPct": 37.13
+            },
+            {
+              "buyDate": "17 Oct 2022",
+              "weight": 0.5513,
+              "buyPrice": 767.96,
+              "gainPct": 30.52
+            }
+          ],
+          "weightedGainPct": 34.7,
+          "weightedAvgBuyPrice": 744.5524
         }
       ]
     },
@@ -1262,110 +1092,6 @@
       "securityName": "Zerodha Nifty 1D Rate Liquid ETF",
       "prevSeriesGains": [
         {
-          "sellDate": "10 Dec 2024",
-          "sellWeight": 2.0,
-          "sellPrice": 105.83,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "04 Sep 2024",
-              "weight": 2.0,
-              "buyPrice": 105.68,
-              "gainPct": 0.14
-            }
-          ],
-          "weightedGainPct": 0.14,
-          "weightedAvgBuyPrice": 105.68
-        },
-        {
-          "sellDate": "14 Jan 2025",
-          "sellWeight": 3.5,
-          "sellPrice": 106.47,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "04 Sep 2024",
-              "weight": 3.5,
-              "buyPrice": 105.68,
-              "gainPct": 0.75
-            }
-          ],
-          "weightedGainPct": 0.75,
-          "weightedAvgBuyPrice": 105.68
-        },
-        {
-          "sellDate": "23 May 2025",
-          "sellWeight": 4.5,
-          "sellPrice": 108.7,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "30 Jan 2025",
-              "weight": 4.5,
-              "buyPrice": 107.06,
-              "gainPct": 1.53
-            }
-          ],
-          "weightedGainPct": 1.53,
-          "weightedAvgBuyPrice": 107.06
-        },
-        {
-          "sellDate": "31 Jul 2025",
-          "sellWeight": 4.0,
-          "sellPrice": 110.66,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "23 Jul 2025",
-              "weight": 4.0,
-              "buyPrice": 109.1,
-              "gainPct": 1.43
-            }
-          ],
-          "weightedGainPct": 1.43,
-          "weightedAvgBuyPrice": 109.1
-        },
-        {
-          "sellDate": "16 Mar 2026",
-          "sellWeight": 6.0,
-          "sellPrice": 113.16,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "10 Nov 2025",
-              "weight": 3.0,
-              "buyPrice": 111.3,
-              "gainPct": 1.67
-            },
-            {
-              "buyDate": "03 Feb 2026",
-              "weight": 3.0,
-              "buyPrice": 112.59,
-              "gainPct": 0.51
-            }
-          ],
-          "weightedGainPct": 1.09,
-          "weightedAvgBuyPrice": 111.945
-        },
-        {
-          "sellDate": "15 Apr 2026",
-          "sellWeight": 3.0,
-          "sellPrice": 113.62,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "03 Feb 2026",
-              "weight": 3.0,
-              "buyPrice": 112.59,
-              "gainPct": 0.91
-            }
-          ],
-          "weightedGainPct": 0.91,
-          "weightedAvgBuyPrice": 112.59
-        }
-      ],
-      "currentSeriesGains": [
-        {
           "sellDate": "10 Aug 2026",
           "sellWeight": 7.0,
           "sellPrice": 115.4025,
@@ -1386,8 +1112,31 @@
           ],
           "weightedGainPct": 0.9,
           "weightedAvgBuyPrice": 114.3846
+        },
+        {
+          "sellDate": "04 Sep 2026",
+          "sellWeight": 5.0,
+          "sellPrice": 115.8025,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "31 Jul 2026",
+              "weight": 2.0,
+              "buyPrice": 115.2775,
+              "gainPct": 0.46
+            },
+            {
+              "buyDate": "04 Aug 2026",
+              "weight": 3.0,
+              "buyPrice": 115.3075,
+              "gainPct": 0.43
+            }
+          ],
+          "weightedGainPct": 0.44,
+          "weightedAvgBuyPrice": 115.2955
         }
-      ]
+      ],
+      "currentSeriesGains": []
     },
     "SWELECTES": {
       "securityName": "SWELECTES",
@@ -2133,8 +1882,7 @@
     },
     "SANGHVIMOV": {
       "securityName": "SANGHVIMOV",
-      "prevSeriesGains": [],
-      "currentSeriesGains": [
+      "prevSeriesGains": [
         {
           "sellDate": "19 Jan 2022",
           "sellWeight": 2.0,
@@ -2204,8 +1952,25 @@
           ],
           "weightedGainPct": 392.62,
           "weightedAvgBuyPrice": 122.195
+        },
+        {
+          "sellDate": "31 Jul 2026",
+          "sellWeight": 3.0,
+          "sellPrice": 423.0625,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "10 Aug 2026",
+              "weight": 3.0,
+              "buyPrice": 509.85,
+              "gainPct": -17.02
+            }
+          ],
+          "weightedGainPct": -17.02,
+          "weightedAvgBuyPrice": 509.85
         }
-      ]
+      ],
+      "currentSeriesGains": []
     },
     "PENIND": {
       "securityName": "PENIND",

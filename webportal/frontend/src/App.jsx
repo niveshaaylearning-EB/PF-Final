@@ -21,8 +21,10 @@ import PLStatementPage       from './components/PLStatementPage.jsx';
 import CorporateActionsPage  from './components/CorporateActionsPage.jsx';
 import DashboardView         from './components/DashboardView.jsx';
 import WatchlistPage         from './components/WatchlistPage.jsx';
+import StockExposurePanel    from './components/StockExposurePanel.jsx';
 import RebalanceSummaryPage  from './components/RebalanceSummaryPage.jsx';
 import PerformanceSummaryPage from './components/PerformanceSummaryPage.jsx';
+import MonthOnMonthPage       from './components/MonthOnMonthPage.jsx';
 import { computeTenureReturn, getLatestIndexDate } from './utils/tenureReturn.js';
 
 // ── Formatters ───────────────────────────────────────────────────────────────
@@ -858,6 +860,9 @@ export default function App() {
             <i className="fa-solid fa-table" /> Holdings
             {loadProgress && <span className="dv-tab-badge">{loadProgress.loaded}/{loadProgress.total}</span>}
           </button>
+          <button className={`dv-tab${dashView === 'exposure' ? ' active' : ''}`} onClick={() => setDashView('exposure')}>
+            <i className="fa-solid fa-layer-group" /> Stock Exposure
+          </button>
           <button className={`dv-tab${dashView === 'watchlist' ? ' active' : ''}`} onClick={() => setDashView('watchlist')}>
             <i className="fa-solid fa-binoculars" /> Watchlist
           </button>
@@ -869,6 +874,11 @@ export default function App() {
           {!isIPO && (
             <button className={`dv-tab${dashView === 'performance' ? ' active' : ''}`} onClick={() => setDashView('performance')}>
               <i className="fa-solid fa-magnifying-glass-chart" /> Performance Summary
+            </button>
+          )}
+          {!isIPO && (
+            <button className={`dv-tab${dashView === 'mom' ? ' active' : ''}`} onClick={() => setDashView('mom')}>
+              <i className="fa-solid fa-calendar-days" /> Month on Month Return
             </button>
           )}
         </div>
@@ -884,6 +894,10 @@ export default function App() {
             basketWeightOverlap={basketWeightOverlap}
             onGoToBasket={handleBasketChange}
           />
+        ) : dashView === 'exposure' ? (
+          // Centralized, NOT basket-scoped: same data regardless of which
+          // basket is currently selected -- combined weightage across all baskets.
+          <StockExposurePanel />
         ) : dashView === 'watchlist' ? (
           // Centralized, NOT basket-scoped: same data regardless of which
           // basket is currently selected -- shared across every user/analyst.
@@ -900,6 +914,11 @@ export default function App() {
             perfByTenure={perfByTenure}
             tenure={selectedTenure}
             tenureReturn={tenureReturn}
+            basketLabel={BASKET_OPTIONS.find(b => b.key === basketKey)?.label || basketKey}
+          />
+        ) : dashView === 'mom' ? (
+          <MonthOnMonthPage
+            basketKey={basketKey}
             basketLabel={BASKET_OPTIONS.find(b => b.key === basketKey)?.label || basketKey}
           />
         ) : (

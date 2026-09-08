@@ -1,5 +1,13 @@
 [
   {
+    "user_email": "jay.chaudhari@niveshaay.com",
+    "event_type": "otp_requested",
+    "details": "Login OTP requested",
+    "created_at": "2026-09-08T05:41:38.765522",
+    "ip_address": "127.0.0.1",
+    "location": null
+  },
+  {
     "user_email": "nukul.madaan@niveshaay.com",
     "event_type": "results_calendar_reminder_sent",
     "details": "SHILPAMED -- Dividend - Re 0.60 Per Share reminder for 2026-09-04",
