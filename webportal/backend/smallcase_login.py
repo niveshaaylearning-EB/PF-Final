@@ -159,8 +159,17 @@ async def _start_login_locked(phone: str) -> dict:
     await login_btn.click(timeout=5000)
     await page.wait_for_timeout(1000)
 
-    phone_input = page.locator("input[type='number'][placeholder='Your phone number']").first
+    # smallcase changed this input's type from "number" to "tel" at some
+    # point after this was first built (confirmed 2026-09-19 -- the old
+    # type='number'+placeholder selector silently stopped matching anything).
+    # data-testid is far less likely to shift on a future redesign than type
+    # or placeholder text, so prefer it and keep the old selector as a
+    # fallback rather than a hard break if it ever changes again.
+    phone_input = page.locator("input[data-testid='test-login-phone-number-input']").first
     if await phone_input.count() == 0:
+        phone_input = page.locator("input[placeholder='Your phone number']").first
+    if await phone_input.count() == 0:
+        await _debug_dump("phone_input_not_found")
         return {"ok": False, "error": "Could not find the phone number field."}
     await phone_input.fill(phone)
 
