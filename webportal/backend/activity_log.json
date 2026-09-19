@@ -1,5 +1,21 @@
 [
   {
+    "action": "watchlist_refresh",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "19 Sep 2026 07:40 UTC",
+    "details": {
+      "ticker": "WAKEFIT"
+    }
+  },
+  {
+    "action": "watchlist_refresh",
+    "user": "jay.chaudhari@niveshaay.com",
+    "ts": "19 Sep 2026 07:39 UTC",
+    "details": {
+      "ticker": "SUDEEPPHRM"
+    }
+  },
+  {
     "action": "corporate_action_auto_scan",
     "user": "jay.chaudhari@niveshaay.com",
     "ts": "01 Aug 2026 05:50 UTC",

@@ -198,6 +198,7 @@ function DetailModal({ record, meta, onClose, onSave, onDelete, onRefresh }) {
   const [draft, setDraft] = useState(record);
   const [saving, setSaving] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [refreshError, setRefreshError] = useState('');
   const [saveError, setSaveError] = useState('');
   const [justSaved, setJustSaved] = useState(false);
   useEffect(() => setDraft(record), [record]);
@@ -250,8 +251,10 @@ function DetailModal({ record, meta, onClose, onSave, onDelete, onRefresh }) {
   };
 
   const handleRefresh = async () => {
-    setRefreshing(true);
-    try { await onRefresh(record.id); } finally { setRefreshing(false); }
+    setRefreshing(true); setRefreshError('');
+    try { await onRefresh(record.id); }
+    catch (e) { setRefreshError(e.message || 'Refresh failed.'); }
+    finally { setRefreshing(false); }
   };
 
   const textField = (field, label, rows = 3) => (
@@ -317,6 +320,9 @@ function DetailModal({ record, meta, onClose, onSave, onDelete, onRefresh }) {
           <button className="btn btn-secondary" onClick={handleRefresh} disabled={refreshing} style={{ marginTop: '0.5rem', fontSize: '0.78rem' }}>
             {refreshing ? 'Refreshing…' : 'Refresh Live Data'}
           </button>
+          {refreshError && (
+            <div style={{ marginTop: '0.4rem', fontSize: '0.76rem', color: 'var(--accent-red)' }}>⚠ {refreshError}</div>
+          )}
 
           <div className="whatif-section-title">Valuation &amp; Scores (manual)</div>
           {numField('fairValue', 'Fair Value (₹)')}

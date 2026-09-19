@@ -1,0 +1,130 @@
+[
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "TIMEX",
+    "allocation": 10.0,
+    "buy_price": 522.47,
+    "buy_date": "2026-07-08",
+    "cmp": 612.05
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "LIQUIDCASE",
+    "allocation": 13.0,
+    "buy_price": 1.0,
+    "buy_date": null,
+    "cmp": 1.0
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "SAMBHV",
+    "allocation": 8.0,
+    "buy_price": 116.34,
+    "buy_date": "2026-07-23",
+    "cmp": 131.3
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "ATHERENERG",
+    "allocation": 10.0,
+    "buy_price": 1215.05,
+    "buy_date": "2026-07-25",
+    "cmp": 1581.9
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "MOLBIO",
+    "allocation": 4.0,
+    "buy_price": 1103.67,
+    "buy_date": "2026-08-31",
+    "cmp": 1307.0
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "ETHOSLTD",
+    "allocation": 5.0,
+    "buy_price": 2795.1,
+    "buy_date": "2026-08-07",
+    "cmp": 2610.1
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "SHADOWFAX",
+    "allocation": 8.0,
+    "buy_price": 207.81,
+    "buy_date": "2026-07-15",
+    "cmp": 245.05
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "BLUESTONE",
+    "allocation": 5.0,
+    "buy_price": 819.39,
+    "buy_date": "2026-08-07",
+    "cmp": 862.45
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "GOLDIAM",
+    "allocation": 2.0,
+    "buy_price": 343.33,
+    "buy_date": "2026-07-07",
+    "cmp": 333.85
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "PARAGMILK",
+    "allocation": 4.0,
+    "buy_price": 218.12,
+    "buy_date": "2026-08-21",
+    "cmp": 255.8
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "ICEMAKE",
+    "allocation": 5.0,
+    "buy_price": 755.36,
+    "buy_date": "2026-07-08",
+    "cmp": 718.0
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "RBA",
+    "allocation": 5.0,
+    "buy_price": 92.46,
+    "buy_date": "2026-08-10",
+    "cmp": 96.75
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "SBCL",
+    "allocation": 8.0,
+    "buy_price": 1014.42,
+    "buy_date": "2026-08-21",
+    "cmp": 1027.2
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "HEXAGON",
+    "allocation": 4.0,
+    "buy_price": 51.07,
+    "buy_date": "2026-06-18",
+    "cmp": 65.4
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "EBGNG",
+    "allocation": 5.0,
+    "buy_price": 557.75,
+    "buy_date": "2026-07-17",
+    "cmp": 680.0
+  },
+  {
+    "user_email": "rohit.chaberwal@niveshaay.com",
+    "stock_code": "URBANCO",
+    "allocation": 4.0,
+    "buy_price": 131.62,
+    "buy_date": "2026-07-17",
+    "cmp": 161.2
+  }
+]

@@ -63,6 +63,17 @@ export default function MonthOnMonthPage({ basketKey, basketLabel }) {
   if (error) return <p style={{ color: 'var(--accent-red)', padding: '24px' }}>{error}</p>;
   if (!series || series.length === 0) return <p style={{ color: 'var(--text-secondary)', padding: '24px' }}>No historical data available for {basketLabel}.</p>;
 
+  const handleExportCsv = () => {
+    const header = ['Month', 'First Date', 'First NAV', 'Last Date', 'Last NAV', 'Return %'];
+    const lines = filtered.map(r => [fmtMonth(r.ym), r.firstDate, r.firstVal.toFixed(2), r.lastDate, r.lastVal.toFixed(2), r.ret.toFixed(2)]);
+    const csv = [header, ...lines].map(row => row.map(v => `"${v}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `${basketLabel.replace(/\s+/g, '_')}_MonthOnMonth_${fromDate}_to_${toDate}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '14px' }}>
@@ -90,6 +101,13 @@ export default function MonthOnMonthPage({ basketKey, basketLabel }) {
             background: 'transparent', color: 'var(--accent-blue)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
           }}>
             Since Inception
+          </button>
+          <button onClick={handleExportCsv} style={{
+            padding: '6px 12px', borderRadius: '6px', border: '1px solid var(--accent-blue)',
+            background: 'var(--accent-blue)', color: '#fff', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: '6px',
+          }}>
+            <i className="fa-solid fa-file-export" /> Export CSV
           </button>
         </div>
       </div>

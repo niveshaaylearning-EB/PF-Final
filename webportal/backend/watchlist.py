@@ -358,6 +358,15 @@ async def refresh_watchlist_company(item_id: str, request: Request):
         raise HTTPException(status_code=404, detail="Watchlist entry not found.")
 
     fetched = await _fetch_fundamentals(rec["ticker"])
+    # _fetch_fundamentals returns {} on ANY failure (Yahoo rate-limited, bad
+    # ticker mapping, network error, ...) -- this used to still stamp
+    # lastUpdated as today and return 200 regardless, so a failed refresh
+    # looked identical to a successful one (the date bumped, CMP silently
+    # stayed frozen at its old value, no error surfaced anywhere). Now a
+    # total failure is a real error the frontend can show instead of a
+    # silent no-op.
+    if not fetched:
+        raise HTTPException(status_code=502, detail=f"Could not fetch live data for {rec['ticker']} -- Yahoo Finance may be rate-limited or the ticker mapping is wrong. Try again shortly.")
     for k, v in fetched.items():
         if k in rec and k not in _MANUAL_FIELDS:
             rec[k] = v

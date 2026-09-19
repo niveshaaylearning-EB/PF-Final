@@ -81,11 +81,41 @@ export default function RebalanceSummaryPage({ basketKey, basketLabel }) {
       .finally(() => setLoading(false));
   }, [basketKey]);
 
+  const handleExportCsv = () => {
+    const header = ['Date', 'Action', 'NSE Code', 'Security Name', 'Weight', 'From', 'To'];
+    const lines = [];
+    for (const entry of summary || []) {
+      for (const s of entry.added || [])
+        lines.push([entry.date, 'Added', s.nseCode, s.securityName, s.weight, '', '']);
+      for (const s of entry.removed || [])
+        lines.push([entry.date, 'Removed', s.nseCode, s.securityName, s.weight, '', '']);
+      for (const s of entry.reweighted || [])
+        lines.push([entry.date, 'Reweighted', s.nseCode, s.securityName, '', s.from, s.to]);
+    }
+    const csv = [header, ...lines].map(row => row.map(v => `"${v ?? ''}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `${basketLabel.replace(/\s+/g, '_')}_RebalanceSummary.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div style={{ padding: '0.5rem 0' }}>
-      <div style={{ marginBottom: '1rem', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-        Every rebalance recorded for <strong style={{ color: 'var(--text-primary)' }}>{basketLabel}</strong>,
-        most recent first — what was added, removed, or reweighted on each date.
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', marginBottom: '1rem' }}>
+        <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+          Every rebalance recorded for <strong style={{ color: 'var(--text-primary)' }}>{basketLabel}</strong>,
+          most recent first — what was added, removed, or reweighted on each date.
+        </div>
+        {summary?.length > 0 && (
+          <button onClick={handleExportCsv} style={{
+            padding: '6px 12px', borderRadius: '6px', border: '1px solid var(--accent-blue)',
+            background: 'var(--accent-blue)', color: '#fff', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0,
+          }}>
+            <i className="fa-solid fa-file-export" /> Export CSV
+          </button>
+        )}
       </div>
 
       {loading && <div style={{ color: 'var(--text-secondary)', padding: '2rem 0', textAlign: 'center' }}>Loading…</div>}
