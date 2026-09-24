@@ -264,18 +264,6 @@
     "is_approved": 1
   },
   {
-    "email": "muskan.ladha@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:59:06.634753",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
     "email": "parikshit.gujrati@niveshaay.com",
     "added_by": "jay.chaudhari@niveshaay.com",
     "added_at": "2026-08-06T06:59:49.416131",
