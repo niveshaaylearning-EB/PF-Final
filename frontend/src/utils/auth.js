@@ -50,8 +50,26 @@ export const getFirstName = () => {
 // pages/buttons immediately on their next login, with no separate frontend
 // deploy needed -- this used to be a duplicate hardcoded list that could only
 // ever reflect the 3 founders.
+//
+// A token issued BEFORE this claim existed has no "admin" field at all, so a
+// founder who hadn't logged out/in since this shipped would see every
+// admin-only page vanish until they did -- confirmed happening to
+// jay.chaudhari@niveshaay.com right after this deployed. This fallback list
+// is NOT a return to the old design (it grants nothing new, never reflects a
+// DB-granted admin, and is redundant with backend/common/admin.py's
+// permanent, unchangeable ADMIN_EMAILS) -- it exists purely so a stale token
+// can never again lock a founder out of their own admin features.
+const _FOUNDER_FALLBACK = new Set([
+  'jay.chaudhari@niveshaay.com',
+  'nukul.madaan@niveshaay.com',
+  'nakshatra.rathi@niveshaay.com',
+]);
+
 export const isAdmin = () => {
   const t = getToken();
   if (!t) return false;
-  return _decodePayload(t)?.admin === true;
+  const payload = _decodePayload(t);
+  if (payload?.admin === true) return true;
+  const email = (payload?.sub || '').toLowerCase().trim();
+  return _FOUNDER_FALLBACK.has(email);
 };

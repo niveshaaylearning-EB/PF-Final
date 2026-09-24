@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import RollbackButtons from './RollbackButtons.jsx';
 import ColumnFilter from './ColumnFilter.jsx';
 
+const _FOUNDER_FALLBACK = new Set(['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com', 'nakshatra.rathi@niveshaay.com']); // see frontend/src/utils/auth.js for why this exists
 const _getAdminState = () => {
   try {
     const t = getAuthToken();
@@ -11,7 +12,7 @@ const _getAdminState = () => {
     const payload = JSON.parse(atob(t.split('.')[1]));
     if (payload.exp && Date.now() > payload.exp * 1000) return { isAdmin: false };
     const email = (payload.sub || '').toLowerCase().trim();
-    return { isAdmin: payload.admin === true };
+    return { isAdmin: (payload.admin === true || _FOUNDER_FALLBACK.has(email)) };
   } catch { return { isAdmin: false }; }
 };
 
