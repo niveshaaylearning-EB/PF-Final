@@ -1354,14 +1354,16 @@
     },
     "ASTRAMICRO": {
       "buyEvents": "23 May 2025 * 3.0\n19 Aug 2025 * 1.0",
-      "sellEvents": "",
+      "sellEvents": "23 Sep 2026 * 1",
       "prevBuyEvents": "",
       "prevSellEvents": "",
       "buyOHLC": {
         "23 May 2025": 1112.85,
         "19 Aug 2025": 1015.875
       },
-      "sellOHLC": {},
+      "sellOHLC": {
+        "23 Sep 2026": 1611.05
+      },
       "securityName": "Astra Microwave Products Ltd",
       "segment": "Aerospace & Defense"
     },
@@ -1882,7 +1884,7 @@
       "buyEvents": "",
       "sellEvents": "",
       "prevBuyEvents": "",
-      "prevSellEvents": "",
+      "prevSellEvents": "04 Aug 2026 * 3",
       "buyOHLC": {
         "20 Feb 2026": 791.1,
         "03 Jun 2021": 142.6,
@@ -1982,7 +1984,7 @@
       "buyEvents": "",
       "sellEvents": "",
       "prevBuyEvents": "",
-      "prevSellEvents": "",
+      "prevSellEvents": "04 Aug 2026 * 3.5",
       "buyOHLC": {
         "18 Feb 2025": 467.9625,
         "23 May 2025": 576.025,
@@ -2738,13 +2740,14 @@
       "segment": "Civil Construction"
     },
     "QPOWER": {
-      "buyEvents": "13 Apr 2026 * 3.0\n05 May 2026 * 1",
+      "buyEvents": "13 Apr 2026 * 3.0\n05 May 2026 * 1\n23 Sep 2026 * 1",
       "sellEvents": "",
       "prevBuyEvents": "",
       "prevSellEvents": "",
       "buyOHLC": {
         "13 Apr 2026": 972.6,
-        "05 May 2026": 1347.7
+        "05 May 2026": 1347.7,
+        "23 Sep 2026": 1534.9
       },
       "sellOHLC": {},
       "securityName": "Quality Power Electrical Equipments Ltd",
@@ -2776,7 +2779,7 @@
       "buyEvents": "",
       "sellEvents": "",
       "prevBuyEvents": "",
-      "prevSellEvents": "",
+      "prevSellEvents": "10 Aug 2026 * 3",
       "buyOHLC": {
         "03 Jun 2021": 180.81,
         "06 Nov 2019": 100.62,
@@ -2986,10 +2989,10 @@
       "segment": "Industrial Products"
     },
     "SHILPAMED": {
-      "buyEvents": "",
+      "buyEvents": "10 Aug 2026 * 3",
       "sellEvents": "",
-      "prevBuyEvents": "10 Aug 2026 * 3",
-      "prevSellEvents": "04 Aug 2026 * 3",
+      "prevBuyEvents": "",
+      "prevSellEvents": "",
       "buyOHLC": {
         "06 Nov 2019": 155.22,
         "08 Sep 2020": 265.67,
@@ -3007,8 +3010,8 @@
     "SJS": {
       "buyEvents": "",
       "sellEvents": "",
-      "prevBuyEvents": "19 Nov 2025 * 2.5",
-      "prevSellEvents": "18 Aug 2026 * 2.5",
+      "prevBuyEvents": "",
+      "prevSellEvents": "",
       "buyOHLC": {
         "19 Nov 2025": 1766.45
       },
@@ -3446,13 +3449,14 @@
       "securityName": "HFCL Ltd",
       "segment": "Telecom - Infrastructure",
       "buyEvents": "05 May 2026 * 4",
-      "sellEvents": "04 Aug 2026 * 0.5\n10 Aug 2026 * 1",
+      "sellEvents": "04 Aug 2026 * 0.5\n10 Aug 2026 * 1\n23 Sep 2026 * 0.5",
       "buyOHLC": {
         "05 May 2026": 128.4175
       },
       "sellOHLC": {
         "04 Aug 2026": 203.1,
-        "10 Aug 2026": 211.6
+        "10 Aug 2026": 211.6,
+        "23 Sep 2026": 218.8425
       },
       "prevBuyEvents": "",
       "prevSellEvents": ""
@@ -3461,26 +3465,30 @@
       "securityName": "ideaForge Technology Ltd",
       "segment": "Aerospace & Defense",
       "buyEvents": "05 May 2026 * 2.5\n20 May 2026 * 0.5",
-      "sellEvents": "",
+      "sellEvents": "23 Sep 2026 * 1.5",
       "buyOHLC": {
         "05 May 2026": 776.0875,
         "20 May 2026": 752.1625
       },
-      "sellOHLC": {},
+      "sellOHLC": {
+        "23 Sep 2026": 726.6125
+      },
       "prevBuyEvents": "",
       "prevSellEvents": ""
     },
     "PRIVISCL": {
       "securityName": "Privi Speciality Chemicals Ltd",
       "segment": "Specialty Chemicals",
-      "buyEvents": "11 May 2026 * 3",
+      "buyEvents": "",
       "sellEvents": "",
       "buyOHLC": {
         "11 May 2026": 3501.575
       },
-      "sellOHLC": {},
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "sellOHLC": {
+        "23 Sep 2026": 3467.1
+      },
+      "prevBuyEvents": "11 May 2026 * 3",
+      "prevSellEvents": "23 Sep 2026 * 3"
     },
     "SHADOWFAX": {
       "securityName": "Shadowfax Technologies Ltd",
@@ -3549,10 +3557,36 @@
     "ETHOSLTD": {
       "securityName": "Ethos Ltd",
       "segment": "Nifty Microcap 250",
-      "buyEvents": "18 Aug 2026 * 3",
+      "buyEvents": "",
       "sellEvents": "",
       "buyOHLC": {
         "18 Aug 2026": 2940.375
+      },
+      "sellOHLC": {
+        "04 Aug 2026": 2925.0
+      },
+      "prevBuyEvents": "18 Aug 2026 * 3",
+      "prevSellEvents": "04 Aug 2026 * 3"
+    },
+    "MANINDS": {
+      "securityName": "Man Industries (India) Ltd",
+      "segment": "BSE Industrials",
+      "buyEvents": "23 Sep 2026 * 3",
+      "sellEvents": "",
+      "buyOHLC": {
+        "23 Sep 2026": 933.2375
+      },
+      "sellOHLC": {},
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
+    },
+    "JYOTICNC": {
+      "securityName": "Jyoti CNC Automation Ltd",
+      "segment": "Nifty MidSmallcap 400",
+      "buyEvents": "23 Sep 2026 * 2",
+      "sellEvents": "",
+      "buyOHLC": {
+        "23 Sep 2026": 1098.575
       },
       "sellOHLC": {},
       "prevBuyEvents": "",
@@ -4531,8 +4565,8 @@
         "04 Aug 2026": 3688.85,
         "17 Aug 2026": 3429.725
       },
-      "prevBuyEvents": "20 Feb 2026 * 5",
-      "prevSellEvents": "04 Aug 2026 * 1\n17 Aug 2026 * 4"
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
     },
     "DYNAMATECH": {
       "securityName": "Dynamatic Technologies Ltd",
@@ -4594,7 +4628,7 @@
         "04 Aug 2026": 521.8875
       },
       "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevSellEvents": "04 Aug 2026 * 4"
     },
     "GENESYS": {
       "securityName": "Genesys International Corporation Ltd",
@@ -4810,7 +4844,7 @@
         "10 Aug 2026": 1520.6
       },
       "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevSellEvents": "28 Jul 2026 * 1\n10 Aug 2026 * 3"
     },
     "STLTECH": {
       "securityName": "Sterlite Technologies Ltd",
@@ -4844,7 +4878,7 @@
         "28 Jul 2026": 426.5875
       },
       "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevSellEvents": "28 Jul 2026 * 4"
     },
     "INOXINDIA": {
       "securityName": "INOX India Ltd",
@@ -4864,8 +4898,8 @@
     "HFCL": {
       "securityName": "HFCL Ltd",
       "segment": "Telecom - Infrastructure",
-      "buyEvents": "04 May 2026 * 7\n08 May 2026 * 1",
-      "sellEvents": "28 Jul 2026 * 3\n04 Aug 2026 * 1",
+      "buyEvents": "",
+      "sellEvents": "",
       "buyOHLC": {
         "08 May 2026": 142.975,
         "18 May 2026": 143.0225,
@@ -4874,10 +4908,11 @@
       },
       "sellOHLC": {
         "04 Aug 2026": 203.1,
-        "28 Jul 2026": 188.8025
+        "28 Jul 2026": 188.8025,
+        "23 Sep 2026": 218.8425
       },
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevBuyEvents": "04 May 2026 * 7\n08 May 2026 * 1",
+      "prevSellEvents": "28 Jul 2026 * 3\n04 Aug 2026 * 1\n23 Sep 2026 * 4"
     },
     "SAKAR": {
       "securityName": "Sakar Healthcare Ltd",
@@ -4924,8 +4959,8 @@
         "04 Aug 2026": 886.425,
         "17 Aug 2026": 807.95
       },
-      "prevBuyEvents": "18 May 2026 * 5\n08 Jun 2026 * 2",
-      "prevSellEvents": "04 Aug 2026 * 1\n17 Aug 2026 * 6"
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
     },
     "VOLTAMP": {
       "securityName": "Voltamp Transformers Ltd",
@@ -5547,7 +5582,8 @@
       },
       "sellOHLC": {
         "21 Nov 2023": 260.56
-      }
+      },
+      "segment": "BSE Industrials"
     },
     "ARMANFIN": {
       "securityName": "ARMANFIN",
@@ -5810,14 +5846,16 @@
     "OMNI": {
       "securityName": "Omnitech Engineering Ltd",
       "segment": "BSE IPO",
-      "buyEvents": "27 May 2026 * 3",
+      "buyEvents": "",
       "sellEvents": "",
       "buyOHLC": {
         "27 May 2026": 438.4
       },
-      "sellOHLC": {},
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "sellOHLC": {
+        "23 Sep 2026": 557.825
+      },
+      "prevBuyEvents": "27 May 2026 * 3",
+      "prevSellEvents": "23 Sep 2026 * 3"
     },
     "DEEDEV": {
       "securityName": "DEE Development Engineers Ltd",
@@ -5863,7 +5901,7 @@
     "YASHO": {
       "securityName": "Yasho Industries Ltd",
       "segment": "BSE Commodities",
-      "buyEvents": "",
+      "buyEvents": "04 Aug 2026 * 5",
       "sellEvents": "",
       "buyOHLC": {
         "04 Aug 2026": 4202.725
@@ -5871,13 +5909,13 @@
       "sellOHLC": {
         "28 Jul 2026": 3143.25
       },
-      "prevBuyEvents": "04 Aug 2026 * 5",
-      "prevSellEvents": "28 Jul 2026 * 5"
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
     },
     "MOREPENLAB": {
       "securityName": "Morepen Laboratories Ltd",
       "segment": "BSE Healthcare",
-      "buyEvents": "",
+      "buyEvents": "10 Aug 2026 * 5",
       "sellEvents": "",
       "buyOHLC": {
         "10 Aug 2026": 79.9925
@@ -5885,27 +5923,53 @@
       "sellOHLC": {
         "28 Jul 2026": 55.9375
       },
-      "prevBuyEvents": "10 Aug 2026 * 5",
-      "prevSellEvents": "28 Jul 2026 * 5"
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
     },
     "KPL": {
       "securityName": "Kwality Pharmaceuticals Ltd",
       "segment": "BSE Healthcare",
-      "buyEvents": "17 Aug 2026 * 5",
+      "buyEvents": "",
       "sellEvents": "",
       "buyOHLC": {
         "17 Aug 2026": 3603.05
+      },
+      "sellOHLC": {
+        "28 Jul 2026": 2655.85
+      },
+      "prevBuyEvents": "17 Aug 2026 * 5",
+      "prevSellEvents": "28 Jul 2026 * 5"
+    },
+    "IND SWIFT LABORATORIES LTD": {
+      "securityName": "IND Swift Laboratories Ltd",
+      "segment": "Equity",
+      "buyEvents": "",
+      "sellEvents": "",
+      "buyOHLC": {},
+      "sellOHLC": {},
+      "prevBuyEvents": "17 Aug 2026 * 5",
+      "prevSellEvents": "28 Jul 2026 * 5"
+    },
+    "SSWL": {
+      "securityName": "Steel Strips Wheels Ltd",
+      "segment": "BSE Consumer Discretionary",
+      "buyEvents": "23 Sep 2026 * 3",
+      "sellEvents": "",
+      "buyOHLC": {
+        "23 Sep 2026": 372.3125
       },
       "sellOHLC": {},
       "prevBuyEvents": "",
       "prevSellEvents": ""
     },
-    "IND SWIFT LABORATORIES LTD": {
-      "securityName": "IND Swift Laboratories Ltd",
-      "segment": "Equity",
-      "buyEvents": "17 Aug 2026 * 5",
+    "MANINDS": {
+      "securityName": "Man Industries (India) Ltd",
+      "segment": "BSE Industrials",
+      "buyEvents": "23 Sep 2026 * 4",
       "sellEvents": "",
-      "buyOHLC": {},
+      "buyOHLC": {
+        "23 Sep 2026": 933.2375
+      },
       "sellOHLC": {},
       "prevBuyEvents": "",
       "prevSellEvents": ""

@@ -2982,6 +2982,28 @@
       ],
       "currentSeriesGains": []
     },
+    "ASTRAMICRO": {
+      "securityName": "Astra Microwave Products Ltd",
+      "prevSeriesGains": [],
+      "currentSeriesGains": [
+        {
+          "sellDate": "23 Sep 2026",
+          "sellWeight": 1.0,
+          "sellPrice": 1611.05,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "23 May 2025",
+              "weight": 1.0,
+              "buyPrice": 1112.85,
+              "gainPct": 44.77
+            }
+          ],
+          "weightedGainPct": 44.77,
+          "weightedAvgBuyPrice": 1112.85
+        }
+      ]
+    },
     "AXISCADES": {
       "securityName": "Axiscades Technologies Ltd",
       "prevSeriesGains": [
@@ -7093,50 +7115,6 @@
       ],
       "currentSeriesGains": []
     },
-    "SHILPAMED": {
-      "securityName": "Shilpa Medicare Ltd",
-      "prevSeriesGains": [
-        {
-          "sellDate": "04 Aug 2026",
-          "sellWeight": 3.0,
-          "sellPrice": 636.15,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "10 Aug 2026",
-              "weight": 3.0,
-              "buyPrice": 791.7875,
-              "gainPct": -19.66
-            }
-          ],
-          "weightedGainPct": -19.66,
-          "weightedAvgBuyPrice": 791.7875
-        }
-      ],
-      "currentSeriesGains": []
-    },
-    "SJS": {
-      "securityName": "SJS Enterprises Ltd",
-      "prevSeriesGains": [
-        {
-          "sellDate": "18 Aug 2026",
-          "sellWeight": 2.5,
-          "sellPrice": 2468.5,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "19 Nov 2025",
-              "weight": 2.5,
-              "buyPrice": 1766.45,
-              "gainPct": 39.74
-            }
-          ],
-          "weightedGainPct": 39.74,
-          "weightedAvgBuyPrice": 1766.45
-        }
-      ],
-      "currentSeriesGains": []
-    },
     "SKIPPER": {
       "securityName": "Skipper Ltd",
       "prevSeriesGains": [
@@ -8055,8 +8033,90 @@
           ],
           "weightedGainPct": 64.78,
           "weightedAvgBuyPrice": 128.4175
+        },
+        {
+          "sellDate": "23 Sep 2026",
+          "sellWeight": 0.5,
+          "sellPrice": 218.8425,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "05 May 2026",
+              "weight": 0.5,
+              "buyPrice": 128.4175,
+              "gainPct": 70.41
+            }
+          ],
+          "weightedGainPct": 70.41,
+          "weightedAvgBuyPrice": 128.4175
         }
       ]
+    },
+    "IDEAFORGE": {
+      "securityName": "ideaForge Technology Ltd",
+      "prevSeriesGains": [],
+      "currentSeriesGains": [
+        {
+          "sellDate": "23 Sep 2026",
+          "sellWeight": 1.5,
+          "sellPrice": 726.6125,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "05 May 2026",
+              "weight": 1.5,
+              "buyPrice": 776.0875,
+              "gainPct": -6.37
+            }
+          ],
+          "weightedGainPct": -6.37,
+          "weightedAvgBuyPrice": 776.0875
+        }
+      ]
+    },
+    "PRIVISCL": {
+      "securityName": "Privi Speciality Chemicals Ltd",
+      "prevSeriesGains": [
+        {
+          "sellDate": "23 Sep 2026",
+          "sellWeight": 3.0,
+          "sellPrice": 3467.1,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "11 May 2026",
+              "weight": 3.0,
+              "buyPrice": 3501.575,
+              "gainPct": -0.98
+            }
+          ],
+          "weightedGainPct": -0.98,
+          "weightedAvgBuyPrice": 3501.575
+        }
+      ],
+      "currentSeriesGains": []
+    },
+    "ETHOSLTD": {
+      "securityName": "Ethos Ltd",
+      "prevSeriesGains": [
+        {
+          "sellDate": "04 Aug 2026",
+          "sellWeight": 3.0,
+          "sellPrice": 2925.0,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "18 Aug 2026",
+              "weight": 3.0,
+              "buyPrice": 2940.375,
+              "gainPct": -0.52
+            }
+          ],
+          "weightedGainPct": -0.52,
+          "weightedAvgBuyPrice": 2940.375
+        }
+      ],
+      "currentSeriesGains": []
     }
   },
   "IPO_Basket": {
@@ -8940,44 +9000,6 @@
         }
       ]
     },
-    "CENTUM": {
-      "securityName": "Centum Electronics Ltd",
-      "prevSeriesGains": [
-        {
-          "sellDate": "04 Aug 2026",
-          "sellWeight": 1.0,
-          "sellPrice": 3688.85,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "20 Feb 2026",
-              "weight": 1.0,
-              "buyPrice": 2478.45,
-              "gainPct": 48.84
-            }
-          ],
-          "weightedGainPct": 48.84,
-          "weightedAvgBuyPrice": 2478.45
-        },
-        {
-          "sellDate": "17 Aug 2026",
-          "sellWeight": 4.0,
-          "sellPrice": 3429.725,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "20 Feb 2026",
-              "weight": 4.0,
-              "buyPrice": 2478.45,
-              "gainPct": 38.38
-            }
-          ],
-          "weightedGainPct": 38.38,
-          "weightedAvgBuyPrice": 2478.45
-        }
-      ],
-      "currentSeriesGains": []
-    },
     "DYNAMATECH": {
       "securityName": "Dynamatic Technologies Ltd",
       "prevSeriesGains": [
@@ -9324,8 +9346,7 @@
     },
     "HFCL": {
       "securityName": "HFCL Ltd",
-      "prevSeriesGains": [],
-      "currentSeriesGains": [
+      "prevSeriesGains": [
         {
           "sellDate": "28 Jul 2026",
           "sellWeight": 3.0,
@@ -9357,8 +9378,31 @@
           ],
           "weightedGainPct": 63.7,
           "weightedAvgBuyPrice": 124.07
+        },
+        {
+          "sellDate": "23 Sep 2026",
+          "sellWeight": 4.0,
+          "sellPrice": 218.8425,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "04 May 2026",
+              "weight": 3.0,
+              "buyPrice": 124.07,
+              "gainPct": 76.39
+            },
+            {
+              "buyDate": "08 May 2026",
+              "weight": 1.0,
+              "buyPrice": 142.975,
+              "gainPct": 53.06
+            }
+          ],
+          "weightedGainPct": 70.56,
+          "weightedAvgBuyPrice": 128.7962
         }
-      ]
+      ],
+      "currentSeriesGains": []
     },
     "TDPOWERSYS": {
       "securityName": "TD Power Systems Ltd",
@@ -9378,50 +9422,6 @@
           ],
           "weightedGainPct": 405.13,
           "weightedAvgBuyPrice": 89.88
-        }
-      ],
-      "currentSeriesGains": []
-    },
-    "IDEAFORGE": {
-      "securityName": "ideaForge Technology Ltd",
-      "prevSeriesGains": [
-        {
-          "sellDate": "04 Aug 2026",
-          "sellWeight": 1.0,
-          "sellPrice": 886.425,
-          "sellType": "Partial Sell",
-          "lots": [
-            {
-              "buyDate": "18 May 2026",
-              "weight": 1.0,
-              "buyPrice": 804.1875,
-              "gainPct": 10.23
-            }
-          ],
-          "weightedGainPct": 10.23,
-          "weightedAvgBuyPrice": 804.1875
-        },
-        {
-          "sellDate": "17 Aug 2026",
-          "sellWeight": 6.0,
-          "sellPrice": 807.95,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "18 May 2026",
-              "weight": 4.0,
-              "buyPrice": 804.1875,
-              "gainPct": 0.47
-            },
-            {
-              "buyDate": "08 Jun 2026",
-              "weight": 2.0,
-              "buyPrice": 946.5625,
-              "gainPct": -14.64
-            }
-          ],
-          "weightedGainPct": -4.57,
-          "weightedAvgBuyPrice": 851.6458
         }
       ],
       "currentSeriesGains": []
@@ -11167,6 +11167,28 @@
         }
       ]
     },
+    "OMNI": {
+      "securityName": "Omnitech Engineering Ltd",
+      "prevSeriesGains": [
+        {
+          "sellDate": "23 Sep 2026",
+          "sellWeight": 3.0,
+          "sellPrice": 557.825,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "27 May 2026",
+              "weight": 3.0,
+              "buyPrice": 438.4,
+              "gainPct": 27.24
+            }
+          ],
+          "weightedGainPct": 27.24,
+          "weightedAvgBuyPrice": 438.4
+        }
+      ],
+      "currentSeriesGains": []
+    },
     "DEEDEV": {
       "securityName": "DEE Development Engineers Ltd",
       "prevSeriesGains": [],
@@ -11189,46 +11211,46 @@
         }
       ]
     },
-    "YASHO": {
-      "securityName": "Yasho Industries Ltd",
+    "KPL": {
+      "securityName": "Kwality Pharmaceuticals Ltd",
       "prevSeriesGains": [
         {
           "sellDate": "28 Jul 2026",
           "sellWeight": 5.0,
-          "sellPrice": 3143.25,
+          "sellPrice": 2655.85,
           "sellType": "Full Exit",
           "lots": [
             {
-              "buyDate": "04 Aug 2026",
+              "buyDate": "17 Aug 2026",
               "weight": 5.0,
-              "buyPrice": 4202.725,
-              "gainPct": -25.21
+              "buyPrice": 3603.05,
+              "gainPct": -26.29
             }
           ],
-          "weightedGainPct": -25.21,
-          "weightedAvgBuyPrice": 4202.725
+          "weightedGainPct": -26.29,
+          "weightedAvgBuyPrice": 3603.05
         }
       ],
       "currentSeriesGains": []
     },
-    "MOREPENLAB": {
-      "securityName": "Morepen Laboratories Ltd",
+    "IND SWIFT LABORATORIES LTD": {
+      "securityName": "IND Swift Laboratories Ltd",
       "prevSeriesGains": [
         {
           "sellDate": "28 Jul 2026",
           "sellWeight": 5.0,
-          "sellPrice": 55.9375,
+          "sellPrice": null,
           "sellType": "Full Exit",
           "lots": [
             {
-              "buyDate": "10 Aug 2026",
+              "buyDate": "17 Aug 2026",
               "weight": 5.0,
-              "buyPrice": 79.9925,
-              "gainPct": -30.07
+              "buyPrice": null,
+              "gainPct": null
             }
           ],
-          "weightedGainPct": -30.07,
-          "weightedAvgBuyPrice": 79.9925
+          "weightedGainPct": null,
+          "weightedAvgBuyPrice": null
         }
       ],
       "currentSeriesGains": []

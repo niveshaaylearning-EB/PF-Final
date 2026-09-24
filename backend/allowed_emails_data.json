@@ -418,5 +418,17 @@
     "last_name": null,
     "password_hash": null,
     "is_approved": 1
+  },
+  {
+    "email": "dhaval.dave@niveshaay.com",
+    "added_by": "nukul.madaan@niveshaay.com",
+    "added_at": "2026-09-21T06:54:35.313982",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1
   }
 ]

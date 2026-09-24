@@ -22,7 +22,13 @@ function buildMonthlyRows(data) {
     const first = pts[0];
     const last = pts[pts.length - 1];
     const ret = first.value ? ((last.value - first.value) / first.value) * 100 : null;
-    return { ym, firstDate: first.date, firstVal: first.value, lastDate: last.date, lastVal: last.value, ret };
+    const benchRet = (first.benchmark != null && last.benchmark != null && first.benchmark)
+      ? ((last.benchmark - first.benchmark) / first.benchmark) * 100 : null;
+    const alpha = (ret != null && benchRet != null) ? ret - benchRet : null;
+    return {
+      ym, firstDate: first.date, firstVal: first.value, lastDate: last.date, lastVal: last.value, ret,
+      firstBench: first.benchmark, lastBench: last.benchmark, benchRet, alpha,
+    };
   });
 }
 
@@ -64,8 +70,11 @@ export default function MonthOnMonthPage({ basketKey, basketLabel }) {
   if (!series || series.length === 0) return <p style={{ color: 'var(--text-secondary)', padding: '24px' }}>No historical data available for {basketLabel}.</p>;
 
   const handleExportCsv = () => {
-    const header = ['Month', 'First Date', 'First NAV', 'Last Date', 'Last NAV', 'Return %'];
-    const lines = filtered.map(r => [fmtMonth(r.ym), r.firstDate, r.firstVal.toFixed(2), r.lastDate, r.lastVal.toFixed(2), r.ret.toFixed(2)]);
+    const header = ['Month', 'First Date', 'First NAV', 'Last Date', 'Last NAV', 'Basket Return %', 'Benchmark Return %', 'Alpha %'];
+    const lines = filtered.map(r => [
+      fmtMonth(r.ym), r.firstDate, r.firstVal.toFixed(2), r.lastDate, r.lastVal.toFixed(2),
+      r.ret.toFixed(2), r.benchRet != null ? r.benchRet.toFixed(2) : '', r.alpha != null ? r.alpha.toFixed(2) : '',
+    ]);
     const csv = [header, ...lines].map(row => row.map(v => `"${v}"`).join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -114,15 +123,7 @@ export default function MonthOnMonthPage({ basketKey, basketLabel }) {
 
       <div className="glass-panel" style={{ padding: 0, overflow: 'hidden' }}>
         <div style={{ overflowX: 'auto', maxHeight: '560px', overflowY: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem', tableLayout: 'fixed' }}>
-            <colgroup>
-              <col style={{ width: '16%' }} />
-              <col style={{ width: '16%' }} />
-              <col style={{ width: '16%' }} />
-              <col style={{ width: '16%' }} />
-              <col style={{ width: '16%' }} />
-              <col style={{ width: '20%' }} />
-            </colgroup>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
             <thead>
               <tr style={{ background: 'var(--th-bg)' }}>
                 <th style={{ padding: '10px 16px', textAlign: 'left',   color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Month</th>
@@ -130,24 +131,32 @@ export default function MonthOnMonthPage({ basketKey, basketLabel }) {
                 <th style={{ padding: '10px 12px', textAlign: 'right',  color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>First NAV</th>
                 <th style={{ padding: '10px 12px', textAlign: 'left',   color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Last Date</th>
                 <th style={{ padding: '10px 12px', textAlign: 'right',  color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Last NAV</th>
-                <th style={{ padding: '10px 16px', textAlign: 'right',  color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Return %</th>
+                <th style={{ padding: '10px 12px', textAlign: 'right',  color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Basket Return %</th>
+                <th style={{ padding: '10px 12px', textAlign: 'right',  color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Benchmark Return %</th>
+                <th style={{ padding: '10px 16px', textAlign: 'right',  color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Alpha %</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map(r => (
                 <tr key={r.ym} style={{ borderTop: '1px solid var(--border-color)' }}>
                   <td style={{ padding: '9px 16px', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{fmtMonth(r.ym)}</td>
-                  <td style={{ padding: '9px 12px', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.firstDate}</td>
+                  <td style={{ padding: '9px 12px', textAlign: 'left', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.firstDate}</td>
                   <td style={{ padding: '9px 12px', textAlign: 'right', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{r.firstVal.toFixed(2)}</td>
-                  <td style={{ padding: '9px 12px', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.lastDate}</td>
+                  <td style={{ padding: '9px 12px', textAlign: 'left', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.lastDate}</td>
                   <td style={{ padding: '9px 12px', textAlign: 'right', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{r.lastVal.toFixed(2)}</td>
-                  <td style={{ padding: '9px 16px', textAlign: 'right', fontWeight: 700, whiteSpace: 'nowrap', color: r.ret >= 0 ? 'var(--accent-green)' : 'var(--accent-red)' }}>
+                  <td style={{ padding: '9px 12px', textAlign: 'right', fontWeight: 700, whiteSpace: 'nowrap', color: r.ret >= 0 ? 'var(--accent-green)' : 'var(--accent-red)' }}>
                     {r.ret >= 0 ? '+' : ''}{r.ret.toFixed(2)}%
+                  </td>
+                  <td style={{ padding: '9px 12px', textAlign: 'right', whiteSpace: 'nowrap', color: 'var(--text-secondary)' }}>
+                    {r.benchRet != null ? `${r.benchRet >= 0 ? '+' : ''}${r.benchRet.toFixed(2)}%` : '—'}
+                  </td>
+                  <td style={{ padding: '9px 16px', textAlign: 'right', fontWeight: 700, whiteSpace: 'nowrap', color: r.alpha == null ? 'var(--text-secondary)' : r.alpha >= 0 ? 'var(--accent-green)' : 'var(--accent-red)' }}>
+                    {r.alpha != null ? `${r.alpha >= 0 ? '+' : ''}${r.alpha.toFixed(2)}%` : '—'}
                   </td>
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td colSpan={6} style={{ padding: '20px', textAlign: 'center', color: 'var(--text-secondary)' }}>No months in the selected range.</td></tr>
+                <tr><td colSpan={8} style={{ padding: '20px', textAlign: 'center', color: 'var(--text-secondary)' }}>No months in the selected range.</td></tr>
               )}
             </tbody>
           </table>

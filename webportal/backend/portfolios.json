@@ -137,24 +137,59 @@
   ],
   "Mid_Small_Cap": [
     {
-      "nseCode": "TIMEX",
+      "nseCode": "SHADOWFAX",
       "allocation": 0.04,
-      "buyPrice": 534.04
+      "buyPrice": 206.04
     },
     {
-      "nseCode": "ETHOSLTD",
-      "allocation": 0.03,
-      "buyPrice": 2940.38
-    },
-    {
-      "nseCode": "TDPOWERSYS",
-      "allocation": 0.025,
-      "buyPrice": 162.89
-    },
-    {
-      "nseCode": "STLTECH",
+      "nseCode": "SAMBHV",
       "allocation": 0.06,
-      "buyPrice": 427.76
+      "buyPrice": 103.36
+    },
+    {
+      "nseCode": "MANINDS",
+      "allocation": 0.03,
+      "buyPrice": 933.24
+    },
+    {
+      "nseCode": "QPOWER",
+      "allocation": 0.05,
+      "buyPrice": 1160.08
+    },
+    {
+      "nseCode": "KRN",
+      "allocation": 0.03,
+      "buyPrice": 879.07
+    },
+    {
+      "nseCode": "HFCL",
+      "allocation": 0.02,
+      "buyPrice": 128.42
+    },
+    {
+      "nseCode": "SAILIFE",
+      "allocation": 0.025,
+      "buyPrice": 1244.15
+    },
+    {
+      "nseCode": "AARTIPHARM",
+      "allocation": 0.05,
+      "buyPrice": 768.95
+    },
+    {
+      "nseCode": "ACUTAAS",
+      "allocation": 0.04,
+      "buyPrice": 1266.39
+    },
+    {
+      "nseCode": "SHILPAMED",
+      "allocation": 0.03,
+      "buyPrice": 791.79
+    },
+    {
+      "nseCode": "JYOTICNC",
+      "allocation": 0.02,
+      "buyPrice": 1098.58
     },
     {
       "nseCode": "INOXINDIA",
@@ -167,6 +202,46 @@
       "buyPrice": 478.3
     },
     {
+      "nseCode": "TDPOWERSYS",
+      "allocation": 0.025,
+      "buyPrice": 162.89
+    },
+    {
+      "nseCode": "STLTECH",
+      "allocation": 0.06,
+      "buyPrice": 427.76
+    },
+    {
+      "nseCode": "IDEAFORGE",
+      "allocation": 0.015,
+      "buyPrice": 768.11
+    },
+    {
+      "nseCode": "SANSERA",
+      "allocation": 0.05,
+      "buyPrice": 2136.68
+    },
+    {
+      "nseCode": "ASTRAMICRO",
+      "allocation": 0.03,
+      "buyPrice": 1080.52
+    },
+    {
+      "nseCode": "ETHOSLTD",
+      "allocation": 0.03,
+      "buyPrice": 2940.38
+    },
+    {
+      "nseCode": "TIMEX",
+      "allocation": 0.04,
+      "buyPrice": 534.04
+    },
+    {
+      "nseCode": "AVALON",
+      "allocation": 0.035,
+      "buyPrice": 1182.42
+    },
+    {
       "nseCode": "SYRMA",
       "allocation": 0.045,
       "buyPrice": 686.18
@@ -177,84 +252,14 @@
       "buyPrice": 2482.6
     },
     {
-      "nseCode": "AVALON",
-      "allocation": 0.035,
-      "buyPrice": 1182.42
-    },
-    {
-      "nseCode": "SHILPAMED",
-      "allocation": 0.03,
-      "buyPrice": 791.79
-    },
-    {
-      "nseCode": "SAILIFE",
-      "allocation": 0.025,
-      "buyPrice": 1244.15
-    },
-    {
-      "nseCode": "ACUTAAS",
-      "allocation": 0.04,
-      "buyPrice": 1266.39
-    },
-    {
-      "nseCode": "AARTIPHARM",
-      "allocation": 0.05,
-      "buyPrice": 768.95
-    },
-    {
-      "nseCode": "SHADOWFAX",
-      "allocation": 0.04,
-      "buyPrice": 206.04
-    },
-    {
       "nseCode": "SBCL",
       "allocation": 0.07,
       "buyPrice": 573.42
     },
     {
-      "nseCode": "SANSERA",
-      "allocation": 0.05,
-      "buyPrice": 2136.68
-    },
-    {
-      "nseCode": "IDEAFORGE",
-      "allocation": 0.03,
-      "buyPrice": 772.1
-    },
-    {
-      "nseCode": "ASTRAMICRO",
-      "allocation": 0.04,
-      "buyPrice": 1088.61
-    },
-    {
-      "nseCode": "SAMBHV",
-      "allocation": 0.06,
-      "buyPrice": 103.36
-    },
-    {
-      "nseCode": "QPOWER",
-      "allocation": 0.04,
-      "buyPrice": 1066.38
-    },
-    {
-      "nseCode": "PRIVISCL",
-      "allocation": 0.03,
-      "buyPrice": 3501.57
-    },
-    {
       "nseCode": "NEOGEN",
       "allocation": 0.06,
       "buyPrice": 1925.49
-    },
-    {
-      "nseCode": "KRN",
-      "allocation": 0.03,
-      "buyPrice": 879.07
-    },
-    {
-      "nseCode": "HFCL",
-      "allocation": 0.025,
-      "buyPrice": 128.42
     },
     {
       "nseCode": "E2E",
@@ -389,35 +394,47 @@
   ],
   "Trends_Triology": [
     {
-      "nseCode": "YASHO",
-      "allocation": 0.05,
-      "buyPrice": 4202.73
+      "nseCode": "SEDEMAC",
+      "allocation": 0.03,
+      "buyPrice": 2361.93
     },
     {
-      "nseCode": "NEOGEN",
+      "nseCode": "ATHERENERG",
       "allocation": 0.06,
-      "buyPrice": 1699.47,
-      "securityName": "Neogen Chemicals Ltd"
+      "buyPrice": 737.95,
+      "securityName": "Ather Energy Ltd"
     },
     {
-      "nseCode": "TDPOWERSYS",
+      "nseCode": "SSWL",
       "allocation": 0.03,
-      "buyPrice": 659.13
+      "buyPrice": 372.31
     },
     {
-      "nseCode": "STLTECH",
-      "allocation": 0.07,
-      "buyPrice": 431.48
+      "nseCode": "SHADOWFAX",
+      "allocation": 0.06,
+      "buyPrice": 215.3
     },
     {
-      "nseCode": "OMNI",
+      "nseCode": "SAILIFE",
       "allocation": 0.03,
-      "buyPrice": 438.4
+      "buyPrice": 1030.06,
+      "securityName": "Sai Life Sciences Ltd"
     },
     {
-      "nseCode": "HFCL",
-      "allocation": 0.04,
-      "buyPrice": 128.8
+      "nseCode": "ACUTAAS",
+      "allocation": 0.06,
+      "buyPrice": 1662.42,
+      "securityName": "Acutaas Chemicals Ltd"
+    },
+    {
+      "nseCode": "KPL",
+      "allocation": 0.05,
+      "buyPrice": 3603.05
+    },
+    {
+      "nseCode": "IND SWIFT LABORATORIES LTD",
+      "allocation": 0.05,
+      "buyPrice": null
     },
     {
       "nseCode": "DEEDEV",
@@ -431,26 +448,36 @@
       "securityName": "Aeroflex Industries Ltd"
     },
     {
-      "nseCode": "SHADOWFAX",
-      "allocation": 0.06,
-      "buyPrice": 215.3
-    },
-    {
-      "nseCode": "SEDEMAC",
+      "nseCode": "TDPOWERSYS",
       "allocation": 0.03,
-      "buyPrice": 2361.93
+      "buyPrice": 659.13
     },
     {
-      "nseCode": "ATHERENERG",
-      "allocation": 0.06,
-      "buyPrice": 737.95,
-      "securityName": "Ather Energy Ltd"
+      "nseCode": "STLTECH",
+      "allocation": 0.07,
+      "buyPrice": 431.48
+    },
+    {
+      "nseCode": "MANINDS",
+      "allocation": 0.04,
+      "buyPrice": 933.24
     },
     {
       "nseCode": "SANSERA",
       "allocation": 0.07,
       "buyPrice": 2037.53,
       "securityName": "Sansera Engineering Ltd"
+    },
+    {
+      "nseCode": "YASHO",
+      "allocation": 0.05,
+      "buyPrice": 4202.73
+    },
+    {
+      "nseCode": "NEOGEN",
+      "allocation": 0.06,
+      "buyPrice": 1699.47,
+      "securityName": "Neogen Chemicals Ltd"
     },
     {
       "nseCode": "SAKAR",
@@ -461,28 +488,6 @@
       "nseCode": "MOREPENLAB",
       "allocation": 0.05,
       "buyPrice": 79.99
-    },
-    {
-      "nseCode": "SAILIFE",
-      "allocation": 0.03,
-      "buyPrice": 1030.06,
-      "securityName": "Sai Life Sciences Ltd"
-    },
-    {
-      "nseCode": "KPL",
-      "allocation": 0.05,
-      "buyPrice": 3603.05
-    },
-    {
-      "nseCode": "IND SWIFT LABORATORIES LTD",
-      "allocation": 0.05,
-      "buyPrice": null
-    },
-    {
-      "nseCode": "ACUTAAS",
-      "allocation": 0.06,
-      "buyPrice": 1662.42,
-      "securityName": "Acutaas Chemicals Ltd"
     },
     {
       "nseCode": "E2E",

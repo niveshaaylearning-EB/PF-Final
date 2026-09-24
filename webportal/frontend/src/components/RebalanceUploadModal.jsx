@@ -9,10 +9,18 @@ const UPDATE_TYPE_COLORS = {
   'No Change':    'var(--text-secondary)',
 };
 
-const cellStyle = { padding: '0.35rem 0.7rem', fontSize: '0.79rem', verticalAlign: 'middle' };
+// Both default to left -- neither set this before, so both silently
+// inherited the global `table { text-align: right }` rule. That happened to
+// keep header and data consistent with each other (both right) in the first
+// table here, but broke the second table below, whose headers explicitly go
+// left/right per column while its text-column cells (Stock, NSE Code, Update
+// Type, Event Date) shared this same cellStyle with no override -- headers
+// left, data right. Explicit left here fixes that mismatch, and the numeric
+// columns in both tables already override to 'right' inline regardless.
+const cellStyle = { padding: '0.35rem 0.7rem', fontSize: '0.79rem', verticalAlign: 'middle', textAlign: 'left' };
 const hdrStyle  = { padding: '0.3rem 0.7rem', color: 'var(--text-secondary)', fontWeight: 600,
                     fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.04em',
-                    borderBottom: '1px solid rgba(255,255,255,0.1)' };
+                    borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left' };
 const inputStyle = {
   background: 'transparent', border: 'none',
   borderBottom: '1px solid rgba(99,102,241,0.3)',

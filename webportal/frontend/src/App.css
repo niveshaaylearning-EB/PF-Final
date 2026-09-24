@@ -2324,6 +2324,12 @@ tr.search-dim { opacity: 0.2; }
   padding: 0.65rem 1rem;
   color: var(--text-primary);
   white-space: nowrap;
+  /* Matches .pl-table thead th's own left default -- without this, a plain
+     <td> (no .pl-td-right) fell through to the global `table { text-align:
+     right }` rule while its header stayed explicitly left, e.g. NSE Code,
+     Security Name, Sell Date, Sell Type, Buy Date all rendered right-aligned
+     data under left-aligned headers. */
+  text-align: left;
 }
 
 .pl-td-right { text-align: right; }

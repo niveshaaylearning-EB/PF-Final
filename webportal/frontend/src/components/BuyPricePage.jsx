@@ -835,7 +835,7 @@ export default function BuyPricePage() {
 
                 return (
                   <tr key={row.nseCode || idx}>
-                    <td style={{ overflow: 'visible' }}>
+                    <td style={{ overflow: 'visible', textAlign: 'left' }}>
                       <input
                         className="bp-edit-input"
                         value={row.nseCode}
@@ -853,7 +853,7 @@ export default function BuyPricePage() {
                         style={{ marginLeft: '0.4rem', background: 'none', border: '1px solid #475569', borderRadius: '3px', color: 'var(--text-secondary)', fontSize: '0.65rem', cursor: 'pointer', padding: '1px 4px', lineHeight: 1.3, fontWeight: 600, letterSpacing: '0.02em' }}
                       >H</button>
                     </td>
-                    <td>
+                    <td style={{ textAlign: 'left' }}>
                       <input
                         className="bp-edit-input"
                         value={row.segment}

@@ -36,10 +36,10 @@ export default function BuyPriceModal({ basketKey, basketMeta, onClose }) {
             <table className="bp-table">
               <thead>
                 <tr>
-                  <th>NSE Code</th>
-                  <th>Security Name</th>
-                  <th>Segment</th>
-                  <th>Buy Events</th>
+                  <th style={{ textAlign: 'left' }}>NSE Code</th>
+                  <th style={{ textAlign: 'left' }}>Security Name</th>
+                  <th style={{ textAlign: 'left' }}>Segment</th>
+                  <th style={{ textAlign: 'left' }}>Buy Events</th>
                 </tr>
               </thead>
               <tbody>
