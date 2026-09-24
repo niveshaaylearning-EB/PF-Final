@@ -271,6 +271,7 @@ def _dump_allowed_emails(db, raise_on_error: bool = False):
         "last_name":     r.last_name,
         "password_hash": r.password_hash,
         "is_approved":   r.is_approved if r.is_approved is not None else 1,
+        "is_admin":      r.is_admin if r.is_admin is not None else 0,
     } for r in rows]
     _save_json_push(_ALLOWED_EMAIL_FILE, data, sync=True, raise_on_error=raise_on_error)
 
@@ -858,7 +859,9 @@ def list_allowed_emails(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(status_code=403, detail="Admin only")
     rows = db.query(database.AllowedEmail).order_by(database.AllowedEmail.added_at.desc()).all()
     return [{"email": r.email, "added_by": r.added_by, "added_at": r.added_at,
-             "is_approved": bool(r.is_approved)} for r in rows]
+             "is_approved": bool(r.is_approved),
+             "is_admin": bool(r.is_admin) or is_admin_email(r.email),
+             "is_founder_admin": r.email.lower().strip() in ADMIN_EMAILS} for r in rows]
 
 @app.post("/api/allowed-emails")
 def add_allowed_email(body: AllowedEmailBody, request: Request, db: Session = Depends(get_db)):
@@ -929,6 +932,28 @@ def remove_allowed_email(email_addr: str, request: Request, db: Session = Depend
     from auth import _log_audit as _la
     _la(user, "email_removed", f"Removed allowed email: {email}")
     return {"status": "removed", "email": email}
+
+@app.post("/api/allowed-emails/{email_addr}/set-admin")
+def set_email_admin(email_addr: str, body: dict, request: Request, db: Session = Depends(get_db)):
+    """Grant or revoke admin status for an already-approved email. On top of
+    (never a replacement for) the hardcoded ADMIN_EMAILS founders in
+    common/admin.py, who always stay admin regardless of this flag."""
+    user = getattr(request.state, "user", None)
+    if not is_admin_email(user):
+        raise HTTPException(status_code=403, detail="Admin only")
+    email = email_addr.lower().strip()
+    if email in ADMIN_EMAILS:
+        raise HTTPException(status_code=400, detail="This email is already a permanent admin and can't be changed here.")
+    row = db.query(database.AllowedEmail).filter_by(email=email).first()
+    if not row:
+        raise HTTPException(status_code=404, detail="Email not found")
+    make_admin = bool(body.get("is_admin"))
+    row.is_admin = 1 if make_admin else 0
+    db.commit()
+    _dump_allowed_emails(db)
+    from auth import _log_audit as _la
+    _la(user, "admin_granted" if make_admin else "admin_revoked", f"{'Granted' if make_admin else 'Revoked'} admin for: {email}")
+    return {"status": "ok", "email": email, "is_admin": make_admin}
 
 
 # ── Access Requests (public — no auth required) ───────────────────────────────

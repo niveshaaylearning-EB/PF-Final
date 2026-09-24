@@ -5,7 +5,6 @@ import SmallcaseLoginModal from './SmallcaseLoginModal.jsx';
 import RollbackButtons from './RollbackButtons.jsx';
 import ColumnFilter from './ColumnFilter.jsx';
 
-const ADMIN_EMAILS = ['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com', 'nakshatra.rathi@niveshaay.com'];
 const _getAdminState = () => {
   try {
     const t = getAuthToken();
@@ -13,7 +12,7 @@ const _getAdminState = () => {
     const payload = JSON.parse(atob(t.split('.')[1]));
     if (payload.exp && Date.now() > payload.exp * 1000) return { isAdmin: false };
     const email = (payload.sub || '').toLowerCase().trim();
-    return { isAdmin: ADMIN_EMAILS.includes(email) };
+    return { isAdmin: payload.admin === true };
   } catch { return { isAdmin: false }; }
 };
 

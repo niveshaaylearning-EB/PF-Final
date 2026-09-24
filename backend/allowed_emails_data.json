@@ -9,7 +9,8 @@
     "first_name": null,
     "last_name": null,
     "password_hash": "8f896c1ddf5c2c2cb007de1091d9c383b8f83e50c929d185305f3e44d6c66cb1:992dc63b9cec0bd0d2d2758a97ffe80572e5b9709d4a45e02745518678116f8c",
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "nukul.madaan@niveshaay.com",
@@ -21,7 +22,8 @@
     "first_name": null,
     "last_name": null,
     "password_hash": "b7292725a88c97c8c2c36463b46a3df5e6d2365ed4be22dba9fcb317330129d2:5e9350789f40ab118b7f3cdf9aa26ecd8a723260746571cfac6892f713dc1fdd",
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "monika.bansal@niveshaay.com",
@@ -33,7 +35,8 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "nakshatra.rathi@niveshaay.com",
@@ -45,7 +48,8 @@
     "first_name": null,
     "last_name": null,
     "password_hash": "30b52cb71af3237aabee01cf4715d7b28f2b986f2b7e8d8b8c5613d86487f065:1524dceb147a103d656a33d02eabf26487ee09b9ad61f7e237a6296b608d772e",
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "naksh@niveshaay.com",
@@ -57,7 +61,8 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "test.user@niveshaay.com",
@@ -69,7 +74,8 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "ajay.surya@niveshaay.com",
@@ -81,7 +87,8 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "dolly.choudhary@niveshaay.com",
@@ -93,7 +100,8 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "shruti.amanchi@niveshaay.com",
@@ -105,7 +113,8 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "jay@niveshaay.com",
@@ -117,247 +126,21 @@
     "first_name": "KJay",
     "last_name": "Chaudhari",
     "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
-    "email": "meet.katrodiya@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-05T20:25:12.912842",
+    "email": "pari.patel@niveshaay.com",
+    "added_by": "self-registered",
+    "added_at": "2026-08-12T07:51:18.899585",
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "somya.gadia@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:12:06.133823",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "karan.sanwal@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:43:50.350251",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "naman.parmar@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:51:54.323674",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "chandresh.malpani@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:53:58.584419",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "shristi.jain@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:55:39.113957",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "keshav.sureka@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:55:54.135025",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "tej.patel@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:56:28.130545",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "raj.agrawal@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:56:54.493893",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "vikram@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:56:58.630908",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "keyur.kumar@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:57:51.226740",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "bhavika.singhvi@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:58:46.174739",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "parikshit.gujrati@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T06:59:49.416131",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "gunjankabra@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T07:00:17.725282",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "arvindkothari@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T07:00:52.449829",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "rohit.chaberwal@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T07:00:58.291013",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "mohit.patil@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T07:01:14.165308",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "diya.kejriwal@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T07:01:28.992052",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "tanishka.agarwal@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T07:01:44.231185",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
-  },
-  {
-    "email": "parth.parekh@niveshaay.com",
-    "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-06T07:22:08.718502",
-    "totp_secret": null,
-    "totp_enabled": 0,
-    "backup_codes": null,
-    "first_name": null,
-    "last_name": null,
-    "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "varun.agarwal@niveshaay.com",
@@ -369,19 +152,268 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
-    "email": "pari.patel@niveshaay.com",
+    "email": "parth.parekh@niveshaay.com",
     "added_by": "jay.chaudhari@niveshaay.com",
-    "added_at": "2026-08-12T07:51:18.899585",
+    "added_at": "2026-08-06T07:22:08.718502",
     "totp_secret": null,
     "totp_enabled": 0,
     "backup_codes": null,
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "tanishka.agarwal@niveshaay.com",
+    "added_by": "nukul.madaan@niveshaay.com",
+    "added_at": "2026-08-06T07:01:44.231185",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "diya.kejriwal@niveshaay.com",
+    "added_by": "nukul.madaan@niveshaay.com",
+    "added_at": "2026-08-06T07:01:28.992052",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "mohit.patil@niveshaay.com",
+    "added_by": "nukul.madaan@niveshaay.com",
+    "added_at": "2026-08-06T07:01:14.165308",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "rohit.chaberwal@niveshaay.com",
+    "added_by": "nukul.madaan@niveshaay.com",
+    "added_at": "2026-08-06T07:00:58.291013",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "arvindkothari@niveshaay.com",
+    "added_by": "jay.chaudhari@niveshaay.com",
+    "added_at": "2026-08-06T07:00:52.449829",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "gunjankabra@niveshaay.com",
+    "added_by": "jay.chaudhari@niveshaay.com",
+    "added_at": "2026-08-06T07:00:17.725282",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "parikshit.gujrati@niveshaay.com",
+    "added_by": "nukul.madaan@niveshaay.com",
+    "added_at": "2026-08-06T06:59:49.416131",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "bhavika.singhvi@niveshaay.com",
+    "added_by": "nukul.madaan@niveshaay.com",
+    "added_at": "2026-08-06T06:58:46.174739",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "keyur.kumar@niveshaay.com",
+    "added_by": "nukul.madaan@niveshaay.com",
+    "added_at": "2026-08-06T06:57:51.226740",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "vikram@niveshaay.com",
+    "added_by": "jay.chaudhari@niveshaay.com",
+    "added_at": "2026-08-06T06:56:58.630908",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "raj.agrawal@niveshaay.com",
+    "added_by": "nukul.madaan@niveshaay.com",
+    "added_at": "2026-08-06T06:56:54.493893",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "tej.patel@niveshaay.com",
+    "added_by": "nukul.madaan@niveshaay.com",
+    "added_at": "2026-08-06T06:56:28.130545",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "keshav.sureka@niveshaay.com",
+    "added_by": "jay.chaudhari@niveshaay.com",
+    "added_at": "2026-08-06T06:55:54.135025",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "shristi.jain@niveshaay.com",
+    "added_by": "nukul.madaan@niveshaay.com",
+    "added_at": "2026-08-06T06:55:39.113957",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "chandresh.malpani@niveshaay.com",
+    "added_by": "self-registered",
+    "added_at": "2026-08-06T06:53:58.584419",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "naman.parmar@niveshaay.com",
+    "added_by": "self-registered",
+    "added_at": "2026-08-06T06:51:54.323674",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "karan.sanwal@niveshaay.com",
+    "added_by": "self-registered",
+    "added_at": "2026-08-06T06:43:50.350251",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "somya.gadia@niveshaay.com",
+    "added_by": "nukul.madaan@niveshaay.com",
+    "added_at": "2026-08-06T06:12:06.133823",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
+  },
+  {
+    "email": "meet.katrodiya@niveshaay.com",
+    "added_by": "self-registered",
+    "added_at": "2026-08-05T20:25:12.912842",
+    "totp_secret": null,
+    "totp_enabled": 0,
+    "backup_codes": null,
+    "first_name": null,
+    "last_name": null,
+    "password_hash": null,
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "maitri.mehta@niveshaay.com",
@@ -393,7 +425,8 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "yugal.rathi@niveshaay.com",
@@ -405,7 +438,8 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   },
   {
     "email": "dhaval.dave@niveshaay.com",
@@ -417,6 +451,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1
+    "is_approved": 1,
+    "is_admin": 0
   }
 ]

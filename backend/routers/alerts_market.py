@@ -10,7 +10,6 @@ from sqlalchemy.orm import Session
 import database
 import sheet_service
 from auth import get_location_from_ip, is_admin_email
-from common.admin import ADMIN_EMAILS
 from main import get_db, _io_pool, _historic_cache, _dump_audit_log
 from routers.actual_portfolio_bridge import _fetch_all_webportal_baskets
 
@@ -79,8 +78,6 @@ async def get_alerts(db: Session = Depends(get_db)):
 
 # ── Rebalance Excel upload ────────────────────────────────────────────────────
 
-REBALANCE_ALLOWED = ADMIN_EMAILS
-
 @router.post("/api/upload-rebalance")
 async def upload_rebalance(request: Request, file: UploadFile = FastAPIFile(...)):
     """Upload a new rebalance Excel file and import all 7 baskets."""
@@ -89,7 +86,7 @@ async def upload_rebalance(request: Request, file: UploadFile = FastAPIFile(...)
     summary  = {}
     user_email = getattr(request.state, "user", "unknown")
 
-    if user_email not in REBALANCE_ALLOWED:
+    if not is_admin_email(user_email):
         raise HTTPException(status_code=403, detail="You do not have permission to upload rebalance files.")
 
     with tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False) as tmp:

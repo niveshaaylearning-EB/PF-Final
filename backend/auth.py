@@ -195,7 +195,7 @@ def create_token(email: str, first_name: str = "") -> str:
     """4-hour access token with unique JTI (used for single-token flows like TOTP)."""
     jti  = str(_uuid.uuid4())
     exp  = datetime.utcnow() + timedelta(hours=4)
-    payload: dict = {"sub": email, "exp": exp, "jti": jti}
+    payload: dict = {"sub": email, "exp": exp, "jti": jti, "admin": is_admin_email(email)}
     if first_name:
         payload["fn"] = first_name
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
@@ -206,7 +206,7 @@ def _create_session_tokens(email: str, first_name: str, db,
     from database import ActiveSession
     jti = str(_uuid.uuid4())
     exp = datetime.utcnow() + timedelta(hours=4)
-    payload: dict = {"sub": email, "exp": exp, "jti": jti}
+    payload: dict = {"sub": email, "exp": exp, "jti": jti, "admin": is_admin_email(email)}
     if first_name:
         payload["fn"] = first_name
     access_token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)

@@ -1,7 +1,6 @@
 import { API_BASE, getAuthToken } from '../api/base.js';
 import { useState, useEffect, useCallback } from 'react';
 
-const ADMIN_EMAILS = ['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com', 'nakshatra.rathi@niveshaay.com'];
 const _getAdminState = () => {
   try {
     const t = getAuthToken();
@@ -9,7 +8,7 @@ const _getAdminState = () => {
     const payload = JSON.parse(atob(t.split('.')[1]));
     if (payload.exp && Date.now() > payload.exp * 1000) return { email: null, isAdmin: false };
     const email = (payload.sub || '').toLowerCase().trim();
-    return { email, isAdmin: ADMIN_EMAILS.includes(email) };
+    return { email, isAdmin: payload.admin === true };
   } catch { return { email: null, isAdmin: false }; }
 };
 

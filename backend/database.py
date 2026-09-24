@@ -255,6 +255,7 @@ class AllowedEmail(Base):
     last_name     = Column(String, nullable=True)
     password_hash = Column(String, nullable=True)  # PBKDF2-SHA256: salt_hex:key_hex
     is_approved   = Column(Integer, default=1)      # 1=approved  0=pending admin approval
+    is_admin      = Column(Integer, default=0)      # 1=admin (grantable from the Approved Emails page), 0=regular user -- on top of the hardcoded ADMIN_EMAILS founders in common/admin.py, which always stay admin regardless of this column
 
 
 class AccessRequest(Base):
@@ -331,6 +332,9 @@ def run_migrations():
         "ALTER TABLE simulation_mods ADD COLUMN user_email TEXT",
         "ALTER TABLE simulation_sips ADD COLUMN user_email TEXT",
         "ALTER TABLE simulation_mods ADD COLUMN buy_date TEXT",
+        # Admin status grantable from the Approved Emails page, on top of the
+        # hardcoded ADMIN_EMAILS founders in common/admin.py
+        "ALTER TABLE allowed_emails ADD COLUMN is_admin INTEGER DEFAULT 0",
     ]
     with engine.connect() as conn:
         for sql in migrations:

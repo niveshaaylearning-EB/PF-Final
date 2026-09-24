@@ -43,16 +43,15 @@ export const getFirstName = () => {
   return part.charAt(0).toUpperCase() + part.slice(1);
 };
 
-// Single source of truth for the frontend's admin/edit allowlist — matches
-// backend/common/admin.py's ADMIN_EMAILS on the server side.
-export const ADMIN_EMAILS = new Set([
-  'jay.chaudhari@niveshaay.com',
-  'nukul.madaan@niveshaay.com',
-  'nakshatra.rathi@niveshaay.com',
-]);
-
+// The JWT now carries an "admin" claim computed server-side (backend/auth.py,
+// via common/admin.py's is_admin_email -- the hardcoded ADMIN_EMAILS founders
+// PLUS anyone granted admin from the Approved Emails page). Reading it here
+// instead of a hardcoded list means a newly-granted admin sees admin-only
+// pages/buttons immediately on their next login, with no separate frontend
+// deploy needed -- this used to be a duplicate hardcoded list that could only
+// ever reflect the 3 founders.
 export const isAdmin = () => {
-  const email = getEmail();
-  if (!email) return false;
-  return ADMIN_EMAILS.has(email.toLowerCase().trim());
+  const t = getToken();
+  if (!t) return false;
+  return _decodePayload(t)?.admin === true;
 };
