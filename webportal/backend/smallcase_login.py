@@ -291,6 +291,69 @@ BASKET_SMALLCASE_MAP = {
 }
 
 
+def _merge_basket_points(hi: dict, basket: str, port_pts: list, bench_pts: list) -> dict:
+    """Shared merge logic for one basket's freshly fetched raw points (however
+    they were obtained -- server-side Playwright, or a browser bookmarklet
+    posting smallcase's own API response straight from an already-logged-in
+    tab) into historical_index.json's existing series for that basket."""
+    bench_by_date = {p["date"][:10]: p["price"] for p in bench_pts}
+
+    existing_series = hi.get(basket, {}).get("data", [])
+    existing_by_date = {e["date"]: e for e in existing_series}
+
+    # Calibrate this basket's own rebase factor from the most recent date
+    # it already has stored that's also in the freshly fetched raw points.
+    rebase_factor = None
+    for e in sorted(existing_series, key=lambda e: e["date"], reverse=True):
+        raw_at_date = bench_by_date.get(e["date"])
+        if raw_at_date:
+            rebase_factor = e["benchmark"] / raw_at_date
+            break
+    if rebase_factor is None:
+        return {"ok": False, "error": "No overlapping date to calibrate the benchmark rebase from."}
+
+    added = []
+    for p in port_pts:
+        date = p["date"][:10]
+        if date in existing_by_date:
+            continue
+        bench_raw = bench_by_date.get(date)
+        if bench_raw is None:
+            continue
+        bench_rebased = round(bench_raw * rebase_factor, 4)
+        hi.setdefault(basket, {"data": []})
+        hi[basket]["data"].append({
+            "date": date, "value": round(p["price"], 4), "benchmark": bench_rebased,
+        })
+        added.append(date)
+    if added:
+        hi[basket]["data"].sort(key=lambda e: e["date"])
+    return {"ok": True, "added_dates": added}
+
+
+def merge_ingested_payload(payload: dict) -> dict:
+    """Entry point for the browser-bookmarklet ingest path (see
+    routers add_smallcase_ingest / static/smallcase-bookmarklet.js) -- payload
+    shape: {"Green_Energy": {"port_pts": [...], "bench_pts": [...]}, ...},
+    each basket's raw points being exactly what smallcase's own
+    /sam/graph/performance endpoint returned for that scid/benchmark_id, no
+    server-side browser involved at all."""
+    from persistence import _load_historical_index, _save_historical_index
+
+    hi = _load_historical_index()
+    results = {}
+    for basket in BASKET_SMALLCASE_MAP:
+        entry = payload.get(basket)
+        if not entry:
+            results[basket] = {"ok": False, "error": "No data submitted for this basket."}
+            continue
+        results[basket] = _merge_basket_points(hi, basket, entry.get("port_pts") or [], entry.get("bench_pts") or [])
+
+    if any(r.get("added_dates") for r in results.values()):
+        _save_historical_index(hi)
+    return {"ok": True, "results": results}
+
+
 async def _fetch_daily_values_locked() -> dict:
     from persistence import _load_historical_index, _save_historical_index
 
@@ -312,40 +375,7 @@ async def _fetch_daily_values_locked() -> dict:
         body = await resp.json()
         port_pts = (body.get("data", {}).get(scid) or {}).get("points", [])
         bench_pts = (body.get("data", {}).get(bench_id) or {}).get("points", [])
-        bench_by_date = {p["date"][:10]: p["price"] for p in bench_pts}
-
-        existing_series = hi.get(basket, {}).get("data", [])
-        existing_by_date = {e["date"]: e for e in existing_series}
-
-        # Calibrate this basket's own rebase factor from the most recent date
-        # it already has stored that's also in the freshly fetched raw points.
-        rebase_factor = None
-        for e in sorted(existing_series, key=lambda e: e["date"], reverse=True):
-            raw_at_date = bench_by_date.get(e["date"])
-            if raw_at_date:
-                rebase_factor = e["benchmark"] / raw_at_date
-                break
-        if rebase_factor is None:
-            results[basket] = {"ok": False, "error": "No overlapping date to calibrate the benchmark rebase from."}
-            continue
-
-        added = []
-        for p in port_pts:
-            date = p["date"][:10]
-            if date in existing_by_date:
-                continue
-            bench_raw = bench_by_date.get(date)
-            if bench_raw is None:
-                continue
-            bench_rebased = round(bench_raw * rebase_factor, 4)
-            hi.setdefault(basket, {"data": []})
-            hi[basket]["data"].append({
-                "date": date, "value": round(p["price"], 4), "benchmark": bench_rebased,
-            })
-            added.append(date)
-        if added:
-            hi[basket]["data"].sort(key=lambda e: e["date"])
-        results[basket] = {"ok": True, "added_dates": added}
+        results[basket] = _merge_basket_points(hi, basket, port_pts, bench_pts)
 
     if any(r.get("added_dates") for r in results.values()):
         _save_historical_index(hi)

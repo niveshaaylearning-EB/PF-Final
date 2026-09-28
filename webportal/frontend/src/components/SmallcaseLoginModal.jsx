@@ -37,12 +37,17 @@ export default function SmallcaseLoginModal({ onClose }) {
   const [error, setError] = useState('');
   const [msg, setMsg]     = useState('');
   const [fetchResult, setFetchResult] = useState(null);
+  const [bookmarklet, setBookmarklet] = useState(null);
+  const [bookmarkletError, setBookmarkletError] = useState('');
   const overlayRef = useRef(null);
 
   useEffect(() => {
     getJson('/admin/smallcase-login/status')
       .then(r => setStep(r.logged_in ? 'done' : 'phone'))
       .catch(() => setStep('phone'));
+    getJson('/admin/smallcase-bookmarklet')
+      .then(r => setBookmarklet(r.href))
+      .catch(() => setBookmarkletError('Could not generate the bookmarklet.'));
   }, []);
 
   const handleSendOtp = async () => {
@@ -91,7 +96,7 @@ export default function SmallcaseLoginModal({ onClose }) {
     >
       <div style={{
         background: 'var(--modal-bg)', border: '1px solid rgba(139,92,246,0.2)',
-        borderRadius: '16px', padding: '2rem 2.25rem', width: 'min(420px, 92vw)',
+        borderRadius: '16px', padding: '2rem 2.25rem', width: 'min(460px, 92vw)',
         boxShadow: '0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(139,92,246,0.08)',
       }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
@@ -185,6 +190,37 @@ export default function SmallcaseLoginModal({ onClose }) {
             ✓ {msg}
           </div>
         )}
+
+        <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)' }}>
+          <p style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 0.4rem' }}>
+            Alternative: fetch from your own browser
+          </p>
+          <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: '0 0 0.6rem', lineHeight: 1.5 }}>
+            If the login above doesn't work (e.g. this server can't run a browser),
+            drag this to your bookmarks bar. Then open smallcase.com while logged in
+            and click it — it sends today's data straight here using your own session.
+          </p>
+          {bookmarklet ? (
+            <a
+              href={bookmarklet}
+              onClick={e => e.preventDefault()}
+              draggable="true"
+              title="Drag me to your bookmarks bar"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                padding: '0.5rem 0.9rem', borderRadius: '8px',
+                border: '1.5px dashed rgba(139,92,246,0.5)', background: 'rgba(139,92,246,0.08)',
+                color: '#a78bfa', fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none', cursor: 'grab',
+              }}
+            >
+              📌 Fetch to Dashboard
+            </a>
+          ) : bookmarkletError ? (
+            <span style={{ fontSize: '0.78rem', color: '#fca5a5' }}>{bookmarkletError}</span>
+          ) : (
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Generating…</span>
+          )}
+        </div>
       </div>
     </div>
   );

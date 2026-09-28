@@ -1,6 +1,7 @@
 """Historical index values: daily basket/benchmark values used by the
 webportal's own historic-return charts, populated manually or via Excel import."""
 import io
+import os
 from datetime import datetime
 
 import openpyxl
@@ -12,6 +13,15 @@ from persistence import (
 )
 
 router = APIRouter()
+
+# Shared secret for the smallcase bookmarklet ingest endpoint below -- NOT a
+# replacement for the normal admin JWT, which the bookmarklet has no way to
+# attach (it runs on smallcase.com's own origin, with no access to our site's
+# localStorage). Deliberately low-stakes: the worst a leaked key allows is
+# someone posting fake index values into historical_index.json, which any
+# admin can already do and which is trivially fixable -- not an account- or
+# data-takeover risk, so a single shared static key (not per-admin) is fine.
+_SMALLCASE_INGEST_KEY = os.environ.get("SMALLCASE_INGEST_KEY", "niveshaay-smallcase-ingest-2026")
 
 @router.get("/api/index-history")
 async def get_index_history():
@@ -142,6 +152,49 @@ async def smallcase_fetch_daily(request: Request):
     _require_admin(request)
     import smallcase_login
     return await smallcase_login.fetch_daily_values(auth_header=request.headers.get("Authorization"))
+
+
+@router.get("/api/admin/smallcase-bookmarklet")
+async def smallcase_bookmarklet(request: Request):
+    """Admin-only: generates the actual javascript: bookmarklet URI from
+    smallcase-bookmarklet-source.js, filled in with THIS server's own origin
+    (so it posts back to wherever it was fetched from -- local or prod, no
+    separate build needed for either) and the shared ingest key."""
+    _require_admin(request)
+    from pathlib import Path
+    src_path = Path(__file__).parent.parent / "frontend" / "public" / "smallcase-bookmarklet-source.js"
+    src = src_path.read_text(encoding="utf-8")
+    # Derive the ingest URL from THIS request's own path rather than a fixed
+    # prefix -- local dev hits this directly on :8001 as /api/admin/..., prod
+    # hits it through the main app's /wp mount as /wp/api/admin/... , and the
+    # bookmarklet must post back to whichever one the admin actually used.
+    prefix = request.url.path.rsplit("/", 1)[0]  # .../admin
+    ingest_url = str(request.base_url).rstrip("/") + prefix + "/smallcase-ingest"
+    src = src.replace("__INGEST_URL__", ingest_url).replace("__INGEST_KEY__", _SMALLCASE_INGEST_KEY)
+    import urllib.parse
+    href = "javascript:" + urllib.parse.quote(src)
+    return {"href": href}
+
+
+@router.post("/api/admin/smallcase-ingest")
+async def smallcase_ingest(request: Request):
+    """Alternative to the server-side Playwright login above: a browser
+    bookmarklet run directly on an already-logged-in smallcase.com tab (see
+    /static/smallcase-bookmarklet.js) fetches each basket's raw performance
+    data itself (using the admin's own real smallcase session -- no server
+    browser automation, no persisted profile, works regardless of whether
+    Chromium is even installed on this server) and posts it here.
+
+    Authenticated by a shared key, NOT the normal admin JWT -- the
+    bookmarklet runs on smallcase.com's origin and has no access to this
+    site's localStorage token. See _SMALLCASE_INGEST_KEY's docstring above
+    for why a single shared key is an acceptable tradeoff here."""
+    key = request.headers.get("X-Ingest-Key", "")
+    if key != _SMALLCASE_INGEST_KEY:
+        raise HTTPException(status_code=403, detail="Invalid ingest key.")
+    payload = await request.json()
+    import smallcase_login
+    return smallcase_login.merge_ingested_payload(payload)
 
 
 @router.post("/api/import-excel-history")
