@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { TrendingUp, Activity, Search, BarChart2, AlertTriangle, Target, ShieldCheck, Calendar, Users, X } from 'lucide-react';
+import { TrendingUp, Activity, Search, BarChart2, AlertTriangle, Target, ShieldCheck, Calendar, Users, X, Swords, FileText } from 'lucide-react';
 import axios from 'axios';
 import { isAdmin, getEmail, getFirstName } from '../utils/auth';
 
@@ -356,6 +356,16 @@ function HomePage() {
             </p>
           </Link>
 
+          <Link to="/actual?wp=/competitor-analysis" style={{ textDecoration: 'none' }} className="glass-panel home-card home-card-d2">
+            <div style={{ background: 'rgba(239,68,68,0.12)', padding: '16px', borderRadius: '12px', display: 'inline-block', marginBottom: '16px', boxShadow: '0 0 20px rgba(239,68,68,0.12)' }}>
+              <Swords color="#ef4444" size={28} />
+            </div>
+            <h2 style={{ color: 'var(--text-main)', marginBottom: '10px' }}>Competitor Analysis</h2>
+            <p style={{ color: 'var(--text-muted)', lineHeight: 1.65 }}>
+              Compare our baskets' stocks, rebalances, and returns against 8 tracked competitor smallcases.
+            </p>
+          </Link>
+
           <Link to="/simulator" style={{ textDecoration: 'none' }} className="glass-panel home-card home-card-d2">
             <div style={{ background: 'rgba(16,185,129,0.12)', padding: '16px', borderRadius: '12px', display: 'inline-block', marginBottom: '16px', boxShadow: '0 0 20px rgba(16,185,129,0.15)' }}>
               <Activity color="var(--positive)" size={28} />
@@ -413,12 +423,25 @@ function HomePage() {
               <div style={{ background: 'rgba(99,102,241,0.12)', padding: '16px', borderRadius: '12px', display: 'inline-block', marginBottom: '16px', boxShadow: '0 0 20px rgba(99,102,241,0.2)' }}>
                 <Users color="var(--primary)" size={28} />
               </div>
-              <h2 style={{ color: 'var(--text-main)', marginBottom: '10px' }}>Approved Emails</h2>
+              <h2 style={{ color: 'var(--text-main)', marginBottom: '10px' }}>Admin Panel</h2>
               <p style={{ color: 'var(--text-muted)', lineHeight: 1.65 }}>
-                Manage which @niveshaay.com email addresses are allowed to log in to the dashboard.
+                Manage login access, admin status, and WhatsApp rebalance alert recipients.
               </p>
             </Link>
           )}
+
+          {isAdmin() && (
+            <Link to="/result-updates" style={{ textDecoration: 'none' }} className="glass-panel home-card home-card-d6">
+              <div style={{ background: 'rgba(16,185,129,0.12)', padding: '16px', borderRadius: '12px', display: 'inline-block', marginBottom: '16px', boxShadow: '0 0 20px rgba(16,185,129,0.15)' }}>
+                <FileText color="var(--positive)" size={28} />
+              </div>
+              <h2 style={{ color: 'var(--text-main)', marginBottom: '10px' }}>Result Update</h2>
+              <p style={{ color: 'var(--text-muted)', lineHeight: 1.65 }}>
+                Track result/concall dates and received/checked/sent status per company, and generate merged result-update PDFs basket-wise.
+              </p>
+            </Link>
+          )}
+
         </div>
 
       </div>

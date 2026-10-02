@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
+from _shared_http import SHARED_SSL_CONTEXT
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
@@ -74,7 +75,8 @@ _yf_cookies: dict = {}
 async def _refresh_yf_crumb() -> None:
     global _yf_crumb, _yf_cookies
     try:
-        async with httpx.AsyncClient(follow_redirects=True, headers=YF_HEADERS, timeout=10.0) as client:
+        async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,follow_redirects=True, headers=YF_HEADERS, timeout=10.0) as client:
             await client.get("https://fc.yahoo.com")
             r = await client.get("https://query2.finance.yahoo.com/v1/test/getcrumb")
             _yf_crumb = r.text.strip() if r.status_code == 200 else None
@@ -103,7 +105,8 @@ async def _fetch_fundamentals(ticker: str) -> dict:
         async def _do_request():
             url = (f"https://query1.finance.yahoo.com/v10/finance/quoteSummary/{sym}"
                    f"?modules={modules}&crumb={_yf_crumb}")
-            async with httpx.AsyncClient(follow_redirects=True, headers=YF_HEADERS,
+            async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,follow_redirects=True, headers=YF_HEADERS,
                                           cookies=_yf_cookies, timeout=10.0) as client:
                 return await client.get(url)
 

@@ -2,6 +2,7 @@ import { API_BASE, getAuthToken } from '../api/base.js';
 import { useState, useEffect, useMemo } from 'react';
 import DailyValuesPanel from './DailyValuesPanel.jsx';
 import SmallcaseLoginModal from './SmallcaseLoginModal.jsx';
+import CompetitorLoginModal from './CompetitorLoginModal.jsx';
 import RollbackButtons from './RollbackButtons.jsx';
 import ColumnFilter from './ColumnFilter.jsx';
 
@@ -85,6 +86,7 @@ export default function CalculateReturnPage() {
   const [pendingRows,     setPendingRows]     = useState([]);
   const [showDailyPanel,  setShowDailyPanel]  = useState(false);
   const [showSmallcaseLogin, setShowSmallcaseLogin] = useState(false);
+  const [showCompetitorLogin, setShowCompetitorLogin] = useState(false);
   const [crSortKey,    setCrSortKey]    = useState(null);
   const [crSortDir,    setCrSortDir]    = useState('asc');
   const [crColFilters, setCrColFilters] = useState({});
@@ -265,12 +267,24 @@ export default function CalculateReturnPage() {
             >
               <i className="fa-solid fa-right-to-bracket" /> smallcase Login
             </button>
+            <button
+              onClick={() => setShowCompetitorLogin(true)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '0.4rem',
+                padding: '0.5rem 1.1rem', borderRadius: '8px', fontSize: '0.88rem', fontWeight: 600,
+                background: 'transparent', border: '1.5px solid #a78bfa', color: '#a78bfa', cursor: 'pointer',
+              }}
+              title="Login to the separate account subscribed to the tracked competitor smallcases"
+            >
+              <i className="fa-solid fa-user-secret" /> Competitor smallcase Login
+            </button>
           </div>
         )}
       </div>
 
       {userIsAdmin && showDailyPanel && <DailyValuesPanel onClose={() => setShowDailyPanel(false)} onSaved={fetchHistData} />}
       {userIsAdmin && showSmallcaseLogin && <SmallcaseLoginModal onClose={() => setShowSmallcaseLogin(false)} />}
+      {userIsAdmin && showCompetitorLogin && <CompetitorLoginModal onClose={() => setShowCompetitorLogin(false)} />}
 
       {/* Controls */}
       <div className="cr-controls-card">

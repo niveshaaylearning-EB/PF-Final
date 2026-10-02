@@ -11,6 +11,7 @@ import urllib.parse
 from datetime import datetime, timezone
 
 import httpx
+from _shared_http import SHARED_SSL_CONTEXT
 from fastapi import APIRouter, BackgroundTasks, Body, HTTPException, Request
 
 from config import YF_HEADERS, YF_SYMBOL_MAP
@@ -169,7 +170,8 @@ async def _fetch_ohlc_yahoo(nse_code: str, ts: int) -> tuple[float | None, str |
             f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
             f"?interval=1d&period1={ts}&period2={ts + 4 * 86400}"
         )
-        async with httpx.AsyncClient(timeout=10) as client:
+        async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,timeout=10) as client:
             r = await client.get(url, headers={"User-Agent": "Mozilla/5.0"})
         result = r.json()["chart"]["result"][0]
         q = result["indicators"]["quote"][0]
@@ -199,7 +201,8 @@ async def _fetch_open_price_yahoo_sym(sym: str, ts: int) -> float | None:
             + urllib.parse.quote(sym)
             + f"?interval=1d&period1={ts}&period2={ts + 7 * 86400}"
         )
-        async with httpx.AsyncClient(follow_redirects=True, timeout=15, headers=YF_HEADERS) as client:
+        async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,follow_redirects=True, timeout=15, headers=YF_HEADERS) as client:
             r = await client.get(url)
         if r.status_code != 200:
             return None
@@ -305,7 +308,8 @@ async def _fetch_ohlc_google(nse_code: str, dt: datetime) -> tuple[float | None,
             f"https://finance.google.com/finance/getprices"
             f"?q={nse_code}&x=NSE&i=86400&p=40d&f=d,o,h,l,c,v&df=cpct&auto=1"
         )
-        async with httpx.AsyncClient(timeout=12, follow_redirects=True) as client:
+        async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,timeout=12, follow_redirects=True) as client:
             r = await client.get(url, headers={"User-Agent": "Mozilla/5.0"})
         lines = r.text.strip().splitlines()
         # Format: first data row starts with "a<unix_ts>", subsequent rows are offset in days
@@ -351,7 +355,8 @@ async def _fetch_ohlc_screener(nse_code: str, dt: datetime) -> tuple[float | Non
             "Referer": "https://www.screener.in/",
             "X-Requested-With": "XMLHttpRequest",
         }
-        async with httpx.AsyncClient(follow_redirects=True, timeout=15) as client:
+        async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,follow_redirects=True, timeout=15) as client:
             # Establish session cookies
             await client.get(
                 f"https://www.screener.in/company/{nse_code}/consolidated/",
@@ -415,7 +420,8 @@ async def _fetch_ohlc_nse_bhavcopy(nse_code: str, dt: datetime) -> float | None:
             "Referer": "https://www.nseindia.com/",
         }
         url = f"https://archives.nseindia.com/products/content/sec_bhavdata_full_{dt.strftime('%d%m%Y')}.csv"
-        async with httpx.AsyncClient(timeout=15.0) as client:
+        async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,timeout=15.0) as client:
             r = await client.get(url, headers=headers)
         if r.status_code != 200:
             return None
@@ -983,7 +989,8 @@ async def _fetch_listing_date_nse(symbol: str) -> str | None:
         "Referer":         "https://www.nseindia.com/",
     }
     try:
-        async with httpx.AsyncClient(headers=headers, timeout=15.0, follow_redirects=True) as c:
+        async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,headers=headers, timeout=15.0, follow_redirects=True) as c:
             await c.get("https://www.nseindia.com/", timeout=10.0)
             r = await c.get(
                 "https://www.nseindia.com/api/quote-equity?symbol="
@@ -1012,7 +1019,8 @@ async def _fetch_listing_date_yahoo(symbol: str) -> str | None:
     _fetch_open_price_for_listing already uses for the price side."""
     async def _first_trade_date(sym: str) -> str | None:
         try:
-            async with httpx.AsyncClient(timeout=10, headers={"User-Agent": "Mozilla/5.0"},
+            async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,timeout=10, headers={"User-Agent": "Mozilla/5.0"},
                                           follow_redirects=True) as client:
                 r = await client.get(
                     f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(sym)}"
@@ -1083,6 +1091,43 @@ async def get_basket(key: str, background_tasks: BackgroundTasks):
         "history":         _build_history_from_events(bp_data),
         "buyPriceDetails": bp_data,
     }
+
+
+@router.get("/api/stock-detail/{nse_code}")
+async def stock_detail(nse_code: str):
+    """For the cross-basket search's "click a stock to see detail" feature --
+    given one NSE code, returns its current weight/buyPrice/buyDate in EVERY
+    basket that currently holds it (not just baskets other than the one
+    you're viewing, unlike the existing cross-basket search panel). buyDate
+    is the earliest still-open buy lot's date (same FIFO lot logic the
+    What-If simulator and gains engine already use), not just the first-ever
+    buy event -- a stock fully sold and re-bought shows its CURRENT entry
+    date, not its original one."""
+    code = nse_code.strip().upper()
+    portfolios, bp_full = await asyncio.gather(
+        asyncio.to_thread(_load_portfolios),
+        asyncio.to_thread(_load_buy_price_data),
+    )
+    results = []
+    for basket in BASKET_DISPLAY_NAMES:
+        stocks = portfolios.get(basket, [])
+        entry = next((s for s in stocks if (s.get("nseCode") or "").upper() == code), None)
+        if not entry:
+            continue
+        bp_data = bp_full.get(basket, {}).get(code, {})
+        buy_events = _parse_buy_events(bp_data.get("buyEvents") or "")
+        sell_events = _parse_buy_events(bp_data.get("sellEvents") or "")
+        open_lots = _current_series_buy_events(buy_events, sell_events)
+        buy_date = min((d for d, _ in open_lots), key=_date_to_ts) if open_lots else None
+        results.append({
+            "basket": basket,
+            "basketLabel": BASKET_DISPLAY_NAMES[basket],
+            "securityName": entry.get("securityName"),
+            "weight": round((entry.get("allocation") or 0) * 100, 2),
+            "buyPrice": entry.get("buyPrice"),
+            "buyDate": buy_date,
+        })
+    return {"nseCode": code, "results": results}
 
 
 async def _recalc_basket_buy_prices(key: str) -> None:

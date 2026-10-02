@@ -238,6 +238,11 @@ _AUDIT_LOG_FILE      = os.path.join(_BACKEND_DIR, "audit_log.json")
 _STOCK_EVENTS_FILE   = os.path.join(_BACKEND_DIR, "stock_events.json")
 _SIMULATION_MODS_FILE = os.path.join(_BACKEND_DIR, "simulation_mods.json")
 _SIMULATION_SIPS_FILE = os.path.join(_BACKEND_DIR, "simulation_sips.json")
+# Shared with webportal/backend/doubletick.py, which reads this SAME file by
+# an absolute path from its own side (two different processes locally, one
+# merged ASGI-mounted process in production -- either way, the path has to
+# be absolute, not cwd-relative, to resolve to the same file from both).
+_WHATSAPP_RECIPIENTS_FILE = os.path.join(_BACKEND_DIR, "whatsapp_recipients.json")
 
 def _save_json_push(filepath: str, data, sync: bool = False, raise_on_error: bool = False):
     rel_path = f"backend/{os.path.basename(filepath)}"
@@ -847,6 +852,9 @@ app.include_router(_rebalance_alerts_router)
 from routers.results_calendar import router as _results_calendar_router, _refresh_results_calendar_data, check_and_notify_upcoming_events
 app.include_router(_results_calendar_router)
 
+from routers.result_updates import router as _result_updates_router
+app.include_router(_result_updates_router)
+
 # ── Actual Portfolio proxy — moved to routers/actual_portfolio_bridge.py ─────
 
 class AllowedEmailBody(BaseModel):
@@ -954,6 +962,56 @@ def set_email_admin(email_addr: str, body: dict, request: Request, db: Session =
     from auth import _log_audit as _la
     _la(user, "admin_granted" if make_admin else "admin_revoked", f"{'Granted' if make_admin else 'Revoked'} admin for: {email}")
     return {"status": "ok", "email": email, "is_admin": make_admin}
+
+
+# ── WhatsApp Rebalance Alert Recipients ─────────────────────────────────────
+# Who gets pinged on WhatsApp (via DoubleTick) when one of our baskets
+# rebalances -- see webportal/backend/doubletick.py for the actual send.
+# This file is the single source of truth for that recipient list; it
+# replaces the old DOUBLETICK_RESEARCH_RECIPIENTS env var (kept as a
+# fallback only, for the one test number already configured there).
+
+@app.get("/api/admin/whatsapp-recipients")
+def list_whatsapp_recipients(request: Request):
+    user = getattr(request.state, "user", None)
+    if not is_admin_email(user):
+        raise HTTPException(status_code=403, detail="Admin only")
+    return _load_json_file(_WHATSAPP_RECIPIENTS_FILE, [])
+
+@app.post("/api/admin/whatsapp-recipients")
+def add_whatsapp_recipient(body: dict, request: Request):
+    user = getattr(request.state, "user", None)
+    if not is_admin_email(user):
+        raise HTTPException(status_code=403, detail="Admin only")
+    name  = (body.get("name") or "").strip()
+    phone = (body.get("phone") or "").strip()
+    email = (body.get("email") or "").strip().lower()
+    if not name or not phone:
+        raise HTTPException(status_code=400, detail="Name and phone number are required")
+    if not phone.startswith("+"):
+        raise HTTPException(status_code=400, detail="Phone number must include country code, e.g. +919999999999")
+    recipients = _load_json_file(_WHATSAPP_RECIPIENTS_FILE, [])
+    if any(r.get("phone") == phone for r in recipients):
+        raise HTTPException(status_code=409, detail="This phone number is already in the list")
+    recipients.append({"name": name, "phone": phone, "email": email})
+    _save_json_push(_WHATSAPP_RECIPIENTS_FILE, recipients, sync=True)
+    from auth import _log_audit as _la
+    _la(user, "whatsapp_recipient_added", f"Added WhatsApp recipient: {name} ({phone})")
+    return {"status": "added", "recipients": recipients}
+
+@app.delete("/api/admin/whatsapp-recipients/{phone}")
+def remove_whatsapp_recipient(phone: str, request: Request):
+    user = getattr(request.state, "user", None)
+    if not is_admin_email(user):
+        raise HTTPException(status_code=403, detail="Admin only")
+    recipients = _load_json_file(_WHATSAPP_RECIPIENTS_FILE, [])
+    new_list = [r for r in recipients if r.get("phone") != phone]
+    if len(new_list) == len(recipients):
+        raise HTTPException(status_code=404, detail="Recipient not found")
+    _save_json_push(_WHATSAPP_RECIPIENTS_FILE, new_list, sync=True)
+    from auth import _log_audit as _la
+    _la(user, "whatsapp_recipient_removed", f"Removed WhatsApp recipient: {phone}")
+    return {"status": "removed", "recipients": new_list}
 
 
 # ── Access Requests (public — no auth required) ───────────────────────────────

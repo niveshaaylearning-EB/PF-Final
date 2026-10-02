@@ -19,6 +19,8 @@ import BuyPricePage          from './components/BuyPricePage.jsx';
 import CalculateReturnPage   from './components/CalculateReturnPage.jsx';
 import PLStatementPage       from './components/PLStatementPage.jsx';
 import CorporateActionsPage  from './components/CorporateActionsPage.jsx';
+import CompetitorAnalysisPage from './components/CompetitorAnalysisPage.jsx';
+import CompetitorMultiComparePage from './components/CompetitorMultiComparePage.jsx';
 import DashboardView         from './components/DashboardView.jsx';
 import WatchlistPage         from './components/WatchlistPage.jsx';
 import StockExposurePanel    from './components/StockExposurePanel.jsx';
@@ -220,6 +222,8 @@ export default function App() {
   if (_path === '/calculate-return') return <CalculateReturnPage />;
   if (_path === '/pl-statement')    return <PLStatementPage />;
   if (_path === '/corporate-actions') return <CorporateActionsPage />;
+  if (_path === '/competitor-analysis') return <CompetitorAnalysisPage />;
+  if (_path === '/competitor-multi-compare') return <CompetitorMultiComparePage />;
 
   const [basketKey,    setBasketKey]    = useState('Mid_Small_Cap');
   const [rows,         setRows]         = useState([]);
@@ -244,6 +248,28 @@ export default function App() {
   const [basketWeightMap,   setBasketWeightMap]   = useState(null);
   const [perfByTenure,      setPerfByTenure]      = useState({}); // {nseCode: {"1M":pct, "3M":pct, ...}}
   const [selectedTenure,    setSelectedTenure]    = useState('1M');
+  const [stockDetailCode,   setStockDetailCode]   = useState(null); // which cross-basket-match row is expanded
+  const [stockDetailData,   setStockDetailData]   = useState(null); // its /api/stock-detail/{code} results
+  const [stockDetailLoading, setStockDetailLoading] = useState(false);
+
+  // "Click a stock to see which baskets hold it, at what weight/buy price/
+  // buy date" -- toggles the expanded row for `code`, fetching once per
+  // click (not cached, since buy price/weight can change between clicks).
+  const toggleStockDetail = useCallback(async (code) => {
+    if (stockDetailCode === code) { setStockDetailCode(null); return; }
+    setStockDetailCode(code);
+    setStockDetailData(null);
+    setStockDetailLoading(true);
+    try {
+      const resp = await fetch(`${API_BASE}/stock-detail/${encodeURIComponent(code)}`);
+      const data = await resp.json();
+      setStockDetailData(data.results || []);
+    } catch (_) {
+      setStockDetailData([]);
+    } finally {
+      setStockDetailLoading(false);
+    }
+  }, [stockDetailCode]);
 
   const loadGenRef = useRef(0);
 
@@ -558,10 +584,15 @@ export default function App() {
     }
     const results = [];
     for (const code of matchedCodes) {
-      const inBaskets = Object.entries(basketStockMap)
-        .filter(([key, codes]) => key !== basketKey && codes.includes(code))
+      const allBaskets = Object.entries(basketStockMap)
+        .filter(([, codes]) => codes.includes(code))
         .map(([key]) => key);
-      if (inBaskets.length > 0) results.push({ code, baskets: inBaskets });
+      const otherBaskets = allBaskets.filter(key => key !== basketKey);
+      // Only surface the panel when the stock is held elsewhere too -- but
+      // once shown, list EVERY basket holding it (including the current
+      // one), not just the "other" ones, so the chip row and the detail
+      // table below always agree on the total count.
+      if (otherBaskets.length > 0) results.push({ code, baskets: allBaskets });
     }
     return results.slice(0, 10);
   }, [searchTerm, basketStockMap, basketKey]);
@@ -811,6 +842,7 @@ export default function App() {
           onCalculateReturn={() => { window.location.href = '/wp/calculate-return' + window.location.search; }}
           onPLStatement={() => { window.location.href = '/wp/pl-statement' + window.location.search; }}
           onCorporateActions={() => { window.location.href = '/wp/corporate-actions' + window.location.search; }}
+          onCompetitorAnalysis={() => { window.location.href = '/wp/competitor-analysis' + window.location.search; }}
           readOnly={READ_ONLY}
           tenure={selectedTenure}
           latestDataDate={latestDataDate}
@@ -819,18 +851,62 @@ export default function App() {
         {crossBasketMatches.length > 0 && (
           <div className="cross-basket-panel">
             {crossBasketMatches.map(m => (
-              <div key={m.code} className="cross-basket-row">
-                <span className="cross-basket-code">{m.code}</span>
-                <span className="cross-basket-label">also in:</span>
-                {m.baskets.map(key => (
-                  <button
-                    key={key}
-                    className="btn btn-secondary cross-basket-go"
-                    onClick={() => handleBasketChange(key)}
-                  >
-                    {BASKET_OPTIONS.find(b => b.key === key)?.label || key} →
-                  </button>
-                ))}
+              <div key={m.code}>
+                <div className="cross-basket-row">
+                  <span className="cross-basket-code" style={{ cursor: 'pointer', textDecoration: 'underline dotted' }}
+                    onClick={() => toggleStockDetail(m.code)} title="Click to see weight/buy price/buy date in every basket">
+                    {m.code}
+                  </span>
+                  <span className="cross-basket-label">held in:</span>
+                  {m.baskets.map(key => key === basketKey ? (
+                    <span
+                      key={key}
+                      className="btn btn-secondary cross-basket-go"
+                      style={{ cursor: 'default', opacity: 0.75 }}
+                      title="You're currently viewing this basket"
+                    >
+                      {BASKET_OPTIONS.find(b => b.key === key)?.label || key} (current)
+                    </span>
+                  ) : (
+                    <button
+                      key={key}
+                      className="btn btn-secondary cross-basket-go"
+                      onClick={() => handleBasketChange(key)}
+                    >
+                      {BASKET_OPTIONS.find(b => b.key === key)?.label || key} →
+                    </button>
+                  ))}
+                </div>
+                {stockDetailCode === m.code && (
+                  <div style={{ padding: '0.5rem 0.75rem 0.75rem', fontSize: '0.8rem' }}>
+                    {stockDetailLoading ? (
+                      <span style={{ opacity: 0.7 }}>Loading…</span>
+                    ) : !stockDetailData?.length ? (
+                      <span style={{ opacity: 0.7 }}>Not held in any basket right now.</span>
+                    ) : (
+                      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead>
+                          <tr style={{ textAlign: 'left', opacity: 0.7, fontSize: '0.74rem' }}>
+                            <th style={{ paddingRight: '1rem' }}>Basket</th>
+                            <th style={{ paddingRight: '1rem' }}>Weight</th>
+                            <th style={{ paddingRight: '1rem' }}>Buy Price</th>
+                            <th>Buy Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {stockDetailData.map(r => (
+                            <tr key={r.basket}>
+                              <td style={{ paddingRight: '1rem', paddingTop: '0.2rem' }}>{BASKET_OPTIONS.find(b => b.key === r.basket)?.label || r.basket}</td>
+                              <td style={{ paddingRight: '1rem', paddingTop: '0.2rem' }}>{r.weight != null ? `${r.weight}%` : '—'}</td>
+                              <td style={{ paddingRight: '1rem', paddingTop: '0.2rem' }}>{r.buyPrice != null ? `₹${r.buyPrice}` : '—'}</td>
+                              <td style={{ paddingTop: '0.2rem' }}>{r.buyDate || '—'}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>

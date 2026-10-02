@@ -154,15 +154,467 @@ async def smallcase_fetch_daily(request: Request):
     return await smallcase_login.fetch_daily_values(auth_header=request.headers.get("Authorization"))
 
 
+@router.post("/api/admin/smallcase-rebalance-report/{basket}")
+async def smallcase_rebalance_report(basket: str, request: Request):
+    """Admin-only: using the saved smallcase session, fetch the password-
+    protected 'portfolio report' PDF for one basket (raw bytes + its issue
+    date, base64-encoded for JSON transport) -- this is the proxy target
+    smallcase_login.fetch_rebalance_report() calls when it's running in the
+    wrong process (see that module's own cwd-proxy docstring); the actual
+    parse-and-apply step lives in portfolio_report.py's
+    /api/fetch-portfolio-report/{basket}, which calls the same public
+    function and gets the real result whichever process ends up doing the
+    Playwright work."""
+    _require_admin(request)
+    import smallcase_login
+    return await smallcase_login.fetch_rebalance_report(basket, auth_header=request.headers.get("Authorization"))
+
+
+@router.get("/api/admin/competitor-list")
+async def competitor_list(request: Request):
+    """Read-only, open to any logged-in user (per the webportal's "non-admins
+    view everything, only admins mutate" permission model): the 8 tracked
+    competitor smallcases + their last-fetched snapshot (if any), for the
+    Competitor Analysis page. Triggering a new fetch stays admin-only, see
+    competitor_fetch_all below."""
+    import competitor_login
+    from persistence import _load_competitor_data
+    cached = _load_competitor_data()
+    out = []
+    for key, cfg in competitor_login.COMPETITOR_SMALLCASE_MAP.items():
+        entry = {"key": key, "label": cfg["label"], "manager": cfg["manager"]}
+        entry.update(cached.get(key, {}))
+        out.append(entry)
+    return {"competitors": out}
+
+
+@router.get("/api/admin/basket-profile/{basket}")
+async def basket_profile(basket: str, request: Request):
+    """Admin-only: derived profile for one of OUR OWN baskets -- sector mix
+    and market-cap mix (both weight-aggregated from current holdings) and
+    the most recent rebalance date -- so the Competitor Analysis page can
+    compare these against a competitor's equivalent numbers instead of only
+    showing the competitor's side. Sector comes from buy_price_data.json's
+    "segment" field (real NSE industry/sector name, populated whenever a
+    stock was added via a rebalance or manually edited); market-cap bucket
+    comes from rebalance_history.json's "segment" field instead -- same
+    field NAME, different MEANING in each file (Smallcap/Midcap/Largecap
+    there vs industry name here), a pre-existing inconsistency in how this
+    data was recorded, not something introduced here. Read-only, open to any
+    logged-in user."""
+    if basket not in BASKET_DISPLAY_NAMES:
+        raise HTTPException(status_code=400, detail=f"Unknown basket: {basket}")
+
+    from persistence import _load_portfolios, _load_buy_price_data, _load_rebalance_history
+    from buy_price_gains import _date_to_ts
+
+    stocks = _load_portfolios().get(basket, [])
+    bp_data = _load_buy_price_data().get(basket, {})
+    rh = _load_rebalance_history().get(basket, [])
+
+    # rebalance_history.json's "segment" field is only a real market-cap
+    # bucket (Smallcap/Midcap/Largecap/Multicap) for entries written by the
+    # smallcase-report rebalance-apply path -- confirmed live (2026-10-01)
+    # that an older bulk-import wrote the literal asset-class string
+    # "Equity" into this SAME field for a large batch of entries (e.g. Mid
+    # & Small Cap's "30 Jun 2026" rows), which isn't a cap bucket at all. A
+    # naive "most recent entry" pick silently lost ~80% of this basket's
+    # weight from the market-cap mix because of that junk value, with no
+    # indication anything was missing. Only entries with one of the 4 real
+    # labels are trusted here; anything else (or no history at all) falls
+    # back to a live-market-cap-based estimate below, rather than being
+    # dropped without explanation.
+    _VALID_CAP_LABELS = {"Largecap", "Midcap", "Smallcap", "Multicap"}
+    by_code: dict = {}
+    for e in rh:
+        if e.get("nseCode"):
+            by_code.setdefault(e["nseCode"], []).append(e)
+    latest_cap_segment = {}
+    for code, entries in by_code.items():
+        valid = [e for e in entries if e.get("segment") in _VALID_CAP_LABELS]
+        if valid:
+            latest_cap_segment[code] = max(valid, key=lambda e: _date_to_ts(e.get("date", ""))).get("segment")
+
+    sector_mix: dict = {}
+    cap_mix: dict = {}
+    needs_live_cap = []
+    for s in stocks:
+        code = s.get("nseCode")
+        alloc_pct = (s.get("allocation") or 0) * 100
+        sector = bp_data.get(code, {}).get("segment")
+        if sector:
+            sector_mix[sector] = round(sector_mix.get(sector, 0) + alloc_pct, 2)
+        cap = latest_cap_segment.get(code)
+        if cap:
+            cap_mix[cap] = round(cap_mix.get(cap, 0) + alloc_pct, 2)
+        elif code:
+            needs_live_cap.append((code, alloc_pct))
+
+    if needs_live_cap:
+        import asyncio
+        import price_engine
+        import time as _time
+        now = _time.time()
+        # 4-way concurrency here (unlike stock_metrics below, which has a
+        # frontend loading indicator) made this endpoint sit for ~60s on a
+        # basket's FIRST load with ~20-40 uncached stocks, with no loading
+        # state anywhere on the page -- confirmed live, it looked
+        # indistinguishable from stuck/broken. Bumping to 12 alone barely
+        # helped (still 59.5s measured live) because the real cost per stock
+        # isn't the semaphore, it's price_engine.fetch_live_single's own
+        # Screener->Google->NSE cascade (12-13s timeout EACH, tried in
+        # sequence on failure) -- so the fix that actually matters is
+        # covering the whole basket in one batch instead of several
+        # sequential ones. These are public scraping targets tolerating the
+        # occasional one-off basket load fine at this concurrency.
+        sem = asyncio.Semaphore(40)
+
+        async def _one(code):
+            cached = _stock_metrics_cache.get(code)
+            if cached and now - cached[0] < _STOCK_METRICS_TTL:
+                return cached[1].get("marketCapCr")
+            async with sem:
+                try:
+                    data = await price_engine.fetch_live_single(code)
+                except Exception:
+                    data = None
+                mc = (data or {}).get("marketCapCr")
+                _stock_metrics_cache[code] = (now, {"marketCapCr": mc, "peRatio": (data or {}).get("peRatio")})
+                return mc
+
+        mcaps = await asyncio.gather(*(_one(code) for code, _ in needs_live_cap))
+        for (code, alloc_pct), mc in zip(needs_live_cap, mcaps):
+            if mc is None:
+                cap_mix["Unclassified"] = round(cap_mix.get("Unclassified", 0) + alloc_pct, 2)
+            else:
+                # Approximate Cr-based thresholds (not SEBI's exact rank-based
+                # definition, which needs a full ranked universe we don't
+                # have) -- close enough to bucket correctly in the vast
+                # majority of cases, and clearly labeled as an estimate.
+                bucket = "Largecap" if mc >= 20000 else "Midcap" if mc >= 5000 else "Smallcap"
+                cap_mix[bucket] = round(cap_mix.get(bucket, 0) + alloc_pct, 2)
+
+    dates = [e.get("date") for e in rh if e.get("date")]
+    last_rebalance = max(dates, key=_date_to_ts) if dates else None
+
+    # Latest-rebalance new/increased/decreased/removed counts, for the same
+    # "what changed last time" comparison panel the competitor side already
+    # has (from its portfolio report). rebalance_history.json records one
+    # entry per stock per rebalance date with its weight AT that date
+    # (0 = wholly removed, per portfolio_report.py's _apply_parsed_entries);
+    # classified against that same stock's immediately-preceding recorded
+    # weight (first time it's seen at all = "new").
+    rebalance_summary = None
+    if last_rebalance:
+        by_date: dict = {}
+        for e in rh:
+            by_date.setdefault(e.get("date", ""), []).append(e)
+        prior_weight: dict = {}
+        for d in sorted(by_date.keys(), key=_date_to_ts):
+            if d == last_rebalance:
+                break
+            for e in by_date[d]:
+                if e.get("nseCode"):
+                    prior_weight[e["nseCode"]] = e.get("weight", 0)
+        counts = {"new": 0, "increased": 0, "decreased": 0, "removed": 0}
+        for e in by_date.get(last_rebalance, []):
+            code = e.get("nseCode")
+            if not code:
+                continue
+            new_w = e.get("weight", 0) or 0
+            old_w = prior_weight.get(code)
+            if new_w == 0:
+                counts["removed"] += 1
+            elif old_w is None:
+                counts["new"] += 1
+            elif new_w > old_w:
+                counts["increased"] += 1
+            elif new_w < old_w:
+                counts["decreased"] += 1
+        rebalance_summary = {"date": last_rebalance, **counts}
+
+    return {
+        "basket": basket, "sectorMix": sector_mix, "capMix": cap_mix,
+        "lastRebalance": last_rebalance, "stockCount": len(stocks),
+        "rebalanceSummary": rebalance_summary,
+    }
+
+
+@router.get("/api/admin/basket-rebalance-history/{basket}")
+async def basket_rebalance_history(basket: str, request: Request):
+    """Read-only, open to any logged-in user: full rebalance history for OUR
+    OWN basket, one entry per date, each with the exact per-stock new/
+    increased/decreased/removed detail (name + old/new weight) -- not just
+    the latest date, unlike basket_profile's rebalanceSummary. rebalance_
+    history.json already has every date's full per-stock snapshot, so
+    (unlike competitor data, which only ever exposes the LATEST rebalance's
+    stock-level detail via its portfolio report PDF) we can compute this for
+    every historical date."""
+    if basket not in BASKET_DISPLAY_NAMES:
+        raise HTTPException(status_code=400, detail=f"Unknown basket: {basket}")
+
+    from persistence import _load_rebalance_history
+    from buy_price_gains import _date_to_ts
+
+    rh = _load_rebalance_history().get(basket, [])
+    by_date: dict = {}
+    for e in rh:
+        by_date.setdefault(e.get("date", ""), []).append(e)
+    sorted_dates = sorted(by_date.keys(), key=_date_to_ts)
+
+    history = []
+    prior_weight: dict = {}
+    prior_name: dict = {}
+    for d in sorted_dates:
+        changes = []
+        counts = {"new": 0, "increased": 0, "decreased": 0, "removed": 0}
+        for e in by_date[d]:
+            code = e.get("nseCode")
+            if not code:
+                continue
+            name = e.get("securityName") or code
+            new_w = e.get("weight", 0) or 0
+            old_w = prior_weight.get(code)
+            if new_w == 0:
+                status = "removed"
+            elif old_w is None:
+                status = "new"
+            elif new_w > old_w:
+                status = "increased"
+            elif new_w < old_w:
+                status = "decreased"
+            else:
+                status = "unchanged"
+            if status != "unchanged":
+                counts[status] += 1
+                changes.append({
+                    "nseCode": code, "name": name,
+                    "oldWeight": old_w, "newWeight": new_w, "status": status,
+                })
+        if changes:
+            history.append({"date": d, "counts": counts, "changes": changes})
+        for e in by_date[d]:
+            if e.get("nseCode"):
+                prior_weight[e["nseCode"]] = e.get("weight", 0)
+                prior_name[e["nseCode"]] = e.get("securityName")
+
+    history.sort(key=lambda h: _date_to_ts(h["date"]), reverse=True)
+    return {"basket": basket, "history": history}
+
+
+# Small server-side cache for arbitrary (possibly non-basket) NSE codes'
+# market cap + P/E -- the Competitor Analysis table needs these for stocks
+# that aren't in any of our own baskets, which price_engine's own
+# fetch_live_batch() cache doesn't cover (that one's scoped to basket
+# holdings only). A 30-minute TTL keeps repeat page loads/competitor
+# switches cheap without hitting Screener.in/Google Finance/NSE on every
+# request for the same ~40 stocks.
+_stock_metrics_cache: dict = {}
+_STOCK_METRICS_TTL = 1800
+
+
+@router.post("/api/admin/stock-metrics")
+async def stock_metrics(body: dict, request: Request):
+    """Read-only, open to any logged-in user: real Market Cap (Cr) + P/E for
+    a batch of NSE codes, used by the Competitor Analysis stock-comparison
+    table. Never fabricated -- a code that fails every source in price_
+    engine's cascade is just omitted, and the frontend shows that as "N/A"."""
+    import asyncio
+    import time
+    import price_engine
+
+    codes = list({c.strip().upper() for c in (body.get("codes") or []) if c})
+    now = time.time()
+    result = {}
+    to_fetch = []
+    for code in codes:
+        cached = _stock_metrics_cache.get(code)
+        if cached and now - cached[0] < _STOCK_METRICS_TTL:
+            result[code] = cached[1]
+        else:
+            to_fetch.append(code)
+
+    sem = asyncio.Semaphore(40)
+
+    async def _one(code):
+        async with sem:
+            try:
+                data = await price_engine.fetch_live_single(code)
+            except Exception:
+                data = None
+            metrics = {"marketCapCr": (data or {}).get("marketCapCr"), "peRatio": (data or {}).get("peRatio")}
+            _stock_metrics_cache[code] = (now, metrics)
+            result[code] = metrics
+
+    if to_fetch:
+        await asyncio.gather(*(_one(c) for c in to_fetch))
+
+    return {"metrics": result}
+
+
+@router.post("/api/admin/stock-ohlc-on-date")
+async def stock_ohlc_on_date(body: dict, request: Request):
+    """Read-only, open to any logged-in user: real OHLC for a batch of
+    (nseCode, date) pairs -- used by Stock Timing Insights to show what
+    price we vs. a competitor actually bought/sold a matched stock at.
+    `date` is YYYY-MM-DD; the backing fetch (price_engine.fetch_ohlc_on_date)
+    resolves to the nearest trading day on/after it when that exact date is
+    a weekend/holiday, never fabricated -- a pair with no data just comes
+    back omitted."""
+    import asyncio
+    import price_engine
+
+    pairs = body.get("pairs") or []
+    seen = {}
+    for p in pairs:
+        code, date_str = (p.get("nseCode") or "").strip().upper(), (p.get("date") or "").strip()
+        if code and date_str:
+            seen[(code, date_str)] = True
+
+    sem = asyncio.Semaphore(6)
+    result = {}
+
+    async def _one(code, date_str):
+        async with sem:
+            try:
+                data = await price_engine.fetch_ohlc_on_date(code, date_str)
+            except Exception:
+                data = None
+            if data:
+                result[f"{code}|{date_str}"] = data
+
+    await asyncio.gather(*(_one(code, date_str) for code, date_str in seen))
+    return {"ohlc": result}
+
+
+@router.post("/api/admin/competitor-login/start")
+async def competitor_login_start(body: dict, request: Request):
+    """Admin-only: begin login to the SEPARATE competitor smallcase account
+    (holds real subscriptions to the 8 tracked competitor smallcases) with a
+    phone number -- mirrors smallcase-login/start but against its own
+    independent session (competitor_login.py)."""
+    _require_admin(request)
+    phone = (body.get("phone") or "").strip()
+    if not phone:
+        raise HTTPException(status_code=400, detail="phone is required")
+    import competitor_login
+    return await competitor_login.start_login(phone, auth_header=request.headers.get("Authorization"))
+
+
+@router.post("/api/admin/competitor-login/verify")
+async def competitor_login_verify(body: dict, request: Request):
+    """Admin-only: complete the competitor-account smallcase login with the OTP code."""
+    _require_admin(request)
+    otp = (body.get("otp") or "").strip()
+    if not otp:
+        raise HTTPException(status_code=400, detail="otp is required")
+    import competitor_login
+    return await competitor_login.verify_otp(otp, auth_header=request.headers.get("Authorization"))
+
+
+@router.get("/api/admin/competitor-login/status")
+async def competitor_login_check(request: Request):
+    """Admin-only: is there currently a valid logged-in session on the competitor account?"""
+    _require_admin(request)
+    import competitor_login
+    return {"logged_in": await competitor_login.login_status(auth_header=request.headers.get("Authorization"))}
+
+
+@router.post("/api/admin/competitor-login/close-browser")
+async def competitor_login_close(request: Request):
+    """Admin-only: release our hold on the competitor-account browser profile."""
+    _require_admin(request)
+    import competitor_login
+    return await competitor_login.close_browser(auth_header=request.headers.get("Authorization"))
+
+
+@router.post("/api/admin/competitor-fetch-snapshot/{key}")
+async def competitor_fetch_snapshot(key: str, request: Request):
+    """Admin-only: proxy target for competitor_login.fetch_competitor_snapshot()
+    when running in the wrong process (see smallcase_login.py's cwd-proxy
+    docstring for why this split exists)."""
+    _require_admin(request)
+    import competitor_login
+    return await competitor_login.fetch_competitor_snapshot(key, auth_header=request.headers.get("Authorization"))
+
+
+@router.post("/api/admin/competitor-fetch-all")
+async def competitor_fetch_all(request: Request):
+    """Admin-only: using the saved competitor-account session, scrape every
+    tracked competitor smallcase's real /constituents page in one server-
+    side run and persist the results -- this is what the Competitor
+    Analysis page's "Fetch Competitor Data" button calls. No bookmarklet,
+    no per-page manual visiting."""
+    _require_admin(request)
+    import competitor_login
+    import price_engine
+    from persistence import _load_competitor_data, _save_competitor_data
+    from datetime import datetime, timezone
+
+    outcome = await competitor_login.fetch_all_competitors(auth_header=request.headers.get("Authorization"))
+    if not outcome.get("ok"):
+        raise HTTPException(status_code=502, detail=outcome.get("error", "Could not fetch competitor data."))
+
+    nse_symbols = price_engine._nse_symbols_cache
+    if not nse_symbols:
+        nse_symbols = await price_engine._fetch_nse_symbols()
+
+    cached = _load_competitor_data()
+    now_str = datetime.now(timezone.utc).strftime("%d %b %Y %H:%M UTC")
+    summary = []
+    for key, snap in outcome.get("results", {}).items():
+        cfg = competitor_login.COMPETITOR_SMALLCASE_MAP[key]
+        if not snap.get("ok"):
+            summary.append({"key": key, "label": cfg["label"], "ok": False, "error": snap.get("error")})
+            continue
+        stocks = []
+        for s in (snap.get("stocks") or []):
+            name = s.get("name", "")
+            nse = price_engine._resolve_nse(name, [], nse_symbols)
+            stocks.append({"name": name, "weight": s.get("weight"), "nseCode": nse, "sector": s.get("sector"), "capSegment": s.get("capSegment")})
+
+        # Full since-inception rebalance history (from the "Download rebalance
+        # timeline" .xlsx, see competitor_login.diff_historical_constituents) --
+        # resolve each change's nseCode the same way `stocks` above does, so
+        # the frontend's timing-insights nseCode matching works on this too.
+        full_history = competitor_login.diff_historical_constituents(snap.get("historicalConstituents") or [])
+        for h in full_history:
+            for c in h["changes"]:
+                c["nseCode"] = price_engine._resolve_nse(c["name"], [], nse_symbols)
+
+        cached[key] = {
+            "key": key, "label": cfg["label"], "manager": cfg["manager"],
+            "stocks": stocks,
+            "cagr": snap.get("cagr"),
+            "rebalanceTimeline": snap.get("rebalanceTimeline"),
+            "fullRebalanceHistory": full_history,
+            "marketCapMix": snap.get("marketCapMix"),
+            "performanceSeries": snap.get("performanceSeries"),
+            "launchDate": snap.get("launchDate"),
+            "latestRebalanceDetail": snap.get("latestRebalanceDetail"),
+            "lastFetched": now_str,
+        }
+        summary.append({"key": key, "label": cfg["label"], "ok": True, "stockCount": len(stocks)})
+    _save_competitor_data(cached)
+    return {"ok": True, "results": summary}
+
+
 @router.get("/api/admin/smallcase-bookmarklet")
 async def smallcase_bookmarklet(request: Request):
-    """Admin-only: generates the actual javascript: bookmarklet URI from
-    smallcase-bookmarklet-source.js, filled in with THIS server's own origin
-    (so it posts back to wherever it was fetched from -- local or prod, no
-    separate build needed for either) and the shared ingest key."""
+    """Admin-only: generates ONE combined bookmarklet (dashboard-
+    bookmarklet-source.js) that does both jobs in a single click -- fetches
+    our own 7 baskets' daily values, AND (if the current page is one of the
+    8 tracked competitor smallcases) scrapes that page's stocks/rebalance/
+    performance sections. One bookmark to drag, not two -- it works from
+    whichever smallcase account is logged into the current tab, since both
+    steps independently no-op if their data isn't reachable from that
+    session. Endpoint name kept as /smallcase-bookmarklet (not renamed to
+    /dashboard-bookmarklet) so an already-dragged bookmark's ingest URL
+    keeps working after this change -- only the SOURCE file it's generated
+    from changed, not this route."""
     _require_admin(request)
     from pathlib import Path
-    src_path = Path(__file__).parent.parent / "frontend" / "public" / "smallcase-bookmarklet-source.js"
+    src_path = Path(__file__).parent.parent / "frontend" / "public" / "dashboard-bookmarklet-source.js"
     src = src_path.read_text(encoding="utf-8")
     # Derive the ingest URL from THIS request's own path rather than a fixed
     # prefix -- local dev hits this directly on :8001 as /api/admin/..., prod
@@ -178,12 +630,15 @@ async def smallcase_bookmarklet(request: Request):
 
 @router.post("/api/admin/smallcase-ingest")
 async def smallcase_ingest(request: Request):
-    """Alternative to the server-side Playwright login above: a browser
-    bookmarklet run directly on an already-logged-in smallcase.com tab (see
-    /static/smallcase-bookmarklet.js) fetches each basket's raw performance
-    data itself (using the admin's own real smallcase session -- no server
-    browser automation, no persisted profile, works regardless of whether
-    Chromium is even installed on this server) and posts it here.
+    """Receives the combined bookmarklet's payload: {"baskets": {...}} (our
+    own 7 baskets' raw performance points, merged into historical_index.json
+    exactly as before) and/or {"competitor": {...}} (one competitor
+    smallcase's page -- scid/cagr/rebalanceTimeline/stocks scraped from its
+    real rendered /constituents page, merged into competitor_data.json).
+    Either key may be absent depending on which page the bookmarklet ran on
+    (competitors each need their own click -- see dashboard-bookmarklet-
+    source.js's docstring for why a one-click-fetches-all-8 design isn't
+    possible here).
 
     Authenticated by a shared key, NOT the normal admin JWT -- the
     bookmarklet runs on smallcase.com's origin and has no access to this
@@ -193,8 +648,51 @@ async def smallcase_ingest(request: Request):
     if key != _SMALLCASE_INGEST_KEY:
         raise HTTPException(status_code=403, detail="Invalid ingest key.")
     payload = await request.json()
-    import smallcase_login
-    return smallcase_login.merge_ingested_payload(payload)
+    result = {"ok": True}
+
+    if payload.get("baskets"):
+        import smallcase_login
+        result["baskets"] = smallcase_login.merge_ingested_payload(payload["baskets"]).get("results", {})
+
+    comp = payload.get("competitor")
+    if comp:
+        scid = (comp.get("scid") or "").strip()
+        import competitor_login
+        import price_engine
+        from persistence import _load_competitor_data, _save_competitor_data
+        from datetime import datetime, timezone
+
+        match = next(((k, cfg) for k, cfg in competitor_login.COMPETITOR_SMALLCASE_MAP.items() if cfg["scid"] == scid), None)
+        if not match:
+            raise HTTPException(status_code=400, detail=f"Unrecognized competitor scid: {scid}")
+        comp_key, cfg = match
+
+        nse_symbols = price_engine._nse_symbols_cache
+        if not nse_symbols:
+            nse_symbols = await price_engine._fetch_nse_symbols()
+
+        stocks = []
+        for s in (comp.get("stocks") or []):
+            name = s.get("name", "")
+            nse = price_engine._resolve_nse(name, [], nse_symbols)
+            stocks.append({"name": name, "weight": s.get("weight"), "nseCode": nse, "sector": s.get("sector"), "capSegment": s.get("capSegment")})
+
+        cached = _load_competitor_data()
+        entry = {
+            "key": comp_key, "label": cfg["label"], "manager": cfg["manager"],
+            "stocks": stocks,
+            "cagr": comp.get("cagr"),
+            "rebalanceTimeline": comp.get("rebalanceTimeline"),
+            "marketCapMix": comp.get("marketCapMix"),
+            "launchDate": comp.get("launchDate"),
+            "latestRebalanceDetail": comp.get("latestRebalanceDetail"),
+            "lastFetched": datetime.now(timezone.utc).strftime("%d %b %Y %H:%M UTC"),
+        }
+        cached[comp_key] = entry
+        _save_competitor_data(cached)
+        result["competitor"] = {"label": cfg["label"], "stockCount": len(stocks)}
+
+    return result
 
 
 @router.post("/api/import-excel-history")
@@ -657,5 +1155,24 @@ async def rebuild_sold_endpoint(basket: str, background_tasks: BackgroundTasks, 
     background_tasks.add_task(_recalc_basket_buy_prices, basket)
     background_tasks.add_task(_refresh_gains_file)
     return {"ok": True, "basket": BASKET_DISPLAY_NAMES[basket], "recordCount": len(new_sold)}
+
+
+@router.post("/api/admin/rebalance-insights")
+async def rebalance_insights(body: dict):
+    """Read-only, open to any logged-in user (same as the rest of Competitor
+    Analysis's data endpoints): AI-generated commentary on where OUR basket
+    could have done better than one competitor, from a condensed summary the
+    frontend already computed (recent rebalance changes, sector/cap mix,
+    returns, timing-insight price matches). See rebalance_insights.py for
+    the actual prompt and the response-caching that keeps this from calling
+    OpenAI more than once per genuinely new rebalance."""
+    import rebalance_insights
+    basket = body.get("basket") or ""
+    competitor_key = body.get("competitorKey") or ""
+    summary = body.get("summary") or {}
+    if not basket or not competitor_key:
+        raise HTTPException(status_code=400, detail="basket and competitorKey are required")
+    result = await rebalance_insights.generate_insights(basket, competitor_key, summary)
+    return result
 
 

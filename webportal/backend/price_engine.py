@@ -15,7 +15,7 @@ import os
 import re
 import time
 import urllib.parse
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import httpx
@@ -24,6 +24,7 @@ from pypdf import PdfReader
 
 from config import YF_HEADERS, YF_SYMBOL_MAP, LIVE_TTL
 from persistence import BASKET_DISPLAY_NAMES, _all_nse_codes, _load_portfolios
+from _shared_http import SHARED_SSL_CONTEXT
 
 router = APIRouter()
 
@@ -34,7 +35,8 @@ async def _refresh_yf_cookies():
     """Visit Yahoo Finance homepage to get fresh session cookies. Called at startup + on 401."""
     global _YF_COOKIES
     try:
-        async with httpx.AsyncClient(follow_redirects=True, headers=YF_HEADERS, timeout=10.0) as c:
+        async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,follow_redirects=True, headers=YF_HEADERS, timeout=10.0) as c:
             r = await c.get("https://finance.yahoo.com/")
             _YF_COOKIES = dict(r.cookies)
             print(f"[YF] Session cookies refreshed ({len(_YF_COOKIES)} cookies)")
@@ -206,6 +208,78 @@ async def _fetch_tenure_bars(code: str, client: httpx.AsyncClient) -> list:
         bars = await _fetch_tenure_bars_for_symbol(f"{code}-SM.NS", client)
     return bars
 
+_ohlc_date_cache: dict = {}  # (code, date_str) -> {"time": ts, "data": dict|None}
+_OHLC_DATE_TTL = 86400 * 7  # a past day's OHLC never changes -- cache a week
+
+
+async def _fetch_ohlc_on_date_for_symbol(sym: str, date_str: str, client: httpx.AsyncClient) -> Optional[dict]:
+    target = datetime.strptime(date_str, "%Y-%m-%d")
+    period1 = int((target - timedelta(days=7)).timestamp())
+    period2 = int((target + timedelta(days=7)).timestamp())
+    url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(sym)}"
+           f"?interval=1d&period1={period1}&period2={period2}")
+    try:
+        resp = await client.get(url, timeout=20.0)
+        if resp.status_code != 200:
+            return None
+        r = (resp.json().get("chart") or {}).get("result") or []
+        if not r:
+            return None
+        r = r[0]
+        ts = r.get("timestamp") or []
+        q = ((r.get("indicators") or {}).get("quote") or [{}])[0]
+        opens, highs, lows, closes = q.get("open") or [], q.get("high") or [], q.get("low") or [], q.get("close") or []
+        target_date = target.date()
+        best = None
+        for i, t in enumerate(ts):
+            if i >= len(opens) or opens[i] is None:
+                continue
+            bar_date = datetime.utcfromtimestamp(t).date()
+            if bar_date >= target_date and (best is None or bar_date < best[0]):
+                best = (bar_date, {"open": opens[i], "high": highs[i] if i < len(highs) else None,
+                                    "low": lows[i] if i < len(lows) else None,
+                                    "close": closes[i] if i < len(closes) else None})
+        if best is None:
+            return None
+        bar_date, ohlc = best
+        ohlc["date"] = bar_date.isoformat()
+        ohlc["requestedDate"] = date_str
+        return ohlc
+    except Exception:
+        return None
+
+
+async def fetch_ohlc_on_date(code: str, date_str: str) -> Optional[dict]:
+    """OHLC for `code` on the nearest trading day on/after `date_str`
+    (YYYY-MM-DD) -- handles the addition/removal date itself falling on a
+    weekend/holiday, same as every other date-driven lookup in this app.
+    `requestedDate` is kept alongside the real `date` so callers can show
+    "priced as of" when they differ. Cached indefinitely (a past day's OHLC
+    is immutable) since this backs the Stock Timing Insights UI, which can
+    request the same handful of (code, date) pairs repeatedly."""
+    cache_key = (code, date_str)
+    cached = _ohlc_date_cache.get(cache_key)
+    now = time.time()
+    if cached and (now - cached["time"]) < _OHLC_DATE_TTL:
+        return cached["data"]
+
+    if not _YF_COOKIES:
+        await _refresh_yf_cookies()
+    sym = YF_SYMBOL_MAP.get(code, f"{code}.NS")
+    async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,
+        follow_redirects=True,
+        headers={**YF_HEADERS, "Referer": "https://finance.yahoo.com/", "Origin": "https://finance.yahoo.com"},
+        cookies=_YF_COOKIES,
+    ) as client:
+        data = await _fetch_ohlc_on_date_for_symbol(sym, date_str, client)
+        if data is None and sym.endswith(".NS") and code not in YF_SYMBOL_MAP:
+            data = await _fetch_ohlc_on_date_for_symbol(f"{code}-SM.NS", date_str, client)
+
+    _ohlc_date_cache[cache_key] = {"time": now, "data": data}
+    return data
+
+
 async def fetch_performance_batch(codes: list) -> dict:
     """{code: {tenure: pct|None}} for every code, using a 12h per-code cache."""
     now = time.time()
@@ -232,6 +306,7 @@ async def fetch_performance_batch(codes: list) -> dict:
             return code, _compute_tenure_performance(bars)
 
     async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,
         follow_redirects=True,
         headers={**YF_HEADERS, "Referer": "https://finance.yahoo.com/", "Origin": "https://finance.yahoo.com"},
         cookies=_YF_COOKIES,
@@ -313,6 +388,7 @@ async def _fetch_yahoo_charts(codes: list) -> dict:
         await _refresh_yf_cookies()
 
     async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,
         follow_redirects=True,
         headers={**YF_HEADERS, "Referer": "https://finance.yahoo.com/", "Origin": "https://finance.yahoo.com"},
         cookies=_YF_COOKIES,
@@ -328,6 +404,7 @@ async def _fetch_yahoo_charts(codes: list) -> dict:
     if not results_check and primary_syms:
         await _refresh_yf_cookies()
         async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,
             follow_redirects=True,
             headers={**YF_HEADERS, "Referer": "https://finance.yahoo.com/", "Origin": "https://finance.yahoo.com"},
             cookies=_YF_COOKIES,
@@ -354,7 +431,8 @@ async def _fetch_yahoo_charts(codes: list) -> dict:
     # Second pass: retry as NSE SME (CODE-SM.NS) for stocks that got no data
     if retry_codes:
         sm_map = {f"{c}-SM.NS": c for c in retry_codes}
-        async with httpx.AsyncClient(follow_redirects=True, headers=YF_HEADERS, timeout=30.0) as client:
+        async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,follow_redirects=True, headers=YF_HEADERS, timeout=30.0) as client:
             sm_pairs = await asyncio.gather(
                 *[_one(sym, client) for sym in sm_map],
                 return_exceptions=True,
@@ -422,6 +500,7 @@ async def _get_via_proxies(target: str, timeout: float = 13.0) -> Optional[str]:
     # ── Primary: codetabs ──────────────────────────────────────────────
     try:
         async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,
             follow_redirects=True, headers=_PROXY_HEADERS,
             timeout=httpx.Timeout(timeout, connect=timeout),
         ) as client:
@@ -442,6 +521,7 @@ async def _get_via_proxies(target: str, timeout: float = 13.0) -> Optional[str]:
     for url, t in fallbacks:
         try:
             async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,
                 follow_redirects=True, headers=_PROXY_HEADERS,
                 timeout=httpx.Timeout(t, connect=t),
             ) as client:
@@ -655,6 +735,7 @@ async def _fetch_yahoo_mc_pe(code: str) -> tuple:
             "?modules=summaryDetail"
         )
         async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,
             follow_redirects=True, headers=YF_HEADERS, timeout=10.0
         ) as client:
             resp = await client.get(url)
@@ -677,6 +758,7 @@ async def _try_nse_mc(code: str) -> Optional[int]:
     """Compute Market Cap (Cr) from NSE India: lastPrice × issuedSize / 1e7."""
     try:
         async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,
             follow_redirects=True, timeout=15.0,
             headers={"User-Agent": _NSE_HEADERS["User-Agent"],
                      "Accept": "text/html,application/xhtml+xml"},
@@ -754,6 +836,7 @@ async def _fetch_mc_pe_one(code: str, sem: asyncio.Semaphore) -> tuple:
         # ── 2. Google Finance ─────────────────────────────────────────────
         try:
             async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,
                 follow_redirects=True, headers=_GF_HEADERS, timeout=12.0
             ) as client:
                 resp = await client.get(
@@ -924,7 +1007,8 @@ async def fetch_live_single(nse_code: str, skip_mc_pe: bool = False) -> Optional
     code   = nse_code.strip().upper()
     sym    = f"{code}.NS"
 
-    async with httpx.AsyncClient(follow_redirects=True, headers=YF_HEADERS, timeout=12.0) as yf_client:
+    async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,follow_redirects=True, headers=YF_HEADERS, timeout=12.0) as yf_client:
         chart_resp = await asyncio.gather(
             yf_client.get(
                 "https://query1.finance.yahoo.com/v8/finance/chart/"
@@ -1015,6 +1099,7 @@ async def _fetch_nse_symbols() -> list:
     url = "https://archives.nseindia.com/content/equities/EQUITY_L.csv"
     try:
         async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,
             follow_redirects=True, timeout=30.0,
             headers={"User-Agent": YF_HEADERS["User-Agent"], "Accept": "text/csv,*/*"},
         ) as client:

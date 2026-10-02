@@ -17163,6 +17163,55 @@
       "segment": "Equity",
       "weight": 5,
       "date": "30 Jun 2026"
+    },
+    {
+      "date": "22 Sep 2026",
+      "nseCode": "MANINDS",
+      "securityName": "Man Industries (India) Ltd",
+      "segment": "Smallcap",
+      "weight": 3
+    },
+    {
+      "date": "22 Sep 2026",
+      "nseCode": "JYOTICNC",
+      "securityName": "Jyoti CNC Automation Ltd",
+      "segment": "Smallcap",
+      "weight": 2
+    },
+    {
+      "date": "22 Sep 2026",
+      "nseCode": "QPOWER",
+      "securityName": "Quality Power Electrical Equipments Ltd",
+      "segment": "Smallcap",
+      "weight": 5
+    },
+    {
+      "date": "22 Sep 2026",
+      "nseCode": "PRIVISCL",
+      "securityName": "Privi Speciality Chemicals Ltd",
+      "segment": "Smallcap",
+      "weight": 0
+    },
+    {
+      "date": "22 Sep 2026",
+      "nseCode": "ASTRAMICRO",
+      "securityName": "Astra Microwave Products Ltd",
+      "segment": "Smallcap",
+      "weight": 3
+    },
+    {
+      "date": "22 Sep 2026",
+      "nseCode": "HFCL",
+      "securityName": "HFCL Ltd",
+      "segment": "Smallcap",
+      "weight": 2
+    },
+    {
+      "date": "22 Sep 2026",
+      "nseCode": "IDEAFORGE",
+      "securityName": "ideaForge Technology Ltd",
+      "segment": "Smallcap",
+      "weight": 1.5
     }
   ],
   "Green_Energy": [
@@ -25502,6 +25551,41 @@
       "segment": "Equity",
       "weight": 5,
       "date": "13 May 2026"
+    },
+    {
+      "date": "16 Sep 2026",
+      "nseCode": "HBLENGINE",
+      "securityName": "HBL Engineering Ltd",
+      "segment": "Smallcap",
+      "weight": 7.0
+    },
+    {
+      "date": "16 Sep 2026",
+      "nseCode": "DHOOTTRANS",
+      "securityName": "Dhoot Transmission Ltd",
+      "segment": "Smallcap",
+      "weight": 5.0
+    },
+    {
+      "date": "16 Sep 2026",
+      "nseCode": "GANECOS",
+      "securityName": "Ganesha Ecosphere Ltd",
+      "segment": "Smallcap",
+      "weight": 0
+    },
+    {
+      "date": "16 Sep 2026",
+      "nseCode": "SKIPPER",
+      "securityName": "Skipper Ltd",
+      "segment": "Smallcap",
+      "weight": 0
+    },
+    {
+      "date": "16 Sep 2026",
+      "nseCode": "BORORENEW",
+      "securityName": "Borosil Renewables Ltd",
+      "segment": "Smallcap",
+      "weight": 3.0
     }
   ],
   "Techstack": [
@@ -32191,6 +32275,34 @@
       "segment": "Equity",
       "weight": 6,
       "date": "08 Jun 2026"
+    },
+    {
+      "date": "22 Sep 2026",
+      "nseCode": "MANINDS",
+      "securityName": "Man Industries (India) Ltd",
+      "segment": "Smallcap",
+      "weight": 4.0
+    },
+    {
+      "date": "22 Sep 2026",
+      "nseCode": "SSWL",
+      "securityName": "Steel Strips Wheels Ltd",
+      "segment": "Smallcap",
+      "weight": 3.0
+    },
+    {
+      "date": "22 Sep 2026",
+      "nseCode": "HFCL",
+      "securityName": "HFCL Ltd",
+      "segment": "Smallcap",
+      "weight": 0
+    },
+    {
+      "date": "22 Sep 2026",
+      "nseCode": "OMNI",
+      "securityName": "Omnitech Engineering Ltd",
+      "segment": "Smallcap",
+      "weight": 0
     }
   ],
   "Consumer_Trends": [
@@ -36148,6 +36260,34 @@
       "segment": "Equity",
       "weight": 4,
       "date": "30 Jun 2026"
+    },
+    {
+      "date": "24 Sep 2026",
+      "nseCode": "EMIL",
+      "securityName": "Electronics Mart India Ltd",
+      "segment": "Smallcap",
+      "weight": 5.0
+    },
+    {
+      "date": "24 Sep 2026",
+      "nseCode": "XPROINDIA",
+      "securityName": "Xpro India Ltd",
+      "segment": "Smallcap",
+      "weight": 3.0
+    },
+    {
+      "date": "24 Sep 2026",
+      "nseCode": "GOKEX",
+      "securityName": "Gokaldas Exports Limited",
+      "segment": "Smallcap",
+      "weight": 0
+    },
+    {
+      "date": "24 Sep 2026",
+      "nseCode": "ICEMAKE",
+      "securityName": "Ice Make Refrigeration Ltd",
+      "segment": "Smallcap",
+      "weight": 0
     }
   ],
   "Make_in_India": [
@@ -45546,6 +45686,20 @@
       "segment": "Equity",
       "weight": 5,
       "date": "20 May 2026"
+    },
+    {
+      "date": "17 Sep 2026",
+      "nseCode": "TEMPSENS",
+      "securityName": "Tempsens Instruments (India) Limited",
+      "segment": "Smallcap",
+      "weight": 3.0
+    },
+    {
+      "date": "17 Sep 2026",
+      "nseCode": "OLAELEC",
+      "securityName": "Ola Electric Mobility Ltd",
+      "segment": "Smallcap",
+      "weight": 0
     }
   ]
 }

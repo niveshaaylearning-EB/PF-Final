@@ -4,6 +4,7 @@ fetch_live_single(), and cost-basis math to buy_price_gains.py."""
 import re
 
 import httpx
+from _shared_http import SHARED_SSL_CONTEXT
 from fastapi import APIRouter, HTTPException
 
 from buy_price_gains import (
@@ -90,6 +91,7 @@ async def _fetch_sector(code: str) -> str | None:
     # 1. NSE India ──────────────────────────────────────────────────────────────
     try:
         async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,
             follow_redirects=True, timeout=15.0,
             headers={"User-Agent": _NSE_HEADERS["User-Agent"],
                      "Accept": "text/html,application/xhtml+xml"},
@@ -114,7 +116,8 @@ async def _fetch_sector(code: str) -> str | None:
     try:
         url = (f"https://query1.finance.yahoo.com/v11/finance/quoteSummary/{code}.NS"
                "?modules=assetProfile")
-        async with httpx.AsyncClient(timeout=10.0,
+        async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,timeout=10.0,
                                      headers={"User-Agent": "Mozilla/5.0"}) as client:
             resp = await client.get(url)
         if resp.status_code == 200:

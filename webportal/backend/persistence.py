@@ -34,6 +34,8 @@ _UNDO_FILE        = Path(__file__).parent / "undo_snapshots.json"
 _ROLLBACK_FILE    = Path(__file__).parent / "rollback_points.json"
 _MAX_ROLLBACK_PTS = 5
 _ACTIVITY_LOG_FILE = Path(__file__).parent / "activity_log.json"
+_PENDING_REBALANCE_FILE = Path(__file__).parent / "pending_rebalance_reports.json"
+_COMPETITOR_DATA_FILE = Path(__file__).parent / "competitor_data.json"
 
 # ── In-memory JSON cache — files are read once then served from RAM ───────────
 # Invalidated immediately on every write so stale data is never served --
@@ -76,6 +78,37 @@ def _require_admin(request: Request) -> str:
     if not email or not is_admin_email(email):
         raise HTTPException(status_code=403, detail="Admin access required.")
     return email
+
+def _load_pending_rebalance_reports() -> dict:
+    """Keyed by basket -- what the daily background check found waiting for
+    admin review (preview data only, nothing applied). Not pushed to GitHub;
+    purely a local notify-only scratch file, cleared once confirmed or
+    dismissed."""
+    if _PENDING_REBALANCE_FILE.exists():
+        try:
+            return json.loads(_PENDING_REBALANCE_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+    return {}
+
+def _save_pending_rebalance_reports(data: dict) -> None:
+    _PENDING_REBALANCE_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+
+def _load_competitor_data() -> dict:
+    """Keyed by our internal competitor key (competitor_login.py's
+    COMPETITOR_SMALLCASE_MAP) -- last-fetched snapshot per competitor smallcase
+    (stocks & weights, performance text, rebalance timeline text). Not pushed
+    to GitHub -- purely a local cache, refreshed by the daily loop or a manual
+    fetch."""
+    if _COMPETITOR_DATA_FILE.exists():
+        try:
+            return json.loads(_COMPETITOR_DATA_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+    return {}
+
+def _save_competitor_data(data: dict) -> None:
+    _COMPETITOR_DATA_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
 def _log_activity(action: str, user: str, details: dict):
     from datetime import datetime, timezone
@@ -148,9 +181,19 @@ def _reconcile_liquidcase(data: dict) -> dict:
     portfolio -- every stock in it is intentionally seeded at allocation: 0
     (see App.jsx's isIPO equal-weight display), so this rule would otherwise
     see ~0% "allocated" on every save and dump ~100% into a LIQUIDCASE row
-    that has no business being there."""
+    that has no business being there.
+
+    Also skips every "*_sold" key -- confirmed live (2026-09-30) this
+    function otherwise treats a basket's SOLD-STOCK LEDGER as if it were a
+    holdings list too: those rows have no "allocation" field at all, so
+    `total` comes out 0 and it silently appends a bogus
+    {"nseCode": "LIQUIDCASE", "allocation": 1.0, ...} row into the sold
+    ledger the very first time anything writes a non-empty one. Any basket's
+    first rebalance-apply since this function existed would have hit this
+    (not specific to one caller) -- it just hadn't happened yet for any
+    basket until this was caught."""
     for basket_key, holdings in data.items():
-        if basket_key.startswith("IPO_Recommendations"):
+        if basket_key.startswith("IPO_Recommendations") or basket_key.endswith("_sold"):
             continue
         if not isinstance(holdings, list) or not holdings:
             continue

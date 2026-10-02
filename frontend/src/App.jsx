@@ -41,6 +41,7 @@ const AdminSimulators     = lazy(() => import('./pages/AdminSimulators'));
 const ResultCalendar      = lazy(() => import('./pages/ResultCalendar'));
 const RebalanceAlertPage  = lazy(() => import('./pages/RebalanceAlertPage'));
 const ApprovedEmailsPage  = lazy(() => import('./pages/ApprovedEmailsPage'));
+const ResultUpdatesPage   = lazy(() => import('./pages/ResultUpdatesPage'));
 
 function PageLoader() {
   return (
@@ -153,6 +154,9 @@ function App() {
             } />
             <Route path="/approved-emails" element={
               <ProtectedRoute adminOnly><ApprovedEmailsPage /></ProtectedRoute>
+            } />
+            <Route path="/result-updates" element={
+              <ProtectedRoute adminOnly><ResultUpdatesPage /></ProtectedRoute>
             } />
             <Route path="/" element={
               <ProtectedRoute><HomePage /></ProtectedRoute>

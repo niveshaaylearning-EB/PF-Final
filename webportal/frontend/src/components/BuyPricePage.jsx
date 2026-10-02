@@ -5,6 +5,7 @@ import { fetchBasket, fetchLiveData, saveBasket } from '../api/client.js';
 import RollbackButtons from './RollbackButtons.jsx';
 import ColumnFilter from './ColumnFilter.jsx';
 import RebalanceUploadModal from './RebalanceUploadModal.jsx';
+import PortfolioReportPreviewModal from './PortfolioReportPreviewModal.jsx';
 
 const _FOUNDER_FALLBACK = new Set(['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com', 'nakshatra.rathi@niveshaay.com']); // see frontend/src/utils/auth.js for why this exists
 const _getAdminState = () => {
@@ -131,7 +132,33 @@ export default function BuyPricePage() {
   const [uploadingRebalance, setUploadingRebalance] = useState(false);
   const [lastRebalanceFile, setLastRebalanceFile]   = useState(null);
   const rebalanceFileRef = useRef(null);
+  const [fetchingReport, setFetchingReport] = useState(false);
+  const [reportResult,   setReportResult]   = useState(null);
+  const [reportPreview,  setReportPreview]  = useState(null); // preview awaiting confirm
+  const [confirmingReport, setConfirmingReport] = useState(false);
+  const [pendingReports, setPendingReports] = useState([]); // from the daily background check, awaiting review
   const { isAdmin: userIsAdmin } = _getAdminState();
+
+  const refreshPendingReports = () => {
+    if (!userIsAdmin) return;
+    const token = getAuthToken();
+    fetch(`${API_BASE}/pending-rebalance-reports`, { headers: token ? { Authorization: `Bearer ${token}` } : {} })
+      .then(r => r.json())
+      .then(d => setPendingReports(d.pending || []))
+      .catch(() => {});
+  };
+  useEffect(() => { refreshPendingReports(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleDismissPending = async (basket) => {
+    const token = getAuthToken();
+    try {
+      await fetch(`${API_BASE}/dismiss-pending-rebalance-report/${basket}`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+    } catch { /* ignore */ }
+    setPendingReports(prev => prev.filter(p => p.basket !== basket));
+  };
 
 
   useEffect(() => {
@@ -441,6 +468,54 @@ export default function BuyPricePage() {
     }
   };
 
+  const handleFetchReport = async () => {
+    setFetchingReport(true);
+    setReportResult(null);
+    try {
+      const token = getAuthToken();
+      const resp = await fetch(`${API_BASE}/preview-portfolio-report/${basketKey}`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.detail || 'Fetch failed');
+      if (data.duplicate) {
+        setReportResult({ ok: true, duplicate: true, message: data.message });
+      } else {
+        setReportPreview(data); // opens the confirm modal -- nothing applied yet
+      }
+    } catch (err) {
+      setReportResult({ ok: false, error: err.message });
+    } finally {
+      setFetchingReport(false);
+    }
+  };
+
+  const handleConfirmReport = async () => {
+    setConfirmingReport(true);
+    try {
+      const token = getAuthToken();
+      const resp = await fetch(`${API_BASE}/confirm-portfolio-report`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: JSON.stringify({ basket: reportPreview.basket, date: reportPreview.date, rawEntries: reportPreview.rawEntries }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.detail || 'Apply failed');
+      setReportPreview(null);
+      setReportResult(data);
+      setPendingReports(prev => prev.filter(p => p.basket !== reportPreview.basket));
+      if (data.ok && !data.duplicate) {
+        handleRebalanceConfirmed(); // reuse the same "reload this basket's rows" logic
+      }
+    } catch (err) {
+      setReportPreview(null);
+      setReportResult({ ok: false, error: err.message });
+    } finally {
+      setConfirmingReport(false);
+    }
+  };
+
   const handleRebalanceConfirmed = () => {
     setRebalancePreview(null);
     setSaveMsg('Rebalance applied!');
@@ -517,6 +592,14 @@ export default function BuyPricePage() {
         previewData={rebalancePreview}
         onClose={() => setRebalancePreview(null)}
         onConfirmed={handleRebalanceConfirmed}
+      />
+    )}
+    {reportPreview && (
+      <PortfolioReportPreviewModal
+        preview={reportPreview}
+        onConfirm={handleConfirmReport}
+        onCancel={() => setReportPreview(null)}
+        confirming={confirmingReport}
       />
     )}
     {historyRow && (
@@ -711,6 +794,16 @@ export default function BuyPricePage() {
                 <i className={`fa-solid ${uploadingRebalance ? 'fa-spinner fa-spin' : 'fa-upload'}`} style={{ marginRight: '0.35rem' }} />
                 {uploadingRebalance ? 'Uploading…' : 'Upload Rebalance'}
               </button>
+              <button
+                className="bp-save-btn"
+                onClick={handleFetchReport}
+                disabled={fetchingReport}
+                title="Fetch the latest portfolio report straight from smallcase.com and apply any rebalance changes (Admin only, local machine only -- needs a logged-in smallcase session)"
+                style={{ background: 'rgba(99,102,241,0.1)', color: fetchingReport ? 'var(--text-secondary)' : 'var(--accent-blue)', borderColor: 'rgba(99,102,241,0.25)' }}
+              >
+                <i className={`fa-solid ${fetchingReport ? 'fa-spinner fa-spin' : 'fa-cloud-arrow-down'}`} style={{ marginRight: '0.35rem' }} />
+                {fetchingReport ? 'Fetching…' : 'Fetch from smallcase'}
+              </button>
             </>
           )}
 
@@ -769,6 +862,68 @@ export default function BuyPricePage() {
           </div>
           <button
             onClick={() => setFallbackDismissed(true)}
+            style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem', padding: '0', flexShrink: 0 }}
+            title="Dismiss"
+          >&times;</button>
+        </div>
+      )}
+
+      {userIsAdmin && pendingReports.length > 0 && (
+        <div style={{ margin: '0.5rem 0 0.75rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+          {pendingReports.map(p => (
+            <div key={p.basket} style={{
+              padding: '0.65rem 1rem', borderRadius: '8px',
+              background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.3)',
+              fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.6rem',
+            }}>
+              <i className="fa-solid fa-bell" style={{ color: '#fbbf24', flexShrink: 0 }} />
+              <div style={{ flex: 1, color: 'var(--text-secondary)' }}>
+                Daily check found a new smallcase rebalance for <strong style={{ color: 'var(--text-primary)' }}>{p.basketLabel}</strong> ({p.date}), not yet applied.
+              </div>
+              <button className="bp-save-btn" onClick={() => setReportPreview(p)}
+                style={{ background: 'rgba(99,102,241,0.1)', color: 'var(--accent-blue)', borderColor: 'rgba(99,102,241,0.25)', padding: '0.3rem 0.7rem', fontSize: '0.78rem' }}>
+                Review
+              </button>
+              <button onClick={() => handleDismissPending(p.basket)}
+                style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem', padding: '0' }}
+                title="Dismiss (reappears next daily check if still unapplied)">&times;</button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {reportResult && (
+        <div style={{
+          margin: '0.5rem 0 0.75rem', padding: '0.65rem 1rem', borderRadius: '8px',
+          background: reportResult.ok === false ? 'rgba(239,68,68,0.08)' : reportResult.duplicate ? 'rgba(148,163,184,0.1)' : 'rgba(52,211,153,0.08)',
+          border: `1px solid ${reportResult.ok === false ? 'rgba(239,68,68,0.3)' : reportResult.duplicate ? 'rgba(148,163,184,0.25)' : 'rgba(52,211,153,0.3)'}`,
+          fontSize: '0.82rem', display: 'flex', alignItems: 'flex-start', gap: '0.6rem',
+        }}>
+          <i className={`fa-solid ${reportResult.ok === false ? 'fa-circle-exclamation' : 'fa-circle-check'}`}
+             style={{ color: reportResult.ok === false ? '#ef4444' : reportResult.duplicate ? 'var(--text-secondary)' : '#34d399', marginTop: '0.1rem', flexShrink: 0 }} />
+          <div style={{ flex: 1, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+            {reportResult.ok === false ? (
+              <span>{reportResult.error}</span>
+            ) : reportResult.duplicate ? (
+              <span>{reportResult.message}</span>
+            ) : (
+              <>
+                <strong style={{ color: 'var(--text-primary)' }}>Report dated {reportResult.date} applied.</strong>
+                {' '}
+                {reportResult.changes?.added?.length > 0 && <span>Added: {reportResult.changes.added.join(', ')}. </span>}
+                {reportResult.changes?.removed?.length > 0 && <span>Removed: {reportResult.changes.removed.join(', ')}. </span>}
+                {reportResult.changes?.increased?.length > 0 && <span>Increased: {reportResult.changes.increased.join(', ')}. </span>}
+                {reportResult.changes?.decreased?.length > 0 && <span>Decreased: {reportResult.changes.decreased.join(', ')}. </span>}
+                {reportResult.unmatched?.length > 0 && (
+                  <div style={{ marginTop: '0.3rem', color: '#fbbf24' }}>
+                    Could not match to a ticker (add manually): {reportResult.unmatched.join(', ')}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+          <button
+            onClick={() => setReportResult(null)}
             style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1rem', padding: '0', flexShrink: 0 }}
             title="Dismiss"
           >&times;</button>

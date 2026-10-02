@@ -8237,15 +8237,17 @@
     "GOKEX": {
       "securityName": "Gokaldas Exports Ltd",
       "segment": "Textile",
-      "buyEvents": "05 Feb 2026 * 3",
+      "buyEvents": "",
       "sellEvents": "",
       "buyOHLC": {
         "04 Feb 2026": 798.84,
         "05 Feb 2026": 823.66
       },
-      "sellOHLC": {},
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "sellOHLC": {
+        "25 Sep 2026": 692.8375
+      },
+      "prevBuyEvents": "05 Feb 2026 * 3",
+      "prevSellEvents": "25 Sep 2026 * 3"
     },
     "GOLDIAM": {
       "securityName": "Goldiam International Ltd",
@@ -8287,7 +8289,7 @@
     "ICEMAKE": {
       "securityName": "Ice Make Refrigeration Ltd",
       "segment": "Electrical Components & Equipments",
-      "buyEvents": "12 Jun 2024 * 3.9991\n17 Mar 2026 * 1",
+      "buyEvents": "",
       "sellEvents": "",
       "buyOHLC": {
         "11 Jun 2024": 715.88,
@@ -8295,9 +8297,11 @@
         "12 Jun 2024": 791.4,
         "17 Mar 2026": 805.59
       },
-      "sellOHLC": {},
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "sellOHLC": {
+        "25 Sep 2026": 662.05
+      },
+      "prevBuyEvents": "12 Jun 2024 * 3.9991\n17 Mar 2026 * 1",
+      "prevSellEvents": "25 Sep 2026 * 5"
     },
     "INDOFARM": {
       "securityName": "Indo Farm Equipment Ltd",
@@ -8446,7 +8450,7 @@
         "10 Aug 2026": 538.3875
       },
       "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevSellEvents": "04 Aug 2026 * 1\n10 Aug 2026 * 4"
     },
     "AEROFLEX": {
       "securityName": "Aeroflex Industries Ltd",
@@ -8511,7 +8515,7 @@
         "04 Aug 2026": 192.7075
       },
       "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevSellEvents": "04 Aug 2026 * 3"
     },
     "EMMVEE": {
       "securityName": "Emmvee Photovoltaic Power Ltd",
@@ -8543,8 +8547,8 @@
         "20 Feb 2025": 1133.48,
         "09 Sep 2026": 2436.55
       },
-      "prevBuyEvents": "05 May 2026 * 4",
-      "prevSellEvents": "09 Sep 2026 * 4"
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
     },
     "HFCL": {
       "securityName": "HFCL Ltd",
@@ -8560,7 +8564,7 @@
         "10 Aug 2026": 211.6
       },
       "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevSellEvents": "04 Aug 2026 * 2\n10 Aug 2026 * 3"
     },
     "SHADOWFAX": {
       "securityName": "Shadowfax Technologies Ltd",
@@ -8742,12 +8746,13 @@
     },
     "EMIL": {
       "securityName": "EMIL",
-      "buyEvents": "13 Nov 2023 * 4.0369",
+      "buyEvents": "13 Nov 2023 * 4.0369\n25 Sep 2026 * 5",
       "sellEvents": "12 Jun 2024 * 0.0378\n20 Feb 2025 * 4",
       "prevBuyEvents": "",
       "prevSellEvents": "",
       "buyOHLC": {
-        "13 Nov 2023": 188.75
+        "13 Nov 2023": 188.75,
+        "25 Sep 2026": 195.4475
       },
       "sellOHLC": {
         "12 Jun 2024": 240.93,
@@ -9155,10 +9160,24 @@
     "SSWL": {
       "securityName": "Steel Strips Wheels Ltd",
       "segment": "BSE 1000",
-      "buyEvents": "09 Sep 2026 * 4",
+      "buyEvents": "",
       "sellEvents": "",
       "buyOHLC": {
         "09 Sep 2026": 373.65
+      },
+      "sellOHLC": {
+        "04 Aug 2026": 317.375
+      },
+      "prevBuyEvents": "09 Sep 2026 * 4",
+      "prevSellEvents": "04 Aug 2026 * 4"
+    },
+    "XPROINDIA": {
+      "securityName": "Xpro India Ltd",
+      "segment": "BSE Industrials",
+      "buyEvents": "25 Sep 2026 * 3",
+      "sellEvents": "",
+      "buyOHLC": {
+        "25 Sep 2026": 1208.3
       },
       "sellOHLC": {},
       "prevBuyEvents": "",

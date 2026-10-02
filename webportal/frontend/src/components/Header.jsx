@@ -27,7 +27,7 @@ export default function Header({
   basketKey, onBasketChange,
   searchTerm, onSearchChange, onSearchClear,
   canUndo, onUndo,
-  onBuyPrice, onCalculateReturn, onPLStatement, onCorporateActions,
+  onBuyPrice, onCalculateReturn, onPLStatement, onCorporateActions, onCompetitorAnalysis,
   readOnly = false,
   tenure = '1M', latestDataDate = null,
 }) {
@@ -140,6 +140,9 @@ export default function Header({
               </button>
               <button className="db-action-item" onClick={() => { setActionsOpen(false); onCorporateActions(); }}>
                 <i className="fa-solid fa-code-branch" /> Corporate Actions
+              </button>
+              <button className="db-action-item" onClick={() => { setActionsOpen(false); onCompetitorAnalysis(); }}>
+                <i className="fa-solid fa-chess" /> Competitor Analysis
               </button>
             </div>
           )}

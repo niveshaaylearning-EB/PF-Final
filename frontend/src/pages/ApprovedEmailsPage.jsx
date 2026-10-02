@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, Users, UserPlus, Trash2, User, Clock, CheckCircle, XCircle, ShieldCheck, Shield } from 'lucide-react';
+import { ArrowLeft, Users, UserPlus, Trash2, User, Clock, CheckCircle, XCircle, ShieldCheck, Shield, MessageCircle } from 'lucide-react';
 import { getToken } from '../utils/auth';
 import { API_BASE as API, API_ROOT } from '../config.js';
 
@@ -16,6 +16,16 @@ export default function ApprovedEmailsPage() {
   const [error,     setError]     = useState('');
   const [success,   setSuccess]   = useState('');
   const [reapprovingAll, setReapprovingAll] = useState(false);
+
+  // WhatsApp rebalance alert recipients
+  const [waRecipients, setWaRecipients] = useState([]);
+  const [waLoading,    setWaLoading]    = useState(true);
+  const [waName,  setWaName]   = useState('');
+  const [waPhone, setWaPhone]  = useState('');
+  const [waEmail, setWaEmail]  = useState('');
+  const [waAdding,  setWaAdding]   = useState(false);
+  const [waRemoving, setWaRemoving] = useState('');
+  const [waError,   setWaError]   = useState('');
 
   // Pending access requests (old flow)
   const [requests,      setRequests]      = useState([]);
@@ -53,7 +63,15 @@ export default function ApprovedEmailsPage() {
       .finally(() => setPendingRegsLoading(false));
   }, []);
 
-  useEffect(() => { load(); loadRequests(); loadPendingRegs(); }, [load, loadRequests, loadPendingRegs]);
+  const loadWaRecipients = useCallback(() => {
+    setWaLoading(true);
+    axios.get(`${API}/admin/whatsapp-recipients`, { headers: { Authorization: `Bearer ${getToken()}` } })
+      .then(r => setWaRecipients(r.data || []))
+      .catch(() => setWaRecipients([]))
+      .finally(() => setWaLoading(false));
+  }, []);
+
+  useEffect(() => { load(); loadRequests(); loadPendingRegs(); loadWaRecipients(); }, [load, loadRequests, loadPendingRegs, loadWaRecipients]);
 
   const handleApproveReg = async (email) => {
     setProcessingReg(email);
@@ -161,6 +179,31 @@ export default function ApprovedEmailsPage() {
     } finally { setRemoving(''); }
   };
 
+  const handleAddWaRecipient = async (e) => {
+    e.preventDefault();
+    setWaError(''); setWaAdding(true);
+    try {
+      await axios.post(`${API}/admin/whatsapp-recipients`,
+        { name: waName.trim(), phone: waPhone.trim(), email: waEmail.trim() },
+        { headers: { Authorization: `Bearer ${getToken()}` } });
+      setWaName(''); setWaPhone(''); setWaEmail('');
+      loadWaRecipients();
+    } catch (err) {
+      setWaError(err.response?.data?.detail || 'Failed to add recipient');
+    } finally { setWaAdding(false); }
+  };
+
+  const handleRemoveWaRecipient = async (phone) => {
+    setWaError(''); setWaRemoving(phone);
+    try {
+      await axios.delete(`${API}/admin/whatsapp-recipients/${encodeURIComponent(phone)}`,
+        { headers: { Authorization: `Bearer ${getToken()}` } });
+      loadWaRecipients();
+    } catch (err) {
+      setWaError(err.response?.data?.detail || 'Failed to remove recipient');
+    } finally { setWaRemoving(''); }
+  };
+
   return (
     <div className="animate-slide-up" style={{ maxWidth: 640, margin: '0 auto', padding: '0 1rem 3rem' }}>
       {/* Header */}
@@ -175,10 +218,10 @@ export default function ApprovedEmailsPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Users size={20} color="var(--primary)" />
-            <h2 className="text-gradient" style={{ margin: 0, fontSize: '1.5rem' }}>Approved Login Emails</h2>
+            <h2 className="text-gradient" style={{ margin: 0, fontSize: '1.5rem' }}>Admin Panel</h2>
           </div>
           <p style={{ color: 'var(--text-muted)', margin: '4px 0 0', fontSize: '0.85rem' }}>
-            Only @niveshaay.com addresses listed here can log in to the dashboard.
+            Login access, admin status, and WhatsApp rebalance alert recipients.
           </p>
         </div>
       </div>
@@ -409,6 +452,71 @@ export default function ApprovedEmailsPage() {
               </div>
             );
           })
+        )}
+      </div>
+
+      {/* ── WhatsApp Rebalance Alert Recipients ── */}
+      <div className="glass-panel" style={{ padding: 0, overflow: 'hidden', marginTop: '20px' }}>
+        <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <MessageCircle size={15} color="var(--positive)" />
+          <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.88rem' }}>WhatsApp Rebalance Alert Recipients</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '2px 8px' }}>
+            {waRecipients.length} total
+          </span>
+        </div>
+        <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <p style={{ color: 'var(--text-muted)', margin: '0 0 12px', fontSize: '0.8rem' }}>
+            Everyone listed here gets a WhatsApp message whenever one of our baskets rebalances (stocks added/removed/weight changed).
+          </p>
+          <form onSubmit={handleAddWaRecipient} style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <input
+              type="text" value={waName} onChange={e => setWaName(e.target.value)}
+              placeholder="Name" required
+              style={{ flex: '1 1 140px', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', fontSize: '0.88rem', outline: 'none', fontFamily: 'inherit' }}
+            />
+            <input
+              type="tel" value={waPhone} onChange={e => setWaPhone(e.target.value)}
+              placeholder="+919999999999" required
+              style={{ flex: '1 1 160px', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', fontSize: '0.88rem', outline: 'none', fontFamily: 'inherit' }}
+            />
+            <input
+              type="email" value={waEmail} onChange={e => setWaEmail(e.target.value)}
+              placeholder="email (optional)"
+              style={{ flex: '1 1 180px', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', fontSize: '0.88rem', outline: 'none', fontFamily: 'inherit' }}
+            />
+            <button type="submit" disabled={waAdding || !waName.trim() || !waPhone.trim()} className="btn btn-primary" style={{ padding: '10px 20px', whiteSpace: 'nowrap' }}>
+              {waAdding ? 'Adding…' : 'Add'}
+            </button>
+          </form>
+          {waError && <div style={{ marginTop: '10px', padding: '8px 12px', borderRadius: '8px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', fontSize: '0.83rem' }}>{waError}</div>}
+        </div>
+        {waLoading ? (
+          <div style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.88rem' }}>Loading…</div>
+        ) : waRecipients.length === 0 ? (
+          <div style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.88rem' }}>No recipients yet.</div>
+        ) : (
+          waRecipients.map((r, i) => (
+            <div key={r.phone} style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '12px 20px',
+              background: i % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent',
+              borderBottom: i < waRecipients.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+            }}>
+              <div>
+                <span style={{ color: 'var(--text-main)', fontSize: '0.88rem' }}>{r.name || '(no name)'}</span>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                  {r.phone}{r.email ? ` · ${r.email}` : ''}
+                </div>
+              </div>
+              <button
+                onClick={() => handleRemoveWaRecipient(r.phone)}
+                disabled={waRemoving === r.phone}
+                style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: '7px', border: '1px solid rgba(239,68,68,0.28)', background: 'rgba(239,68,68,0.08)', color: '#f87171', fontSize: '0.78rem', cursor: waRemoving === r.phone ? 'not-allowed' : 'pointer', opacity: waRemoving === r.phone ? 0.5 : 1 }}
+              >
+                <Trash2 size={12} /> {waRemoving === r.phone ? 'Removing…' : 'Remove'}
+              </button>
+            </div>
+          ))
         )}
       </div>
     </div>

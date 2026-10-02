@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { getEmail, getToken, isAdmin } from '../utils/auth.js';
@@ -15,13 +15,57 @@ const THEME_SYNC_TYPE = 'nia-theme-sync';
 
 export default function ActualPortfolio() {
   const navigate = useNavigate();
+  // Optional ?wp=/some-page lets a Link deep-link straight into one of the
+  // webportal's own sub-pages (e.g. Competitor Analysis) instead of always
+  // landing on its root dashboard -- read once at mount, same as the other
+  // auth query params below, since the iframe's src never changes after.
+  const wpPath = new URLSearchParams(useLocation().search).get('wp') || '';
   const [headerBottom, setHeaderBottom] = useState(120);
   const [loaded, setLoaded] = useState(false);
   const iframeRef = useRef(null);
 
+  // The sub-bar and iframe below are both `position: fixed`, pinned at
+  // `headerBottom` px from the viewport top -- so they only stay correctly
+  // aligned under the real <header> if that measurement stays current. A
+  // one-time mount measurement goes stale the moment the header's height
+  // changes afterward (e.g. its content reflows once web fonts finish
+  // loading, or an admin-only nav button appears after an async isAdmin()
+  // check resolves), which is exactly when the overlap was reported. A
+  // ResizeObserver keeps this in sync for as long as the header exists,
+  // not just at the instant this component first mounted.
   useEffect(() => {
     const header = document.querySelector('header');
-    if (header) setHeaderBottom(Math.ceil(header.getBoundingClientRect().bottom));
+    if (!header) return;
+    const measure = () => setHeaderBottom(Math.ceil(header.getBoundingClientRect().bottom));
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(header);
+    window.addEventListener('resize', measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, []);
+
+  // Everything in this page (sub-bar, overlay, iframe) is `position: fixed`
+  // and sized to exactly fill the viewport below the header, so the OUTER
+  // document itself should never need to scroll. But without this, it still
+  // CAN (nothing stops it), and once you scroll the iframe's own content to
+  // its end and keep scrolling, the browser hands remaining wheel input to
+  // the next scrollable ancestor -- the outer page -- dragging the real
+  // header out of view while this component's fixed elements stay put,
+  // which is exactly the misalignment that was reported. Locking outer
+  // scroll here (and restoring it on unmount) keeps all scroll input inside
+  // the iframe where it belongs.
+  useEffect(() => {
+    const prevHtml = document.documentElement.style.overflow;
+    const prevBody = document.body.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.documentElement.style.overflow = prevHtml;
+      document.body.style.overflow = prevBody;
+    };
   }, []);
 
   // Keep the embedded webportal iframe's theme live-synced with the outer
@@ -56,7 +100,7 @@ export default function ActualPortfolio() {
   // detection AND every authenticated upload inside the iframe silently fail
   // (empty Authorization header -> 403) even when the edit flag says "yes".
   const token = getToken() || '';
-  const WEBPORTAL_URL = `${WP_BASE}?u=${encodeURIComponent(email)}&edit=${canEdit ? '1' : '0'}&t=${encodeURIComponent(token)}&theme=${getTheme()}`;
+  const WEBPORTAL_URL = `${WP_BASE.replace(/\/$/, '')}${wpPath}?u=${encodeURIComponent(email)}&edit=${canEdit ? '1' : '0'}&t=${encodeURIComponent(token)}&theme=${getTheme()}`;
 
   return (
     <>

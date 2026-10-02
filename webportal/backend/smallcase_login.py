@@ -27,9 +27,12 @@ its own cwd check is the one that's actually correct, so it just does the
 real work -- no loop.
 """
 import asyncio
+import os
+import re
 from pathlib import Path
 
 import httpx
+from _shared_http import SHARED_SSL_CONTEXT
 from playwright.async_api import async_playwright
 
 _PROFILE_DIR = Path(__file__).parent / "smallcase_session_profile"
@@ -48,7 +51,8 @@ async def _proxy(method: str, path: str, auth_header: str | None = None, **kwarg
     # not an exception, so callers doing result.get("logged_in", False)
     # silently got False instead of the real answer).
     headers = {"Authorization": auth_header} if auth_header else {}
-    async with httpx.AsyncClient(timeout=kwargs.pop("timeout", 60)) as client:
+    async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,timeout=kwargs.pop("timeout", 60)) as client:
         resp = await client.request(method, f"{_PROXY_BASE}{path}", headers=headers, **kwargs)
         return resp.json()
 
@@ -132,7 +136,16 @@ async def _is_logged_in() -> bool:
     page's own rendered content is what's actually reliable here."""
     try:
         page = await _ensure_page()
-        await page.goto(_LOGIN_URL, wait_until="networkidle", timeout=20000)
+        # "networkidle" here used to time out intermittently (confirmed live,
+        # 2026-09-30: 3 consecutive failures) -- smallcase's page apparently
+        # keeps some persistent connection open (analytics/chat widget?) that
+        # never lets the network go fully idle. "load" is what every other
+        # navigation in this module already uses and never showed this
+        # flakiness, and the page's rendered text is what we actually read
+        # below anyway -- there was never a real need to wait for network
+        # silence, just for the DOM to be there.
+        await page.goto(_LOGIN_URL, wait_until="load", timeout=20000)
+        await page.wait_for_timeout(1500)
         body = await page.inner_text("body")
         return "Subscribed" in body  # distinct word from "Subscribers Only" (the logged-out label)
     except Exception as e:
@@ -388,3 +401,174 @@ async def fetch_daily_values(auth_header: str | None = None) -> dict:
         return await _proxy("POST", "/smallcase-fetch-daily", auth_header=auth_header, timeout=120)
     async with _lock:
         return await _fetch_daily_values_locked()
+
+
+# ── Rebalance report fetch ────────────────────────────────────────────────────
+# smallcase's "Get portfolio report" (Stocks & Weights tab) issues a
+# password-protected PDF. price_engine._parse_portfolio_pdf (used by the
+# existing, never-actually-wired-to-a-button /api/upload-portfolio-report)
+# looked like a match at first glance -- same section vocabulary ("Additions"
+# / "Removals" / etc) -- but it is NOT safe to reuse here: confirmed live
+# (2026-09-30, Mid & Small Cap) that it corrupted real data. Its section
+# state ("current = stype") is set the FIRST time it sees a header substring
+# and never cleared until the NEXT header substring -- but smallcase's real
+# report repeats those exact words as narrative section titles in a long
+# free-text "Constituent-wise Rationale" (paragraphs of investment thesis
+# prose) BEFORE the second, real occurrence. Every prose line downstream that
+# happens to contain a bare "NN%" (e2695a45's test run hit "...EMS from 2% to
+# 6%...") got swallowed as a fake constituent row, with a nonsense "company
+# name" and a garbage NSE-code match via _resolve_nse's substring fallback.
+# _parse_portfolio_pdf may well be correct for whatever simpler PDF format it
+# was originally written against -- it's just wrong for THIS one, so this
+# fetch path uses its own parser instead, deliberately reading only ONE
+# tightly bounded, single-line-per-stock section: "Latest Rebalance Update"
+# through the following "Click here to view sectorwise..." marker. That
+# section lists EVERY current holding (not just changed ones) as one line
+# each -- "Name Smallcap 3% +3%" -- with the trailing "+/-N%" delta present
+# only for stocks that actually changed, which is what turns each line into
+# an unambiguous addition/increase/removal/decrease/no_change classification
+# without any cross-line state to get confused by.
+_REPORT_DATE_RE = re.compile(r"issued on\s*:\s*([A-Za-z]+ \d{1,2}, \d{4})")
+_REBALANCE_LINE_RE = re.compile(
+    r"^(.+?)\s+(Smallcap|Midcap|Largecap|Multicap)\s+([\d.]+)%(?:\s+([+-][\d.]+)%)?$"
+)
+
+
+def _extract_report_date(text: str) -> str | None:
+    m = _REPORT_DATE_RE.search(text)
+    if not m:
+        return None
+    from datetime import datetime as _dt
+    try:
+        return _dt.strptime(m.group(1), "%B %d, %Y").strftime("%d %b %Y")
+    except ValueError:
+        return None
+
+
+def parse_rebalance_update(text: str) -> list[dict]:
+    """Parse ONLY the bounded 'Latest Rebalance Update' section (see the
+    module comment above for why nothing else in this PDF is safe to read).
+    Returns entries shaped like price_engine._parse_portfolio_pdf's output
+    (section/companyName/holdingType/newWeight) so portfolio_report.py's
+    existing apply logic can consume either one unchanged."""
+    lines = text.split("\n")
+    try:
+        start = next(i for i, l in enumerate(lines) if l.strip().startswith("Latest Rebalance Update"))
+    except StopIteration:
+        return []
+    end = next((i for i in range(start, len(lines)) if "Click here to view sectorwise" in lines[i]), len(lines))
+
+    entries = []
+    for line in lines[start + 1:end]:
+        m = _REBALANCE_LINE_RE.match(line.strip())
+        if not m:
+            continue
+        name, holding, weight_s, delta_s = m.groups()
+        weight = float(weight_s)
+        delta = float(delta_s) if delta_s else None
+
+        if delta is None:
+            section = "no_change"
+        elif weight <= 0.01 and delta < 0:
+            section = "removal"
+        elif delta > 0 and weight - delta <= 0.01:
+            section = "addition"
+        elif delta > 0:
+            section = "increase"
+        else:
+            section = "decrease"
+
+        entries.append({
+            "section": section, "companyName": name.strip(),
+            "holdingType": holding, "newWeight": weight,
+            # The report's own delta is ground truth for how much to buy/sell
+            # -- our own rebalance_history's "previous weight" can drift out
+            # of sync with smallcase's real one (confirmed live: HFCL showed
+            # 4.0% in our last recorded snapshot when the report's own delta
+            # said the true previous weight was 2.5%), so the caller should
+            # prefer this over recomputing from its own history where both
+            # are available.
+            "delta": abs(delta) if delta is not None else None,
+        })
+    return entries
+
+
+async def _fetch_rebalance_report_locked(basket: str) -> dict:
+    if basket not in BASKET_SMALLCASE_MAP:
+        return {"ok": False, "error": f"Unknown basket: {basket}"}
+
+    page = await _ensure_page()
+    if not await _is_logged_in():
+        return {"ok": False, "error": "Not logged in to smallcase -- use the login button first."}
+
+    scid = BASKET_SMALLCASE_MAP[basket]["scid"]
+    # The slug before the scid is cosmetic -- smallcase redirects to the
+    # canonical URL from the scid alone (confirmed live), so a fixed
+    # placeholder slug works for every basket without needing its real one.
+    await page.goto(f"https://www.smallcase.com/smallcase/x-{scid}/constituents", wait_until="load", timeout=30000)
+    await page.wait_for_timeout(2000)
+
+    report_btn = page.locator("text=/Get portfolio report/i").first
+    if await report_btn.count() == 0:
+        return {"ok": False, "error": "Could not find the 'Get portfolio report' button."}
+    await report_btn.click()
+    await page.wait_for_timeout(1200)
+
+    view_btn = page.locator("text=/View report/i").first
+    if await view_btn.count() == 0:
+        return {"ok": False, "error": "Could not find the 'View report' button."}
+
+    download_holder: dict = {}
+
+    async def _save_download(d):
+        download_holder["download"] = d
+
+    def _on_new_page(p):
+        p.on("download", lambda d: asyncio.create_task(_save_download(d)))
+
+    page.on("download", lambda d: asyncio.create_task(_save_download(d)))
+    page.context.on("page", _on_new_page)
+
+    await view_btn.click()
+    for _ in range(15):
+        await asyncio.sleep(1)
+        if "download" in download_holder:
+            break
+    if "download" not in download_holder:
+        return {"ok": False, "error": "Timed out waiting for the portfolio report download."}
+
+    tmp_path = Path(__file__).parent / f"_tmp_rebalance_report_{scid}.pdf"
+    try:
+        await download_holder["download"].save_as(str(tmp_path))
+        raw = tmp_path.read_bytes()
+    finally:
+        try:
+            tmp_path.unlink(missing_ok=True)
+        except Exception:
+            pass
+
+    # Peek at the (still-encrypted-for-content, but plaintext-metadata) date
+    # line using the same password price_engine._parse_portfolio_pdf uses, so
+    # the caller doesn't have to duplicate PDF decryption just to learn the
+    # report's own issue date for the existing endpoint's required `date` field.
+    date_str = None
+    try:
+        from pypdf import PdfReader
+        import io as _io
+        reader = PdfReader(_io.BytesIO(raw))
+        if reader.is_encrypted:
+            reader.decrypt(os.environ.get("PORTFOLIO_PDF_PASSWORD", ""))
+        text = "\n".join((p.extract_text() or "") for p in reader.pages)
+        date_str = _extract_report_date(text)
+    except Exception as e:
+        print(f"[smallcase_login] could not pre-read report date: {e}")
+
+    import base64
+    return {"ok": True, "date": date_str, "pdf_base64": base64.b64encode(raw).decode("ascii")}
+
+
+async def fetch_rebalance_report(basket: str, auth_header: str | None = None) -> dict:
+    if _should_proxy():
+        return await _proxy("POST", f"/smallcase-rebalance-report/{basket}", auth_header=auth_header, timeout=120)
+    async with _lock:
+        return await _fetch_rebalance_report_locked(basket)

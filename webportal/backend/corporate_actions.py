@@ -18,6 +18,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import httpx
+from _shared_http import SHARED_SSL_CONTEXT
 from fastapi import APIRouter, BackgroundTasks, Body, HTTPException, Request
 
 from persistence import (
@@ -185,7 +186,8 @@ async def scan_for_new_actions(admin_email: str) -> dict:
         async with sem:
             splits_by_code[code] = await _fetch_recent_splits_yf(code, client)
 
-    async with httpx.AsyncClient(headers=_YF_SCAN_HEADERS, timeout=12.0, follow_redirects=True) as client:
+    async with httpx.AsyncClient(
+            verify=SHARED_SSL_CONTEXT,headers=_YF_SCAN_HEADERS, timeout=12.0, follow_redirects=True) as client:
         await asyncio.gather(*(_lookup(code, client) for code in unique_codes))
 
     existing = _load_ca()
