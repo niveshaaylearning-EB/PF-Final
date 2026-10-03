@@ -51,10 +51,24 @@ async def _proxy(method: str, path: str, auth_header: str | None = None, **kwarg
     # not an exception, so callers doing result.get("logged_in", False)
     # silently got False instead of the real answer).
     headers = {"Authorization": auth_header} if auth_header else {}
-    async with httpx.AsyncClient(
-            verify=SHARED_SSL_CONTEXT,timeout=kwargs.pop("timeout", 60)) as client:
-        resp = await client.request(method, f"{_PROXY_BASE}{path}", headers=headers, **kwargs)
-        return resp.json()
+    try:
+        async with httpx.AsyncClient(
+                verify=SHARED_SSL_CONTEXT,timeout=kwargs.pop("timeout", 60)) as client:
+            resp = await client.request(method, f"{_PROXY_BASE}{path}", headers=headers, **kwargs)
+            return resp.json()
+    except Exception as e:
+        # This whole proxy mechanism assumes a second process is really
+        # listening on :8001 (true for run.py's local dev setup -- see this
+        # module's docstring). If production actually runs as a single
+        # merged process (app.mount('/wp', ...) in backend/main.py) with
+        # nothing bound to :8001, every one of these calls fails with a
+        # connection error that -- uncaught -- propagated all the way to an
+        # opaque 500 on EVERY smallcase-login endpoint, confirmed live
+        # 2026-10-03. Returning a normal-shaped failure here instead means
+        # every caller (login_status's `.get("logged_in", False)`,
+        # start/verify/close's `.get("ok")`) degrades to a safe default
+        # with the real reason attached, instead of crashing the request.
+        return {"ok": False, "logged_in": False, "error": f"Could not reach the automation process: {e}"}
 
 # Module-level Playwright/browser handles, plus a lock so overlapping HTTP
 # requests to these endpoints don't interleave calls against the same page.

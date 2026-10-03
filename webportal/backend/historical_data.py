@@ -112,7 +112,10 @@ async def smallcase_login_start(body: dict, request: Request):
     if not phone:
         raise HTTPException(status_code=400, detail="phone is required")
     import smallcase_login
-    return await smallcase_login.start_login(phone, auth_header=request.headers.get("Authorization"))
+    try:
+        return await smallcase_login.start_login(phone, auth_header=request.headers.get("Authorization"))
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
 
 @router.post("/api/admin/smallcase-login/verify")
@@ -123,7 +126,10 @@ async def smallcase_login_verify(body: dict, request: Request):
     if not otp:
         raise HTTPException(status_code=400, detail="otp is required")
     import smallcase_login
-    return await smallcase_login.verify_otp(otp, auth_header=request.headers.get("Authorization"))
+    try:
+        return await smallcase_login.verify_otp(otp, auth_header=request.headers.get("Authorization"))
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
 
 @router.get("/api/admin/smallcase-login/status")
@@ -131,7 +137,10 @@ async def smallcase_login_check(request: Request):
     """Admin-only: is there currently a valid logged-in smallcase session?"""
     _require_admin(request)
     import smallcase_login
-    return {"logged_in": await smallcase_login.login_status(auth_header=request.headers.get("Authorization"))}
+    try:
+        return {"logged_in": await smallcase_login.login_status(auth_header=request.headers.get("Authorization"))}
+    except Exception as e:
+        return {"logged_in": False, "error": f"{type(e).__name__}: {e}"}
 
 
 @router.post("/api/admin/smallcase-login/close-browser")
@@ -141,7 +150,10 @@ async def smallcase_login_close(request: Request):
     profile) without a lock conflict."""
     _require_admin(request)
     import smallcase_login
-    return await smallcase_login.close_browser(auth_header=request.headers.get("Authorization"))
+    try:
+        return await smallcase_login.close_browser(auth_header=request.headers.get("Authorization"))
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
 
 @router.post("/api/admin/smallcase-fetch-daily")
@@ -498,7 +510,16 @@ async def competitor_login_start(body: dict, request: Request):
     if not phone:
         raise HTTPException(status_code=400, detail="phone is required")
     import competitor_login
-    return await competitor_login.start_login(phone, auth_header=request.headers.get("Authorization"))
+    try:
+        return await competitor_login.start_login(phone, auth_header=request.headers.get("Authorization"))
+    except Exception as e:
+        # This is this module's FIRST-EVER production invocation (new
+        # feature, brand new browser profile dir) -- unlike every other step
+        # here, nothing has proven the underlying Playwright/browser launch
+        # actually works in this environment yet. Surface the real error
+        # instead of letting it fall through to FastAPI's generic 500 (which
+        # the admin UI only shows as an opaque "Request failed (500)").
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
 
 @router.post("/api/admin/competitor-login/verify")
@@ -509,7 +530,10 @@ async def competitor_login_verify(body: dict, request: Request):
     if not otp:
         raise HTTPException(status_code=400, detail="otp is required")
     import competitor_login
-    return await competitor_login.verify_otp(otp, auth_header=request.headers.get("Authorization"))
+    try:
+        return await competitor_login.verify_otp(otp, auth_header=request.headers.get("Authorization"))
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
 
 @router.get("/api/admin/competitor-login/status")
@@ -517,7 +541,10 @@ async def competitor_login_check(request: Request):
     """Admin-only: is there currently a valid logged-in session on the competitor account?"""
     _require_admin(request)
     import competitor_login
-    return {"logged_in": await competitor_login.login_status(auth_header=request.headers.get("Authorization"))}
+    try:
+        return {"logged_in": await competitor_login.login_status(auth_header=request.headers.get("Authorization"))}
+    except Exception as e:
+        return {"logged_in": False, "error": f"{type(e).__name__}: {e}"}
 
 
 @router.post("/api/admin/competitor-login/close-browser")
@@ -525,7 +552,10 @@ async def competitor_login_close(request: Request):
     """Admin-only: release our hold on the competitor-account browser profile."""
     _require_admin(request)
     import competitor_login
-    return await competitor_login.close_browser(auth_header=request.headers.get("Authorization"))
+    try:
+        return await competitor_login.close_browser(auth_header=request.headers.get("Authorization"))
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
 
 
 @router.post("/api/admin/competitor-fetch-snapshot/{key}")

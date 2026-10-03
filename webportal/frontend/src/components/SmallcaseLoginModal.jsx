@@ -1,5 +1,5 @@
 import { API_BASE, getAuthToken } from '../api/base.js';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 
 async function postJson(path, body) {
   const token = getAuthToken();
@@ -49,6 +49,22 @@ export default function SmallcaseLoginModal({ onClose }) {
       .then(r => setBookmarklet(r.href))
       .catch(() => setBookmarkletError('Could not generate the bookmarklet.'));
   }, []);
+
+  // Surfaces the host this bookmarklet actually posts to -- a bookmarklet is
+  // a static javascript: snippet, baked with whichever host generated it.
+  // Re-dragging it here on a DIFFERENT host (e.g. a leftover one dragged
+  // from local dev, later clicked on the live site) silently keeps posting
+  // to the OLD host and fails with a confusing "Failed to fetch" error.
+  // Showing the destination up front makes a stale bookmarklet obvious
+  // before it's dragged, instead of only after it fails on smallcase.com.
+  const bookmarkletHost = useMemo(() => {
+    if (!bookmarklet) return null;
+    try {
+      const decoded = decodeURIComponent(bookmarklet.replace(/^javascript:/, ''));
+      const m = decoded.match(/var BACKEND_URL\s*=\s*"([^"]+)"/);
+      return m ? new URL(m[1]).host : null;
+    } catch { return null; }
+  }, [bookmarklet]);
 
   const handleSendOtp = async () => {
     setError(''); setBusy(true);
@@ -215,11 +231,19 @@ export default function SmallcaseLoginModal({ onClose }) {
             >
               📌 Fetch to Dashboard
             </a>
-          ) : bookmarkletError ? (
+          ) : null}
+          {bookmarklet && bookmarkletHost && (
+            <p style={{ fontSize: '0.72rem', color: bookmarkletHost.includes('localhost') || bookmarkletHost.includes('127.0.0.1') ? '#f87171' : 'var(--text-secondary)', margin: '0.4rem 0 0' }}>
+              {bookmarkletHost.includes('localhost') || bookmarkletHost.includes('127.0.0.1')
+                ? `⚠ This will send data to ${bookmarkletHost} -- drag it again from the live site if you want it to reach production.`
+                : `Sends data to: ${bookmarkletHost}`}
+            </p>
+          )}
+          {!bookmarklet && (bookmarkletError ? (
             <span style={{ fontSize: '0.78rem', color: '#fca5a5' }}>{bookmarkletError}</span>
           ) : (
             <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Generating…</span>
-          )}
+          ))}
         </div>
       </div>
     </div>

@@ -37,10 +37,19 @@ def _should_proxy() -> bool:
 
 async def _proxy(method: str, path: str, auth_header: str | None = None, **kwargs) -> dict:
     headers = {"Authorization": auth_header} if auth_header else {}
-    async with httpx.AsyncClient(
-            verify=SHARED_SSL_CONTEXT,timeout=kwargs.pop("timeout", 180)) as client:
-        resp = await client.request(method, f"{_PROXY_BASE}{path}", headers=headers, **kwargs)
-        return resp.json()
+    try:
+        async with httpx.AsyncClient(
+                verify=SHARED_SSL_CONTEXT,timeout=kwargs.pop("timeout", 180)) as client:
+            resp = await client.request(method, f"{_PROXY_BASE}{path}", headers=headers, **kwargs)
+            return resp.json()
+    except Exception as e:
+        # See smallcase_login.py's _proxy() for the full story -- this
+        # mechanism assumes a second process is listening on :8001, which
+        # is only true for run.py's local dev setup. Confirmed live
+        # 2026-10-03: in whatever topology production actually runs, this
+        # connection fails and -- uncaught -- turned into a blind 500 on
+        # every competitor-login endpoint.
+        return {"ok": False, "logged_in": False, "error": f"Could not reach the automation process: {e}"}
 
 # Own, independent session state -- deliberately NOT shared with
 # smallcase_login.py's globals, so the two accounts never contend for the
