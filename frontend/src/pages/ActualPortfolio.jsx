@@ -100,7 +100,17 @@ export default function ActualPortfolio() {
   // detection AND every authenticated upload inside the iframe silently fail
   // (empty Authorization header -> 403) even when the edit flag says "yes".
   const token = getToken() || '';
-  const WEBPORTAL_URL = `${WP_BASE.replace(/\/$/, '')}${wpPath}?u=${encodeURIComponent(email)}&edit=${canEdit ? '1' : '0'}&t=${encodeURIComponent(token)}&theme=${getTheme()}`;
+  // Stripping WP_BASE's trailing slash unconditionally and leaving it at
+  // that when wpPath is empty (the plain "Actual Portfolio" case, no ?wp=
+  // query param) produced ".../wp?u=..." -- the BARE "/wp" path with no
+  // trailing slash. Confirmed live on production: unlike "/wp/" (the /wp
+  // ASGI mount), a bare "/wp" falls through to the main app's own SPA
+  // catch-all route instead, serving the main app's OWN index.html inside
+  // the iframe -- rendering the whole dashboard a second time nested
+  // inside itself (duplicate header, blank below it). Pages reached via
+  // ?wp=/some-path never hit this, since wpPath already supplies the
+  // slash. Always supplying at least "/" after the mount prefix fixes it.
+  const WEBPORTAL_URL = `${WP_BASE.replace(/\/$/, '')}${wpPath || '/'}?u=${encodeURIComponent(email)}&edit=${canEdit ? '1' : '0'}&t=${encodeURIComponent(token)}&theme=${getTheme()}`;
 
   return (
     <>
