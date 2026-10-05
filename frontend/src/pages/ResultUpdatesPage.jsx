@@ -282,10 +282,19 @@ async function blobErrorMessage(err) {
 }
 
 function ReminderDateForm({ rem, onConfirm, onCancel, inputStyle }) {
-  const [resultDate, setResultDate] = useState('');
+  // Pre-filled from results_calendar.py's own NSE board-meeting/yfinance
+  // feed when it already has a date for this company -- admin can still
+  // change or clear it, this just saves re-typing something already known.
+  const [resultDate, setResultDate] = useState(rem.suggestedResultDate || '');
   const [concallDate, setConcallDate] = useState('');
   return (
-    <div style={{ marginTop: '10px', display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+    <div style={{ marginTop: '10px' }}>
+      {rem.suggestedResultDate && (
+        <div style={{ fontSize: '0.72rem', color: 'var(--positive)', marginBottom: '6px' }}>
+          Pre-filled from Result Calendar's own NSE/yfinance tracking -- adjust if needed.
+        </div>
+      )}
+      <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
       <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Result date
         <input type="date" value={resultDate} onChange={e => setResultDate(e.target.value)} style={{ ...inputStyle, marginLeft: '6px' }} />
       </label>
@@ -294,6 +303,7 @@ function ReminderDateForm({ rem, onConfirm, onCancel, inputStyle }) {
       </label>
       <button onClick={() => onConfirm(rem, resultDate, concallDate)} className="btn btn-primary" style={{ padding: '6px 14px', fontSize: '0.78rem' }}>Save</button>
       <button onClick={onCancel} className="btn btn-secondary" style={{ padding: '6px 14px', fontSize: '0.78rem' }}>Cancel</button>
+      </div>
     </div>
   );
 }

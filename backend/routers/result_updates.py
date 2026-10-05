@@ -57,6 +57,29 @@ _UPLOAD_DIR.mkdir(exist_ok=True)
 _RAW_DOC_DIR = _DATA_DIR / "result_update_raw_docs"
 _RAW_DOC_DIR.mkdir(exist_ok=True)
 
+# Read-only reuse of results_calendar.py's own cache (NSE board-meeting +
+# yfinance earnings dates, already fetched/refreshed by that feature's own
+# background job) to auto-suggest a result date on "new" reminders instead
+# of always starting from a blank field -- reading the plain JSON file
+# directly rather than importing results_calendar.py, so this module stays
+# decoupled from that one's DB/session dependencies. Does NOT cover concall
+# dates -- NSE's board-meeting feed is specifically for the results board
+# meeting, not the separate earnings-call announcement, which has no
+# reliable automated source anywhere in this codebase.
+_RESULTS_CALENDAR_CACHE_FILE = _DATA_DIR / "results_calendar_cache.json"
+
+
+def _suggested_result_dates() -> dict:
+    """{nseCode: "YYYY-MM-DD"} for every upcoming/recent result-type event
+    in results_calendar.py's cache. Best-effort -- any read/parse failure
+    just means no suggestions, not an error for this feature."""
+    try:
+        cache = json.loads(_RESULTS_CALENDAR_CACHE_FILE.read_text(encoding="utf-8"))
+        events = (cache.get("calendar") or {}).get("data") or []
+        return {e["stock_code"]: e["date"] for e in events if e.get("type") == "result" and e.get("stock_code")}
+    except Exception:
+        return {}
+
 
 def _require_admin(request: Request) -> str:
     user = getattr(request.state, "user", None)
@@ -148,12 +171,15 @@ def _sync_and_compute_reminders(data: dict) -> list:
                 continue
             entry = new_by_code.setdefault(code, {"name": name, "baskets": []})
             entry["baskets"].append(info["label"])
+    suggested_dates = _suggested_result_dates()
     for code, entry in new_by_code.items():
         baskets_str = ", ".join(entry["baskets"])
+        suggested = suggested_dates.get(code)
         reminders.append({
             "type": "new", "nseCode": code, "securityName": entry["name"],
-            "baskets": entry["baskets"],
-            "message": f"{entry['name']} ({code}) is held in {baskets_str} but has no result/concall dates tracked yet.",
+            "baskets": entry["baskets"], "suggestedResultDate": suggested,
+            "message": f"{entry['name']} ({code}) is held in {baskets_str} but has no result/concall dates tracked yet."
+                       + (f" Result Calendar already has a board-meeting date: {suggested}." if suggested else ""),
         })
 
     # Overdue reminders for already-tracked, still-held-somewhere, not-yet-
