@@ -251,7 +251,9 @@ export default function ResultUpdatesPage() {
                   <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{rem.nseCode}</div>
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                  {rem.baskets.map(b => <BasketChip key={b} label={b} />)}
+                  {/* A specific basket is picked -- show only that one, not
+                      every basket this company happens to also be held in. */}
+                  {(selectedBasket ? [basketLabels[selectedBasket]] : rem.baskets).map(b => <BasketChip key={b} label={b} />)}
                 </div>
                 <div style={{ fontSize: '0.78rem', color: status.tone }}>{status.text}</div>
                 <div>
@@ -338,6 +340,7 @@ export default function ResultUpdatesPage() {
             ) : visibleRows.map((r, i) => (
               <CompanyRow
                 key={r.nseCode} r={r} i={i} total={visibleRows.length} basketKey={basketKey}
+                hideOtherBaskets={!!selectedBasket}
                 selected={!!selected[selKey(basketKey, r.nseCode)]} onToggleSelect={() => toggleSelect(basketKey, r)}
                 expanded={expanded === selKey(basketKey, r.nseCode)} onToggleExpand={() => setExpanded(expanded === selKey(basketKey, r.nseCode) ? null : selKey(basketKey, r.nseCode))}
                 onPatch={(patch) => patchRow(r.nseCode, patch)}
@@ -439,13 +442,15 @@ function BasketChip({ label, muted }) {
   );
 }
 
-function CompanyRow({ r, i, total, basketKey, selected, onToggleSelect, expanded, onToggleExpand, onPatch, onUploadSnapshot, onUploadRawDocument, onRemove, inputStyle }) {
+function CompanyRow({ r, i, total, basketKey, hideOtherBaskets, selected, onToggleSelect, expanded, onToggleExpand, onPatch, onUploadSnapshot, onUploadRawDocument, onRemove, inputStyle }) {
   const [opPerf, setOpPerf] = useState(r.operationalPerformance || []);
   const [outlook, setOutlook] = useState(r.outlook || []);
   useEffect(() => { setOpPerf(r.operationalPerformance || []); setOutlook(r.outlook || []); }, [r.operationalPerformance, r.outlook]);
 
   const thisBasketHeld = r.baskets[basketKey]?.currentlyHeld;
-  const otherBaskets = Object.entries(r.baskets || {}).filter(([key]) => key !== basketKey);
+  // A specific basket is picked from the dropdown -- don't surface other
+  // baskets this company happens to also be held in, even when common.
+  const otherBaskets = hideOtherBaskets ? [] : Object.entries(r.baskets || {}).filter(([key]) => key !== basketKey);
 
   const checkbox = (field) => (
     <input type="checkbox" checked={!!r[field]} onChange={e => onPatch({ [field]: e.target.checked })} style={{ cursor: 'pointer' }} />
