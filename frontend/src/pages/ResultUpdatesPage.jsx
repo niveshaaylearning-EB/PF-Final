@@ -27,6 +27,7 @@ export default function ResultUpdatesPage() {
   const [generating, setGenerating] = useState(null); // basket key currently generating, or null
   const [addingFor, setAddingFor] = useState(null); // reminder being turned into a tracked row
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedBasket, setSelectedBasket] = useState(''); // '' = All Baskets
 
   const load = useCallback(() => {
     setLoading(true);
@@ -44,10 +45,13 @@ export default function ResultUpdatesPage() {
     return (name || '').toLowerCase().includes(term) || (code || '').toLowerCase().includes(term);
   }, [searchTerm]);
 
-  const filteredReminders = useMemo(
-    () => reminders.filter(rem => matchesSearch(rem.securityName, rem.nseCode)),
-    [reminders, matchesSearch]
-  );
+  const filteredReminders = useMemo(() => {
+    const basketLabel = selectedBasket ? basketLabels[selectedBasket] : null;
+    return reminders.filter(rem =>
+      matchesSearch(rem.securityName, rem.nseCode) &&
+      (!basketLabel || rem.baskets.includes(basketLabel))
+    );
+  }, [reminders, matchesSearch, selectedBasket, basketLabels]);
 
   const byBasket = useMemo(() => {
     const groups = {};
@@ -188,8 +192,18 @@ export default function ResultUpdatesPage() {
 
       {error && <div style={{ marginBottom: '16px', padding: '10px 14px', borderRadius: '8px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', fontSize: '0.85rem' }}>{error}</div>}
 
-      {/* ── Search ── */}
-      <div style={{ position: 'relative', marginBottom: '20px' }}>
+      {/* ── Basket picker + Search ── */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
+        <select
+          value={selectedBasket} onChange={e => setSelectedBasket(e.target.value)}
+          style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', fontSize: '0.85rem', outline: 'none', fontFamily: 'inherit', cursor: 'pointer', flex: '0 0 220px' }}
+        >
+          <option value="">All Baskets</option>
+          {Object.keys(basketLabels).sort((a, b) => (basketLabels[a] || a).localeCompare(basketLabels[b] || b)).map(key => (
+            <option key={key} value={key}>{basketLabels[key] || key}</option>
+          ))}
+        </select>
+        <div style={{ position: 'relative', flex: '1 1 260px' }}>
         <Search size={15} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
         <input
           type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
@@ -201,6 +215,7 @@ export default function ResultUpdatesPage() {
             <X size={15} />
           </button>
         )}
+        </div>
       </div>
 
       {/* ── Reminders ── */}
@@ -209,7 +224,7 @@ export default function ResultUpdatesPage() {
           <Bell size={15} color="#fbbf24" />
           <span style={{ fontWeight: 700, color: '#fbbf24', fontSize: '0.88rem' }}>Reminders</span>
           <span style={{ fontSize: '0.72rem', background: 'rgba(251,191,36,0.2)', color: '#fbbf24', borderRadius: '10px', padding: '2px 8px', fontWeight: 700 }}>
-            {searchTerm ? `${filteredReminders.length} of ${reminders.length}` : reminders.length}
+            {(searchTerm || selectedBasket) ? `${filteredReminders.length} of ${reminders.length}` : reminders.length}
           </span>
         </div>
         {!loading && filteredReminders.length > 0 && (
@@ -257,17 +272,26 @@ export default function ResultUpdatesPage() {
         })}
       </div>
 
-      {/* ── Per-basket tracking ── */}
-      {Object.keys(basketLabels).sort((a, b) => (basketLabels[a] || a).localeCompare(basketLabels[b] || b)).map(basketKey => {
+      {/* ── Per-basket tracking -- restricted to the picked basket, if any ── */}
+      {Object.keys(basketLabels).sort((a, b) => (basketLabels[a] || a).localeCompare(basketLabels[b] || b))
+        .filter(basketKey => !selectedBasket || basketKey === selectedBasket)
+        .map(basketKey => {
         const basketRows = byBasket[basketKey] || [];
-        if (!basketRows.length) return null;
-        // Selection/received-state calculations always use the FULL list --
-        // filtering is for visibility only, it shouldn't change what counts
-        // as "selected" or whether the basket is eligible for a consolidated send.
-        const visibleRows = basketRows.filter(r => matchesSearch(r.securityName, r.nseCode));
-        if (searchTerm && visibleRows.length === 0) return null;
-        const selectedCount = basketRows.filter(r => selected[selKey(basketKey, r.nseCode)]).length;
+        // When no specific basket is picked, skip empty ones entirely so the
+        // "All Baskets" view isn't cluttered with sections that have nothing
+        // tracked yet. Once the admin explicitly picks a basket from the
+        // dropdown though, show it regardless -- an empty table is still a
+        // meaningful answer to "what does this basket currently look like".
+        if (!basketRows.length && !selectedBasket) return null;
+        // A company removed from THIS basket shouldn't be fetched/shown in
+        // its list at all -- per the user's own spec, "if an existing stock
+        // has been completely removed... we won't be sending the result
+        // update for the same." It still exists globally (other baskets
+        // still holding it, or its own history) -- just not surfaced here.
         const heldRows = basketRows.filter(r => r.baskets[basketKey]?.currentlyHeld);
+        const visibleRows = heldRows.filter(r => matchesSearch(r.securityName, r.nseCode));
+        if (searchTerm && heldRows.length > 0 && visibleRows.length === 0) return null;
+        const selectedCount = heldRows.filter(r => selected[selKey(basketKey, r.nseCode)]).length;
         const allReceived = heldRows.length > 0 && heldRows.every(r => r.received);
         const isGenerating = generating === basketKey;
         return (
@@ -276,7 +300,7 @@ export default function ResultUpdatesPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                 <span style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.92rem' }}>{basketLabels[basketKey] || basketKey}</span>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '2px 8px' }}>
-                  {basketRows.length} tracked
+                  {heldRows.length} tracked
                 </span>
                 {allReceived && (
                   <span title="Every currently-held company has its result update received -- ready for the consolidated send" style={{ fontSize: '0.72rem', color: 'var(--positive)', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '10px', padding: '2px 8px', fontWeight: 600 }}>
@@ -302,10 +326,16 @@ export default function ResultUpdatesPage() {
                 </button>
               </div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '24px 18px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-              <span></span><span></span><span>Company</span><span>Result Date</span><span>Concall Date</span><span>Received</span><span>Checked</span><span>Sent</span><span></span>
-            </div>
-            {visibleRows.map((r, i) => (
+            {visibleRows.length > 0 && (
+              <div style={{ display: 'grid', gridTemplateColumns: '24px 18px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <span></span><span></span><span>Company</span><span>Result Date</span><span>Concall Date</span><span>Received</span><span>Checked</span><span>Sent</span><span></span>
+              </div>
+            )}
+            {visibleRows.length === 0 ? (
+              <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                {searchTerm ? 'No companies in this basket match your search.' : 'No companies tracked yet for this basket -- check the Reminders above.'}
+              </div>
+            ) : visibleRows.map((r, i) => (
               <CompanyRow
                 key={r.nseCode} r={r} i={i} total={visibleRows.length} basketKey={basketKey}
                 selected={!!selected[selKey(basketKey, r.nseCode)]} onToggleSelect={() => toggleSelect(basketKey, r)}
