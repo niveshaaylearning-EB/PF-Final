@@ -102,7 +102,15 @@ wp_proc = subprocess.Popen(
     cwd=os.path.normpath(WEBPORTAL),
     stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
     text=True, bufsize=1,
-    env={**os.environ, "PYTHONUNBUFFERED": "1"},
+    # NIA_DUAL_PROCESS tells smallcase_login.py/competitor_login.py's
+    # _should_proxy() that a second process genuinely exists to proxy
+    # Playwright calls to -- only true for this local dev launcher. Without
+    # it, the single-container production deployment (docker-compose.yml/
+    # supervisord.conf -- ONE process, webportal mounted in-process at /wp,
+    # nothing ever listens on :8001 there) would try to proxy to a port
+    # nothing is bound to and fail every single smallcase-login call with
+    # "All connection attempts failed", confirmed live 2026-10-05.
+    env={**os.environ, "PYTHONUNBUFFERED": "1", "NIA_DUAL_PROCESS": "1"},
 )
 threading.Thread(target=stream, args=(wp_proc, "webportal", "cyan"), daemon=True).start()
 
@@ -113,7 +121,7 @@ main_proc = subprocess.Popen(
     cwd=BACKEND,
     stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
     text=True, bufsize=1,
-    env={**os.environ, "PYTHONUNBUFFERED": "1"},
+    env={**os.environ, "PYTHONUNBUFFERED": "1", "NIA_DUAL_PROCESS": "1"},
 )
 threading.Thread(target=stream, args=(main_proc, "backend ", "green"), daemon=True).start()
 

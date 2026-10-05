@@ -41,6 +41,16 @@ _PROXY_BASE = "http://127.0.0.1:8001/api/admin"
 
 
 def _should_proxy() -> bool:
+    # The cwd mismatch below only means anything when a second process
+    # genuinely exists to proxy to -- true ONLY for run.py's local dual-
+    # process dev launcher, which sets NIA_DUAL_PROCESS on both children.
+    # Without it (every real deployment: docker-compose.yml/supervisord.conf
+    # run exactly ONE process, webportal mounted in-process at /wp, nothing
+    # ever listens on :8001), proxying would just fail outright -- confirmed
+    # live 2026-10-05 ("All connection attempts failed") -- so always do the
+    # real work in this same process instead.
+    if not os.environ.get("NIA_DUAL_PROCESS"):
+        return False
     return Path.cwd().resolve() != _PROFILE_DIR.parent.resolve()
 
 

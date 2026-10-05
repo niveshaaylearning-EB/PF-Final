@@ -32,6 +32,13 @@ _PROXY_BASE = "http://127.0.0.1:8001/api/admin"
 
 
 def _should_proxy() -> bool:
+    # See smallcase_login.py's _should_proxy() for the full story -- only
+    # proxy when run.py's NIA_DUAL_PROCESS confirms a second process
+    # actually exists to proxy to. Every real deployment runs a single
+    # process with nothing listening on :8001, so without it, always do
+    # the real work here instead of failing outright trying to reach it.
+    if not os.environ.get("NIA_DUAL_PROCESS"):
+        return False
     return Path.cwd().resolve() != _PROFILE_DIR.parent.resolve()
 
 
