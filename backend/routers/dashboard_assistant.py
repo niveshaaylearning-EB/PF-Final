@@ -35,7 +35,20 @@ router = APIRouter()
 
 _WEBPORTAL = "http://127.0.0.1:8000/wp"
 _GROQ_MODEL = "openai/gpt-oss-120b"
+_GEMINI_MODEL = "gemini-3.8-flash"
 _MAX_TOOL_ROUNDS = 6
+
+# Groq's free tier has a very low per-model TPM cap (8000 for gpt-oss-120b),
+# which this assistant has hit live more than once (context_length_exceeded,
+# then rate_limit_exceeded). Gemini's free tier is far more generous and
+# exposes an OpenAI-compatible endpoint, so it's a drop-in fallback using the
+# exact same AsyncOpenAI client / tool-calling code -- no separate SDK needed.
+# Try Groq first (already proven, fast); fall back to Gemini only when Groq's
+# own call fails for any reason (rate limit, context length, outage, etc).
+_PROVIDERS = [
+    ("groq",   "GROQ_API_KEY",   "https://api.groq.com/openai/v1",                 _GROQ_MODEL),
+    ("gemini", "GEMINI_API_KEY", "https://generativelanguage.googleapis.com/v1beta/openai/", _GEMINI_MODEL),
+]
 
 
 def _require_admin(request: Request) -> str:
@@ -311,38 +324,48 @@ async def ask_assistant(body: dict, request: Request):
     _MAX_HISTORY_MESSAGES = 8
     history = history[-_MAX_HISTORY_MESSAGES:]
 
-    key = os.environ.get("GROQ_API_KEY")
-    if not key:
-        return {"answer": None, "error": "GROQ_API_KEY not set"}
+    base_messages = [{"role": "system", "content": _SYSTEM_PROMPT}] + history + [{"role": "user", "content": question}]
 
     from openai import AsyncOpenAI
-    client = AsyncOpenAI(api_key=key, base_url="https://api.groq.com/openai/v1")
 
-    messages = [{"role": "system", "content": _SYSTEM_PROMPT}] + history + [{"role": "user", "content": question}]
-    tools_used = []
-
-    try:
-        for _ in range(_MAX_TOOL_ROUNDS):
-            resp = await client.chat.completions.create(
-                model=_GROQ_MODEL, messages=messages, tools=_TOOL_SCHEMAS,
-                tool_choice="auto", temperature=0.2, max_tokens=2000,
-            )
-            msg = resp.choices[0].message
-            if msg.tool_calls:
-                messages.append({
-                    "role": "assistant", "content": msg.content,
-                    "tool_calls": [tc.model_dump() for tc in msg.tool_calls],
-                })
-                for tc in msg.tool_calls:
-                    args = json.loads(tc.function.arguments or "{}")
-                    tools_used.append({"name": tc.function.name, "args": args})
-                    result = await _dispatch_tool(tc.function.name, args)
+    errors = {}
+    for provider_name, env_var, base_url, model in _PROVIDERS:
+        key = os.environ.get(env_var)
+        if not key:
+            continue
+        client = AsyncOpenAI(api_key=key, base_url=base_url)
+        # Fresh copy of messages per provider -- a failed attempt on one
+        # provider must not leave its partial tool-call state polluting the
+        # next provider's request.
+        messages = list(base_messages)
+        tools_used = []
+        try:
+            for _ in range(_MAX_TOOL_ROUNDS):
+                resp = await client.chat.completions.create(
+                    model=model, messages=messages, tools=_TOOL_SCHEMAS,
+                    tool_choice="auto", temperature=0.2, max_tokens=2000,
+                )
+                msg = resp.choices[0].message
+                if msg.tool_calls:
                     messages.append({
-                        "role": "tool", "tool_call_id": tc.id,
-                        "content": json.dumps(result, default=str),
+                        "role": "assistant", "content": msg.content,
+                        "tool_calls": [tc.model_dump() for tc in msg.tool_calls],
                     })
-                continue
-            return {"answer": msg.content, "toolsUsed": tools_used}
-        return {"answer": "I needed too many steps to answer that -- try asking something more specific.", "toolsUsed": tools_used}
-    except Exception as e:
-        return {"answer": None, "error": str(e)}
+                    for tc in msg.tool_calls:
+                        args = json.loads(tc.function.arguments or "{}")
+                        tools_used.append({"name": tc.function.name, "args": args})
+                        result = await _dispatch_tool(tc.function.name, args)
+                        messages.append({
+                            "role": "tool", "tool_call_id": tc.id,
+                            "content": json.dumps(result, default=str),
+                        })
+                    continue
+                return {"answer": msg.content, "toolsUsed": tools_used, "provider": provider_name}
+            return {"answer": "I needed too many steps to answer that -- try asking something more specific.", "toolsUsed": tools_used, "provider": provider_name}
+        except Exception as e:
+            errors[provider_name] = str(e)
+            continue  # try the next provider
+
+    if not errors:
+        return {"answer": None, "error": "No AI provider configured -- set GROQ_API_KEY or GEMINI_API_KEY."}
+    return {"answer": None, "error": f"All AI providers failed: {errors}"}
