@@ -23,7 +23,8 @@ from reportlab.platypus.flowables import Flowable
 _GREEN = colors.HexColor("#456232")
 
 _styles = getSampleStyleSheet()
-_basket_title_style = ParagraphStyle("BasketTitle", parent=_styles["Title"], fontSize=18, textColor=_GREEN, spaceAfter=14)
+_basket_title_style = ParagraphStyle("BasketTitle", parent=_styles["Title"], fontSize=18, textColor=_GREEN, spaceAfter=4)
+_consolidated_subtitle_style = ParagraphStyle("ConsolidatedSubtitle", parent=_styles["Normal"], fontSize=11, textColor=colors.black, alignment=1, spaceAfter=14)
 _company_style = ParagraphStyle("Company", parent=_styles["Heading1"], fontSize=15, textColor=colors.black, spaceBefore=10, spaceAfter=8)
 _section_style = ParagraphStyle("Section", parent=_styles["Heading2"], fontSize=12, textColor=_GREEN, spaceBefore=10, spaceAfter=6)
 _bullet_style = ParagraphStyle("Bullet", parent=_styles["Normal"], fontSize=10, leading=14, spaceAfter=5, leftIndent=12)
@@ -101,13 +102,18 @@ def _company_flowables(row: dict, upload_dir: Path) -> list:
     return flow
 
 
-def generate_merged_pdf(basket_label: str, rows: list, upload_dir: Path, output_path: Path) -> None:
+def generate_merged_pdf(basket_label: str, rows: list, upload_dir: Path, output_path: Path, consolidated: bool = False) -> None:
     """`rows` is a list of result_updates.json row dicts (already filtered
     + ordered by the caller) for ONE basket. Writes the merged PDF to
-    `output_path`."""
+    `output_path`. `consolidated=True` adds a subtitle marking this as the
+    final once-everyone's-reported send, per the user's own spec -- same
+    layout otherwise, since the format doesn't change, just when it's sent."""
     doc = SimpleDocTemplate(str(output_path), pagesize=A4,
                              topMargin=2 * cm, bottomMargin=2 * cm, leftMargin=2 * cm, rightMargin=2 * cm)
-    story = [Paragraph(basket_label, _basket_title_style), Spacer(1, 6)]
+    story = [Paragraph(basket_label, _basket_title_style)]
+    if consolidated:
+        story.append(Paragraph("Consolidated Result Update", _consolidated_subtitle_style))
+    story.append(Spacer(1, 6))
 
     for i, row in enumerate(rows):
         company_flow = _company_flowables(row, upload_dir)
