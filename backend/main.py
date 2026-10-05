@@ -855,6 +855,9 @@ app.include_router(_results_calendar_router)
 from routers.result_updates import router as _result_updates_router
 app.include_router(_result_updates_router)
 
+from routers.dashboard_assistant import router as _dashboard_assistant_router
+app.include_router(_dashboard_assistant_router)
+
 # ── Actual Portfolio proxy — moved to routers/actual_portfolio_bridge.py ─────
 
 class AllowedEmailBody(BaseModel):

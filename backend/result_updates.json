@@ -1,1 +1,54 @@
-{}
+{
+  "SAILIFE": {
+    "nseCode": "SAILIFE",
+    "securityName": "SAILIFE",
+    "resultDate": "2026-11-05",
+    "concallDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "snapshotImage": null,
+    "rawDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      },
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "05 Oct 2026 11:42 UTC"
+  },
+  "SSWL": {
+    "nseCode": "SSWL",
+    "securityName": "SSWL",
+    "resultDate": "2026-10-23",
+    "concallDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "snapshotImage": null,
+    "rawDocument": null,
+    "baskets": {
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "05 Oct 2026 11:42 UTC"
+  }
+}
