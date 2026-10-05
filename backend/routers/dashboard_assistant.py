@@ -82,6 +82,44 @@ def _tool_get_rebalance_history(args: dict) -> dict:
     return _wp_get(f"/api/admin/basket-rebalance-history/{args['basket']}")
 
 
+def _tool_get_basket_returns(args: dict) -> dict:
+    # Reuses actual_portfolio_bridge.py's own period-return computation
+    # directly (same process, same main app) rather than re-deriving it --
+    # that's the exact function behind the Actual Portfolio page's own
+    # return figures, so this answers with the identical numbers.
+    from routers.actual_portfolio_bridge import get_basket_period_returns
+    period = (args.get("period") or "1M").upper()
+    all_returns = get_basket_period_returns(period=period)
+    basket = args.get("basket")
+    return {basket: all_returns.get(basket)} if basket else all_returns
+
+
+def _tool_get_competitor_rebalance_history(args: dict) -> dict:
+    # get_competitor_list already returns fullRebalanceHistory/rebalanceTimeline
+    # per competitor -- this narrows to the one asked about. fullRebalanceHistory
+    # itself is deliberately left out by default: it's a per-stock breakdown of
+    # EVERY historical rebalance event and alone can be ~25K+ characters, which
+    # blows Groq's 8000 TPM request-size cap on its own. rebalanceTimeline (dates
+    # + add/remove counts) and latestRebalanceDetail (current full holding list)
+    # cover "what/when was the recent rebalance" questions; pass includeFullHistory
+    # only when the user explicitly wants the entire historical breakdown, and
+    # even then only the last 3 events are returned.
+    data = _wp_get("/api/admin/competitor-list")
+    key = (args.get("competitorKey") or "").strip().lower()
+    label = (args.get("competitorLabel") or "").strip().lower()
+    for c in data.get("competitors") or []:
+        if (key and c.get("key") == key) or (label and label in (c.get("label") or "").lower()):
+            result = {
+                "key": c.get("key"), "label": c.get("label"), "manager": c.get("manager"),
+                "rebalanceTimeline": c.get("rebalanceTimeline"),
+                "latestRebalanceDetail": c.get("latestRebalanceDetail"),
+            }
+            if args.get("includeFullHistory"):
+                result["fullRebalanceHistory"] = (c.get("fullRebalanceHistory") or [])[-3:]
+            return result
+    return {"error": "No matching competitor -- call get_competitor_list to see the exact key/label spelling."}
+
+
 def _tool_get_gains_statement(args: dict) -> dict:
     data = _wp_get("/api/gains-statement")
     basket = args.get("basket")
@@ -97,7 +135,29 @@ def _tool_get_watchlist(_args: dict) -> dict:
 
 
 def _tool_get_competitor_list(_args: dict) -> dict:
-    return _wp_get("/api/admin/competitor-list")
+    # Deliberately slimmed down -- the full payload includes each competitor's
+    # stocks/performanceSeries/rebalanceTimeline/fullRebalanceHistory, which
+    # is far too large to feed back into the model as a single tool result
+    # (blows Groq's context window). This tool is only for resolving a name
+    # to a key/label; use get_competitor_rebalance_history for full detail.
+    full = _wp_get("/api/admin/competitor-list")
+    competitors = full.get("competitors", full) if isinstance(full, dict) else full
+    if isinstance(competitors, dict):
+        items = competitors.values()
+    else:
+        items = competitors
+    slim = []
+    for c in items:
+        if not isinstance(c, dict):
+            continue
+        slim.append({
+            "key": c.get("key"),
+            "label": c.get("label"),
+            "manager": c.get("manager"),
+            "cagr": c.get("cagr"),
+            "launchDate": c.get("launchDate"),
+        })
+    return {"competitors": slim}
 
 
 def _tool_get_result_update_status(args: dict) -> dict:
@@ -127,10 +187,12 @@ _TOOL_IMPLS = {
     "list_baskets": _tool_list_baskets,
     "get_basket_holdings": _tool_get_basket_holdings,
     "get_rebalance_history": _tool_get_rebalance_history,
+    "get_basket_returns": _tool_get_basket_returns,
     "get_gains_statement": _tool_get_gains_statement,
     "get_corporate_actions": _tool_get_corporate_actions,
     "get_watchlist": _tool_get_watchlist,
     "get_competitor_list": _tool_get_competitor_list,
+    "get_competitor_rebalance_history": _tool_get_competitor_rebalance_history,
     "get_result_update_status": _tool_get_result_update_status,
     "get_results_calendar": _tool_get_results_calendar,
 }
@@ -152,10 +214,18 @@ _TOOL_SCHEMAS = [
     }},
     {"type": "function", "function": {
         "name": "get_rebalance_history",
-        "description": "Dated rebalance events for one basket: stocks added, removed, or reweighted on each date.",
+        "description": "Dated rebalance events for one of OUR OWN baskets: stocks added, removed, or reweighted on each date. For a COMPETITOR smallcase's rebalances instead, use get_competitor_rebalance_history.",
         "parameters": {"type": "object", "properties": {
             "basket": {"type": "string", "description": "Exact basket key"},
         }, "required": ["basket"]},
+    }},
+    {"type": "function", "function": {
+        "name": "get_basket_returns",
+        "description": "Our own basket's percentage return (and CAGR) over a trailing period, as of today.",
+        "parameters": {"type": "object", "properties": {
+            "basket": {"type": "string", "description": "Optional exact basket key -- omit for every basket"},
+            "period": {"type": "string", "enum": ["1W", "1M", "3M", "6M", "1Y"], "description": "Trailing window, default 1M"},
+        }},
     }},
     {"type": "function", "function": {
         "name": "get_gains_statement",
@@ -176,8 +246,17 @@ _TOOL_SCHEMAS = [
     }},
     {"type": "function", "function": {
         "name": "get_competitor_list",
-        "description": "The 8 tracked competitor smallcases: label, fund manager, last-fetched stocks/returns/rebalance data.",
+        "description": "Every one of the 8 tracked COMPETITOR smallcases (external funds we benchmark against, e.g. GEM-Q Model, Omni AI-Tech Global-AI Theme, Wright Innovation Theme, Caprize Earnings Momentum Portfolio -- NOT our own baskets): key, label, fund manager, current stocks, CAGR, and rebalance history. Call this to see the exact key/label list if a competitor's name is ambiguous.",
         "parameters": {"type": "object", "properties": {}},
+    }},
+    {"type": "function", "function": {
+        "name": "get_competitor_rebalance_history",
+        "description": "One COMPETITOR smallcase's rebalance history (not one of our own baskets -- use get_rebalance_history for those). Match by key or a partial/fuzzy label (e.g. 'Omni' matches 'Omni AI-Tech Global-AI Theme').",
+        "parameters": {"type": "object", "properties": {
+            "competitorKey": {"type": "string"},
+            "competitorLabel": {"type": "string", "description": "Partial name is fine, e.g. 'Omni' or 'GEM-Q'"},
+            "includeFullHistory": {"type": "boolean", "description": "Only set true if the user explicitly wants the full historical per-stock rebalance breakdown, not just the latest/recent one. Returns just the last 3 events."},
+        }},
     }},
     {"type": "function", "function": {
         "name": "get_result_update_status",
@@ -195,6 +274,11 @@ _TOOL_SCHEMAS = [
 ]
 
 _SYSTEM_PROMPT = f"""You are the Niveshaay dashboard's own assistant. Answer questions ONLY using data you retrieve via the tools provided -- never invent a stock, price, date, or percentage. Basket keys you may need: {_BASKET_KEYS_HINT} (call list_baskets if unsure).
+
+Two different things can be named in a question, and they use DIFFERENT tools -- never assume a name must be one of OUR baskets just because no basket matches it:
+- OUR OWN baskets (the {len(_BASKET_KEYS_HINT.split(', '))} listed above) -- holdings, rebalances, returns, gains, corporate actions, watchlist, result updates.
+- The 8 tracked COMPETITOR smallcases (external funds, e.g. GEM-Q Model, Consumer Durables Stars Tracker, Omni AI-Tech Global-AI Theme, AI & Data Center Theme, Wright Innovation Theme, Nirivantes TechWave Select Theme, Caprize Earnings Momentum Portfolio, Caprize Midcap & Smallcap Portfolio) -- use get_competitor_list / get_competitor_rebalance_history for these, matching by partial name.
+If a name in the question doesn't match a basket, check whether it's actually a competitor smallcase before saying no data exists.
 
 Call as many tools as needed to answer fully, including multiple baskets if the question spans more than one. Keep answers concise and concrete (real numbers/dates/names from the tool results), in plain prose or a short list -- no preamble. If the data needed isn't available through any tool, say so plainly instead of guessing."""
 
