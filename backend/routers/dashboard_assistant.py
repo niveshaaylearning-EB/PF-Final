@@ -86,9 +86,12 @@ def _tool_get_basket_returns(args: dict) -> dict:
     # Reuses actual_portfolio_bridge.py's own period-return computation
     # directly (same process, same main app) rather than re-deriving it --
     # that's the exact function behind the Actual Portfolio page's own
-    # return figures, so this answers with the identical numbers.
+    # return figures, so this answers with the identical numbers. Not
+    # limited to the 5 preset buttons the UI shows -- the underlying data
+    # is a daily series, so any "<n><W|D|M|Y>" period works (e.g. "9M",
+    # "270D"), same as a custom date range would on the Actual Portfolio page.
     from routers.actual_portfolio_bridge import get_basket_period_returns
-    period = (args.get("period") or "1M").upper()
+    period = (args.get("period") or "1M").strip().upper()
     all_returns = get_basket_period_returns(period=period)
     basket = args.get("basket")
     return {basket: all_returns.get(basket)} if basket else all_returns
@@ -221,10 +224,10 @@ _TOOL_SCHEMAS = [
     }},
     {"type": "function", "function": {
         "name": "get_basket_returns",
-        "description": "Our own basket's percentage return (and CAGR) over a trailing period, as of today.",
+        "description": "Our own basket's percentage return (and CAGR) over a trailing period, as of today. Not limited to a fixed list -- any lookback window works.",
         "parameters": {"type": "object", "properties": {
             "basket": {"type": "string", "description": "Optional exact basket key -- omit for every basket"},
-            "period": {"type": "string", "enum": ["1W", "1M", "3M", "6M", "1Y"], "description": "Trailing window, default 1M"},
+            "period": {"type": "string", "description": "Trailing window, default 1M. Either a preset (1W/1M/3M/6M/1Y) or a generic '<number><W|D|M|Y>' string for any other window, e.g. '9M' for 9 months, '270D' for 270 days, '2Y' for 2 years."},
         }},
     }},
     {"type": "function", "function": {

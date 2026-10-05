@@ -146,16 +146,38 @@ def get_actual_portfolio_baskets():
         raise HTTPException(status_code=503, detail=f"Webportal unreachable: {e}")
 
 
+_PERIOD_DAYS = {'1W': 7, '1M': 30, '3M': 90, '6M': 182, '1Y': 365}
+
+
+def _parse_period_to_days(period: str) -> int:
+    """
+    Accepts either one of the preset keys (1W/1M/3M/6M/1Y) or a generic
+    "<number><W|D|M|Y>" string (e.g. "9M", "45D", "2Y") so callers aren't
+    limited to the 5 preset buttons the Actual Portfolio UI happens to show
+    -- the underlying historical_index.json series has a data point for
+    every day, so any arbitrary lookback is just as answerable.
+    """
+    p = (period or "1M").strip().upper()
+    if p in _PERIOD_DAYS:
+        return _PERIOD_DAYS[p]
+    import re as _re
+    m = _re.fullmatch(r"(\d+)\s*([WDMY])", p)
+    if not m:
+        return _PERIOD_DAYS['1M']
+    n, unit = int(m.group(1)), m.group(2)
+    return n * {'D': 1, 'W': 7, 'M': 30, 'Y': 365}[unit]
+
+
 @router.get("/api/basket-period-returns")
-def get_basket_period_returns(period: str = "1M"):
+def get_basket_period_returns(period: str = "1M", days: int = None):
     """
     Compute basket-level period returns from the webportal's historical index data.
     Source: webportal GET /api/index-history (historical_index.json).
-    period: 1W=7d, 1M=30d, 3M=90d, 6M=182d, 1Y=365d
+    period: a preset (1W/1M/3M/6M/1Y) or a generic "<n><W|D|M|Y>" string (e.g. "9M").
+    days: optional explicit lookback in days -- takes precedence over period when given.
     Returns {basket_key: {name, net, cagr, base_date, latest_date}}
     """
-    period_days = {'1W': 7, '1M': 30, '3M': 90, '6M': 182, '1Y': 365}
-    days = period_days.get(period.upper(), 30)
+    days = days if days is not None else _parse_period_to_days(period)
     today = datetime.now().date()
     base_date_str = (today - timedelta(days=days)).isoformat()
 
