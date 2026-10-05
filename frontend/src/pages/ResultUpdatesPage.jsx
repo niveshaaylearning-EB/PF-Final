@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, FileText, Bell, Upload, FileUp, Trash2, Download, Plus, ChevronDown, ChevronRight } from 'lucide-react';
+import { ArrowLeft, FileText, Bell, Upload, FileUp, Trash2, Download, Plus, ChevronDown, ChevronRight, Search, X } from 'lucide-react';
 import { getToken } from '../utils/auth';
 import { API_BASE as API } from '../config.js';
 
@@ -26,6 +26,7 @@ export default function ResultUpdatesPage() {
   const [selected, setSelected] = useState({}); // {"basket|nseCode": true} -- merge selection is basket-scoped
   const [generating, setGenerating] = useState(null); // basket key currently generating, or null
   const [addingFor, setAddingFor] = useState(null); // reminder being turned into a tracked row
+  const [searchTerm, setSearchTerm] = useState('');
 
   const load = useCallback(() => {
     setLoading(true);
@@ -36,6 +37,17 @@ export default function ResultUpdatesPage() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+
+  const matchesSearch = useCallback((name, code) => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return true;
+    return (name || '').toLowerCase().includes(term) || (code || '').toLowerCase().includes(term);
+  }, [searchTerm]);
+
+  const filteredReminders = useMemo(
+    () => reminders.filter(rem => matchesSearch(rem.securityName, rem.nseCode)),
+    [reminders, matchesSearch]
+  );
 
   const byBasket = useMemo(() => {
     const groups = {};
@@ -176,31 +188,69 @@ export default function ResultUpdatesPage() {
 
       {error && <div style={{ marginBottom: '16px', padding: '10px 14px', borderRadius: '8px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', fontSize: '0.85rem' }}>{error}</div>}
 
+      {/* ── Search ── */}
+      <div style={{ position: 'relative', marginBottom: '20px' }}>
+        <Search size={15} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+        <input
+          type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+          placeholder="Search by company name or NSE code…"
+          style={{ width: '100%', padding: '10px 36px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', fontSize: '0.85rem', outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }}
+        />
+        {searchTerm && (
+          <button onClick={() => setSearchTerm('')} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', padding: 0 }}>
+            <X size={15} />
+          </button>
+        )}
+      </div>
+
       {/* ── Reminders ── */}
       <div className="glass-panel" style={{ padding: 0, overflow: 'hidden', marginBottom: '20px', border: '1px solid rgba(251,191,36,0.25)' }}>
         <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(251,191,36,0.06)' }}>
           <Bell size={15} color="#fbbf24" />
           <span style={{ fontWeight: 700, color: '#fbbf24', fontSize: '0.88rem' }}>Reminders</span>
-          <span style={{ fontSize: '0.72rem', background: 'rgba(251,191,36,0.2)', color: '#fbbf24', borderRadius: '10px', padding: '2px 8px', fontWeight: 700 }}>{reminders.length}</span>
+          <span style={{ fontSize: '0.72rem', background: 'rgba(251,191,36,0.2)', color: '#fbbf24', borderRadius: '10px', padding: '2px 8px', fontWeight: 700 }}>
+            {searchTerm ? `${filteredReminders.length} of ${reminders.length}` : reminders.length}
+          </span>
         </div>
+        {!loading && filteredReminders.length > 0 && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(160px, 1.4fr) minmax(140px, 1fr) minmax(160px, 1.6fr) 120px', gap: '10px', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            <span>Company</span><span>Basket(s)</span><span>Status</span><span></span>
+          </div>
+        )}
         {loading ? (
           <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Loading…</div>
-        ) : reminders.length === 0 ? (
-          <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Nothing pending.</div>
-        ) : reminders.map((rem, i) => {
+        ) : filteredReminders.length === 0 ? (
+          <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>{searchTerm ? 'No reminders match your search.' : 'Nothing pending.'}</div>
+        ) : filteredReminders.map((rem, i) => {
           const isAdding = addingFor && addingFor.nseCode === rem.nseCode;
+          const status = rem.type === 'new'
+            ? (rem.suggestedResultDate ? { text: `Suggested result date: ${rem.suggestedResultDate}`, tone: 'var(--positive)' } : { text: 'No dates tracked yet', tone: 'var(--text-muted)' })
+            : rem.type === 'overdue_result'
+            ? { text: `Results announced ${rem.resultDate} — not yet Received`, tone: '#fbbf24' }
+            : { text: `Concall was ${rem.concallDate} — not yet Received`, tone: '#fbbf24' };
           return (
-            <div key={rem.nseCode} style={{ padding: '12px 20px', borderBottom: i < reminders.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
-                <div style={{ fontSize: '0.84rem', color: 'var(--text-main)' }}>{rem.message}</div>
-                {rem.type === 'new' && !isAdding && (
-                  <button onClick={() => startTrackingFromReminder(rem)} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: '7px', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.1)', color: 'var(--primary)', fontSize: '0.78rem', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                    <Plus size={12} /> Add dates
-                  </button>
-                )}
+            <div key={rem.nseCode} style={{ borderBottom: i < filteredReminders.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(160px, 1.4fr) minmax(140px, 1fr) minmax(160px, 1.6fr) 120px', gap: '10px', alignItems: 'center', padding: '10px 20px' }}>
+                <div>
+                  <div style={{ fontSize: '0.84rem', color: 'var(--text-main)', fontWeight: 600 }}>{rem.securityName}</div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{rem.nseCode}</div>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                  {rem.baskets.map(b => <BasketChip key={b} label={b} />)}
+                </div>
+                <div style={{ fontSize: '0.78rem', color: status.tone }}>{status.text}</div>
+                <div>
+                  {rem.type === 'new' && !isAdding && (
+                    <button onClick={() => startTrackingFromReminder(rem)} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: '7px', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.1)', color: 'var(--primary)', fontSize: '0.78rem', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                      <Plus size={12} /> Add dates
+                    </button>
+                  )}
+                </div>
               </div>
               {isAdding && (
-                <ReminderDateForm rem={rem} onConfirm={confirmAddFromReminder} onCancel={() => setAddingFor(null)} inputStyle={inputStyle} />
+                <div style={{ padding: '0 20px 14px' }}>
+                  <ReminderDateForm rem={rem} onConfirm={confirmAddFromReminder} onCancel={() => setAddingFor(null)} inputStyle={inputStyle} />
+                </div>
               )}
             </div>
           );
@@ -211,6 +261,11 @@ export default function ResultUpdatesPage() {
       {Object.keys(basketLabels).sort((a, b) => (basketLabels[a] || a).localeCompare(basketLabels[b] || b)).map(basketKey => {
         const basketRows = byBasket[basketKey] || [];
         if (!basketRows.length) return null;
+        // Selection/received-state calculations always use the FULL list --
+        // filtering is for visibility only, it shouldn't change what counts
+        // as "selected" or whether the basket is eligible for a consolidated send.
+        const visibleRows = basketRows.filter(r => matchesSearch(r.securityName, r.nseCode));
+        if (searchTerm && visibleRows.length === 0) return null;
         const selectedCount = basketRows.filter(r => selected[selKey(basketKey, r.nseCode)]).length;
         const heldRows = basketRows.filter(r => r.baskets[basketKey]?.currentlyHeld);
         const allReceived = heldRows.length > 0 && heldRows.every(r => r.received);
@@ -247,9 +302,12 @@ export default function ResultUpdatesPage() {
                 </button>
               </div>
             </div>
-            {basketRows.map((r, i) => (
+            <div style={{ display: 'grid', gridTemplateColumns: '24px 18px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <span></span><span></span><span>Company</span><span>Result Date</span><span>Concall Date</span><span>Received</span><span>Checked</span><span>Sent</span><span></span>
+            </div>
+            {visibleRows.map((r, i) => (
               <CompanyRow
-                key={r.nseCode} r={r} i={i} total={basketRows.length} basketKey={basketKey}
+                key={r.nseCode} r={r} i={i} total={visibleRows.length} basketKey={basketKey}
                 selected={!!selected[selKey(basketKey, r.nseCode)]} onToggleSelect={() => toggleSelect(basketKey, r)}
                 expanded={expanded === selKey(basketKey, r.nseCode)} onToggleExpand={() => setExpanded(expanded === selKey(basketKey, r.nseCode) ? null : selKey(basketKey, r.nseCode))}
                 onPatch={(patch) => patchRow(r.nseCode, patch)}
@@ -338,6 +396,19 @@ function BulletEditor({ label, items, onChange }) {
   );
 }
 
+function BasketChip({ label, muted }) {
+  return (
+    <span style={{
+      fontSize: '0.68rem', fontWeight: 600, padding: '2px 8px', borderRadius: '999px', whiteSpace: 'nowrap',
+      color: muted ? 'var(--text-muted)' : 'var(--primary)',
+      background: muted ? 'rgba(255,255,255,0.05)' : 'rgba(99,102,241,0.12)',
+      border: `1px solid ${muted ? 'rgba(255,255,255,0.1)' : 'rgba(99,102,241,0.3)'}`,
+    }}>
+      {label}
+    </span>
+  );
+}
+
 function CompanyRow({ r, i, total, basketKey, selected, onToggleSelect, expanded, onToggleExpand, onPatch, onUploadSnapshot, onUploadRawDocument, onRemove, inputStyle }) {
   const [opPerf, setOpPerf] = useState(r.operationalPerformance || []);
   const [outlook, setOutlook] = useState(r.outlook || []);
@@ -346,35 +417,32 @@ function CompanyRow({ r, i, total, basketKey, selected, onToggleSelect, expanded
   const thisBasketHeld = r.baskets[basketKey]?.currentlyHeld;
   const otherBaskets = Object.entries(r.baskets || {}).filter(([key]) => key !== basketKey);
 
-  const checkbox = (field, label) => (
-    <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.76rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
-      <input type="checkbox" checked={!!r[field]} onChange={e => onPatch({ [field]: e.target.checked })} />
-      {label}
-    </label>
+  const checkbox = (field) => (
+    <input type="checkbox" checked={!!r[field]} onChange={e => onPatch({ [field]: e.target.checked })} style={{ cursor: 'pointer' }} />
   );
 
   return (
     <div style={{ borderBottom: i < total - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none', opacity: thisBasketHeld ? 1 : 0.55 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 20px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '24px 18px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '10px 20px' }}>
         <input type="checkbox" checked={selected} onChange={onToggleSelect} title="Include in next merged PDF for this basket" />
         <button onClick={onToggleExpand} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', padding: 0 }}>
           {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
         </button>
-        <div style={{ minWidth: '160px', flex: '1 1 160px' }}>
-          <span style={{ color: 'var(--text-main)', fontSize: '0.85rem' }}>{r.securityName}</span>
-          <span style={{ color: 'var(--text-muted)', fontSize: '0.74rem', marginLeft: '6px' }}>({r.nseCode})</span>
-          {!thisBasketHeld && <span style={{ marginLeft: '8px', fontSize: '0.68rem', color: '#f87171' }}>no longer held here -- not sent for this basket</span>}
-          {otherBaskets.length > 0 && (
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-              also tracked in: {otherBaskets.map(([, b]) => b.label).join(', ')}
-            </div>
-          )}
+        <div style={{ minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
+            <span style={{ color: 'var(--text-main)', fontSize: '0.85rem', fontWeight: 600 }}>{r.securityName}</span>
+            <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>({r.nseCode})</span>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '4px' }}>
+            {!thisBasketHeld && <BasketChip label="no longer held here" muted />}
+            {otherBaskets.map(([key, b]) => <BasketChip key={key} label={`also in: ${b.label}`} muted />)}
+          </div>
         </div>
         <input type="date" value={r.resultDate || ''} onChange={e => onPatch({ resultDate: e.target.value })} title="Result date (shared across every basket holding this company)" style={inputStyle} />
         <input type="date" value={r.concallDate || ''} onChange={e => onPatch({ concallDate: e.target.value })} title="Concall date" style={inputStyle} />
-        {checkbox('received', 'Received')}
-        {checkbox('checked', 'Checked')}
-        {checkbox('sent', 'Sent')}
+        <div style={{ textAlign: 'center' }}>{checkbox('received')}</div>
+        <div style={{ textAlign: 'center' }}>{checkbox('checked')}</div>
+        <div style={{ textAlign: 'center' }}>{checkbox('sent')}</div>
         <button onClick={onRemove} title="Stop tracking this company entirely (all baskets)" style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.28)', background: 'rgba(239,68,68,0.08)', color: '#f87171', cursor: 'pointer' }}>
           <Trash2 size={12} />
         </button>

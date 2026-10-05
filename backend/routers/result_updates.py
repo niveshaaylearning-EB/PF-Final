@@ -192,13 +192,13 @@ def _sync_and_compute_reminders(data: dict) -> list:
         if row.get("resultDate") and row["resultDate"] <= today:
             reminders.append({
                 "type": "overdue_result", "nseCode": row["nseCode"], "securityName": row["securityName"],
-                "baskets": held_labels,
+                "baskets": held_labels, "resultDate": row["resultDate"],
                 "message": f"{row['securityName']} ({row['nseCode']}) announced results on {row['resultDate']} -- held in: {baskets_str}. Mark Received once the update is in hand.",
             })
         elif row.get("concallDate") and row["concallDate"] <= today:
             reminders.append({
                 "type": "overdue_concall", "nseCode": row["nseCode"], "securityName": row["securityName"],
-                "baskets": held_labels,
+                "baskets": held_labels, "concallDate": row["concallDate"],
                 "message": f"{row['securityName']} ({row['nseCode']})'s concall was on {row['concallDate']} -- held in: {baskets_str}. Mark Received once the update is in hand.",
             })
 
