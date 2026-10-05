@@ -227,7 +227,7 @@ _TOOL_SCHEMAS = [
         "description": "Our own basket's percentage return (and CAGR) over a trailing period, as of today. Not limited to a fixed list -- any lookback window works.",
         "parameters": {"type": "object", "properties": {
             "basket": {"type": "string", "description": "Optional exact basket key -- omit for every basket"},
-            "period": {"type": "string", "description": "Trailing window, default 1M. Either a preset (1W/1M/3M/6M/1Y) or a generic '<number><W|D|M|Y>' string for any other window, e.g. '9M' for 9 months, '270D' for 270 days, '2Y' for 2 years."},
+            "period": {"type": "string", "description": "Trailing window, default 1M. Either a preset (1W/1M/3M/6M/1Y), a generic '<number><W|D|M|Y>' string for any other window (e.g. '9M' for 9 months, '270D' for 270 days, '2Y' for 2 years), or 'MAX' for the full since-inception return -- always use 'MAX' for 'since inception'/'all-time' questions rather than guessing a large year count, since guessing too small silently truncates the result to that guessed date instead of the true launch date."},
         }},
     }},
     {"type": "function", "function": {
@@ -303,6 +303,13 @@ async def ask_assistant(body: dict, request: Request):
     if not question:
         raise HTTPException(status_code=400, detail="question is required")
     history = body.get("history") or []  # [{role, content}, ...] prior turns, optional
+    # The frontend sends the whole conversation back on every turn, so a long
+    # back-and-forth session keeps growing the request size until it blows
+    # Groq's 8000 TPM cap (confirmed live: a multi-turn session hit a 413
+    # rate_limit_exceeded wanting 23781 tokens). Older turns add little value
+    # for a Q&A assistant anyway -- cap to the last few exchanges.
+    _MAX_HISTORY_MESSAGES = 8
+    history = history[-_MAX_HISTORY_MESSAGES:]
 
     key = os.environ.get("GROQ_API_KEY")
     if not key:

@@ -168,18 +168,24 @@ def _parse_period_to_days(period: str) -> int:
     return n * {'D': 1, 'W': 7, 'M': 30, 'Y': 365}[unit]
 
 
+_INCEPTION_ALIASES = {"MAX", "ALL", "INCEPTION", "SINCE_INCEPTION", "SINCEINCEPTION"}
+
+
 @router.get("/api/basket-period-returns")
 def get_basket_period_returns(period: str = "1M", days: int = None):
     """
     Compute basket-level period returns from the webportal's historical index data.
     Source: webportal GET /api/index-history (historical_index.json).
-    period: a preset (1W/1M/3M/6M/1Y) or a generic "<n><W|D|M|Y>" string (e.g. "9M").
+    period: a preset (1W/1M/3M/6M/1Y), a generic "<n><W|D|M|Y>" string (e.g. "9M"),
+        or "MAX"/"ALL"/"INCEPTION" for the basket's full since-inception return.
     days: optional explicit lookback in days -- takes precedence over period when given.
     Returns {basket_key: {name, net, cagr, base_date, latest_date}}
     """
-    days = days if days is not None else _parse_period_to_days(period)
-    today = datetime.now().date()
-    base_date_str = (today - timedelta(days=days)).isoformat()
+    since_inception = days is None and (period or "").strip().upper() in _INCEPTION_ALIASES
+    if not since_inception:
+        days = days if days is not None else _parse_period_to_days(period)
+        today = datetime.now().date()
+        base_date_str = (today - timedelta(days=days)).isoformat()
 
     hi = _fetch_index_history()
     if not hi:
@@ -199,7 +205,13 @@ def get_basket_period_returns(period: str = "1M", days: int = None):
         data = info.get("data", [])
         if not data:
             continue
-        base_pt   = _find_closest(data, base_date_str)
+        # "Since inception" means the earliest point we have, full stop -- not
+        # a days-based guess. Guessing a lookback (e.g. "5Y") and letting
+        # _find_closest land on the first date ON/AFTER that guess silently
+        # truncates history whenever the guess undershoots the real inception
+        # date, which is exactly what happened when the Dashboard Assistant
+        # guessed 5Y for a basket that actually launched 7 years ago.
+        base_pt   = min(data, key=lambda d: d["date"]) if since_inception else _find_closest(data, base_date_str)
         latest_pt = max(data, key=lambda d: d["date"])
         if not base_pt or not latest_pt:
             continue
