@@ -171,7 +171,7 @@ export default function ResultUpdatesPage() {
     load(); // re-sync so every basket currently holding this company gets associated, not just the one that surfaced the reminder
   };
 
-  const inputStyle = { padding: '6px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', fontSize: '0.82rem', outline: 'none', fontFamily: 'inherit' };
+  const inputStyle = { padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--panel-border)', background: 'var(--input-bg)', color: 'var(--text-main)', fontSize: '0.82rem', outline: 'none', fontFamily: 'inherit' };
 
   return (
     <div className="animate-slide-up" style={{ maxWidth: 980, margin: '0 auto', padding: '0 1rem 3rem' }}>
@@ -196,7 +196,7 @@ export default function ResultUpdatesPage() {
       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
         <select
           value={selectedBasket} onChange={e => setSelectedBasket(e.target.value)}
-          style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', fontSize: '0.85rem', outline: 'none', fontFamily: 'inherit', cursor: 'pointer', flex: '0 0 220px' }}
+          style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--panel-border)', background: 'var(--input-bg)', color: 'var(--text-main)', fontSize: '0.85rem', outline: 'none', fontFamily: 'inherit', cursor: 'pointer', flex: '0 0 220px' }}
         >
           <option value="">All Baskets</option>
           {Object.keys(basketLabels).sort((a, b) => (basketLabels[a] || a).localeCompare(basketLabels[b] || b)).map(key => (
@@ -208,7 +208,7 @@ export default function ResultUpdatesPage() {
         <input
           type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
           placeholder="Search by company name or NSE code…"
-          style={{ width: '100%', padding: '10px 36px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', fontSize: '0.85rem', outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }}
+          style={{ width: '100%', padding: '10px 36px', borderRadius: '8px', border: '1px solid var(--panel-border)', background: 'var(--input-bg)', color: 'var(--text-main)', fontSize: '0.85rem', outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }}
         />
         {searchTerm && (
           <button onClick={() => setSearchTerm('')} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', padding: 0 }}>
@@ -220,7 +220,7 @@ export default function ResultUpdatesPage() {
 
       {/* ── Reminders ── */}
       <div className="glass-panel" style={{ padding: 0, overflow: 'hidden', marginBottom: '20px', border: '1px solid rgba(251,191,36,0.25)' }}>
-        <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(251,191,36,0.06)' }}>
+        <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--panel-border)', display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(251,191,36,0.06)' }}>
           <Bell size={15} color="#fbbf24" />
           <span style={{ fontWeight: 700, color: '#fbbf24', fontSize: '0.88rem' }}>Reminders</span>
           <span style={{ fontSize: '0.72rem', background: 'rgba(251,191,36,0.2)', color: '#fbbf24', borderRadius: '10px', padding: '2px 8px', fontWeight: 700 }}>
@@ -228,7 +228,7 @@ export default function ResultUpdatesPage() {
           </span>
         </div>
         {!loading && filteredReminders.length > 0 && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(160px, 1.4fr) minmax(140px, 1fr) minmax(160px, 1.6fr) 120px', gap: '10px', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(160px, 1.4fr) minmax(140px, 1fr) minmax(160px, 1.6fr) 120px', gap: '10px', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid var(--panel-border)' }}>
             <span>Company</span><span>Basket(s)</span><span>Status</span><span></span>
           </div>
         )}
@@ -244,7 +244,7 @@ export default function ResultUpdatesPage() {
             ? { text: `Results announced ${rem.resultDate} — not yet Received`, tone: '#fbbf24' }
             : { text: `Concall was ${rem.concallDate} — not yet Received`, tone: '#fbbf24' };
           return (
-            <div key={rem.nseCode} style={{ borderBottom: i < filteredReminders.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+            <div key={rem.nseCode} style={{ borderBottom: i < filteredReminders.length - 1 ? '1px solid var(--panel-border)' : 'none' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'minmax(160px, 1.4fr) minmax(140px, 1fr) minmax(160px, 1.6fr) 120px', gap: '10px', alignItems: 'center', padding: '10px 20px' }}>
                 <div>
                   <div style={{ fontSize: '0.84rem', color: 'var(--text-main)', fontWeight: 600 }}>{rem.securityName}</div>
@@ -296,10 +296,10 @@ export default function ResultUpdatesPage() {
         const isGenerating = generating === basketKey;
         return (
           <div key={basketKey} className="glass-panel" style={{ padding: 0, overflow: 'hidden', marginBottom: '20px' }}>
-            <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+            <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--panel-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                 <span style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.92rem' }}>{basketLabels[basketKey] || basketKey}</span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '2px 8px' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'var(--input-bg)', border: '1px solid var(--panel-border)', borderRadius: '10px', padding: '2px 8px' }}>
                   {heldRows.length} tracked
                 </span>
                 {allReceived && (
@@ -312,7 +312,7 @@ export default function ResultUpdatesPage() {
                 <button
                   onClick={() => generatePdf(basketKey)}
                   disabled={isGenerating || selectedCount === 0}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 16px', borderRadius: '7px', border: 'none', background: selectedCount ? 'var(--primary)' : 'rgba(255,255,255,0.08)', color: selectedCount ? '#fff' : 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, cursor: selectedCount ? 'pointer' : 'not-allowed' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 16px', borderRadius: '7px', border: 'none', background: selectedCount ? 'var(--primary)' : 'var(--input-bg)', color: selectedCount ? '#fff' : 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, cursor: selectedCount ? 'pointer' : 'not-allowed' }}
                 >
                   <Download size={13} /> {isGenerating ? 'Generating…' : `Generate Merged PDF (${selectedCount})`}
                 </button>
@@ -320,14 +320,14 @@ export default function ResultUpdatesPage() {
                   onClick={() => generateConsolidated(basketKey)}
                   disabled={isGenerating || !allReceived}
                   title={allReceived ? 'Generate the final consolidated update for every company currently held in this basket' : 'Every currently-held company must be marked Received first'}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 16px', borderRadius: '7px', border: `1px solid ${allReceived ? 'var(--positive)' : 'rgba(255,255,255,0.1)'}`, background: allReceived ? 'rgba(16,185,129,0.12)' : 'rgba(255,255,255,0.04)', color: allReceived ? 'var(--positive)' : 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, cursor: allReceived ? 'pointer' : 'not-allowed' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 16px', borderRadius: '7px', border: `1px solid ${allReceived ? 'var(--positive)' : 'var(--panel-border)'}`, background: allReceived ? 'rgba(16,185,129,0.12)' : 'var(--input-bg)', color: allReceived ? 'var(--positive)' : 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, cursor: allReceived ? 'pointer' : 'not-allowed' }}
                 >
                   <Download size={13} /> {isGenerating ? 'Generating…' : 'Generate Consolidated PDF'}
                 </button>
               </div>
             </div>
             {visibleRows.length > 0 && (
-              <div style={{ display: 'grid', gridTemplateColumns: '24px 18px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '24px 18px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid var(--panel-border)' }}>
                 <span></span><span></span><span>Company</span><span>Result Date</span><span>Concall Date</span><span>Received</span><span>Checked</span><span>Sent</span><span></span>
               </div>
             )}
@@ -410,10 +410,10 @@ function BulletEditor({ label, items, onChange }) {
         <div key={idx} style={{ display: 'flex', gap: '8px', marginBottom: '6px', alignItems: 'flex-start' }}>
           <input placeholder="Bold lead-in (e.g. Robust Revenue Growth)" value={b.heading}
             onChange={e => update(idx, 'heading', e.target.value)}
-            style={{ flex: '0 0 220px', padding: '6px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', fontSize: '0.78rem', fontFamily: 'inherit' }} />
+            style={{ flex: '0 0 220px', padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--panel-border)', background: 'var(--input-bg)', color: 'var(--text-main)', fontSize: '0.78rem', fontFamily: 'inherit' }} />
           <textarea placeholder="Description text" value={b.text} rows={2}
             onChange={e => update(idx, 'text', e.target.value)}
-            style={{ flex: 1, padding: '6px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', fontSize: '0.78rem', fontFamily: 'inherit', resize: 'vertical' }} />
+            style={{ flex: 1, padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--panel-border)', background: 'var(--input-bg)', color: 'var(--text-main)', fontSize: '0.78rem', fontFamily: 'inherit', resize: 'vertical' }} />
           <button onClick={() => remove(idx)} style={{ padding: '6px 8px', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.28)', background: 'rgba(239,68,68,0.08)', color: '#f87171', cursor: 'pointer' }}>
             <Trash2 size={12} />
           </button>
@@ -431,8 +431,8 @@ function BasketChip({ label, muted }) {
     <span style={{
       fontSize: '0.68rem', fontWeight: 600, padding: '2px 8px', borderRadius: '999px', whiteSpace: 'nowrap',
       color: muted ? 'var(--text-muted)' : 'var(--primary)',
-      background: muted ? 'rgba(255,255,255,0.05)' : 'rgba(99,102,241,0.12)',
-      border: `1px solid ${muted ? 'rgba(255,255,255,0.1)' : 'rgba(99,102,241,0.3)'}`,
+      background: muted ? 'var(--input-bg)' : 'rgba(99,102,241,0.12)',
+      border: `1px solid ${muted ? 'var(--panel-border)' : 'rgba(99,102,241,0.3)'}`,
     }}>
       {label}
     </span>
@@ -452,7 +452,7 @@ function CompanyRow({ r, i, total, basketKey, selected, onToggleSelect, expanded
   );
 
   return (
-    <div style={{ borderBottom: i < total - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none', opacity: thisBasketHeld ? 1 : 0.55 }}>
+    <div style={{ borderBottom: i < total - 1 ? '1px solid var(--panel-border)' : 'none', opacity: thisBasketHeld ? 1 : 0.55 }}>
       <div style={{ display: 'grid', gridTemplateColumns: '24px 18px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '10px 20px' }}>
         <input type="checkbox" checked={selected} onChange={onToggleSelect} title="Include in next merged PDF for this basket" />
         <button onClick={onToggleExpand} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', padding: 0 }}>
@@ -484,7 +484,7 @@ function CompanyRow({ r, i, total, basketKey, selected, onToggleSelect, expanded
               <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>Financial Snapshot Image</div>
               {r.snapshotImage && (
                 <img src={`${API}/admin/result-updates/snapshot/${r.snapshotImage}`} alt="snapshot"
-                  style={{ maxWidth: '320px', maxHeight: '220px', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', marginBottom: '8px', display: 'block' }} />
+                  style={{ maxWidth: '320px', maxHeight: '220px', border: '1px solid var(--panel-border)', borderRadius: '4px', marginBottom: '8px', display: 'block' }} />
               )}
               <label style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.1)', color: 'var(--primary)', fontSize: '0.78rem', cursor: 'pointer' }}>
                 <Upload size={12} /> {r.snapshotImage ? 'Replace image' : 'Upload image'}
