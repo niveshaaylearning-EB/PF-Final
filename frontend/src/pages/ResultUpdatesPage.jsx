@@ -329,8 +329,8 @@ export default function ResultUpdatesPage() {
               </div>
             </div>
             {visibleRows.length > 0 && (
-              <div style={{ display: 'grid', gridTemplateColumns: '24px 18px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid var(--panel-border)' }}>
-                <span></span><span></span><span>Company</span><span>Result Date</span><span>Concall Date</span><span>Received</span><span>Checked</span><span>Sent</span><span></span>
+              <div style={{ display: 'grid', gridTemplateColumns: '24px 78px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid var(--panel-border)' }}>
+                <span></span><span>Details</span><span>Company</span><span>Result Date</span><span>Concall Date</span><span>Received</span><span>Checked</span><span>Sent</span><span></span>
               </div>
             )}
             {visibleRows.length === 0 ? (
@@ -458,10 +458,11 @@ function CompanyRow({ r, i, total, basketKey, hideOtherBaskets, selected, onTogg
 
   return (
     <div style={{ borderBottom: i < total - 1 ? '1px solid var(--panel-border)' : 'none', opacity: thisBasketHeld ? 1 : 0.55 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '24px 18px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '10px 20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '24px 78px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '10px 20px' }}>
         <input type="checkbox" checked={selected} onChange={onToggleSelect} title="Include in next merged PDF for this basket" />
-        <button onClick={onToggleExpand} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', padding: 0 }}>
-          {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+        <button onClick={onToggleExpand} title="Show snapshot/document upload and Operational Performance / Outlook editor"
+          style={{ display: 'flex', alignItems: 'center', gap: '3px', padding: '4px 8px', borderRadius: '6px', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.1)', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.7rem', fontWeight: 600, whiteSpace: 'nowrap' }}>
+          {expanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />} Details
         </button>
         <div style={{ minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
