@@ -239,7 +239,7 @@ export default function ResultUpdatesPage() {
         ) : filteredReminders.map((rem, i) => {
           const isAdding = addingFor && addingFor.nseCode === rem.nseCode;
           const status = rem.type === 'new'
-            ? (rem.suggestedResultDate ? { text: `Suggested result date: ${rem.suggestedResultDate}`, tone: 'var(--positive)' } : { text: 'No dates tracked yet', tone: 'var(--text-muted)' })
+            ? (rem.suggestedResultDate ? { text: `Not tracked yet -- click "Add dates" to save ${rem.suggestedResultDate}`, tone: 'var(--positive)' } : { text: 'No dates tracked yet', tone: 'var(--text-muted)' })
             : rem.type === 'overdue_result'
             ? { text: `Results announced ${rem.resultDate} — not yet Received`, tone: '#fbbf24' }
             : { text: `Concall was ${rem.concallDate} — not yet Received`, tone: '#fbbf24' };
