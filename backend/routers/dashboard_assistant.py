@@ -36,18 +36,24 @@ router = APIRouter()
 _WEBPORTAL = "http://127.0.0.1:8000/wp"
 _GROQ_MODEL = "openai/gpt-oss-120b"
 _GEMINI_MODEL = "gemini-3.8-flash"
+# Confirmed live (2026-10-05) to actually invoke tools correctly -- several
+# other ":free" OpenRouter slugs either 404 (deprecated/paid-only now) or
+# silently fail, so don't swap this without re-testing tool_calls firsthand.
+_OPENROUTER_MODEL = "nvidia/nemotron-3-super-120b-a12b:free"
 _MAX_TOOL_ROUNDS = 6
 
 # Groq's free tier has a very low per-model TPM cap (8000 for gpt-oss-120b),
 # which this assistant has hit live more than once (context_length_exceeded,
-# then rate_limit_exceeded). Gemini's free tier is far more generous and
-# exposes an OpenAI-compatible endpoint, so it's a drop-in fallback using the
-# exact same AsyncOpenAI client / tool-calling code -- no separate SDK needed.
-# Try Groq first (already proven, fast); fall back to Gemini only when Groq's
-# own call fails for any reason (rate limit, context length, outage, etc).
+# then rate_limit_exceeded). Gemini and OpenRouter's free tiers are far more
+# generous and both expose an OpenAI-compatible endpoint, so each is a
+# drop-in fallback using the exact same AsyncOpenAI client / tool-calling
+# code -- no separate SDK needed. Try Groq first (already proven, fast);
+# fall back through the list only when the current provider's own call
+# fails for any reason (rate limit, context length, outage, etc).
 _PROVIDERS = [
-    ("groq",   "GROQ_API_KEY",   "https://api.groq.com/openai/v1",                 _GROQ_MODEL),
-    ("gemini", "GEMINI_API_KEY", "https://generativelanguage.googleapis.com/v1beta/openai/", _GEMINI_MODEL),
+    ("groq",       "GROQ_API_KEY",       "https://api.groq.com/openai/v1",                            _GROQ_MODEL),
+    ("gemini",     "GEMINI_API_KEY",     "https://generativelanguage.googleapis.com/v1beta/openai/",  _GEMINI_MODEL),
+    ("openrouter", "OPENROUTER_API_KEY", "https://openrouter.ai/api/v1",                              _OPENROUTER_MODEL),
 ]
 
 
