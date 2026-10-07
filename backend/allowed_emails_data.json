@@ -9,8 +9,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": "8f896c1ddf5c2c2cb007de1091d9c383b8f83e50c929d185305f3e44d6c66cb1:992dc63b9cec0bd0d2d2758a97ffe80572e5b9709d4a45e02745518678116f8c",
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "nukul.madaan@niveshaay.com",
@@ -22,8 +21,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": "b7292725a88c97c8c2c36463b46a3df5e6d2365ed4be22dba9fcb317330129d2:5e9350789f40ab118b7f3cdf9aa26ecd8a723260746571cfac6892f713dc1fdd",
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "monika.bansal@niveshaay.com",
@@ -35,8 +33,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "nakshatra.rathi@niveshaay.com",
@@ -48,8 +45,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": "30b52cb71af3237aabee01cf4715d7b28f2b986f2b7e8d8b8c5613d86487f065:1524dceb147a103d656a33d02eabf26487ee09b9ad61f7e237a6296b608d772e",
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "naksh@niveshaay.com",
@@ -61,8 +57,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "test.user@niveshaay.com",
@@ -74,8 +69,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "ajay.surya@niveshaay.com",
@@ -87,8 +81,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "dolly.choudhary@niveshaay.com",
@@ -100,8 +93,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "shruti.amanchi@niveshaay.com",
@@ -113,8 +105,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "jay@niveshaay.com",
@@ -126,8 +117,7 @@
     "first_name": "KJay",
     "last_name": "Chaudhari",
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "pari.patel@niveshaay.com",
@@ -139,8 +129,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "varun.agarwal@niveshaay.com",
@@ -152,8 +141,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "parth.parekh@niveshaay.com",
@@ -165,8 +153,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "tanishka.agarwal@niveshaay.com",
@@ -178,8 +165,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "diya.kejriwal@niveshaay.com",
@@ -191,8 +177,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "mohit.patil@niveshaay.com",
@@ -204,8 +189,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "rohit.chaberwal@niveshaay.com",
@@ -217,8 +201,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "arvindkothari@niveshaay.com",
@@ -230,8 +213,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "gunjankabra@niveshaay.com",
@@ -243,8 +225,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "parikshit.gujrati@niveshaay.com",
@@ -256,8 +237,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "bhavika.singhvi@niveshaay.com",
@@ -269,8 +249,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "keyur.kumar@niveshaay.com",
@@ -282,8 +261,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "vikram@niveshaay.com",
@@ -295,8 +273,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "raj.agrawal@niveshaay.com",
@@ -308,8 +285,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "tej.patel@niveshaay.com",
@@ -321,8 +297,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "keshav.sureka@niveshaay.com",
@@ -334,8 +309,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "shristi.jain@niveshaay.com",
@@ -347,8 +321,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "chandresh.malpani@niveshaay.com",
@@ -360,8 +333,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "naman.parmar@niveshaay.com",
@@ -373,8 +345,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "karan.sanwal@niveshaay.com",
@@ -386,8 +357,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "somya.gadia@niveshaay.com",
@@ -399,8 +369,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "meet.katrodiya@niveshaay.com",
@@ -412,8 +381,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "maitri.mehta@niveshaay.com",
@@ -425,8 +393,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "yugal.rathi@niveshaay.com",
@@ -438,8 +405,7 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   },
   {
     "email": "dhaval.dave@niveshaay.com",
@@ -451,7 +417,6 @@
     "first_name": null,
     "last_name": null,
     "password_hash": null,
-    "is_approved": 1,
-    "is_admin": 0
+    "is_approved": 1
   }
 ]

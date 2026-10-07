@@ -21550,5 +21550,10 @@
     "launchDate": "13 Jun 2024",
     "latestRebalanceDetail": [],
     "lastFetched": "02 Oct 2026 12:55 UTC"
+  },
+  "consumer_durables_stars": {
+    "key": "consumer_durables_stars",
+    "label": "Consumer Durables Stars Tracker",
+    "manager": "Quantace Research"
   }
 }
