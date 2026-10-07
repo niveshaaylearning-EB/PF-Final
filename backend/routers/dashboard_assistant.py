@@ -1,8 +1,14 @@
-"""Dashboard Assistant -- a tool-calling LLM (Groq, same setup as
-webportal/backend/rebalance_insights.py) that answers natural-language
+"""Dashboard Assistant -- a tool-calling LLM (Groq, with Gemini/OpenRouter
+free-tier fallbacks -- see _PROVIDERS) that answers natural-language
 questions about what's actually in this dashboard: basket holdings, buy
-prices, rebalance history, result-update tracking, corporate actions,
-watchlist, and competitor data. Admin-only for now.
+prices, rebalance history/summary, basket returns/profile/overlap, stock
+exposure and cross-basket detail, live prices, benchmarks, watchlist,
+corporate actions, result-update tracking, analyst notes/targets, the
+asking admin's own simulator portfolio, and competitor data. The widget
+itself is admin-only for now, but per an explicit 2026-10-07 instruction
+the tool coverage itself deliberately spans EVERY piece of data visible to
+an ordinary logged-in member, not just admin-only features -- see the
+"Added 2026-10-07" comment block below for the audit this was built from.
 
 Deliberately NOT classic vector-embedding RAG -- almost everything here is
 structured JSON (holdings, dates, prices), not long-form prose, so
@@ -22,6 +28,7 @@ smallcase-login proxy bug fixed earlier the same day -- same lesson
 applies: never assume a second process is there to talk to).
 """
 import asyncio
+import contextvars
 import json
 import os
 from pathlib import Path
@@ -70,6 +77,29 @@ def _require_admin(request: Request) -> str:
 
 def _wp_get(path: str, timeout: float = 10.0):
     r = _http.get(f"{_WEBPORTAL}{path}", timeout=timeout)
+    r.raise_for_status()
+    return r.json()
+
+
+# Unlike /wp/* (open, no auth), the main app's own /api/* routes are all
+# behind JWTMiddleware (main.py) -- a self-loopback call needs a real bearer
+# token or gets a 401. The admin asking the assistant a question already has
+# one (that's how they got past _require_admin), so ask_assistant() stashes
+# their own Authorization header here per-request and every _api_get() call
+# forwards it. A contextvar (not a plain module global) because this runs
+# per-request under asyncio -- it survives the asyncio.to_thread() hop tool
+# impls run in (to_thread copies the current context into the thread).
+_current_auth_header: contextvars.ContextVar[str] = contextvars.ContextVar(
+    "_current_auth_header", default=""
+)
+
+
+def _api_get(path: str, timeout: float = 10.0):
+    headers = {}
+    auth = _current_auth_header.get()
+    if auth:
+        headers["Authorization"] = auth
+    r = _http.get(f"http://127.0.0.1:8000{path}", headers=headers, timeout=timeout)
     r.raise_for_status()
     return r.json()
 
@@ -205,6 +235,116 @@ def _tool_get_results_calendar(_args: dict) -> dict:
         return {"events": []}
 
 
+# ── Added 2026-10-07 -- per an explicit instruction that the assistant must
+# cover EVERYTHING visible to an ordinary logged-in member (not just the
+# admin-only data it started with), an audit of every GET route in both
+# backend/ and webportal/backend/ found ~45 member-visible endpoints with no
+# tool coverage at all. These wrap the genuinely distinct ones (duplicates of
+# already-covered data, e.g. the main-app mirror of /wp/api/baskets, are
+# skipped). Admin-only/mutating routes (confirmed via _require_admin/
+# is_admin_email in each file) are deliberately left uncovered.
+
+def _tool_get_stock_exposure(args: dict) -> dict:
+    data = _wp_get("/api/stock-exposure")
+    code = (args.get("nseCode") or "").strip().upper()
+    if code:
+        data = [e for e in data if e.get("code") == code]
+    return {"exposure": data}
+
+
+def _tool_get_stock_cross_basket_detail(args: dict) -> dict:
+    return _wp_get(f"/api/stock-detail/{args['nseCode'].strip().upper()}")
+
+
+def _tool_get_basket_overlap(_args: dict) -> dict:
+    return {
+        "stockMap": _wp_get("/api/basket-stock-map"),
+        "weightMap": _wp_get("/api/basket-weight-map"),
+    }
+
+
+def _tool_get_rebalance_summary(args: dict) -> dict:
+    # More complete than get_rebalance_history (which only reads
+    # rebalance_history.json) -- this replays every buy/sell event directly,
+    # so it also catches manual buy-price-page edits that never touch the
+    # history file. Prefer this one when both could answer the question.
+    return _wp_get(f"/api/rebalance-summary/{args['basket']}")
+
+
+def _tool_get_live_price(args: dict) -> dict:
+    code = (args.get("nseCode") or "").strip().upper()
+    if code:
+        return _wp_get(f"/api/live/{code}")
+    return {"live": _wp_get("/api/live")}
+
+
+def _tool_get_stock_performance(args: dict) -> dict:
+    codes = args.get("nseCodes") or []
+    if not codes:
+        return {"error": "nseCodes is required -- a list of one or more NSE codes."}
+    return _wp_get(f"/api/performance?codes={','.join(c.strip().upper() for c in codes)}")
+
+
+def _tool_get_basket_profile(args: dict) -> dict:
+    return _wp_get(f"/api/admin/basket-profile/{args['basket']}")
+
+
+def _tool_get_watchlist_alerts(_args: dict) -> dict:
+    return {"alerts": _wp_get("/api/watchlist/alerts")}
+
+
+def _tool_get_benchmark_comparison(_args: dict) -> dict:
+    return {
+        "benchmarks": _api_get("/api/benchmarks"),
+        "basketsVsInception": _api_get("/api/baskets/comparison"),
+    }
+
+
+def _tool_get_rebalance_alerts(_args: dict) -> dict:
+    # Per-user unacknowledged alerts (exits/partial sells/new additions/
+    # weight increases since last viewed) -- scoped to whichever admin asked.
+    return {"alerts": _api_get("/api/rebalance-alerts")}
+
+
+def _tool_get_market_snapshot(_args: dict) -> dict:
+    return {
+        "indices": _api_get("/api/market"),
+        "targetStoplossAlerts": _api_get("/api/alerts"),
+    }
+
+
+def _tool_get_analyst_contacts(_args: dict) -> dict:
+    return {"contacts": _api_get("/api/results-calendar/analyst-contacts")}
+
+
+def _tool_get_basket_notes_targets(args: dict) -> dict:
+    basket = args["basket"]
+    return {
+        "notes": _api_get(f"/api/basket-notes/{basket}"),
+        "targets": _api_get(f"/api/portfolio/{basket}/targets"),
+    }
+
+
+def _tool_search_stock(args: dict) -> dict:
+    query = (args.get("query") or "").strip()
+    code = (args.get("nseCode") or "").strip().upper()
+    if code:
+        return _api_get(f"/api/stocks/info?code={code}")
+    if query:
+        return {"results": _api_get(f"/api/stocks/search?q={query}")}
+    return {"error": "Pass either query (name search) or nseCode (exact lookup)."}
+
+
+def _tool_get_simulator_portfolio(_args: dict) -> dict:
+    # The asking admin's OWN virtual/simulator portfolio (Simulator Portfolio
+    # page) -- self-scoped by their own token, not a real-money basket.
+    return {
+        "holdings": _api_get("/api/simulator"),
+        "sips": _api_get("/api/simulator/sips"),
+        "settings": _api_get("/api/simulator/settings"),
+    }
+
+
 _TOOL_IMPLS = {
     "list_baskets": _tool_list_baskets,
     "get_basket_holdings": _tool_get_basket_holdings,
@@ -217,6 +357,21 @@ _TOOL_IMPLS = {
     "get_competitor_rebalance_history": _tool_get_competitor_rebalance_history,
     "get_result_update_status": _tool_get_result_update_status,
     "get_results_calendar": _tool_get_results_calendar,
+    "get_stock_exposure": _tool_get_stock_exposure,
+    "get_stock_cross_basket_detail": _tool_get_stock_cross_basket_detail,
+    "get_basket_overlap": _tool_get_basket_overlap,
+    "get_rebalance_summary": _tool_get_rebalance_summary,
+    "get_live_price": _tool_get_live_price,
+    "get_stock_performance": _tool_get_stock_performance,
+    "get_basket_profile": _tool_get_basket_profile,
+    "get_watchlist_alerts": _tool_get_watchlist_alerts,
+    "get_benchmark_comparison": _tool_get_benchmark_comparison,
+    "get_rebalance_alerts": _tool_get_rebalance_alerts,
+    "get_market_snapshot": _tool_get_market_snapshot,
+    "get_analyst_contacts": _tool_get_analyst_contacts,
+    "get_basket_notes_targets": _tool_get_basket_notes_targets,
+    "search_stock": _tool_search_stock,
+    "get_simulator_portfolio": _tool_get_simulator_portfolio,
 }
 
 _BASKET_KEYS_HINT = "Green_Energy, Mid_Small_Cap, Consumer_Trends, IPO_Basket, Trends_Triology, Techstack, Make_in_India"
@@ -293,6 +448,98 @@ _TOOL_SCHEMAS = [
         "description": "Upcoming/recent board-meeting result dates sourced from NSE/yfinance, across every held stock.",
         "parameters": {"type": "object", "properties": {}},
     }},
+    {"type": "function", "function": {
+        "name": "get_stock_exposure",
+        "description": "Combined weight of each stock summed across ALL our baskets (concentration), how many baskets it's in, and its weight in each -- e.g. 'how concentrated is our exposure to X' or 'which stock do we hold the most of overall'. Omit nseCode to rank every held stock.",
+        "parameters": {"type": "object", "properties": {
+            "nseCode": {"type": "string", "description": "Optional exact NSE code to look up just one stock"},
+        }},
+    }},
+    {"type": "function", "function": {
+        "name": "get_stock_cross_basket_detail",
+        "description": "For ONE specific stock: its current weight, buy price, and buy date in EVERY one of our baskets that holds it right now -- the tool for 'which baskets hold X' or 'what's our buy price for X in each basket'.",
+        "parameters": {"type": "object", "properties": {
+            "nseCode": {"type": "string", "description": "Exact NSE code"},
+        }, "required": ["nseCode"]},
+    }},
+    {"type": "function", "function": {
+        "name": "get_basket_overlap",
+        "description": "Which stocks every basket holds (plain list) and at what weight (allocation map) -- for comparing overlap/duplication between our own baskets.",
+        "parameters": {"type": "object", "properties": {}},
+    }},
+    {"type": "function", "function": {
+        "name": "get_rebalance_summary",
+        "description": "Day-wise rebalance detail for one of our own baskets (added/removed/reweighted per date), derived from the actual buy/sell event log -- more complete than get_rebalance_history since it also catches manual buy-price edits, not just formal rebalance uploads. Prefer this over get_rebalance_history when available.",
+        "parameters": {"type": "object", "properties": {
+            "basket": {"type": "string", "description": "Exact basket key"},
+        }, "required": ["basket"]},
+    }},
+    {"type": "function", "function": {
+        "name": "get_live_price",
+        "description": "Live current market price (CMP) and OHLC for one stock, or every tracked stock if nseCode is omitted.",
+        "parameters": {"type": "object", "properties": {
+            "nseCode": {"type": "string", "description": "Optional exact NSE code -- omit for every tracked stock's live price"},
+        }},
+    }},
+    {"type": "function", "function": {
+        "name": "get_stock_performance",
+        "description": "Multi-tenure (1M/3M/6M/1Y/2Y/3Y/5Y) percentage price performance for one or more specific stocks (not a basket).",
+        "parameters": {"type": "object", "properties": {
+            "nseCodes": {"type": "array", "items": {"type": "string"}, "description": "One or more exact NSE codes"},
+        }, "required": ["nseCodes"]},
+    }},
+    {"type": "function", "function": {
+        "name": "get_basket_profile",
+        "description": "One of our own basket's derived profile: sector mix %, market-cap mix % (Large/Mid/Small/Multicap), and most recent rebalance date -- useful for 'what sectors does X basket cover' type questions.",
+        "parameters": {"type": "object", "properties": {
+            "basket": {"type": "string", "description": "Exact basket key"},
+        }, "required": ["basket"]},
+    }},
+    {"type": "function", "function": {
+        "name": "get_watchlist_alerts",
+        "description": "Active watchlist alerts -- a watchlist stock whose next-review date has arrived, or whose price target was hit. Different from get_watchlist, which is just the plain company list.",
+        "parameters": {"type": "object", "properties": {}},
+    }},
+    {"type": "function", "function": {
+        "name": "get_benchmark_comparison",
+        "description": "Nifty 50/200/MidSmall benchmark index returns (1M/6M/1Y/3Y/5Y net+CAGR), plus every one of our baskets' own returns compared against their individual inception dates -- for 'how do we compare to the index' or 'which basket has done best since it launched' type questions.",
+        "parameters": {"type": "object", "properties": {}},
+    }},
+    {"type": "function", "function": {
+        "name": "get_rebalance_alerts",
+        "description": "Unacknowledged rebalance-impact alerts for the asking admin: exits, partial sells, new additions, or weight increases since they last checked.",
+        "parameters": {"type": "object", "properties": {}},
+    }},
+    {"type": "function", "function": {
+        "name": "get_market_snapshot",
+        "description": "Current Nifty 50/Sensex/Nifty 200 index levels and day change, plus any cross-basket target-hit or stoploss-hit alerts right now.",
+        "parameters": {"type": "object", "properties": {}},
+    }},
+    {"type": "function", "function": {
+        "name": "get_analyst_contacts",
+        "description": "Per-basket analyst contact names/emails who receive the day-before-results reminder.",
+        "parameters": {"type": "object", "properties": {}},
+    }},
+    {"type": "function", "function": {
+        "name": "get_basket_notes_targets",
+        "description": "The free-text analyst note for one basket, plus per-stock target-price/stoploss values set for it.",
+        "parameters": {"type": "object", "properties": {
+            "basket": {"type": "string", "description": "Exact basket key"},
+        }, "required": ["basket"]},
+    }},
+    {"type": "function", "function": {
+        "name": "search_stock",
+        "description": "Look up a stock by name (fuzzy search) or get sector/industry info for an exact NSE code. Use this to resolve a company name the user mentioned into its exact NSE code before calling other stock-specific tools.",
+        "parameters": {"type": "object", "properties": {
+            "query": {"type": "string", "description": "Partial company name to search, if the exact NSE code isn't known"},
+            "nseCode": {"type": "string", "description": "Exact NSE code, if already known, to get sector/industry detail"},
+        }},
+    }},
+    {"type": "function", "function": {
+        "name": "get_simulator_portfolio",
+        "description": "The asking admin's OWN virtual/practice Simulator Portfolio (a what-if sandbox, not a real basket) -- holdings, SIP entries, and initial-investment setting.",
+        "parameters": {"type": "object", "properties": {}},
+    }},
 ]
 
 _SYSTEM_PROMPT = f"""You are the Niveshaay dashboard's own assistant. Answer questions ONLY using data you retrieve via the tools provided -- never invent a stock, price, date, or percentage. Basket keys you may need: {_BASKET_KEYS_HINT} (call list_baskets if unsure).
@@ -318,6 +565,7 @@ async def _dispatch_tool(name: str, args: dict) -> dict:
 @router.post("/api/admin/assistant/ask")
 async def ask_assistant(body: dict, request: Request):
     _require_admin(request)
+    _current_auth_header.set(request.headers.get("Authorization", ""))
     question = (body.get("question") or "").strip()
     if not question:
         raise HTTPException(status_code=400, detail="question is required")
