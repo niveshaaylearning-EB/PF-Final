@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { MessageCircle } from 'lucide-react';
-import { getToken, isLoggedIn } from '../utils/auth.js';
+import { MessageCircle, LogOut } from 'lucide-react';
+import { getToken, isLoggedIn, clearAllTokens } from '../utils/auth.js';
 import { API_ROOT } from '../config.js';
 
 // MANDATORY, per explicit instruction (2026-10-07): "no option to skip it
@@ -13,8 +13,16 @@ import { API_ROOT } from '../config.js';
 // modal stops rendering on its own. There is deliberately no dismiss/session
 // suppression anymore (an earlier skippable version existed before this
 // instruction tightened it).
+//
+// Logout IS offered though (added right after shipping the mandatory
+// version, per direct feedback) -- the header's own Logout button sits
+// behind this full-screen overlay and was unreachable, leaving a user who
+// didn't want to add a number right now with literally no action available
+// at all. Logging out doesn't bypass the requirement (they'll see this
+// again next login), it just means "mandatory" isn't the same as "trapped".
 
 export default function WhatsAppOptInModal() {
+  const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const [step, setStep] = useState('phone'); // 'phone' | 'otp'
   const [phone, setPhone] = useState('+91');
@@ -42,6 +50,11 @@ export default function WhatsAppOptInModal() {
   }, [location.pathname]);
 
   if (!visible) return null;
+
+  const logout = () => {
+    clearAllTokens();
+    navigate('/login', { replace: true });
+  };
 
   const sendOtp = async () => {
     setError(''); setInfo('');
@@ -123,6 +136,14 @@ export default function WhatsAppOptInModal() {
             </div>
           </>
         )}
+
+        <button onClick={logout} style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+          width: '100%', marginTop: '14px', padding: '8px', background: 'none', border: 'none',
+          color: 'var(--text-muted)', fontSize: '0.78rem', cursor: 'pointer',
+        }}>
+          <LogOut size={13} /> Not now -- Logout instead
+        </button>
       </div>
     </div>
   );
