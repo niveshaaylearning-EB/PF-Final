@@ -840,6 +840,17 @@ class RegisterRequest(BaseModel):
     first_name: str
     last_name:  str
     email:      str
+    phone:      str = ""
+    phone_code: str = ""
+
+class RegisterPhoneOtpRequest(BaseModel):
+    email: str
+    phone: str
+
+class RegisterPhoneOtpVerify(BaseModel):
+    email: str
+    phone: str
+    code:  str
 
 class RegisterVerifyRequest(BaseModel):
     first_name: str
@@ -1113,6 +1124,43 @@ def _notify_user_rejected(email: str, first_name: str):
 
 
 # ── Registration ──────────────────────────────────────────────────────────────
+# WhatsApp number is now collected and verified DURING the request-access
+# flow itself (per explicit instruction, 2026-10-07), rather than leaving a
+# new user to hit the separate mandatory post-login WhatsAppOptInModal --
+# by the time they're approved and log in for the first time, the number is
+# already on file and that modal never has reason to appear for them.
+# These two endpoints are deliberately UNAUTHENTICATED (no account/token
+# exists yet at this point) -- reuses the same deterministic
+# "phone-change:<email>:<phone>" HMAC scheme as the post-login profile
+# change flow, just keyed by the not-yet-existing email, which works fine
+# since it's stateless.
+
+@router.post("/register/request-phone-otp")
+@_limiter.limit("5/minute")
+def register_request_phone_otp(request: Request, body: RegisterPhoneOtpRequest):
+    email = body.email.lower().strip()
+    phone = body.phone.strip()
+    if not email.endswith(f"@{ALLOWED_DOMAIN}"):
+        raise HTTPException(400, detail=f"Only @{ALLOWED_DOMAIN} email addresses are allowed.")
+    if not phone.startswith("+") or not phone[1:].isdigit() or len(phone) < 8:
+        raise HTTPException(400, detail="Enter a valid phone number in international format, e.g. +919537407484.")
+    code = _otp_for_phone_change(email, phone)
+    try:
+        send_whatsapp_otp(phone, code)
+    except Exception as ex:
+        raise HTTPException(502, detail=f"Could not send WhatsApp OTP: {ex}")
+    return {"status": "otp_sent", "message": f"A verification code has been sent via WhatsApp to {phone}."}
+
+
+@router.post("/register/verify-phone-otp")
+@_limiter.limit("10/minute")
+def register_verify_phone_otp(request: Request, body: RegisterPhoneOtpVerify):
+    email = body.email.lower().strip()
+    phone = body.phone.strip()
+    if not _verify_phone_change_otp(email, phone, body.code.strip()):
+        raise HTTPException(400, detail="Invalid or expired code.")
+    return {"status": "ok"}
+
 
 @router.post("/register")
 @_limiter.limit("5/minute")
@@ -1123,11 +1171,16 @@ def register(request: Request, body: RegisterRequest,
     email = body.email.lower().strip()
     fn    = body.first_name.strip()
     ln    = body.last_name.strip()
+    phone = body.phone.strip()
 
     if not email.endswith(f"@{ALLOWED_DOMAIN}"):
         raise HTTPException(400, detail=f"Only @{ALLOWED_DOMAIN} email addresses are allowed.")
     if not fn or not ln:
         raise HTTPException(400, detail="First name and last name are required.")
+    if not phone:
+        raise HTTPException(400, detail="A verified WhatsApp number is required.")
+    if not _verify_phone_change_otp(email, phone, body.phone_code.strip()):
+        raise HTTPException(400, detail="WhatsApp number is not verified -- please verify it again.")
 
     existing = db.query(AllowedEmail).filter_by(email=email).first()
     if existing and existing.is_approved:
@@ -1138,12 +1191,13 @@ def register(request: Request, body: RegisterRequest,
     if existing:
         existing.first_name = fn
         existing.last_name  = ln
+        existing.whatsapp_phone = phone
     else:
         db.add(AllowedEmail(
             email=email, added_by="self-registered",
             added_at=datetime.utcnow().isoformat(),
             first_name=fn, last_name=ln,
-            is_approved=0,
+            is_approved=0, whatsapp_phone=phone,
         ))
     try:
         db.commit()

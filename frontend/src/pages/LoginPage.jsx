@@ -73,6 +73,10 @@ export default function LoginPage() {
   const [regFirst, setRegFirst] = useState('');
   const [regLast,  setRegLast]  = useState('');
   const [regEmail, setRegEmail] = useState('');
+  const [regPhone, setRegPhone] = useState('+91');
+  const [regPhoneCode, setRegPhoneCode] = useState('');
+  // 'enter' (editing number) | 'otp' (code sent, awaiting entry) | 'verified'
+  const [regPhoneStep, setRegPhoneStep] = useState('enter');
 
   function resetState() { setError(''); setHint(''); setSuccess(''); setLoading(false); }
   function go(v) { resetState(); setView(v); }
@@ -122,16 +126,57 @@ export default function LoginPage() {
   }
 
   // ── Register: request access ───────────────────────────────────────────────
+  // A verified WhatsApp number is now REQUIRED as part of requesting access
+  // (per explicit instruction, 2026-10-07) -- verified right here, before the
+  // access request is even submitted, so a newly-approved user already has a
+  // number on file and never hits the separate mandatory post-login
+  // WhatsAppOptInModal at all.
+  async function handleSendRegPhoneOtp() {
+    setError(''); setSuccess('');
+    const em = regEmail.toLowerCase().trim();
+    if (!em.endsWith('@niveshaay.com')) { setError('Enter your @niveshaay.com email first.'); return; }
+    if (!regPhone.startsWith('+') || regPhone.length < 9) {
+      setError('Enter a valid number in international format, e.g. +919537407484.'); return;
+    }
+    setLoading(true);
+    try {
+      await axios.post(`${API}/auth/register/request-phone-otp`, { email: em, phone: regPhone });
+      setRegPhoneStep('otp');
+      setSuccess(`Code sent via WhatsApp to ${regPhone}.`);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to send code.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleVerifyRegPhoneOtp() {
+    setError('');
+    const em = regEmail.toLowerCase().trim();
+    setLoading(true);
+    try {
+      await axios.post(`${API}/auth/register/verify-phone-otp`, { email: em, phone: regPhone, code: regPhoneCode.trim() });
+      setRegPhoneStep('verified');
+      setSuccess('WhatsApp number verified.');
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Invalid or expired code.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleRegister(e) {
     e.preventDefault();
     setError('');
     const em = regEmail.toLowerCase().trim();
     if (!regFirst.trim() || !regLast.trim()) { setError('First name and last name are required.'); return; }
     if (!em.endsWith('@niveshaay.com')) { setError('Only @niveshaay.com email addresses are allowed.'); return; }
+    if (regPhoneStep !== 'verified') { setError('Please verify your WhatsApp number first.'); return; }
     setLoading(true);
     try {
       await axios.post(`${API}/auth/register`, {
         first_name: regFirst.trim(), last_name: regLast.trim(), email: em,
+        phone: regPhone, phone_code: regPhoneCode.trim(),
       });
       go('pending');
     } catch (err) {
@@ -230,9 +275,41 @@ export default function LoginPage() {
             <div style={{ position: 'relative' }}>
               <Mail size={16} style={iconStyle} />
               <input type="email" placeholder="your@niveshaay.com" value={regEmail}
-                onChange={e => setRegEmail(e.target.value)} required autoFocus style={inputBase} />
+                onChange={e => { setRegEmail(e.target.value); setRegPhoneStep('enter'); }} required autoFocus style={inputBase} />
             </div>
-            <button type="submit" disabled={loading} className="btn btn-primary"
+
+            {/* WhatsApp number -- must be verified before the request can be submitted */}
+            <div style={{ position: 'relative' }}>
+              <input type="tel" placeholder="+919537407484 (WhatsApp number)" value={regPhone}
+                onChange={e => { setRegPhone(e.target.value); setRegPhoneStep('enter'); }}
+                disabled={regPhoneStep === 'verified'} required
+                style={{ ...inputNoIcon, opacity: regPhoneStep === 'verified' ? 0.6 : 1 }} />
+            </div>
+
+            {regPhoneStep !== 'verified' && regPhoneStep !== 'otp' && (
+              <button type="button" onClick={handleSendRegPhoneOtp} disabled={loading} className="btn btn-secondary"
+                style={{ width: '100%', padding: '10px' }}>
+                {loading ? 'Sending…' : 'Send WhatsApp Verification Code'}
+              </button>
+            )}
+
+            {regPhoneStep === 'otp' && (
+              <>
+                <input type="text" inputMode="numeric" placeholder="6-digit WhatsApp code" value={regPhoneCode}
+                  onChange={e => setRegPhoneCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  style={{ ...inputNoIcon, letterSpacing: '0.2em', textAlign: 'center' }} />
+                <button type="button" onClick={handleVerifyRegPhoneOtp} disabled={loading || regPhoneCode.length < 6} className="btn btn-secondary"
+                  style={{ width: '100%', padding: '10px' }}>
+                  {loading ? 'Verifying…' : 'Verify Number'}
+                </button>
+              </>
+            )}
+
+            {regPhoneStep === 'verified' && (
+              <div style={{ color: '#34d399', fontSize: '0.8rem' }}>✓ WhatsApp number verified</div>
+            )}
+
+            <button type="submit" disabled={loading || regPhoneStep !== 'verified'} className="btn btn-primary"
               style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
               {loading ? <><Spinner /><span>Submitting…</span></> : <><UserPlus size={16} /><span>Request Access</span></>}
             </button>
