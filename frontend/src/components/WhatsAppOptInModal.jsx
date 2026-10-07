@@ -41,7 +41,7 @@ export default function WhatsAppOptInModal() {
   // every navigation including that post-login redirect, so this now
   // actually re-evaluates right when it matters.
   useEffect(() => {
-    if (!isLoggedIn()) return;
+    if (!isLoggedIn()) { setVisible(false); return; }
     axios.get(`${API_ROOT}/auth/me`, { headers: { Authorization: `Bearer ${getToken()}` } })
       .then(res => {
         setVisible(!res.data.whatsappPhone);
