@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { MessageCircle } from 'lucide-react';
 import { getToken, isLoggedIn } from '../utils/auth.js';
@@ -21,15 +22,24 @@ export default function WhatsAppOptInModal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
+  const location = useLocation();
 
+  // Re-checks on every route change, not just once on initial page load --
+  // a plain mount-only effect (empty deps) misses a same-tab SPA login (no
+  // full page reload from /login -> /), since isLoggedIn() was false the one
+  // time this ran and never re-runs on its own afterwards. Confirmed live:
+  // a user ("Pari") who logged in without a hard refresh never saw the
+  // prompt despite having no number on file. location.pathname changes on
+  // every navigation including that post-login redirect, so this now
+  // actually re-evaluates right when it matters.
   useEffect(() => {
     if (!isLoggedIn()) return;
     axios.get(`${API_ROOT}/auth/me`, { headers: { Authorization: `Bearer ${getToken()}` } })
       .then(res => {
-        if (!res.data.whatsappPhone) setVisible(true);
+        setVisible(!res.data.whatsappPhone);
       })
       .catch(() => {});
-  }, []);
+  }, [location.pathname]);
 
   if (!visible) return null;
 
