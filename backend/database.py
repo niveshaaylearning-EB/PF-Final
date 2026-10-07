@@ -256,6 +256,7 @@ class AllowedEmail(Base):
     password_hash = Column(String, nullable=True)  # PBKDF2-SHA256: salt_hex:key_hex
     is_approved   = Column(Integer, default=1)      # 1=approved  0=pending admin approval
     is_admin      = Column(Integer, default=0)      # 1=admin (grantable from the Approved Emails page), 0=regular user -- on top of the hardcoded ADMIN_EMAILS founders in common/admin.py, which always stay admin regardless of this column
+    whatsapp_phone = Column(String, nullable=True)  # E.164, e.g. "+919537407484" -- opt-in WhatsApp OTP delivery alongside email
 
 
 class AccessRequest(Base):
@@ -335,6 +336,8 @@ def run_migrations():
         # Admin status grantable from the Approved Emails page, on top of the
         # hardcoded ADMIN_EMAILS founders in common/admin.py
         "ALTER TABLE allowed_emails ADD COLUMN is_admin INTEGER DEFAULT 0",
+        # Opt-in WhatsApp OTP delivery (DoubleTick), alongside the existing email OTP
+        "ALTER TABLE allowed_emails ADD COLUMN whatsapp_phone TEXT",
     ]
     with engine.connect() as conn:
         for sql in migrations:

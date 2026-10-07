@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Sun, Moon } from 'lucide-react';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import DashboardAssistant from './components/DashboardAssistant.jsx';
+import WhatsAppOptInModal from './components/WhatsAppOptInModal.jsx';
 import { clearAllTokens, getEmail, isAdmin, getFirstName, isLoggedIn } from './utils/auth.js';
 import { getTheme, toggleTheme, THEME_CHANGE_EVENT } from './utils/theme.js';
 import { API_ROOT } from './config.js';
@@ -43,6 +44,7 @@ const ResultCalendar      = lazy(() => import('./pages/ResultCalendar'));
 const RebalanceAlertPage  = lazy(() => import('./pages/RebalanceAlertPage'));
 const ApprovedEmailsPage  = lazy(() => import('./pages/ApprovedEmailsPage'));
 const ResultUpdatesPage   = lazy(() => import('./pages/ResultUpdatesPage'));
+const ProfilePage         = lazy(() => import('./pages/ProfilePage'));
 
 function PageLoader() {
   return (
@@ -118,6 +120,15 @@ function Header() {
         )}
         <ThemeToggle />
         {loggedIn && (
+          <Link
+            to="/profile"
+            className="btn btn-secondary"
+            style={{ fontSize: '0.78rem', padding: '6px 12px' }}
+          >
+            Profile
+          </Link>
+        )}
+        {loggedIn && (
           <>
             {email && (
               <span style={{
@@ -159,6 +170,9 @@ function App() {
             <Route path="/result-updates" element={
               <ProtectedRoute adminOnly><ResultUpdatesPage /></ProtectedRoute>
             } />
+            <Route path="/profile" element={
+              <ProtectedRoute><ProfilePage /></ProtectedRoute>
+            } />
             <Route path="/" element={
               <ProtectedRoute><HomePage /></ProtectedRoute>
             } />
@@ -186,6 +200,7 @@ function App() {
           </Routes>
         </Suspense>
         <DashboardAssistant />
+        <WhatsAppOptInModal />
       </div>
     </BrowserRouter>
   );
