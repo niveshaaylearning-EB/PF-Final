@@ -1,20 +1,17 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { X, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { getToken, isLoggedIn } from '../utils/auth.js';
 import { API_ROOT } from '../config.js';
 
-// Shown once per browser session, right after login, to any user who has no
-// WhatsApp number on file yet -- lets them opt in to receiving their login
-// OTP via WhatsApp as a backup to email, same code on both channels
-// (backend/auth.py's send_whatsapp_otp alongside the existing send_email_otp).
-// Per the user's own spec (2026-10-07): "once they have entered their number
-// then the pop up shouldn't show up" -- the condition is literally "do we
-// have a number on file", re-checked via /auth/me on every fresh load, so it
-// naturally stops once saved. Skipping only suppresses it for this browser
-// session (sessionStorage), not permanently, so it isn't lost track of if the
-// user genuinely forgot rather than deliberately declined forever.
-const DISMISS_KEY = 'nia_wa_optin_dismissed';
+// MANDATORY, per explicit instruction (2026-10-07): "no option to skip it
+// until a verified number is added." Shown on every load after login to any
+// user with no WhatsApp number on file yet (re-checked via /auth/me), with
+// no close/skip affordance at all -- the only way out is successfully
+// verifying a number, which makes /auth/me stop returning empty and the
+// modal stops rendering on its own. There is deliberately no dismiss/session
+// suppression anymore (an earlier skippable version existed before this
+// instruction tightened it).
 
 export default function WhatsAppOptInModal() {
   const [visible, setVisible] = useState(false);
@@ -27,7 +24,6 @@ export default function WhatsAppOptInModal() {
 
   useEffect(() => {
     if (!isLoggedIn()) return;
-    if (sessionStorage.getItem(DISMISS_KEY)) return;
     axios.get(`${API_ROOT}/auth/me`, { headers: { Authorization: `Bearer ${getToken()}` } })
       .then(res => {
         if (!res.data.whatsappPhone) setVisible(true);
@@ -36,11 +32,6 @@ export default function WhatsAppOptInModal() {
   }, []);
 
   if (!visible) return null;
-
-  const dismiss = () => {
-    sessionStorage.setItem(DISMISS_KEY, '1');
-    setVisible(false);
-  };
 
   const sendOtp = async () => {
     setError(''); setInfo('');
@@ -85,15 +76,12 @@ export default function WhatsAppOptInModal() {
         border: '1px solid var(--panel-border)', borderRadius: '14px',
         padding: '22px', position: 'relative',
       }}>
-        <button onClick={dismiss} style={{ position: 'absolute', top: '14px', right: '14px', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex' }}>
-          <X size={18} />
-        </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
           <MessageCircle size={20} color="var(--primary)" />
           <h3 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-main)' }}>Add your WhatsApp number</h3>
         </div>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.5, marginTop: 0 }}>
-          Get your login code on WhatsApp too, as a backup in case email is ever delayed or missed. Optional -- you can skip this.
+          A verified WhatsApp number is required before you can continue -- it's used as a backup channel for your login code in case email is ever delayed or missed.
         </p>
 
         {step === 'phone' ? (
@@ -104,12 +92,9 @@ export default function WhatsAppOptInModal() {
               style={{ width: '100%', marginBottom: '10px' }}
             />
             {error && <div style={{ color: '#f87171', fontSize: '0.78rem', marginBottom: '10px' }}>{error}</div>}
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button className="btn btn-secondary" onClick={dismiss} disabled={loading} style={{ flex: 1 }}>Skip for now</button>
-              <button className="btn btn-primary" onClick={sendOtp} disabled={loading} style={{ flex: 1 }}>
-                {loading ? 'Sending…' : 'Send Code'}
-              </button>
-            </div>
+            <button className="btn btn-primary" onClick={sendOtp} disabled={loading} style={{ width: '100%' }}>
+              {loading ? 'Sending…' : 'Send Code'}
+            </button>
           </>
         ) : (
           <>
