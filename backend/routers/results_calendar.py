@@ -97,14 +97,22 @@ async def _refresh_results_calendar_data(db: Session) -> list:
             if hs.expires_at and hs.expires_at >= today_str:
                 hidden_set.add((hs.basket_id, hs.stock_code.strip().upper()))
 
+    # BasketHistory is a legacy, DB-backed holdings mirror -- unlike the
+    # webportal's portfolios.json (the actual current source of truth,
+    # confirmed in sync with production during the 2026-10-07 data audit),
+    # this table has NO restore-from-GitHub step in main.py's startup
+    # sequence (unlike allowed_emails/simulation_mods/simulation_sips, which
+    # all do). Production's DB does not persist across redeploys, so this
+    # table silently goes back to empty on every single deploy with nothing
+    # to repopulate it. An early `if not holdings: return []` here used to
+    # hard-fail the whole calendar the moment that happened, before ever
+    # reaching the webportal-sourced fallback below -- confirmed live
+    # 2026-10-19: production's BasketHistory table was completely empty
+    # (0 rows even for Techstack) and the Result Calendar had been
+    # returning [] for at least 12 days as a result. Now treats BasketHistory
+    # as an optional supplement instead of a hard requirement, so the
+    # webportal source alone is enough to populate the calendar.
     holdings = db.query(database.BasketHistory).filter(database.BasketHistory.stock_code != None).all()
-    if not holdings:
-        _results_cache["calendar"] = {
-            "time": now,
-            "data": []
-        }
-        _save_results_cache(_results_cache)
-        return []
 
     stocks_map = {}
     for h in holdings:
@@ -123,7 +131,8 @@ async def _refresh_results_calendar_data(db: Session) -> list:
         else:
             stocks_map[code]["baskets"].add(basket_name)
 
-    # Supplement with stocks from actual portfolio (webportal) — falls back silently
+    # Primary source as of 2026-10-19 (see comment above) -- falls back
+    # silently only if the webportal itself is unreachable.
     try:
         for key, basket_obj in _fetch_all_webportal_baskets().items():
             basket_label = basket_obj.get("name", key)
@@ -140,6 +149,14 @@ async def _refresh_results_calendar_data(db: Session) -> list:
                     stocks_map[code]["baskets"].add(basket_label)
     except Exception:
         pass
+
+    if not stocks_map:
+        _results_cache["calendar"] = {
+            "time": now,
+            "data": []
+        }
+        _save_results_cache(_results_cache)
+        return []
 
     unique_codes = set(stocks_map.keys())
 
