@@ -644,7 +644,14 @@ async def smallcase_bookmarklet(request: Request):
     from changed, not this route."""
     _require_admin(request)
     from pathlib import Path
-    src_path = Path(__file__).parent.parent / "frontend" / "public" / "dashboard-bookmarklet-source.js"
+    # "public" is the raw Vite source dir -- only present in local dev. The
+    # Dockerfile's final runtime stage copies just the BUILT
+    # webportal/frontend/dist output into the container (vite build copies
+    # public/*'s contents into dist/ automatically at build time), never the
+    # standalone "public" folder itself. Reading from "public" worked
+    # locally (both exist there side by side) but 404'd in production,
+    # confirmed live 2026-10-22 ("Could not generate the bookmarklet.").
+    src_path = Path(__file__).parent.parent / "frontend" / "dist" / "dashboard-bookmarklet-source.js"
     src = src_path.read_text(encoding="utf-8")
     # Derive the ingest URL from THIS request's own path rather than a fixed
     # prefix -- local dev hits this directly on :8001 as /api/admin/..., prod
