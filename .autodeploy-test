@@ -1,0 +1,1 @@
+Trivial marker file to test whether Easypanel's auto-deploy actually fires on a git push. No functional effect on the app -- safe to delete anytime.
