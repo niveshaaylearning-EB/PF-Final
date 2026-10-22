@@ -547,6 +547,42 @@ async def competitor_login_check(request: Request):
         return {"logged_in": False, "error": f"{type(e).__name__}: {e}"}
 
 
+@router.get("/api/admin/login-debug-dumps")
+async def list_login_debug_dumps(request: Request):
+    """Admin-only: lists the screenshot+HTML debug dumps _debug_dump() in
+    smallcase_login.py/competitor_login.py writes on an unexpected page
+    state (e.g. "login_button_not_found") -- these just sit on disk inside
+    the container with no way to retrieve them otherwise. Added 2026-10-22
+    alongside the first _debug_dump() call for the competitor login's
+    "Could not find a Login button" failure, which had no diagnostic
+    capture at all before this."""
+    _require_admin(request)
+    from pathlib import Path
+    backend_dir = Path(__file__).parent
+    files = sorted(
+        [p.name for p in backend_dir.glob("*_debug_*.png")] +
+        [p.name for p in backend_dir.glob("*_debug_*.html")]
+    )
+    return {"files": files}
+
+
+@router.get("/api/admin/login-debug-dumps/{filename}")
+async def get_login_debug_dump(filename: str, request: Request):
+    """Admin-only: serves one debug-dump file by name (from the list above)."""
+    _require_admin(request)
+    from pathlib import Path
+    from fastapi.responses import FileResponse
+    backend_dir = Path(__file__).parent
+    # Only ever serve our own generated dumps, by exact name -- no path
+    # components allowed, so this can't be used to read arbitrary files.
+    if "/" in filename or "\\" in filename or not (filename.endswith(".png") or filename.endswith(".html")):
+        raise HTTPException(400, detail="Invalid filename.")
+    path = backend_dir / filename
+    if not path.is_file() or "_debug_" not in filename:
+        raise HTTPException(404, detail="No such debug dump.")
+    return FileResponse(path)
+
+
 @router.post("/api/admin/competitor-login/close-browser")
 async def competitor_login_close(request: Request):
     """Admin-only: release our hold on the competitor-account browser profile."""

@@ -140,6 +140,13 @@ async def _start_login_locked(phone: str) -> dict:
 
     login_btn = page.locator("button:has-text('Login')").first
     if await login_btn.count() == 0:
+        # No debug dump existed for this specific failure before -- confirmed
+        # live 2026-10-22 with no way to tell WHY (cookie-consent overlay
+        # blocking it, a changed button label, a bot-check interstitial,
+        # etc.). Captures a screenshot + HTML snapshot next to the other
+        # _debug_dump() calls in this file so the next occurrence is
+        # diagnosable instead of a repeat guessing game.
+        await _debug_dump("login_button_not_found")
         return {"ok": False, "error": "Could not find a Login button on the smallcase page."}
     await login_btn.click(timeout=5000)
     await page.wait_for_timeout(1000)
