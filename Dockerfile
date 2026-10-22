@@ -36,6 +36,14 @@ RUN pip install --no-cache-dir pip-audit && \
     pip-audit -r backend/requirements.txt --desc on 2>&1 || true && \
     pip uninstall -y pip-audit pip-audit-requirements 2>/dev/null || true
 
+# `pip install playwright` only installs the Python driver, never the actual
+# browser binary -- without this, every live smallcase/competitor-login call
+# fails with "Executable doesn't exist at /root/.cache/ms-playwright/...",
+# confirmed live 2026-10-22. --with-deps also pulls in the OS-level shared
+# libraries headless Chromium needs (nss, libatk, etc.), so it must run
+# while apt is still usable, before the build-tool purge below.
+RUN playwright install --with-deps chromium
+
 # Remove build tools after pip
 RUN apt-get purge -y --auto-remove gcc g++ gfortran libopenblas-dev liblapack-dev pkg-config \
     && rm -rf /var/lib/apt/lists/*
