@@ -277,6 +277,7 @@ def _dump_allowed_emails(db, raise_on_error: bool = False):
         "password_hash": r.password_hash,
         "is_approved":   r.is_approved if r.is_approved is not None else 1,
         "is_admin":      r.is_admin if r.is_admin is not None else 0,
+        "whatsapp_phone": r.whatsapp_phone,
     } for r in rows]
     _save_json_push(_ALLOWED_EMAIL_FILE, data, sync=True, raise_on_error=raise_on_error)
 
@@ -355,6 +356,8 @@ async def _startup_prewarm():
                         last_name=rec.get("last_name"),
                         password_hash=rec.get("password_hash"),
                         is_approved=rec.get("is_approved", 1),
+                        is_admin=rec.get("is_admin", 0),
+                        whatsapp_phone=rec.get("whatsapp_phone"),
                     ))
                 else:
                     if "totp_secret" in rec:
@@ -371,6 +374,17 @@ async def _startup_prewarm():
                         existing.password_hash = rec["password_hash"]
                     if "is_approved" in rec:
                         existing.is_approved = rec["is_approved"]
+                    # is_admin/whatsapp_phone were missing from this restore path
+                    # entirely -- confirmed live 2026-10-22: a verified WhatsApp
+                    # number (set and tested the same day) was silently wiped by
+                    # a later redeploy, since _dump_allowed_emails() never even
+                    # serialized it to the GitHub-backed JSON this loop reads
+                    # from, let alone restored it here. Same gap existed for
+                    # admin-grant status.
+                    if "is_admin" in rec:
+                        existing.is_admin = rec["is_admin"]
+                    if "whatsapp_phone" in rec:
+                        existing.whatsapp_phone = rec["whatsapp_phone"]
         # Restore access requests
         _sync_access_requests_to_db(db_s)
         # Restore login history
