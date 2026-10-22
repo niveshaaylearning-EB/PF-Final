@@ -40,7 +40,16 @@ async def get_stock_exposure():
     buy_price  = _load_buy_price_data()
 
     exposure: dict = {}
-    for basket, stocks in portfolios.items():
+    for basket in BASKET_DISPLAY_NAMES:
+        # portfolios.json also carries "<basket>_sold" keys (sold-stock
+        # history, not current holdings) -- iterating portfolios.items()
+        # directly picked those up too, and a stale leftover `allocation`
+        # field on an already-sold entry (e.g. LIQUIDCASE at 1.0 in
+        # Consumer_Trends_sold) got counted as if it were a real 100%
+        # current holding. Confirmed live 2026-10-22 (Stock Exposure
+        # showing LIQUIDCASE at #1, 100%, "1 basket"). Only ever iterate
+        # real basket keys now.
+        stocks = portfolios.get(basket) or []
         label = BASKET_DISPLAY_NAMES.get(basket, basket)
         bp_map = buy_price.get(basket, {})
         for stock in stocks:
