@@ -886,7 +886,8 @@ def list_allowed_emails(request: Request, db: Session = Depends(get_db)):
     return [{"email": r.email, "added_by": r.added_by, "added_at": r.added_at,
              "is_approved": bool(r.is_approved),
              "is_admin": bool(r.is_admin) or is_admin_email(r.email),
-             "is_founder_admin": r.email.lower().strip() in ADMIN_EMAILS} for r in rows]
+             "is_founder_admin": r.email.lower().strip() in ADMIN_EMAILS,
+             "whatsapp_phone": r.whatsapp_phone} for r in rows]
 
 @app.post("/api/allowed-emails")
 def add_allowed_email(body: AllowedEmailBody, request: Request, db: Session = Depends(get_db)):

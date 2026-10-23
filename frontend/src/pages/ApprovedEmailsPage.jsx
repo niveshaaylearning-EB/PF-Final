@@ -193,6 +193,18 @@ export default function ApprovedEmailsPage() {
     } finally { setWaAdding(false); }
   };
 
+  const quickAddWaRecipient = async (name, phone, email) => {
+    setWaError('');
+    try {
+      await axios.post(`${API}/admin/whatsapp-recipients`,
+        { name, phone, email },
+        { headers: { Authorization: `Bearer ${getToken()}` } });
+      loadWaRecipients();
+    } catch (err) {
+      setWaError(err.response?.data?.detail || 'Failed to add recipient');
+    }
+  };
+
   const handleRemoveWaRecipient = async (phone) => {
     setWaError(''); setWaRemoving(phone);
     try {
@@ -411,9 +423,25 @@ export default function ApprovedEmailsPage() {
                       </span>
                     )}
                     {em?.added_at && <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '1px' }}>Added {em.added_at.slice(0, 10)}</div>}
+                    {em?.whatsapp_phone && <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '1px' }}>WhatsApp: {em.whatsapp_phone}</div>}
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
+                  {em?.whatsapp_phone && !waRecipients.some(r => r.phone === em.whatsapp_phone) && (
+                    <button
+                      onClick={() => quickAddWaRecipient(emailStr.split('@')[0].replace('.', ' '), em.whatsapp_phone, emailStr)}
+                      title="Add to WhatsApp rebalance alert recipients"
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '5px',
+                        padding: '5px 12px', borderRadius: '7px',
+                        border: '1px solid rgba(16,185,129,0.3)',
+                        background: 'rgba(16,185,129,0.1)',
+                        color: 'var(--positive)', fontSize: '0.78rem', cursor: 'pointer',
+                      }}
+                    >
+                      <MessageCircle size={12} /> Add to alerts
+                    </button>
+                  )}
                   {!em?.is_founder_admin && (
                     <button
                       onClick={() => handleToggleAdmin(emailStr, !em?.is_admin)}
