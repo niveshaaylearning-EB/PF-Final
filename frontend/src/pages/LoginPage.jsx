@@ -96,7 +96,12 @@ export default function LoginPage() {
       setLoginOtp('');
       go('otp');
       if (res.data?.code) setHint(`Email delivery failed. Your code: ${res.data.code}`);
-      else setSuccess(`A login code has been sent to ${em}.`);
+      // auth.py's /login already computes the right channel list (email-only,
+      // or "email and WhatsApp" when the account has a verified number on
+      // file) -- this used to hardcode "sent to {email}" regardless, silently
+      // hiding that a WhatsApp code went out too. Use the backend's own
+      // message instead of re-deriving it here.
+      else setSuccess(res.data?.message || `A login code has been sent to ${em}.`);
     } catch (err) {
       const det = err.response?.data?.detail;
       setError(typeof det === 'string' ? det : det?.[0]?.msg || 'Failed to send code. Please try again.');
