@@ -24,9 +24,15 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# supervisor + build tools for scipy/nsepython
+# supervisor + build tools for scipy/nsepython + libreoffice (headless, for
+# converting an uploaded legacy .doc result-update into .docx so it can be
+# parsed -- python-docx only reads the modern .docx XML format, and Word's
+# own COM automation (used for this exact conversion in local Windows dev)
+# doesn't exist on Linux, so headless LibreOffice is the production
+# equivalent: `soffice --headless --convert-to docx`.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     supervisor gcc g++ gfortran libopenblas-dev liblapack-dev pkg-config \
+    libreoffice-writer \
     && rm -rf /var/lib/apt/lists/*
 
 COPY backend/requirements.txt ./backend/requirements.txt

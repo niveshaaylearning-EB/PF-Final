@@ -3,9 +3,9 @@ updates. Admin-only end to end (visible as a home-page tile only to admins).
 
 Tracked PER COMPANY (by nseCode), not per (basket, company) -- a company
 held in multiple baskets (e.g. ACUTAAS in both Mid & Small Cap and Trends
-Triology) shares ONE result date / concall date / received-checked-sent
-state / snapshot / bullets, since it's the same real-world result
-regardless of which basket holds it. Per the user's own spec (2026-10-05):
+Triology) shares ONE result date / received-checked-sent-sentResults state /
+bullets / financial table, since it's the same real-world result regardless
+of which basket holds it. Per the user's own spec (2026-10-05):
 "Now suppose Green Energy Basket has... A... Now you have already tracked
 A... then don't track it again for the basket." Each row instead carries a
 `baskets` map of every basket it's EVER been tracked under, each with its
@@ -14,19 +14,22 @@ held in another keeps showing (and stays sendable) for the one that still
 holds it, while a company removed from EVERY basket it was tracked under
 drops out of reminders/generation entirely.
 
-Format (see ACUTAA_1.DOC / MID&SM_1.PDF / MID&SM_2.PDF / RA Disclaimer.docx,
-2026-10-02): basket name -> company name -> snapshot image (bordered) ->
-"Operational Performance:" + bold-lead-in bullets -> "Outlook:" +
-bold-lead-in bullets -> (once, at the very end of a merge) the fixed SEBI
-research-analyst disclosure footer on its own fresh page.
+Format (see Document 1.DOC / MID&SM~1.PDF / MID&SM~2.PDF / RA Dislcaimer.docx,
+2026-10-23 refinement): basket name -> company name -> [optional financial
+table, if the uploaded document had one] -> "Operational Performance:" +
+bold-lead-in bullets -> "Outlook:" + bold-lead-in bullets -> (once, at the
+very end of a merge) the fixed SEBI research-analyst disclosure footer on
+its own fresh page. Per company, ALL of the table/bullets are auto-parsed
+from ONE uploaded result-update document (see result_update_doc_parser.py)
+rather than typed in by hand or built from a separately-uploaded snapshot
+image -- that whole older flow (concall date, a standalone snapshot-image
+upload, manual bullet editors) was removed in this refinement.
 
 Lifecycle rules (from the user's own spec):
-  - A company currently held in ANY basket with no tracking row at all yet
-    is a "new" reminder (dates need entering), listing every basket that
-    currently holds it. This covers "added after its results/concall
-    already happened" implicitly -- we track it regardless of whether the
-    real-world result date is before or after the addition, since we are
-    sending the update for it either way.
+  - A company currently held in a basket is tracked (and its result date
+    auto-filled from Result Calendar when available) the moment it's first
+    seen -- no manual "add dates" step. It only surfaces as a "new"
+    reminder if Result Calendar has no date for it yet.
   - A basket that stops holding an already-tracked company has JUST that
     basket's `currentlyHeld` flipped to False -- other baskets still
     holding the same company are unaffected. Only once EVERY basket entry
@@ -35,6 +38,10 @@ Lifecycle rules (from the user's own spec):
     a position that's gone everywhere). A company already `received`
     before full removal is left alone (still sendable from its basket
     history) but naturally stops generating new reminders.
+  - `sentResults` (added 2026-10-23) is a SEPARATE checkbox from
+    received/checked/sent -- it's what actually selects a company into a
+    merged PDF, and the Generate Merged/Consolidated PDF buttons only
+    appear once at least one held company has it checked.
 """
 import json
 import os
@@ -52,8 +59,6 @@ router = APIRouter()
 
 _DATA_DIR = Path(__file__).parent.parent
 _DATA_FILE = _DATA_DIR / "result_updates.json"
-_UPLOAD_DIR = _DATA_DIR / "result_update_uploads"
-_UPLOAD_DIR.mkdir(exist_ok=True)
 _RAW_DOC_DIR = _DATA_DIR / "result_update_raw_docs"
 _RAW_DOC_DIR.mkdir(exist_ok=True)
 
@@ -121,12 +126,22 @@ def _current_holdings() -> dict:
 
 
 def _new_row(nse_code: str, security_name: str) -> dict:
+    # Per the 2026-10-23 refinement: concall date, the separate financial-
+    # snapshot-image upload, and the raw-document-as-reference-only upload
+    # are all gone -- replaced by ONE "upload or drag" document per company
+    # (resultUpdateDocument) that gets parsed automatically into
+    # operationalPerformance/outlook/financialTable (see
+    # _parse_result_update_document below), instead of being typed in by
+    # hand or kept purely for reference. sentResults is a new, separate
+    # checkbox from received/checked/sent -- it's what actually selects a
+    # company into the merged PDF (see generate_pdf), not a lifecycle status.
     return {
         "nseCode": nse_code, "securityName": security_name or nse_code,
-        "resultDate": None, "concallDate": None,
-        "received": False, "checked": False, "sent": False,
+        "resultDate": None,
+        "received": False, "checked": False, "sent": False, "sentResults": False,
         "operationalPerformance": [], "outlook": [],
-        "snapshotImage": None, "rawDocument": None,
+        "financialTable": None,
+        "resultUpdateDocument": None,
         "baskets": {},
     }
 
@@ -172,14 +187,47 @@ def _sync_and_compute_reminders(data: dict) -> list:
             entry = new_by_code.setdefault(code, {"name": name, "baskets": []})
             entry["baskets"].append(info["label"])
     suggested_dates = _suggested_result_dates()
+
+    # Per the 2026-10-23 refinement ("fetch the result date of each company
+    # in each basket automatically"), a newly-discovered held company is now
+    # created as a REAL tracked row immediately -- with its result date
+    # auto-filled straight from Result Calendar's own feed when available --
+    # instead of only ever surfacing as a "new" reminder the admin has to
+    # manually click "Add dates" on. It still shows as a reminder if the
+    # date is missing (Result Calendar has nothing for it yet) or once that
+    # date has passed without being Received (the overdue case below).
     for code, entry in new_by_code.items():
-        baskets_str = ", ".join(entry["baskets"])
         suggested = suggested_dates.get(code)
+        row = _new_row(code, entry["name"])
+        row["resultDate"] = suggested
+        for label in entry["baskets"]:
+            basket_key = next((k for k, v in holdings.items() if v["label"] == label), None)
+            if basket_key:
+                row["baskets"][basket_key] = {"label": label, "currentlyHeld": True}
+        row["updatedAt"] = datetime.now(timezone.utc).strftime("%d %b %Y %H:%M UTC")
+        data[code] = row
+
+    # Also backfill any ALREADY-tracked row that's still missing a result
+    # date -- e.g. Result Calendar only just learned the date after this
+    # company started being tracked. Never overwrites a date someone already
+    # set (manually or from an earlier auto-fill), only fills a blank.
+    for row in data.values():
+        if not row.get("resultDate"):
+            suggested = suggested_dates.get(row["nseCode"])
+            if suggested:
+                row["resultDate"] = suggested
+
+    # New-company / missing-date reminders -- one per company even when held
+    # in several baskets at once.
+    for row in data.values():
+        held_labels = [b["label"] for b in row.get("baskets", {}).values() if b.get("currentlyHeld")]
+        if not held_labels or row.get("resultDate"):
+            continue
+        baskets_str = ", ".join(held_labels)
         reminders.append({
-            "type": "new", "nseCode": code, "securityName": entry["name"],
-            "baskets": entry["baskets"], "suggestedResultDate": suggested,
-            "message": f"{entry['name']} ({code}) is held in {baskets_str} but has no result/concall dates tracked yet."
-                       + (f" Result Calendar already has a board-meeting date: {suggested}." if suggested else ""),
+            "type": "new", "nseCode": row["nseCode"], "securityName": row["securityName"],
+            "baskets": held_labels, "suggestedResultDate": None,
+            "message": f"{row['securityName']} ({row['nseCode']}) is held in {baskets_str} but Result Calendar has no result date for it yet -- enter one manually.",
         })
 
     # Overdue reminders for already-tracked, still-held-somewhere, not-yet-
@@ -194,12 +242,6 @@ def _sync_and_compute_reminders(data: dict) -> list:
                 "type": "overdue_result", "nseCode": row["nseCode"], "securityName": row["securityName"],
                 "baskets": held_labels, "resultDate": row["resultDate"],
                 "message": f"{row['securityName']} ({row['nseCode']}) announced results on {row['resultDate']} -- held in: {baskets_str}. Mark Received once the update is in hand.",
-            })
-        elif row.get("concallDate") and row["concallDate"] <= today:
-            reminders.append({
-                "type": "overdue_concall", "nseCode": row["nseCode"], "securityName": row["securityName"],
-                "baskets": held_labels, "concallDate": row["concallDate"],
-                "message": f"{row['securityName']} ({row['nseCode']})'s concall was on {row['concallDate']} -- held in: {baskets_str}. Mark Received once the update is in hand.",
             })
 
     return reminders
@@ -242,8 +284,8 @@ def upsert_result_update(body: dict, request: Request):
         label = (holdings.get(basket) or {}).get("label", basket)
         row.setdefault("baskets", {})[basket] = {"label": label, "currentlyHeld": True}
 
-    for field in ("securityName", "resultDate", "concallDate", "received", "checked", "sent",
-                  "operationalPerformance", "outlook"):
+    for field in ("securityName", "resultDate", "received", "checked", "sent", "sentResults",
+                  "operationalPerformance", "outlook", "financialTable"):
         if field in body:
             row[field] = body[field]
     row["updatedAt"] = datetime.now(timezone.utc).strftime("%d %b %Y %H:%M UTC")
@@ -263,66 +305,33 @@ def delete_result_update(nse_code: str, request: Request):
     if nse_code not in data:
         raise HTTPException(status_code=404, detail="Not found")
     row = data[nse_code]
-    for filename, directory in ((row.get("snapshotImage"), _UPLOAD_DIR), (row.get("rawDocument"), _RAW_DOC_DIR)):
-        if filename:
-            try:
-                (directory / filename).unlink(missing_ok=True)
-            except Exception:
-                pass
+    if row.get("resultUpdateDocument"):
+        try:
+            (_RAW_DOC_DIR / row["resultUpdateDocument"]).unlink(missing_ok=True)
+        except Exception:
+            pass
     del data[nse_code]
     _save(data)
     return {"status": "removed"}
 
 
-@router.post("/api/admin/result-updates/{nse_code}/snapshot")
-async def upload_snapshot(nse_code: str, request: Request, file: UploadFile = File(...)):
+@router.post("/api/admin/result-updates/{nse_code}/parse-document")
+async def upload_and_parse_document(nse_code: str, request: Request, file: UploadFile = File(...)):
+    """Replaces the old separate snapshot-image + raw-document uploads with
+    ONE drag-and-drop per company (per the 2026-10-23 refinement): the admin
+    uploads the result-update document exactly as received from the
+    research team, and this endpoint auto-extracts Operational Performance/
+    Outlook bullets + an optional financial table from it -- see
+    result_update_doc_parser.py for the exact parsing rules, confirmed
+    against a real sample. The original upload is kept on disk (served back
+    via GET .../document/{filename}) purely for reference/re-checking, same
+    as the old raw-document upload did -- it is not itself fed into the
+    merged PDF, the PARSED fields are."""
     _require_admin(request)
     nse_code = nse_code.strip().upper()
     data = _load()
     if nse_code not in data:
-        raise HTTPException(status_code=404, detail="Add the result/concall dates for this company first")
-
-    ext = os.path.splitext(file.filename or "")[1].lower() or ".png"
-    if ext not in (".png", ".jpg", ".jpeg"):
-        raise HTTPException(status_code=400, detail="Only PNG/JPG images are supported")
-    filename = f"{nse_code}{ext}"
-    dest = _UPLOAD_DIR / filename
-
-    old = data[nse_code].get("snapshotImage")
-    if old and old != filename:
-        try:
-            (_UPLOAD_DIR / old).unlink(missing_ok=True)
-        except Exception:
-            pass
-
-    with open(dest, "wb") as f:
-        shutil.copyfileobj(file.file, f)
-
-    data[nse_code]["snapshotImage"] = filename
-    _save(data)
-    return {"status": "ok", "snapshotImage": filename}
-
-
-@router.get("/api/admin/result-updates/snapshot/{filename}")
-def get_snapshot(filename: str, request: Request):
-    _require_admin(request)
-    path = _UPLOAD_DIR / filename
-    if not path.exists():
-        raise HTTPException(status_code=404, detail="Not found")
-    return FileResponse(str(path))
-
-
-@router.post("/api/admin/result-updates/{nse_code}/raw-document")
-async def upload_raw_document(nse_code: str, request: Request, file: UploadFile = File(...)):
-    """Stores the original Word result-update document as received from the
-    company/research team -- kept for reference/re-checking against what
-    was actually parsed into the snapshot image + bullets, not itself used
-    to generate the merged PDF."""
-    _require_admin(request)
-    nse_code = nse_code.strip().upper()
-    data = _load()
-    if nse_code not in data:
-        raise HTTPException(status_code=404, detail="Add the result/concall dates for this company first")
+        raise HTTPException(status_code=404, detail="Add the result date for this company first")
 
     ext = os.path.splitext(file.filename or "")[1].lower() or ".docx"
     if ext not in (".doc", ".docx"):
@@ -330,7 +339,7 @@ async def upload_raw_document(nse_code: str, request: Request, file: UploadFile 
     filename = f"{nse_code}{ext}"
     dest = _RAW_DOC_DIR / filename
 
-    old = data[nse_code].get("rawDocument")
+    old = data[nse_code].get("resultUpdateDocument")
     if old and old != filename:
         try:
             (_RAW_DOC_DIR / old).unlink(missing_ok=True)
@@ -340,13 +349,31 @@ async def upload_raw_document(nse_code: str, request: Request, file: UploadFile 
     with open(dest, "wb") as f:
         shutil.copyfileobj(file.file, f)
 
-    data[nse_code]["rawDocument"] = filename
+    import result_update_doc_parser as parser
+    parse_target = dest
+    converted = None
+    try:
+        if ext == ".doc":
+            converted = parser.convert_doc_to_docx(dest, _RAW_DOC_DIR)
+            parse_target = converted
+        parsed = parser.parse_result_update_document(parse_target)
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=f"Could not parse this document: {e}")
+    finally:
+        if converted and converted.exists():
+            converted.unlink(missing_ok=True)
+
+    data[nse_code]["resultUpdateDocument"] = filename
+    data[nse_code]["operationalPerformance"] = parsed["operationalPerformance"]
+    data[nse_code]["outlook"] = parsed["outlook"]
+    data[nse_code]["financialTable"] = parsed["financialTable"]
+    data[nse_code]["updatedAt"] = datetime.now(timezone.utc).strftime("%d %b %Y %H:%M UTC")
     _save(data)
-    return {"status": "ok", "rawDocument": filename}
+    return data[nse_code]
 
 
-@router.get("/api/admin/result-updates/raw-document/{filename}")
-def get_raw_document(filename: str, request: Request):
+@router.get("/api/admin/result-updates/document/{filename}")
+def get_result_update_document(filename: str, request: Request):
     _require_admin(request)
     path = _RAW_DOC_DIR / filename
     if not path.exists():
@@ -357,14 +384,16 @@ def get_raw_document(filename: str, request: Request):
 @router.post("/api/admin/result-updates/generate-pdf")
 def generate_pdf(body: dict, request: Request):
     """Merges companies (one basket at a time) into a single PDF, per
-    routers/result_updates.py's module docstring. Two modes:
-      - Partial: pass explicit `nseCodes`, e.g. whichever companies
-        reported results this week.
-      - Consolidated: pass `consolidated: true` instead -- automatically
-        selects every company currently held in `basket` that is already
-        `received`, for the final once-everyone's-reported send. Refuses
-        if anything currently held in the basket is still un-received,
-        since a consolidated send is supposed to be the complete set."""
+    routers/result_updates.py's module docstring. Two modes, both scoped to
+    companies CURRENTLY held in `basket` (per the 2026-10-23 refinement):
+      - Partial/merged: every held company with `sentResults` checked --
+        that checkbox is what actually selects a company into this PDF, not
+        a separate selection-only control.
+      - Consolidated: pass `consolidated: true` instead -- every held
+        company that is `received` AND `checked` AND `sentResults`. Unlike
+        the old all-or-nothing version, this no longer blocks the whole
+        generation just because some other held company isn't ready yet --
+        it simply includes whichever ones already qualify."""
     _require_admin(request)
     basket = (body.get("basket") or "").strip()
     if not basket:
@@ -373,50 +402,34 @@ def generate_pdf(body: dict, request: Request):
     data = _load()
     consolidated = bool(body.get("consolidated"))
 
-    if consolidated:
-        # Check against the basket's ACTUAL current holdings, not just
-        # already-tracked rows -- a company with no tracking row at all
-        # definitely hasn't been received, and silently excluding it (as an
-        # earlier version of this check did, by only ever looking at rows
-        # that already existed) would let a consolidated send go out
-        # missing companies nobody had even started tracking yet.
-        current_holdings = _current_holdings()
-        held_codes = (current_holdings.get(basket) or {}).get("stocks", {})
-        if not held_codes:
-            raise HTTPException(status_code=400, detail="This basket currently holds no stocks.")
-        missing, not_received = [], []
-        rows = []
-        for code, name in held_codes.items():
-            row = data.get(code)
-            if not row or not row.get("received"):
-                (missing if not row else not_received).append(f"{name} ({code})")
-            else:
-                rows.append(row)
-        if missing or not_received:
-            parts = []
-            if missing:
-                parts.append(f"not tracked yet: {', '.join(missing)}")
-            if not_received:
-                parts.append(f"not yet received: {', '.join(not_received)}")
-            raise HTTPException(status_code=400, detail=f"Not every company in this basket has been received yet ({'; '.join(parts)}).")
-    else:
-        nse_codes = body.get("nseCodes") or []
-        if not nse_codes:
-            raise HTTPException(status_code=400, detail="nseCodes is required (or pass consolidated: true)")
-        rows = []
-        for code in nse_codes:
-            row = data.get(code.strip().upper())
-            if not row:
-                raise HTTPException(status_code=404, detail=f"No tracking row for {code}")
-            rows.append(row)
+    current_holdings = _current_holdings()
+    held_codes = (current_holdings.get(basket) or {}).get("stocks", {})
+    if not held_codes:
+        raise HTTPException(status_code=400, detail="This basket currently holds no stocks.")
 
-    holdings = _current_holdings()
-    basket_label = (holdings.get(basket) or {}).get("label", basket)
+    rows = []
+    for code in held_codes:
+        row = data.get(code)
+        if not row or not row.get("sentResults"):
+            continue
+        if consolidated and not (row.get("received") and row.get("checked")):
+            continue
+        rows.append(row)
+
+    if not rows:
+        detail = (
+            "No company in this basket is marked received, checked, and sentResults yet."
+            if consolidated else
+            "No company in this basket has 'sent results' checked yet."
+        )
+        raise HTTPException(status_code=400, detail=detail)
+
+    basket_label = (current_holdings.get(basket) or {}).get("label", basket)
 
     import result_update_pdf
     import tempfile
     suffix = "consolidated" if consolidated else f"{len(rows)}companies"
     out_path = Path(tempfile.gettempdir()) / f"result_update_{basket}_{suffix}.pdf"
-    result_update_pdf.generate_merged_pdf(basket_label, rows, _UPLOAD_DIR, out_path, consolidated=consolidated)
+    result_update_pdf.generate_merged_pdf(basket_label, rows, out_path, consolidated=consolidated)
 
     return FileResponse(str(out_path), filename=out_path.name, media_type="application/pdf")

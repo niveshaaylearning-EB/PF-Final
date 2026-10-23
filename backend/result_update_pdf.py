@@ -1,14 +1,28 @@
 """Builds the merged result-update PDF (see routers/result_updates.py for
 the full context). Per company, in this exact order (matching the real
-sample format, ACUTAA_1.DOC):
-  company name (bold) -> financial-snapshot image (black border drawn
-  explicitly, regardless of whether the source image already has one) ->
-  "Operational Performance:" + bold-lead-in bullets -> "Outlook:" +
-  bold-lead-in bullets.
+sample format, confirmed against MID&SM~1.PDF / MID&SM~2.PDF, 2026-10-23):
+  company name (bold) -> [optional financial table, auto-parsed from the
+  uploaded result-update document by result_update_doc_parser.py -- NOT
+  every company has one] -> "Operational Performance:" + bold-lead-in
+  bullets -> "Outlook:" + bold-lead-in bullets.
 Basket name appears once as the document title. The SEBI research-analyst
 disclosure footer appears once, at the very end, not per company -- it's
 fixed legal boilerplate, not something to repeat per page.
+
+The financial table's row/column structure is NOT fixed -- confirmed live
+that different companies' tables don't share the same line items (e.g.
+"Cost of materials consumed" vs "Cost of raw materials and components
+consumed" vs separate "Purchases of stock-in-trade" + "Changes in
+inventories" rows). It's rendered generically from whatever headers/rows
+the source document's table actually had, with a row rendered bold+shaded
+when its label was bold in the source (subtotal/margin lines like Gross
+Profit, EBITDA, PAT) -- detected from real formatting, not guessed by label
+name. NOTE: the real sample's table header also carries the Niveshaay logo
+graphic in the corner -- that exact logo asset wasn't available when this
+was built, so it's omitted; swap in a real logo file here if/when one is
+provided.
 """
+import html
 from pathlib import Path
 
 from reportlab.lib.pagesizes import A4
@@ -16,11 +30,13 @@ from reportlab.lib.units import cm
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle, PageBreak, KeepTogether,
+    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, KeepTogether,
 )
-from reportlab.platypus.flowables import Flowable
 
 _GREEN = colors.HexColor("#456232")
+_TABLE_HEADER_BG = colors.HexColor("#1F3864")   # dark navy, matches the sample's column-header row
+_TABLE_ROW_LIGHT = colors.HexColor("#E2EFDA")   # light mint green, regular line items
+_TABLE_ROW_BOLD = colors.HexColor("#A9D18E")    # darker green, subtotal/margin rows
 
 _styles = getSampleStyleSheet()
 _basket_title_style = ParagraphStyle("BasketTitle", parent=_styles["Title"], fontSize=18, textColor=_GREEN, spaceAfter=4)
@@ -30,26 +46,56 @@ _section_style = ParagraphStyle("Section", parent=_styles["Heading2"], fontSize=
 _bullet_style = ParagraphStyle("Bullet", parent=_styles["Normal"], fontSize=10, leading=14, spaceAfter=5, leftIndent=12)
 _footer_heading_style = ParagraphStyle("FooterHeading", parent=_styles["Heading3"], fontSize=11, textColor=colors.black, spaceBefore=10, spaceAfter=4)
 _footer_body_style = ParagraphStyle("FooterBody", parent=_styles["Normal"], fontSize=8, leading=11)
+_table_header_style = ParagraphStyle("TableHeader", parent=_styles["Normal"], fontSize=8.5, textColor=colors.white, fontName="Helvetica-Bold")
+_table_cell_style = ParagraphStyle("TableCell", parent=_styles["Normal"], fontSize=8.5, textColor=colors.black)
+_table_cell_bold_style = ParagraphStyle("TableCellBold", parent=_styles["Normal"], fontSize=8.5, textColor=colors.black, fontName="Helvetica-Bold")
 
 
-class _BorderedImage(Flowable):
-    """An image with an explicit black border drawn around it -- doesn't
-    rely on the source image already having one baked in."""
-    def __init__(self, img_path: str, max_width: float, border_width: float = 1.5):
-        super().__init__()
-        self.img_path = img_path
-        self.border_width = border_width
-        reader_img = Image(img_path)
-        iw, ih = reader_img.imageWidth, reader_img.imageHeight
-        scale = min(max_width / iw, 1.0)
-        self.width = iw * scale
-        self.height = ih * scale
+def _sanitize(text: str) -> str:
+    """Text pulled from an uploaded Word doc is untrusted-ish free text, fed
+    straight into reportlab Paragraphs, which interpret a small HTML-like
+    markup subset -- a literal "&"/"<"/">" in a company's own wording (e.g.
+    "R&D") would otherwise break rendering. Also swaps the Rupee sign (₹)
+    for "Rs." -- confirmed live that reportlab's base Helvetica font has no
+    glyph for U+20B9 and silently renders it as a solid black square;
+    embedding a Unicode-complete TTF just for this one symbol wasn't worth
+    the cross-platform font-availability risk (this needs to render
+    identically in the Linux production container too)."""
+    return html.escape(text.replace("₹", "Rs. "), quote=False)
 
-    def draw(self):
-        self.canv.drawImage(self.img_path, 0, 0, width=self.width, height=self.height, preserveAspectRatio=True)
-        self.canv.setStrokeColor(colors.black)
-        self.canv.setLineWidth(self.border_width)
-        self.canv.rect(0, 0, self.width, self.height)
+
+def _financial_table_flowable(financial_table: dict, max_width: float) -> Table:
+    headers = financial_table.get("headers") or []
+    data_rows = financial_table.get("rows") or []
+    if not headers:
+        return None
+
+    table_data = [[Paragraph(_sanitize(h), _table_header_style) for h in headers]]
+    for row in data_rows:
+        cells = row.get("cells") or []
+        style = _table_cell_bold_style if row.get("bold") else _table_cell_style
+        table_data.append([Paragraph(_sanitize(c), style) for c in cells])
+
+    n_cols = len(headers)
+    first_col_width = max_width * 0.34
+    other_col_width = (max_width - first_col_width) / max(n_cols - 1, 1)
+    col_widths = [first_col_width] + [other_col_width] * (n_cols - 1)
+
+    style_cmds = [
+        ("BACKGROUND", (0, 0), (-1, 0), _TABLE_HEADER_BG),
+        ("GRID", (0, 0), (-1, -1), 0.5, colors.white),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("TOPPADDING", (0, 0), (-1, -1), 4),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ("LEFTPADDING", (0, 0), (-1, -1), 6),
+    ]
+    for i, row in enumerate(data_rows, start=1):
+        bg = _TABLE_ROW_BOLD if row.get("bold") else _TABLE_ROW_LIGHT
+        style_cmds.append(("BACKGROUND", (0, i), (-1, i), bg))
+
+    tbl = Table(table_data, colWidths=col_widths)
+    tbl.setStyle(TableStyle(style_cmds))
+    return tbl
 
 
 _DISCLOSURE_FOOTER = """
@@ -75,34 +121,39 @@ Contact No: 7859870559, Email: research@niveshaay.com<br/>
 SEBI regional/local office address - SEBI Bhavan, Western Regional Office, Panchvati 1st Lane, Gulbai Tekra Road, Ahmedabad - 380006, Gujarat"""
 
 
-def _company_flowables(row: dict, upload_dir: Path) -> list:
-    flow = [Paragraph(row["securityName"], _company_style)]
+def _company_flowables(row: dict) -> list:
+    flow = [Paragraph(_sanitize(row["securityName"]), _company_style)]
 
-    snapshot = row.get("snapshotImage")
-    if snapshot:
-        img_path = upload_dir / snapshot
-        if img_path.exists():
-            flow.append(_BorderedImage(str(img_path), max_width=16.5 * cm))
+    financial_table = row.get("financialTable")
+    if financial_table and financial_table.get("headers"):
+        tbl = _financial_table_flowable(financial_table, max_width=16.5 * cm)
+        if tbl:
+            flow.append(tbl)
             flow.append(Spacer(1, 10))
+
+    def _bullet_paragraph(b: dict) -> Paragraph:
+        heading = _sanitize((b.get("heading") or "").strip())
+        text = _sanitize((b.get("text") or "").strip())
+        # heading can be "" -- a bullet with no bold lead-in phrase (see
+        # result_update_doc_parser.py's fallback) -- skip the bold/colon
+        # wrapper entirely rather than rendering a stray "• <b></b>: text".
+        body = f"<b>{heading}:</b> {text}" if heading else text
+        return Paragraph(f"&bull; {body}", _bullet_style)
 
     if row.get("operationalPerformance"):
         flow.append(Paragraph("Operational Performance:", _section_style))
         for b in row["operationalPerformance"]:
-            heading = (b.get("heading") or "").strip()
-            text = (b.get("text") or "").strip()
-            flow.append(Paragraph(f"&bull; <b>{heading}:</b> {text}", _bullet_style))
+            flow.append(_bullet_paragraph(b))
 
     if row.get("outlook"):
         flow.append(Paragraph("Outlook:", _section_style))
         for b in row["outlook"]:
-            heading = (b.get("heading") or "").strip()
-            text = (b.get("text") or "").strip()
-            flow.append(Paragraph(f"&bull; <b>{heading}:</b> {text}", _bullet_style))
+            flow.append(_bullet_paragraph(b))
 
     return flow
 
 
-def generate_merged_pdf(basket_label: str, rows: list, upload_dir: Path, output_path: Path, consolidated: bool = False) -> None:
+def generate_merged_pdf(basket_label: str, rows: list, output_path: Path, consolidated: bool = False) -> None:
     """`rows` is a list of result_updates.json row dicts (already filtered
     + ordered by the caller) for ONE basket. Writes the merged PDF to
     `output_path`. `consolidated=True` adds a subtitle marking this as the
@@ -116,7 +167,7 @@ def generate_merged_pdf(basket_label: str, rows: list, upload_dir: Path, output_
     story.append(Spacer(1, 6))
 
     for i, row in enumerate(rows):
-        company_flow = _company_flowables(row, upload_dir)
+        company_flow = _company_flowables(row)
         story.append(KeepTogether(company_flow))
         if i < len(rows) - 1:
             story.append(Spacer(1, 16))

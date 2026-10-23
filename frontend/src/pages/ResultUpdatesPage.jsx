@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, FileText, Bell, Upload, FileUp, Trash2, Download, Plus, ChevronDown, ChevronRight, Search, X } from 'lucide-react';
+import { ArrowLeft, FileText, Bell, Upload, Trash2, Download, Plus, ChevronDown, ChevronRight, Search, X } from 'lucide-react';
 import { getToken } from '../utils/auth';
 import { API_BASE as API } from '../config.js';
 
@@ -9,12 +9,20 @@ const authHeaders = () => ({ Authorization: `Bearer ${getToken()}` });
 
 // Tracking is PER COMPANY (by nseCode), not per basket -- a company held in
 // several baskets at once (e.g. ACUTAAS in both Mid & Small Cap and Trends
-// Triology) shares one result/concall date and one received/checked/sent
-// state, since it's the same real-world result regardless of which basket
-// holds it. Each row's `baskets` map lists every basket it's tracked under,
-// each with its own `currentlyHeld` flag, so it still shows (and is still
-// sendable) under any basket that still holds it even after being removed
-// from another.
+// Triology) shares one result date / received-checked-sent-sentResults
+// state / bullets / financial table, since it's the same real-world result
+// regardless of which basket holds it. Each row's `baskets` map lists every
+// basket it's tracked under, each with its own `currentlyHeld` flag, so it
+// still shows (and is still sendable) under any basket that still holds it
+// even after being removed from another.
+//
+// 2026-10-23 refinement: concall date, the separate snapshot-image upload,
+// and manual Operational Performance/Outlook typing are all gone -- each
+// company now gets ONE "upload or drag" document (parsed automatically into
+// bullets + an optional financial table, see backend's
+// result_update_doc_parser.py), and `sentResults` is a new, separate
+// checkbox from received/checked/sent that actually selects a company into
+// the merged PDF (replacing the old per-row "selected" checkbox).
 export default function ResultUpdatesPage() {
   const navigate = useNavigate();
   const [rows, setRows] = useState([]);
@@ -23,9 +31,7 @@ export default function ResultUpdatesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [expanded, setExpanded] = useState(null); // composite "basket|nseCode" of the open detail editor
-  const [selected, setSelected] = useState({}); // {"basket|nseCode": true} -- merge selection is basket-scoped
   const [generating, setGenerating] = useState(null); // basket key currently generating, or null
-  const [addingFor, setAddingFor] = useState(null); // reminder being turned into a tracked row
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBasket, setSelectedBasket] = useState(''); // '' = All Baskets
 
@@ -88,39 +94,26 @@ export default function ResultUpdatesPage() {
     }
   };
 
-  const uploadSnapshot = async (r, file) => {
+  const [uploading, setUploading] = useState(null); // nseCode currently uploading, or null
+  const uploadResultUpdateDocument = async (r, file) => {
     const form = new FormData();
     form.append('file', file);
+    setUploading(r.nseCode);
+    setError('');
     try {
       const resp = await axios.post(
-        `${API}/admin/result-updates/${encodeURIComponent(r.nseCode)}/snapshot`,
+        `${API}/admin/result-updates/${encodeURIComponent(r.nseCode)}/parse-document`,
         form, { headers: { ...authHeaders(), 'Content-Type': 'multipart/form-data' } }
       );
-      setRows(prev => prev.map(x => x.nseCode === r.nseCode ? { ...x, snapshotImage: resp.data.snapshotImage } : x));
+      setRows(prev => prev.map(x => x.nseCode === r.nseCode ? resp.data : x));
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to upload image');
-    }
-  };
-
-  const uploadRawDocument = async (r, file) => {
-    const form = new FormData();
-    form.append('file', file);
-    try {
-      const resp = await axios.post(
-        `${API}/admin/result-updates/${encodeURIComponent(r.nseCode)}/raw-document`,
-        form, { headers: { ...authHeaders(), 'Content-Type': 'multipart/form-data' } }
-      );
-      setRows(prev => prev.map(x => x.nseCode === r.nseCode ? { ...x, rawDocument: resp.data.rawDocument } : x));
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to upload document');
+      setError(err.response?.data?.detail || 'Failed to upload/parse document');
+    } finally {
+      setUploading(null);
     }
   };
 
   const selKey = (basketKey, nseCode) => `${basketKey}|${nseCode}`;
-  const toggleSelect = (basketKey, r) => {
-    const k = selKey(basketKey, r.nseCode);
-    setSelected(prev => ({ ...prev, [k]: !prev[k] }));
-  };
 
   const downloadPdf = (blobData, filenameBase) => {
     const url = window.URL.createObjectURL(new Blob([blobData], { type: 'application/pdf' }));
@@ -133,13 +126,14 @@ export default function ResultUpdatesPage() {
     window.URL.revokeObjectURL(url);
   };
 
+  // Both modes now derive their company list server-side from sentResults
+  // (+ received/checked for consolidated) within the basket -- no selection
+  // payload to send from here anymore, see backend's generate_pdf.
   const generatePdf = async (basketKey) => {
-    const nseCodes = (byBasket[basketKey] || []).filter(r => selected[selKey(basketKey, r.nseCode)]).map(r => r.nseCode);
-    if (!nseCodes.length) { setError('Select at least one company to merge first.'); return; }
     setGenerating(basketKey);
     setError('');
     try {
-      const resp = await axios.post(`${API}/admin/result-updates/generate-pdf`, { basket: basketKey, nseCodes },
+      const resp = await axios.post(`${API}/admin/result-updates/generate-pdf`, { basket: basketKey },
         { headers: authHeaders(), responseType: 'blob' });
       downloadPdf(resp.data, `${basketLabels[basketKey] || basketKey}_Result_Update`);
     } catch (err) {
@@ -163,14 +157,6 @@ export default function ResultUpdatesPage() {
     }
   };
 
-  const startTrackingFromReminder = (rem) => setAddingFor(rem);
-
-  const confirmAddFromReminder = async (rem, resultDate, concallDate) => {
-    await patchRow(rem.nseCode, { securityName: rem.securityName, resultDate: resultDate || null, concallDate: concallDate || null });
-    setAddingFor(null);
-    load(); // re-sync so every basket currently holding this company gets associated, not just the one that surfaced the reminder
-  };
-
   const inputStyle = { padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--panel-border)', background: 'var(--input-bg)', color: 'var(--text-main)', fontSize: '0.82rem', outline: 'none', fontFamily: 'inherit' };
 
   return (
@@ -185,7 +171,7 @@ export default function ResultUpdatesPage() {
             <h2 className="text-gradient" style={{ margin: 0, fontSize: '1.5rem' }}>Result Update</h2>
           </div>
           <p style={{ color: 'var(--text-muted)', margin: '4px 0 0', fontSize: '0.85rem' }}>
-            Track result/concall dates, received/checked/sent status, and merge quarterly result updates into a single PDF -- per basket.
+            Result dates auto-fill from Result Calendar. Upload each company's result-update document, then check "Sent Results" to include it in a merged/consolidated PDF -- per basket.
           </p>
         </div>
       </div>
@@ -228,8 +214,8 @@ export default function ResultUpdatesPage() {
           </span>
         </div>
         {!loading && filteredReminders.length > 0 && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(160px, 1.4fr) minmax(140px, 1fr) minmax(160px, 1.6fr) 120px', gap: '10px', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid var(--panel-border)' }}>
-            <span>Company</span><span>Basket(s)</span><span>Status</span><span></span>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(160px, 1.4fr) minmax(140px, 1fr) minmax(160px, 1.6fr)', gap: '10px', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid var(--panel-border)' }}>
+            <span>Company</span><span>Basket(s)</span><span>Status</span>
           </div>
         )}
         {loading ? (
@@ -237,15 +223,17 @@ export default function ResultUpdatesPage() {
         ) : filteredReminders.length === 0 ? (
           <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>{searchTerm ? 'No reminders match your search.' : 'Nothing pending.'}</div>
         ) : filteredReminders.map((rem, i) => {
-          const isAdding = addingFor && addingFor.nseCode === rem.nseCode;
+          // "new" (no result date yet -- Result Calendar has nothing for it,
+          // fix it directly in the per-basket table below) vs "overdue_result"
+          // (date's passed, still not Received). No "Add dates" flow anymore
+          // -- the row already exists as a real tracked row the moment a
+          // basket starts holding it, see backend's _sync_and_compute_reminders.
           const status = rem.type === 'new'
-            ? (rem.suggestedResultDate ? { text: `Not tracked yet -- click "Add dates" to save ${rem.suggestedResultDate}`, tone: 'var(--positive)' } : { text: 'No dates tracked yet', tone: 'var(--text-muted)' })
-            : rem.type === 'overdue_result'
-            ? { text: `Results announced ${rem.resultDate} — not yet Received`, tone: '#fbbf24' }
-            : { text: `Concall was ${rem.concallDate} — not yet Received`, tone: '#fbbf24' };
+            ? { text: 'No result date yet -- Result Calendar has none; enter one in the table below', tone: 'var(--text-muted)' }
+            : { text: `Results announced ${rem.resultDate} — not yet Received`, tone: '#fbbf24' };
           return (
             <div key={rem.nseCode} style={{ borderBottom: i < filteredReminders.length - 1 ? '1px solid var(--panel-border)' : 'none' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(160px, 1.4fr) minmax(140px, 1fr) minmax(160px, 1.6fr) 120px', gap: '10px', alignItems: 'center', padding: '10px 20px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(160px, 1.4fr) minmax(140px, 1fr) minmax(160px, 1.6fr)', gap: '10px', alignItems: 'center', padding: '10px 20px' }}>
                 <div>
                   <div style={{ fontSize: '0.84rem', color: 'var(--text-main)', fontWeight: 600 }}>{rem.securityName}</div>
                   <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{rem.nseCode}</div>
@@ -256,19 +244,7 @@ export default function ResultUpdatesPage() {
                   {(selectedBasket ? [basketLabels[selectedBasket]] : rem.baskets).map(b => <BasketChip key={b} label={b} />)}
                 </div>
                 <div style={{ fontSize: '0.78rem', color: status.tone }}>{status.text}</div>
-                <div>
-                  {rem.type === 'new' && !isAdding && (
-                    <button onClick={() => startTrackingFromReminder(rem)} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: '7px', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.1)', color: 'var(--primary)', fontSize: '0.78rem', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                      <Plus size={12} /> Add dates
-                    </button>
-                  )}
-                </div>
               </div>
-              {isAdding && (
-                <div style={{ padding: '0 20px 14px' }}>
-                  <ReminderDateForm rem={rem} onConfirm={confirmAddFromReminder} onCancel={() => setAddingFor(null)} inputStyle={inputStyle} />
-                </div>
-              )}
             </div>
           );
         })}
@@ -293,8 +269,13 @@ export default function ResultUpdatesPage() {
         const heldRows = basketRows.filter(r => r.baskets[basketKey]?.currentlyHeld);
         const visibleRows = heldRows.filter(r => matchesSearch(r.securityName, r.nseCode));
         if (searchTerm && heldRows.length > 0 && visibleRows.length === 0) return null;
-        const selectedCount = heldRows.filter(r => selected[selKey(basketKey, r.nseCode)]).length;
-        const allReceived = heldRows.length > 0 && heldRows.every(r => r.received);
+        // sentResults is what actually selects a company into a PDF now (not
+        // a separate "selected" checkbox) -- the buttons themselves only
+        // appear once at least one held company has it checked, per the
+        // 2026-10-23 refinement ("the button... shall get popped up only
+        // when I select the companies 'sent results' box only").
+        const sentResultsCount = heldRows.filter(r => r.sentResults).length;
+        const consolidatedCount = heldRows.filter(r => r.sentResults && r.received && r.checked).length;
         const isGenerating = generating === basketKey;
         return (
           <div key={basketKey} className="glass-panel" style={{ padding: 0, overflow: 'hidden', marginBottom: '20px' }}>
@@ -304,33 +285,32 @@ export default function ResultUpdatesPage() {
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'var(--input-bg)', border: '1px solid var(--panel-border)', borderRadius: '10px', padding: '2px 8px' }}>
                   {heldRows.length} tracked
                 </span>
-                {allReceived && (
-                  <span title="Every currently-held company has its result update received -- ready for the consolidated send" style={{ fontSize: '0.72rem', color: 'var(--positive)', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '10px', padding: '2px 8px', fontWeight: 600 }}>
-                    All received
-                  </span>
-                )}
               </div>
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                <button
-                  onClick={() => generatePdf(basketKey)}
-                  disabled={isGenerating || selectedCount === 0}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 16px', borderRadius: '7px', border: 'none', background: selectedCount ? 'var(--primary)' : 'var(--input-bg)', color: selectedCount ? '#fff' : 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, cursor: selectedCount ? 'pointer' : 'not-allowed' }}
-                >
-                  <Download size={13} /> {isGenerating ? 'Generating…' : `Generate Merged PDF (${selectedCount})`}
-                </button>
-                <button
-                  onClick={() => generateConsolidated(basketKey)}
-                  disabled={isGenerating || !allReceived}
-                  title={allReceived ? 'Generate the final consolidated update for every company currently held in this basket' : 'Every currently-held company must be marked Received first'}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 16px', borderRadius: '7px', border: `1px solid ${allReceived ? 'var(--positive)' : 'var(--panel-border)'}`, background: allReceived ? 'rgba(16,185,129,0.12)' : 'var(--input-bg)', color: allReceived ? 'var(--positive)' : 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, cursor: allReceived ? 'pointer' : 'not-allowed' }}
-                >
-                  <Download size={13} /> {isGenerating ? 'Generating…' : 'Generate Consolidated PDF'}
-                </button>
+                {sentResultsCount > 0 && (
+                  <button
+                    onClick={() => generatePdf(basketKey)}
+                    disabled={isGenerating}
+                    style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 16px', borderRadius: '7px', border: 'none', background: 'var(--primary)', color: '#fff', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}
+                  >
+                    <Download size={13} /> {isGenerating ? 'Generating…' : `Generate Merged PDF (${sentResultsCount})`}
+                  </button>
+                )}
+                {consolidatedCount > 0 && (
+                  <button
+                    onClick={() => generateConsolidated(basketKey)}
+                    disabled={isGenerating}
+                    title="Generate the consolidated update for every held company that's received, checked, and marked sent results"
+                    style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 16px', borderRadius: '7px', border: '1px solid var(--positive)', background: 'rgba(16,185,129,0.12)', color: 'var(--positive)', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}
+                  >
+                    <Download size={13} /> {isGenerating ? 'Generating…' : `Generate Consolidated PDF (${consolidatedCount})`}
+                  </button>
+                )}
               </div>
             </div>
             {visibleRows.length > 0 && (
-              <div style={{ display: 'grid', gridTemplateColumns: '24px 78px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid var(--panel-border)' }}>
-                <span></span><span>Details</span><span>Company</span><span>Result Date</span><span>Concall Date</span><span>Received</span><span>Checked</span><span>Sent</span><span></span>
+              <div style={{ display: 'grid', gridTemplateColumns: '78px minmax(160px, 1fr) 128px 86px 86px 70px 90px 32px', gap: '8px', alignItems: 'center', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid var(--panel-border)' }}>
+                <span>Details</span><span>Company</span><span>Result Date</span><span>Received</span><span>Checked</span><span>Sent</span><span>Sent Results</span><span></span>
               </div>
             )}
             {visibleRows.length === 0 ? (
@@ -341,11 +321,10 @@ export default function ResultUpdatesPage() {
               <CompanyRow
                 key={r.nseCode} r={r} i={i} total={visibleRows.length} basketKey={basketKey}
                 hideOtherBaskets={!!selectedBasket}
-                selected={!!selected[selKey(basketKey, r.nseCode)]} onToggleSelect={() => toggleSelect(basketKey, r)}
                 expanded={expanded === selKey(basketKey, r.nseCode)} onToggleExpand={() => setExpanded(expanded === selKey(basketKey, r.nseCode) ? null : selKey(basketKey, r.nseCode))}
                 onPatch={(patch) => patchRow(r.nseCode, patch)}
-                onUploadSnapshot={(file) => uploadSnapshot(r, file)}
-                onUploadRawDocument={(file) => uploadRawDocument(r, file)}
+                onUploadDocument={(file) => uploadResultUpdateDocument(r, file)}
+                uploading={uploading === r.nseCode}
                 onRemove={() => removeRow(r)}
                 inputStyle={inputStyle}
               />
@@ -370,33 +349,6 @@ async function blobErrorMessage(err) {
     } catch { return null; }
   }
   return err.response?.data?.detail || null;
-}
-
-function ReminderDateForm({ rem, onConfirm, onCancel, inputStyle }) {
-  // Pre-filled from results_calendar.py's own NSE board-meeting/yfinance
-  // feed when it already has a date for this company -- admin can still
-  // change or clear it, this just saves re-typing something already known.
-  const [resultDate, setResultDate] = useState(rem.suggestedResultDate || '');
-  const [concallDate, setConcallDate] = useState('');
-  return (
-    <div style={{ marginTop: '10px' }}>
-      {rem.suggestedResultDate && (
-        <div style={{ fontSize: '0.72rem', color: 'var(--positive)', marginBottom: '6px' }}>
-          Pre-filled from Result Calendar's own NSE/yfinance tracking -- adjust if needed.
-        </div>
-      )}
-      <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-      <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Result date
-        <input type="date" value={resultDate} onChange={e => setResultDate(e.target.value)} style={{ ...inputStyle, marginLeft: '6px' }} />
-      </label>
-      <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Concall date
-        <input type="date" value={concallDate} onChange={e => setConcallDate(e.target.value)} style={{ ...inputStyle, marginLeft: '6px' }} />
-      </label>
-      <button onClick={() => onConfirm(rem, resultDate, concallDate)} className="btn btn-primary" style={{ padding: '6px 14px', fontSize: '0.78rem' }}>Save</button>
-      <button onClick={onCancel} className="btn btn-secondary" style={{ padding: '6px 14px', fontSize: '0.78rem' }}>Cancel</button>
-      </div>
-    </div>
-  );
 }
 
 function BulletEditor({ label, items, onChange }) {
@@ -442,9 +394,10 @@ function BasketChip({ label, muted }) {
   );
 }
 
-function CompanyRow({ r, i, total, basketKey, hideOtherBaskets, selected, onToggleSelect, expanded, onToggleExpand, onPatch, onUploadSnapshot, onUploadRawDocument, onRemove, inputStyle }) {
+function CompanyRow({ r, i, total, basketKey, hideOtherBaskets, expanded, onToggleExpand, onPatch, onUploadDocument, uploading, onRemove, inputStyle }) {
   const [opPerf, setOpPerf] = useState(r.operationalPerformance || []);
   const [outlook, setOutlook] = useState(r.outlook || []);
+  const [dragOver, setDragOver] = useState(false);
   useEffect(() => { setOpPerf(r.operationalPerformance || []); setOutlook(r.outlook || []); }, [r.operationalPerformance, r.outlook]);
 
   const thisBasketHeld = r.baskets[basketKey]?.currentlyHeld;
@@ -456,11 +409,17 @@ function CompanyRow({ r, i, total, basketKey, hideOtherBaskets, selected, onTogg
     <input type="checkbox" checked={!!r[field]} onChange={e => onPatch({ [field]: e.target.checked })} style={{ cursor: 'pointer' }} />
   );
 
+  const handleFile = (file) => {
+    if (!file) return;
+    const ext = file.name.toLowerCase().split('.').pop();
+    if (ext !== 'doc' && ext !== 'docx') return;
+    onUploadDocument(file);
+  };
+
   return (
     <div style={{ borderBottom: i < total - 1 ? '1px solid var(--panel-border)' : 'none', opacity: thisBasketHeld ? 1 : 0.55 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '24px 78px minmax(160px, 1fr) 128px 128px 86px 86px 70px 32px', gap: '8px', alignItems: 'center', padding: '10px 20px' }}>
-        <input type="checkbox" checked={selected} onChange={onToggleSelect} title="Include in next merged PDF for this basket" />
-        <button onClick={onToggleExpand} title="Show snapshot/document upload and Operational Performance / Outlook editor"
+      <div style={{ display: 'grid', gridTemplateColumns: '78px minmax(160px, 1fr) 128px 86px 86px 70px 90px 32px', gap: '8px', alignItems: 'center', padding: '10px 20px' }}>
+        <button onClick={onToggleExpand} title="Show the uploaded document, parsed bullets, and financial table"
           style={{ display: 'flex', alignItems: 'center', gap: '3px', padding: '4px 8px', borderRadius: '6px', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.1)', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.7rem', fontWeight: 600, whiteSpace: 'nowrap' }}>
           {expanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />} Details
         </button>
@@ -474,45 +433,69 @@ function CompanyRow({ r, i, total, basketKey, hideOtherBaskets, selected, onTogg
             {otherBaskets.map(([key, b]) => <BasketChip key={key} label={`also in: ${b.label}`} muted />)}
           </div>
         </div>
-        <input type="date" value={r.resultDate || ''} onChange={e => onPatch({ resultDate: e.target.value })} title="Result date (shared across every basket holding this company)" style={inputStyle} />
-        <input type="date" value={r.concallDate || ''} onChange={e => onPatch({ concallDate: e.target.value })} title="Concall date" style={inputStyle} />
+        <input type="date" value={r.resultDate || ''} onChange={e => onPatch({ resultDate: e.target.value })} title="Result date (shared across every basket holding this company) -- auto-filled from Result Calendar when available" style={inputStyle} />
         <div style={{ textAlign: 'center' }}>{checkbox('received')}</div>
         <div style={{ textAlign: 'center' }}>{checkbox('checked')}</div>
         <div style={{ textAlign: 'center' }}>{checkbox('sent')}</div>
+        <div style={{ textAlign: 'center' }} title="Selects this company into the next Generate Merged/Consolidated PDF for this basket">{checkbox('sentResults')}</div>
         <button onClick={onRemove} title="Stop tracking this company entirely (all baskets)" style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.28)', background: 'rgba(239,68,68,0.08)', color: '#f87171', cursor: 'pointer' }}>
           <Trash2 size={12} />
         </button>
       </div>
       {expanded && (
         <div style={{ padding: '0 20px 18px 48px' }}>
-          <div style={{ marginBottom: '12px', display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-            <div>
-              <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>Financial Snapshot Image</div>
-              {r.snapshotImage && (
-                <img src={`${API}/admin/result-updates/snapshot/${r.snapshotImage}`} alt="snapshot"
-                  style={{ maxWidth: '320px', maxHeight: '220px', border: '1px solid var(--panel-border)', borderRadius: '4px', marginBottom: '8px', display: 'block' }} />
-              )}
-              <label style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.1)', color: 'var(--primary)', fontSize: '0.78rem', cursor: 'pointer' }}>
-                <Upload size={12} /> {r.snapshotImage ? 'Replace image' : 'Upload image'}
-                <input type="file" accept="image/png,image/jpeg" style={{ display: 'none' }} onChange={e => e.target.files[0] && onUploadSnapshot(e.target.files[0])} />
-              </label>
-            </div>
-            <div>
-              <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>Raw Result Update (Word doc)</div>
-              {r.rawDocument && (
-                <a href={`${API}/admin/result-updates/raw-document/${r.rawDocument}`} target="_blank" rel="noreferrer"
-                  style={{ display: 'block', fontSize: '0.78rem', color: 'var(--primary)', marginBottom: '8px' }}>
-                  {r.rawDocument}
-                </a>
-              )}
-              <label style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.1)', color: 'var(--primary)', fontSize: '0.78rem', cursor: 'pointer' }}>
-                <FileUp size={12} /> {r.rawDocument ? 'Replace document' : 'Upload document'}
-                <input type="file" accept=".doc,.docx" style={{ display: 'none' }} onChange={e => e.target.files[0] && onUploadRawDocument(e.target.files[0])} />
-              </label>
-            </div>
+          <div style={{ marginBottom: '14px' }}>
+            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>Result Update Document</div>
+            {r.resultUpdateDocument && (
+              <a href={`${API}/admin/result-updates/document/${r.resultUpdateDocument}`} target="_blank" rel="noreferrer"
+                style={{ display: 'block', fontSize: '0.78rem', color: 'var(--primary)', marginBottom: '8px' }}>
+                {r.resultUpdateDocument}
+              </a>
+            )}
+            <label
+              onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={e => { e.preventDefault(); setDragOver(false); handleFile(e.dataTransfer.files[0]); }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 18px', borderRadius: '8px',
+                border: `2px dashed ${dragOver ? 'var(--primary)' : 'var(--panel-border)'}`,
+                background: dragOver ? 'rgba(99,102,241,0.08)' : 'var(--input-bg)',
+                color: 'var(--text-muted)', fontSize: '0.78rem', cursor: 'pointer', maxWidth: '420px',
+              }}
+            >
+              <Upload size={14} />
+              {uploading ? 'Uploading & parsing…' : (r.resultUpdateDocument ? 'Replace -- drag or click (.doc/.docx)' : 'Upload or drag the result update (.doc/.docx)')}
+              <input type="file" accept=".doc,.docx" style={{ display: 'none' }} disabled={uploading}
+                onChange={e => handleFile(e.target.files[0])} />
+            </label>
           </div>
-          <BulletEditor label="Operational Performance" items={opPerf} onChange={(v) => { setOpPerf(v); onPatch({ operationalPerformance: v }); }} />
-          <BulletEditor label="Outlook" items={outlook} onChange={(v) => { setOutlook(v); onPatch({ outlook: v }); }} />
+
+          {r.financialTable?.headers?.length > 0 && (
+            <div style={{ marginBottom: '14px', overflowX: 'auto' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>Financial Snapshot (parsed from the uploaded document)</div>
+              <table style={{ borderCollapse: 'collapse', fontSize: '0.75rem', minWidth: '480px' }}>
+                <thead>
+                  <tr>
+                    {r.financialTable.headers.map((h, idx) => (
+                      <th key={idx} style={{ textAlign: 'left', padding: '5px 10px', background: 'var(--primary)', color: '#fff', whiteSpace: 'nowrap' }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {r.financialTable.rows.map((row, ridx) => (
+                    <tr key={ridx} style={{ background: row.bold ? 'rgba(16,185,129,0.18)' : 'var(--input-bg)', fontWeight: row.bold ? 700 : 400 }}>
+                      {row.cells.map((c, cidx) => (
+                        <td key={cidx} style={{ padding: '5px 10px', borderBottom: '1px solid var(--panel-border)', whiteSpace: 'nowrap' }}>{c}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          <BulletEditor label="Operational Performance (auto-parsed -- correct here if needed)" items={opPerf} onChange={(v) => { setOpPerf(v); onPatch({ operationalPerformance: v }); }} />
+          <BulletEditor label="Outlook (auto-parsed -- correct here if needed)" items={outlook} onChange={(v) => { setOutlook(v); onPatch({ outlook: v }); }} />
         </div>
       )}
     </div>

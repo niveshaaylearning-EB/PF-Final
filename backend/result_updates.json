@@ -50,5 +50,1897 @@
       }
     },
     "updatedAt": "05 Oct 2026 11:42 UTC"
+  },
+  "DHOOTTRANS": {
+    "nseCode": "DHOOTTRANS",
+    "securityName": "DHOOTTRANS",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "VAML": {
+    "nseCode": "VAML",
+    "securityName": "VAML",
+    "resultDate": "2026-10-28",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "EMMVEE": {
+    "nseCode": "EMMVEE",
+    "securityName": "Emmvee Photovoltaic Power Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "WAAREEENER": {
+    "nseCode": "WAAREEENER",
+    "securityName": "Waaree Energies Ltd",
+    "resultDate": "2026-10-27",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "TRITURBINE": {
+    "nseCode": "TRITURBINE",
+    "securityName": "Triveni Turbine Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "TDPOWERSYS": {
+    "nseCode": "TDPOWERSYS",
+    "securityName": "TD Power Systems Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      },
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "BORORENEW": {
+    "nseCode": "BORORENEW",
+    "securityName": "Borosil Renewables Ltd",
+    "resultDate": "2026-10-30",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "EBGNG": {
+    "nseCode": "EBGNG",
+    "securityName": "GNG Electronics Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      },
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "POCL": {
+    "nseCode": "POCL",
+    "securityName": "Pondy Oxides and Chemicals Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "ENRIN": {
+    "nseCode": "ENRIN",
+    "securityName": "Siemens Energy India Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "ATHERENERG": {
+    "nseCode": "ATHERENERG",
+    "securityName": "Ather Energy Ltd",
+    "resultDate": "2026-10-26",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      },
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      },
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "SBCL": {
+    "nseCode": "SBCL",
+    "securityName": "Shivalik Bimetal Controls Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      },
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "QPOWER": {
+    "nseCode": "QPOWER",
+    "securityName": "Quality Power Electrical Equipments Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      },
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "INOXINDIA": {
+    "nseCode": "INOXINDIA",
+    "securityName": "INOX India Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      },
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "HBLENGINE": {
+    "nseCode": "HBLENGINE",
+    "securityName": "HBL Engineering Ltd",
+    "resultDate": "2026-11-07",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "SYRMA": {
+    "nseCode": "SYRMA",
+    "securityName": "Syrma SGS Technology Ltd",
+    "resultDate": "2026-10-30",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      },
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "AVALON": {
+    "nseCode": "AVALON",
+    "securityName": "Avalon Technologies Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      },
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "SANSERA": {
+    "nseCode": "SANSERA",
+    "securityName": "Sansera Engineering Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      },
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "JASH": {
+    "nseCode": "JASH",
+    "securityName": "Jash Engineering Ltd",
+    "resultDate": "2026-11-04",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "VEDL": {
+    "nseCode": "VEDL",
+    "securityName": "Vedanta Ltd",
+    "resultDate": "2026-10-28",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "SANGHVIMOV": {
+    "nseCode": "SANGHVIMOV",
+    "securityName": "SANGHVIMOV",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "NEOGEN": {
+    "nseCode": "NEOGEN",
+    "securityName": "Neogen Chemicals Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      },
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "FLUOROCHEM": {
+    "nseCode": "FLUOROCHEM",
+    "securityName": "FLUOROCHEM",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "SHADOWFAX": {
+    "nseCode": "SHADOWFAX",
+    "securityName": "SHADOWFAX",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      },
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "SAMBHV": {
+    "nseCode": "SAMBHV",
+    "securityName": "SAMBHV",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "MANINDS": {
+    "nseCode": "MANINDS",
+    "securityName": "Man Industries (India) Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "KRN": {
+    "nseCode": "KRN",
+    "securityName": "KRN",
+    "resultDate": "2026-10-29",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "HFCL": {
+    "nseCode": "HFCL",
+    "securityName": "HFCL",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "AARTIPHARM": {
+    "nseCode": "AARTIPHARM",
+    "securityName": "AARTIPHARM",
+    "resultDate": "2026-10-28",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "ACUTAAS": {
+    "nseCode": "ACUTAAS",
+    "securityName": "ACUTAAS",
+    "resultDate": "2026-10-27",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "SHILPAMED": {
+    "nseCode": "SHILPAMED",
+    "securityName": "SHILPAMED",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "JYOTICNC": {
+    "nseCode": "JYOTICNC",
+    "securityName": "Jyoti CNC Automation Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "HLEGLAS": {
+    "nseCode": "HLEGLAS",
+    "securityName": "HLEGLAS",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "STLTECH": {
+    "nseCode": "STLTECH",
+    "securityName": "STLTECH",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "IDEAFORGE": {
+    "nseCode": "IDEAFORGE",
+    "securityName": "IDEAFORGE",
+    "resultDate": "2026-11-02",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "ASTRAMICRO": {
+    "nseCode": "ASTRAMICRO",
+    "securityName": "ASTRAMICRO",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "ETHOSLTD": {
+    "nseCode": "ETHOSLTD",
+    "securityName": "ETHOSLTD",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "TIMEX": {
+    "nseCode": "TIMEX",
+    "securityName": "TIMEX",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "CENTUM": {
+    "nseCode": "CENTUM",
+    "securityName": "CENTUM",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "E2E": {
+    "nseCode": "E2E",
+    "securityName": "E2E",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "STEAMHOUSE": {
+    "nseCode": "STEAMHOUSE",
+    "securityName": "STEAMHOUSE",
+    "resultDate": "2026-10-29",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "TEMPSENS": {
+    "nseCode": "TEMPSENS",
+    "securityName": "TEMPSENS",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "SEDEMAC": {
+    "nseCode": "SEDEMAC",
+    "securityName": "SEDEMAC Mechatronics Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      },
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "OMNI": {
+    "nseCode": "OMNI",
+    "securityName": "Omnitech Engineering Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "UNIMECH": {
+    "nseCode": "UNIMECH",
+    "securityName": "Unimech Aerospace and Manufacturing Ltd",
+    "resultDate": "2026-10-27",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "DEEDEV": {
+    "nseCode": "DEEDEV",
+    "securityName": "DEE Development Engineers Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      },
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "MOLBIO": {
+    "nseCode": "MOLBIO",
+    "securityName": "MOLBIO",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "KUSUMGAR": {
+    "nseCode": "KUSUMGAR",
+    "securityName": "KUSUMGAR",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "BLACKBUCK": {
+    "nseCode": "BLACKBUCK",
+    "securityName": "Blackbuck Ltd",
+    "resultDate": "2026-10-29",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "SUDEEPPHRM": {
+    "nseCode": "SUDEEPPHRM",
+    "securityName": "SUDEEPPHRM",
+    "resultDate": "2026-10-28",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "ATLANTAELE": {
+    "nseCode": "ATLANTAELE",
+    "securityName": "ATLANTAELE",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "URBANCO": {
+    "nseCode": "URBANCO",
+    "securityName": "Urban Company Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "ELLEN": {
+    "nseCode": "ELLEN",
+    "securityName": "ELLEN",
+    "resultDate": "2026-11-04",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "EXICOM": {
+    "nseCode": "EXICOM",
+    "securityName": "EXICOM",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "KPL": {
+    "nseCode": "KPL",
+    "securityName": "KPL",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "IND SWIFT LABORATORIES LTD": {
+    "nseCode": "IND SWIFT LABORATORIES LTD",
+    "securityName": "IND SWIFT LABORATORIES LTD",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "AEROFLEX": {
+    "nseCode": "AEROFLEX",
+    "securityName": "Aeroflex Industries Ltd",
+    "resultDate": "2026-10-28",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "YASHO": {
+    "nseCode": "YASHO",
+    "securityName": "YASHO",
+    "resultDate": "2026-10-28",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "SAKAR": {
+    "nseCode": "SAKAR",
+    "securityName": "SAKAR",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "MOREPENLAB": {
+    "nseCode": "MOREPENLAB",
+    "securityName": "MOREPENLAB",
+    "resultDate": "2026-10-27",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "MEESHO": {
+    "nseCode": "MEESHO",
+    "securityName": "MEESHO",
+    "resultDate": "2026-10-28",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "TEJASNET": {
+    "nseCode": "TEJASNET",
+    "securityName": "TEJASNET",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "PARAS": {
+    "nseCode": "PARAS",
+    "securityName": "PARAS",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "DATAPATTNS": {
+    "nseCode": "DATAPATTNS",
+    "securityName": "DATAPATTNS",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "AVANTEL": {
+    "nseCode": "AVANTEL",
+    "securityName": "AVANTEL",
+    "resultDate": "2026-10-26",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "GENESYS": {
+    "nseCode": "GENESYS",
+    "securityName": "GENESYS",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "SASKEN": {
+    "nseCode": "SASKEN",
+    "securityName": "SASKEN",
+    "resultDate": "2026-10-28",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "RPTECH": {
+    "nseCode": "RPTECH",
+    "securityName": "RPTECH",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "REDINGTON": {
+    "nseCode": "REDINGTON",
+    "securityName": "REDINGTON",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "NPST": {
+    "nseCode": "NPST",
+    "securityName": "NPST",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "NETWEB": {
+    "nseCode": "NETWEB",
+    "securityName": "NETWEB",
+    "resultDate": "2026-10-24",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "PAUSHAKLTD": {
+    "nseCode": "PAUSHAKLTD",
+    "securityName": "PAUSHAKLTD",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "XPROINDIA": {
+    "nseCode": "XPROINDIA",
+    "securityName": "XPROINDIA",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "ORCHPHARMA": {
+    "nseCode": "ORCHPHARMA",
+    "securityName": "ORCHPHARMA",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "KDDL": {
+    "nseCode": "KDDL",
+    "securityName": "KDDL Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      },
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "DIVGIITTS": {
+    "nseCode": "DIVGIITTS",
+    "securityName": "DIVGIITTS",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "EMIL": {
+    "nseCode": "EMIL",
+    "securityName": "Electronics Mart India Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "ETERNAL": {
+    "nseCode": "ETERNAL",
+    "securityName": "Eternal Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "GRWRHITECH": {
+    "nseCode": "GRWRHITECH",
+    "securityName": "Garware Hi-Tech Films Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "CARYSIL": {
+    "nseCode": "CARYSIL",
+    "securityName": "Carysil Ltd",
+    "resultDate": "2026-11-04",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "SHAILY": {
+    "nseCode": "SHAILY",
+    "securityName": "Shaily Engineering Plastics Ltd",
+    "resultDate": "2026-10-29",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
+  },
+  "MANORAMA": {
+    "nseCode": "MANORAMA",
+    "securityName": "Manorama Industries Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 07:09 UTC"
   }
 }
