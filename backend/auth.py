@@ -1503,6 +1503,44 @@ def admin_approve_registration(
     return {"status": "approved", "email": email}
 
 
+class AdminSetWhatsappPhone(BaseModel):
+    email: str
+    phone: str
+
+
+@router.post("/admin/set-whatsapp-phone")
+def admin_set_whatsapp_phone(
+    body: AdminSetWhatsappPhone,
+    current_user: str = Depends(get_current_user),
+    db: Session = Depends(lambda: __import__('database').SessionLocal()),
+):
+    """Admin-only direct correction of a user's WhatsApp number, bypassing
+    the normal self-service OTP-verify flow (/profile/request-phone-otp +
+    /verify-phone-otp), which only the user themselves can drive with their
+    own login token. Needed when an admin already knows a user's verified
+    number (e.g. from a prior successful WhatsApp OTP login) but the value
+    is missing or wrong on production -- confirmed live 2026-10-26 for two
+    users whose numbers never made it past a local dev database."""
+    if not is_admin_email(current_user):
+        raise HTTPException(403, detail="Admin only")
+    from database import AllowedEmail
+    email = body.email.lower().strip()
+    phone = body.phone.strip()
+    if not phone.startswith("+") or not phone[1:].isdigit() or len(phone) < 8:
+        raise HTTPException(400, detail="Enter a valid phone number in international format, e.g. +919537407484.")
+    user = db.query(AllowedEmail).filter_by(email=email).first()
+    if not user:
+        raise HTTPException(404, detail="User not found")
+    user.whatsapp_phone = phone
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise HTTPException(500, detail="DB error")
+    _log_audit(current_user, "admin_set_whatsapp_phone", f"Set WhatsApp number for {email} to {phone}")
+    return {"status": "ok", "email": email, "whatsappPhone": phone}
+
+
 @router.post("/admin/reject-registration")
 def admin_reject_registration(
     body: AdminRegistrationAction,
