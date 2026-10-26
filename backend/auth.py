@@ -305,7 +305,17 @@ def _push_login():
         print(f"[login-push] {e}")
 
 def _push_allowed_emails():
-    """Background task to write allowed_emails_data.json locally and push to GitHub."""
+    """Background task to write allowed_emails_data.json locally and push to
+    GitHub. This is a SEPARATE serializer from main.py's _dump_allowed_emails
+    (same target file, written from the other module) -- confirmed live
+    2026-10-26 that this one had silently fallen out of sync with that one:
+    it never serialized is_admin or whatsapp_phone at all, so a WhatsApp
+    number verified through any endpoint in THIS file that calls this
+    function (and the self-service /profile/verify-phone-otp endpoint,
+    which called neither persistence function at all) would commit fine to
+    the live DB but vanish on the next redeploy, since the restored-on-
+    startup JSON snapshot never had it to begin with. Keep this field list
+    in sync with main.py's _dump_allowed_emails."""
     try:
         from database import SessionLocal, AllowedEmail
         db = SessionLocal()
@@ -321,6 +331,8 @@ def _push_allowed_emails():
             "last_name":     r.last_name,
             "password_hash": r.password_hash,
             "is_approved":   r.is_approved if r.is_approved is not None else 1,
+            "is_admin":      r.is_admin if r.is_admin is not None else 0,
+            "whatsapp_phone": r.whatsapp_phone,
         } for r in rows]
         db.close()
         
@@ -795,6 +807,7 @@ def verify_phone_otp(request: Request, body: PhoneOtpVerify, current_user: str =
         db.commit()
     finally:
         db.close()
+    threading.Thread(target=_push_allowed_emails, daemon=True).start()
     _log_audit(current_user, "whatsapp_number_updated", f"WhatsApp number set to {phone}", request.client.host if request.client else None)
     return {"status": "ok", "whatsappPhone": phone}
 
@@ -1537,6 +1550,7 @@ def admin_set_whatsapp_phone(
     except Exception:
         db.rollback()
         raise HTTPException(500, detail="DB error")
+    threading.Thread(target=_push_allowed_emails, daemon=True).start()
     _log_audit(current_user, "admin_set_whatsapp_phone", f"Set WhatsApp number for {email} to {phone}")
     return {"status": "ok", "email": email, "whatsappPhone": phone}
 
