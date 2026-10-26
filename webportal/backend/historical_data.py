@@ -697,16 +697,30 @@ async def smallcase_bookmarklet(request: Request):
     # locally (both exist there side by side) but 404'd in production,
     # confirmed live 2026-10-22 ("Could not generate the bookmarklet.").
     src_path = Path(__file__).parent.parent / "frontend" / "dist" / "dashboard-bookmarklet-source.js"
-    src = src_path.read_text(encoding="utf-8")
-    # Derive the ingest URL from THIS request's own path rather than a fixed
-    # prefix -- local dev hits this directly on :8001 as /api/admin/..., prod
-    # hits it through the main app's /wp mount as /wp/api/admin/... , and the
-    # bookmarklet must post back to whichever one the admin actually used.
-    prefix = request.url.path.rsplit("/", 1)[0]  # .../admin
-    ingest_url = str(request.base_url).rstrip("/") + prefix + "/smallcase-ingest"
-    src = src.replace("__INGEST_URL__", ingest_url).replace("__INGEST_KEY__", _SMALLCASE_INGEST_KEY)
-    import urllib.parse
-    href = "javascript:" + urllib.parse.quote(src)
+    # Wrapped in a clear 500 + reason instead of letting a missing-file (or
+    # any other) exception bubble up as a bare, unhelpful "Internal Server
+    # Error" -- confirmed live 2026-10-26 that this endpoint was failing with
+    # zero diagnostic info, making it impossible to tell a stale-deploy
+    # (dist/ missing this file) apart from any other failure mode without
+    # server log access.
+    try:
+        src = src_path.read_text(encoding="utf-8")
+        # Derive the ingest URL from THIS request's own path rather than a
+        # fixed prefix -- local dev hits this directly on :8001 as
+        # /api/admin/..., prod hits it through the main app's /wp mount as
+        # /wp/api/admin/..., and the bookmarklet must post back to whichever
+        # one the admin actually used.
+        prefix = request.url.path.rsplit("/", 1)[0]  # .../admin
+        ingest_url = str(request.base_url).rstrip("/") + prefix + "/smallcase-ingest"
+        src = src.replace("__INGEST_URL__", ingest_url).replace("__INGEST_KEY__", _SMALLCASE_INGEST_KEY)
+        import urllib.parse
+        href = "javascript:" + urllib.parse.quote(src)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Could not generate the bookmarklet ({type(e).__name__}: {e}). "
+                   f"Looked for the source file at: {src_path}",
+        )
     return {"href": href}
 
 
