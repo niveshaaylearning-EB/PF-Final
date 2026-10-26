@@ -146,12 +146,34 @@ def _new_row(nse_code: str, security_name: str) -> dict:
     }
 
 
+_LEGACY_ROW_KEYS = ("concallDate", "snapshotImage", "rawDocument")
+
+def _migrate_legacy_rows(data: dict) -> None:
+    """A row created before the 2026-10-23 refinement (see _new_row) is
+    missing the new schema's keys (sentResults/financialTable/
+    resultUpdateDocument) and still carries now-dead ones (concallDate/
+    snapshotImage/rawDocument) -- confirmed live 2026-10-26 on production:
+    2 pre-rework rows (SAILIFE, SSWL) stayed in this stale shape forever,
+    since nothing but an explicit admin edit via upsert would otherwise
+    touch their fields. Normalizes every row to the current shape in
+    place, filling only missing keys (never overwriting anything already
+    there) and dropping the dead legacy ones."""
+    fresh = _new_row("", "")
+    for row in data.values():
+        for key, default in fresh.items():
+            if key not in row and key not in ("nseCode", "securityName", "baskets"):
+                row[key] = default
+        for key in _LEGACY_ROW_KEYS:
+            row.pop(key, None)
+
+
 def _sync_and_compute_reminders(data: dict) -> list:
     """Mutates `data` in place (adds newly-discovered basket associations,
-    flips `currentlyHeld` per basket) and returns the reminders list. Does
-    NOT create a tracking row for a brand-new company -- that only happens
-    once the admin actually enters dates for it, via the upsert endpoint;
-    "new" reminders just surface the gap."""
+    flips `currentlyHeld` per basket) and returns the reminders list. Also
+    creates a real tracking row for any newly-held company (see the
+    2026-10-23 refinement below) and migrates any pre-refinement row to
+    the current schema."""
+    _migrate_legacy_rows(data)
     holdings = _current_holdings()
     reminders = []
 
