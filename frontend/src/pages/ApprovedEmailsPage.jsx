@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, Users, UserPlus, Trash2, User, Clock, CheckCircle, XCircle, ShieldCheck, Shield, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Users, UserPlus, Trash2, User, Clock, CheckCircle, XCircle, ShieldCheck, Shield, MessageCircle, Pencil, Check, X } from 'lucide-react';
 import { getToken } from '../utils/auth';
 import { API_BASE as API, API_ROOT } from '../config.js';
 
@@ -16,6 +16,13 @@ export default function ApprovedEmailsPage() {
   const [error,     setError]     = useState('');
   const [success,   setSuccess]   = useState('');
   const [reapprovingAll, setReapprovingAll] = useState(false);
+
+  // Admin-set WhatsApp number (direct correction, bypasses the user's own
+  // self-verify OTP flow -- e.g. when an admin already knows a user's real
+  // verified number but it's missing/wrong on this deployment)
+  const [editingPhone, setEditingPhone] = useState('');
+  const [phoneDraft,   setPhoneDraft]   = useState('');
+  const [savingPhone,  setSavingPhone]  = useState('');
 
   // WhatsApp rebalance alert recipients
   const [waRecipients, setWaRecipients] = useState([]);
@@ -203,6 +210,25 @@ export default function ApprovedEmailsPage() {
     } catch (err) {
       setWaError(err.response?.data?.detail || 'Failed to add recipient');
     }
+  };
+
+  const saveWhatsappPhone = async (email) => {
+    setError('');
+    const phone = phoneDraft.trim();
+    if (!phone.startsWith('+') || phone.length < 8) {
+      setError('Enter a valid phone number in international format, e.g. +919537407484.');
+      return;
+    }
+    setSavingPhone(email);
+    try {
+      await axios.post(`${API_ROOT}/auth/admin/set-whatsapp-phone`,
+        { email, phone },
+        { headers: { Authorization: `Bearer ${getToken()}` } });
+      setEditingPhone(''); setPhoneDraft('');
+      load();
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to save WhatsApp number');
+    } finally { setSavingPhone(''); }
   };
 
   const handleRemoveWaRecipient = async (phone) => {
@@ -423,7 +449,34 @@ export default function ApprovedEmailsPage() {
                       </span>
                     )}
                     {em?.added_at && <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '1px' }}>Added {em.added_at.slice(0, 10)}</div>}
-                    {em?.whatsapp_phone && <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '1px' }}>WhatsApp: {em.whatsapp_phone}</div>}
+                    {editingPhone === emailStr ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
+                        <input
+                          type="tel" value={phoneDraft} onChange={e => setPhoneDraft(e.target.value)}
+                          placeholder="+919537407484" disabled={savingPhone === emailStr}
+                          style={{ fontSize: '0.78rem', padding: '3px 7px', width: '150px' }}
+                        />
+                        <button onClick={() => saveWhatsappPhone(emailStr)} disabled={savingPhone === emailStr}
+                          title="Save" style={{ display: 'flex', padding: '3px', border: 'none', background: 'none', color: 'var(--positive)', cursor: 'pointer' }}>
+                          <Check size={14} />
+                        </button>
+                        <button onClick={() => { setEditingPhone(''); setPhoneDraft(''); }} disabled={savingPhone === emailStr}
+                          title="Cancel" style={{ display: 'flex', padding: '3px', border: 'none', background: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '1px' }}>
+                        {em?.whatsapp_phone ? `WhatsApp: ${em.whatsapp_phone}` : 'No WhatsApp number on file'}
+                        <button
+                          onClick={() => { setEditingPhone(emailStr); setPhoneDraft(em?.whatsapp_phone || '+91'); }}
+                          title={em?.whatsapp_phone ? 'Edit WhatsApp number' : 'Add WhatsApp number'}
+                          style={{ display: 'flex', padding: '2px', border: 'none', background: 'none', color: 'var(--primary)', cursor: 'pointer' }}
+                        >
+                          <Pencil size={11} />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
