@@ -61,6 +61,21 @@ _DATA_DIR = Path(__file__).parent.parent
 _DATA_FILE = _DATA_DIR / "result_updates.json"
 _RAW_DOC_DIR = _DATA_DIR / "result_update_raw_docs"
 _RAW_DOC_DIR.mkdir(exist_ok=True)
+_IMAGE_DIR = _DATA_DIR / "result_update_images"
+_IMAGE_DIR.mkdir(exist_ok=True)
+
+
+def _image_ext(data: bytes) -> str:
+    """Sniffs the image format from its magic bytes -- embedded docx media
+    isn't necessarily PNG, and trusting the real format (not just slapping
+    .png on everything) matters for reportlab to decode it correctly later."""
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        return ".png"
+    if data[:3] == b"\xff\xd8\xff":
+        return ".jpg"
+    if data[:6] in (b"GIF87a", b"GIF89a"):
+        return ".gif"
+    return ".png"
 
 # Read-only reuse of results_calendar.py's own cache (NSE board-meeting +
 # yfinance earnings dates, already fetched/refreshed by that feature's own
@@ -141,6 +156,7 @@ def _new_row(nse_code: str, security_name: str) -> dict:
         "received": False, "checked": False, "sent": False, "sentResults": False,
         "operationalPerformance": [], "outlook": [],
         "financialTable": None,
+        "financialImages": [],
         "resultUpdateDocument": None,
         "baskets": {},
     }
@@ -332,6 +348,11 @@ def delete_result_update(nse_code: str, request: Request):
             (_RAW_DOC_DIR / row["resultUpdateDocument"]).unlink(missing_ok=True)
         except Exception:
             pass
+    for img in row.get("financialImages") or []:
+        try:
+            (_IMAGE_DIR / img).unlink(missing_ok=True)
+        except Exception:
+            pass
     del data[nse_code]
     _save(data)
     return {"status": "removed"}
@@ -367,6 +388,11 @@ async def upload_and_parse_document(nse_code: str, request: Request, file: Uploa
             (_RAW_DOC_DIR / old).unlink(missing_ok=True)
         except Exception:
             pass
+    for img in data[nse_code].get("financialImages") or []:
+        try:
+            (_IMAGE_DIR / img).unlink(missing_ok=True)
+        except Exception:
+            pass
 
     with open(dest, "wb") as f:
         shutil.copyfileobj(file.file, f)
@@ -385,10 +411,21 @@ async def upload_and_parse_document(nse_code: str, request: Request, file: Uploa
         if converted and converted.exists():
             converted.unlink(missing_ok=True)
 
+    # A financial snapshot pasted in as a picture (not a real Word table) --
+    # confirmed live 2026-10-27 that this is common and was being silently
+    # dropped entirely. Saved alongside the raw document, served the same
+    # way, and embedded directly into the merged PDF (see result_update_pdf).
+    image_names = []
+    for idx, img_bytes in enumerate(parsed.get("images") or []):
+        img_name = f"{nse_code}_{idx}{_image_ext(img_bytes)}"
+        (_IMAGE_DIR / img_name).write_bytes(img_bytes)
+        image_names.append(img_name)
+
     data[nse_code]["resultUpdateDocument"] = filename
     data[nse_code]["operationalPerformance"] = parsed["operationalPerformance"]
     data[nse_code]["outlook"] = parsed["outlook"]
     data[nse_code]["financialTable"] = parsed["financialTable"]
+    data[nse_code]["financialImages"] = image_names
     data[nse_code]["updatedAt"] = datetime.now(timezone.utc).strftime("%d %b %Y %H:%M UTC")
     _save(data)
     return data[nse_code]
@@ -398,6 +435,15 @@ async def upload_and_parse_document(nse_code: str, request: Request, file: Uploa
 def get_result_update_document(filename: str, request: Request):
     _require_admin(request)
     path = _RAW_DOC_DIR / filename
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="Not found")
+    return FileResponse(str(path), filename=filename)
+
+
+@router.get("/api/admin/result-updates/image/{filename}")
+def get_result_update_image(filename: str, request: Request):
+    _require_admin(request)
+    path = _IMAGE_DIR / filename
     if not path.exists():
         raise HTTPException(status_code=404, detail="Not found")
     return FileResponse(str(path), filename=filename)
@@ -452,6 +498,6 @@ def generate_pdf(body: dict, request: Request):
     import tempfile
     suffix = "consolidated" if consolidated else f"{len(rows)}companies"
     out_path = Path(tempfile.gettempdir()) / f"result_update_{basket}_{suffix}.pdf"
-    result_update_pdf.generate_merged_pdf(basket_label, rows, out_path, consolidated=consolidated)
+    result_update_pdf.generate_merged_pdf(basket_label, rows, out_path, consolidated=consolidated, image_dir=_IMAGE_DIR)
 
     return FileResponse(str(out_path), filename=out_path.name, media_type="application/pdf")

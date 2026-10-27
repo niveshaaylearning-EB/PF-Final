@@ -3,14 +3,11 @@
     "nseCode": "SAILIFE",
     "securityName": "SAILIFE",
     "resultDate": "2026-11-05",
-    "concallDate": null,
     "received": false,
     "checked": false,
     "sent": false,
     "operationalPerformance": [],
     "outlook": [],
-    "snapshotImage": null,
-    "rawDocument": null,
     "baskets": {
       "Mid_Small_Cap": {
         "label": "Mid & Small Cap",
@@ -25,20 +22,21 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "05 Oct 2026 11:42 UTC"
+    "updatedAt": "05 Oct 2026 11:42 UTC",
+    "sentResults": false,
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "financialImages": []
   },
   "SSWL": {
     "nseCode": "SSWL",
     "securityName": "SSWL",
     "resultDate": "2026-10-23",
-    "concallDate": null,
     "received": false,
     "checked": false,
     "sent": false,
     "operationalPerformance": [],
     "outlook": [],
-    "snapshotImage": null,
-    "rawDocument": null,
     "baskets": {
       "Trends_Triology": {
         "label": "Trends Triology",
@@ -49,12 +47,16 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "05 Oct 2026 11:42 UTC"
+    "updatedAt": "05 Oct 2026 11:42 UTC",
+    "sentResults": false,
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "financialImages": []
   },
   "DHOOTTRANS": {
     "nseCode": "DHOOTTRANS",
     "securityName": "DHOOTTRANS",
-    "resultDate": null,
+    "resultDate": "2026-11-03",
     "received": false,
     "checked": false,
     "sent": false,
@@ -69,7 +71,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "27 Oct 2026 06:23 UTC",
+    "financialImages": []
   },
   "VAML": {
     "nseCode": "VAML",
@@ -89,7 +92,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "EMMVEE": {
     "nseCode": "EMMVEE",
@@ -109,7 +113,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "WAAREEENER": {
     "nseCode": "WAAREEENER",
@@ -129,7 +134,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "TRITURBINE": {
     "nseCode": "TRITURBINE",
@@ -149,7 +155,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "TDPOWERSYS": {
     "nseCode": "TDPOWERSYS",
@@ -177,7 +184,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "BORORENEW": {
     "nseCode": "BORORENEW",
@@ -197,7 +205,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "EBGNG": {
     "nseCode": "EBGNG",
@@ -221,7 +230,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "POCL": {
     "nseCode": "POCL",
@@ -241,7 +251,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "ENRIN": {
     "nseCode": "ENRIN",
@@ -261,7 +272,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "ATHERENERG": {
     "nseCode": "ATHERENERG",
@@ -297,7 +309,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "SBCL": {
     "nseCode": "SBCL",
@@ -329,7 +342,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "QPOWER": {
     "nseCode": "QPOWER",
@@ -361,7 +375,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "INOXINDIA": {
     "nseCode": "INOXINDIA",
@@ -385,7 +400,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "HBLENGINE": {
     "nseCode": "HBLENGINE",
@@ -405,7 +421,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "SYRMA": {
     "nseCode": "SYRMA",
@@ -433,7 +450,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "AVALON": {
     "nseCode": "AVALON",
@@ -461,7 +479,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "SANSERA": {
     "nseCode": "SANSERA",
@@ -493,7 +512,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "JASH": {
     "nseCode": "JASH",
@@ -513,7 +533,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "VEDL": {
     "nseCode": "VEDL",
@@ -533,7 +554,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "SANGHVIMOV": {
     "nseCode": "SANGHVIMOV",
@@ -553,7 +575,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "NEOGEN": {
     "nseCode": "NEOGEN",
@@ -585,12 +608,13 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "FLUOROCHEM": {
     "nseCode": "FLUOROCHEM",
     "securityName": "FLUOROCHEM",
-    "resultDate": null,
+    "resultDate": "2026-11-03",
     "received": false,
     "checked": false,
     "sent": false,
@@ -605,12 +629,13 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "SHADOWFAX": {
     "nseCode": "SHADOWFAX",
     "securityName": "SHADOWFAX",
-    "resultDate": null,
+    "resultDate": "2026-10-29",
     "received": false,
     "checked": false,
     "sent": false,
@@ -641,12 +666,13 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "SAMBHV": {
     "nseCode": "SAMBHV",
     "securityName": "SAMBHV",
-    "resultDate": null,
+    "resultDate": "2026-10-29",
     "received": false,
     "checked": false,
     "sent": false,
@@ -665,7 +691,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "MANINDS": {
     "nseCode": "MANINDS",
@@ -689,7 +716,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "KRN": {
     "nseCode": "KRN",
@@ -717,7 +745,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "HFCL": {
     "nseCode": "HFCL",
@@ -741,7 +770,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "AARTIPHARM": {
     "nseCode": "AARTIPHARM",
@@ -769,7 +799,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "ACUTAAS": {
     "nseCode": "ACUTAAS",
@@ -793,7 +824,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "SHILPAMED": {
     "nseCode": "SHILPAMED",
@@ -817,7 +849,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "JYOTICNC": {
     "nseCode": "JYOTICNC",
@@ -837,12 +870,13 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "HLEGLAS": {
     "nseCode": "HLEGLAS",
     "securityName": "HLEGLAS",
-    "resultDate": null,
+    "resultDate": "2026-11-02",
     "received": false,
     "checked": false,
     "sent": false,
@@ -857,7 +891,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "STLTECH": {
     "nseCode": "STLTECH",
@@ -889,7 +924,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "IDEAFORGE": {
     "nseCode": "IDEAFORGE",
@@ -913,7 +949,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "ASTRAMICRO": {
     "nseCode": "ASTRAMICRO",
@@ -941,7 +978,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "ETHOSLTD": {
     "nseCode": "ETHOSLTD",
@@ -961,7 +999,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "TIMEX": {
     "nseCode": "TIMEX",
@@ -985,7 +1024,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "CENTUM": {
     "nseCode": "CENTUM",
@@ -1009,7 +1049,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "E2E": {
     "nseCode": "E2E",
@@ -1041,7 +1082,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "STEAMHOUSE": {
     "nseCode": "STEAMHOUSE",
@@ -1061,12 +1103,13 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "TEMPSENS": {
     "nseCode": "TEMPSENS",
     "securityName": "TEMPSENS",
-    "resultDate": null,
+    "resultDate": "2026-10-30",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1081,7 +1124,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "SEDEMAC": {
     "nseCode": "SEDEMAC",
@@ -1113,7 +1157,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "OMNI": {
     "nseCode": "OMNI",
@@ -1137,7 +1182,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "UNIMECH": {
     "nseCode": "UNIMECH",
@@ -1157,7 +1203,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "DEEDEV": {
     "nseCode": "DEEDEV",
@@ -1181,7 +1228,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "MOLBIO": {
     "nseCode": "MOLBIO",
@@ -1201,7 +1249,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "KUSUMGAR": {
     "nseCode": "KUSUMGAR",
@@ -1221,7 +1270,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "BLACKBUCK": {
     "nseCode": "BLACKBUCK",
@@ -1241,7 +1291,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "SUDEEPPHRM": {
     "nseCode": "SUDEEPPHRM",
@@ -1261,7 +1312,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "ATLANTAELE": {
     "nseCode": "ATLANTAELE",
@@ -1281,7 +1333,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "URBANCO": {
     "nseCode": "URBANCO",
@@ -1309,7 +1362,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "ELLEN": {
     "nseCode": "ELLEN",
@@ -1329,7 +1383,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "EXICOM": {
     "nseCode": "EXICOM",
@@ -1349,7 +1404,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "KPL": {
     "nseCode": "KPL",
@@ -1369,7 +1425,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "IND SWIFT LABORATORIES LTD": {
     "nseCode": "IND SWIFT LABORATORIES LTD",
@@ -1393,7 +1450,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "AEROFLEX": {
     "nseCode": "AEROFLEX",
@@ -1421,7 +1479,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "YASHO": {
     "nseCode": "YASHO",
@@ -1445,7 +1504,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "SAKAR": {
     "nseCode": "SAKAR",
@@ -1469,7 +1529,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "MOREPENLAB": {
     "nseCode": "MOREPENLAB",
@@ -1493,7 +1554,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "MEESHO": {
     "nseCode": "MEESHO",
@@ -1513,7 +1575,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "TEJASNET": {
     "nseCode": "TEJASNET",
@@ -1533,12 +1596,13 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "PARAS": {
     "nseCode": "PARAS",
     "securityName": "PARAS",
-    "resultDate": null,
+    "resultDate": "2026-10-29",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1553,7 +1617,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "DATAPATTNS": {
     "nseCode": "DATAPATTNS",
@@ -1573,7 +1638,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "AVANTEL": {
     "nseCode": "AVANTEL",
@@ -1593,7 +1659,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "GENESYS": {
     "nseCode": "GENESYS",
@@ -1613,7 +1680,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "SASKEN": {
     "nseCode": "SASKEN",
@@ -1633,7 +1701,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "RPTECH": {
     "nseCode": "RPTECH",
@@ -1653,7 +1722,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "REDINGTON": {
     "nseCode": "REDINGTON",
@@ -1673,7 +1743,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "NPST": {
     "nseCode": "NPST",
@@ -1693,7 +1764,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "NETWEB": {
     "nseCode": "NETWEB",
@@ -1713,7 +1785,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "PAUSHAKLTD": {
     "nseCode": "PAUSHAKLTD",
@@ -1733,12 +1806,13 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "XPROINDIA": {
     "nseCode": "XPROINDIA",
     "securityName": "XPROINDIA",
-    "resultDate": null,
+    "resultDate": "2026-11-03",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1757,7 +1831,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "ORCHPHARMA": {
     "nseCode": "ORCHPHARMA",
@@ -1777,7 +1852,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "KDDL": {
     "nseCode": "KDDL",
@@ -1801,7 +1877,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "DIVGIITTS": {
     "nseCode": "DIVGIITTS",
@@ -1821,12 +1898,13 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "EMIL": {
     "nseCode": "EMIL",
     "securityName": "Electronics Mart India Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-05",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1841,7 +1919,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "ETERNAL": {
     "nseCode": "ETERNAL",
@@ -1861,7 +1940,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "GRWRHITECH": {
     "nseCode": "GRWRHITECH",
@@ -1881,7 +1961,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "CARYSIL": {
     "nseCode": "CARYSIL",
@@ -1901,7 +1982,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "SHAILY": {
     "nseCode": "SHAILY",
@@ -1921,7 +2003,8 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
   },
   "MANORAMA": {
     "nseCode": "MANORAMA",
@@ -1941,6 +2024,32 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC"
+    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "financialImages": []
+  },
+  "CPPLUS": {
+    "nseCode": "CPPLUS",
+    "securityName": "Aditya Infotech Ltd",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "23 Oct 2026 11:49 UTC",
+    "financialImages": []
   }
 }

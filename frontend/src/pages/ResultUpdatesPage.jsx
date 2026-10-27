@@ -34,6 +34,13 @@ export default function ResultUpdatesPage() {
   const [generating, setGenerating] = useState(null); // basket key currently generating, or null
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBasket, setSelectedBasket] = useState(''); // '' = All Baskets
+  // Two separate tabs per the 2026-10-27 refinement: "Result Status" (track
+  // dates/documents/checkboxes per basket) and "Generate Result" (its own
+  // basket dropdown, just for producing the merged/consolidated PDF) -- kept
+  // apart since generating was previously buried inside each basket's
+  // tracking section, mixed in with everything else.
+  const [activeTab, setActiveTab] = useState('status'); // 'status' | 'generate'
+  const [generateBasket, setGenerateBasket] = useState('');
 
   const load = useCallback(() => {
     setLoading(true);
@@ -44,6 +51,12 @@ export default function ResultUpdatesPage() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+
+  useEffect(() => {
+    if (!generateBasket && Object.keys(basketLabels).length > 0) {
+      setGenerateBasket(Object.keys(basketLabels).sort((a, b) => (basketLabels[a] || a).localeCompare(basketLabels[b] || b))[0]);
+    }
+  }, [basketLabels, generateBasket]);
 
   const matchesSearch = useCallback((name, code) => {
     const term = searchTerm.trim().toLowerCase();
@@ -171,13 +184,34 @@ export default function ResultUpdatesPage() {
             <h2 className="text-gradient" style={{ margin: 0, fontSize: '1.5rem' }}>Result Update</h2>
           </div>
           <p style={{ color: 'var(--text-muted)', margin: '4px 0 0', fontSize: '0.85rem' }}>
-            Result dates auto-fill from Result Calendar. Upload each company's result-update document, then check "Sent Results" to include it in a merged/consolidated PDF -- per basket.
+            Result dates auto-fill from Result Calendar. Track each company and upload its result-update document under "Result Status", then check "Sent Results" and head to "Generate Result" to produce the merged/consolidated PDF for a basket.
           </p>
         </div>
       </div>
 
       {error && <div style={{ marginBottom: '16px', padding: '10px 14px', borderRadius: '8px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', fontSize: '0.85rem' }}>{error}</div>}
 
+      {/* ── Tabs ── */}
+      <div style={{ display: 'flex', gap: '4px', marginBottom: '20px', borderBottom: '1px solid var(--panel-border)' }}>
+        {[['status', 'Result Status'], ['generate', 'Generate Result']].map(([key, label]) => (
+          <button key={key} onClick={() => setActiveTab(key)} style={{
+            padding: '10px 18px', border: 'none', borderBottom: `2px solid ${activeTab === key ? 'var(--primary)' : 'transparent'}`,
+            background: 'none', color: activeTab === key ? 'var(--primary)' : 'var(--text-muted)',
+            fontSize: '0.88rem', fontWeight: 600, cursor: 'pointer',
+          }}>
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'generate' ? (
+        <GenerateResultTab
+          basketLabels={basketLabels} rows={rows} loading={loading}
+          generateBasket={generateBasket} setGenerateBasket={setGenerateBasket}
+          generating={generating} onGenerate={generatePdf} onGenerateConsolidated={generateConsolidated}
+        />
+      ) : (
+      <>
       {/* ── Basket picker + Search ── */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
         <select
@@ -274,39 +308,13 @@ export default function ResultUpdatesPage() {
         // appear once at least one held company has it checked, per the
         // 2026-10-23 refinement ("the button... shall get popped up only
         // when I select the companies 'sent results' box only").
-        const sentResultsCount = heldRows.filter(r => r.sentResults).length;
-        const consolidatedCount = heldRows.filter(r => r.sentResults && r.received && r.checked).length;
-        const isGenerating = generating === basketKey;
         return (
           <div key={basketKey} className="glass-panel" style={{ padding: 0, overflow: 'hidden', marginBottom: '20px' }}>
-            <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--panel-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                <span style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.92rem' }}>{basketLabels[basketKey] || basketKey}</span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'var(--input-bg)', border: '1px solid var(--panel-border)', borderRadius: '10px', padding: '2px 8px' }}>
-                  {heldRows.length} tracked
-                </span>
-              </div>
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                {sentResultsCount > 0 && (
-                  <button
-                    onClick={() => generatePdf(basketKey)}
-                    disabled={isGenerating}
-                    style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 16px', borderRadius: '7px', border: 'none', background: 'var(--primary)', color: '#fff', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}
-                  >
-                    <Download size={13} /> {isGenerating ? 'Generating…' : `Generate Merged PDF (${sentResultsCount})`}
-                  </button>
-                )}
-                {consolidatedCount > 0 && (
-                  <button
-                    onClick={() => generateConsolidated(basketKey)}
-                    disabled={isGenerating}
-                    title="Generate the consolidated update for every held company that's received, checked, and marked sent results"
-                    style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 16px', borderRadius: '7px', border: '1px solid var(--positive)', background: 'rgba(16,185,129,0.12)', color: 'var(--positive)', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}
-                  >
-                    <Download size={13} /> {isGenerating ? 'Generating…' : `Generate Consolidated PDF (${consolidatedCount})`}
-                  </button>
-                )}
-              </div>
+            <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--panel-border)', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+              <span style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.92rem' }}>{basketLabels[basketKey] || basketKey}</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'var(--input-bg)', border: '1px solid var(--panel-border)', borderRadius: '10px', padding: '2px 8px' }}>
+                {heldRows.length} tracked
+              </span>
             </div>
             {visibleRows.length > 0 && (
               <div style={{ display: 'grid', gridTemplateColumns: '78px minmax(160px, 1fr) 128px 86px 86px 70px 90px 32px', gap: '8px', alignItems: 'center', padding: '8px 20px', fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '1px solid var(--panel-border)' }}>
@@ -332,6 +340,66 @@ export default function ResultUpdatesPage() {
           </div>
         );
       })}
+      </>
+      )}
+    </div>
+  );
+}
+
+function GenerateResultTab({ basketLabels, rows, loading, generateBasket, setGenerateBasket, generating, onGenerate, onGenerateConsolidated }) {
+  const heldRows = rows.filter(r => r.baskets[generateBasket]?.currentlyHeld);
+  const sentResultsCount = heldRows.filter(r => r.sentResults).length;
+  const consolidatedCount = heldRows.filter(r => r.sentResults && r.received && r.checked).length;
+  const isGenerating = generating === generateBasket;
+
+  return (
+    <div className="glass-panel" style={{ padding: '24px' }}>
+      <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '8px' }}>Pick a basket</div>
+      <select
+        value={generateBasket} onChange={e => setGenerateBasket(e.target.value)}
+        style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--panel-border)', background: 'var(--input-bg)', color: 'var(--text-main)', fontSize: '0.88rem', outline: 'none', fontFamily: 'inherit', cursor: 'pointer', width: '280px', marginBottom: '20px' }}
+      >
+        {Object.keys(basketLabels).sort((a, b) => (basketLabels[a] || a).localeCompare(basketLabels[b] || b)).map(key => (
+          <option key={key} value={key}>{basketLabels[key] || key}</option>
+        ))}
+      </select>
+
+      {loading ? (
+        <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Loading…</div>
+      ) : !generateBasket ? (
+        <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>No baskets found.</div>
+      ) : (
+        <>
+          <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', flexWrap: 'wrap' }}>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+              <b style={{ color: 'var(--text-main)' }}>{heldRows.length}</b> tracked &middot; <b style={{ color: 'var(--text-main)' }}>{sentResultsCount}</b> sent results &middot; <b style={{ color: 'var(--text-main)' }}>{consolidatedCount}</b> ready for consolidated
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            {sentResultsCount > 0 ? (
+              <button
+                onClick={() => onGenerate(generateBasket)}
+                disabled={isGenerating}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 20px', borderRadius: '8px', border: 'none', background: 'var(--primary)', color: '#fff', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
+              >
+                <Download size={15} /> {isGenerating ? 'Generating…' : `Generate Merged PDF (${sentResultsCount})`}
+              </button>
+            ) : (
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>No company in this basket has "Sent Results" checked yet -- go to Result Status to mark some.</div>
+            )}
+            {consolidatedCount > 0 && (
+              <button
+                onClick={() => onGenerateConsolidated(generateBasket)}
+                disabled={isGenerating}
+                title="Generate the consolidated update for every held company that's received, checked, and marked sent results"
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 20px', borderRadius: '8px', border: '1px solid var(--positive)', background: 'rgba(16,185,129,0.12)', color: 'var(--positive)', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
+              >
+                <Download size={15} /> {isGenerating ? 'Generating…' : `Generate Consolidated PDF (${consolidatedCount})`}
+              </button>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -351,6 +419,12 @@ async function blobErrorMessage(err) {
   return err.response?.data?.detail || null;
 }
 
+// Redesigned 2026-10-27 as a single bordered box with one compact row per
+// point (heading + text side by side) instead of stacked heading-input +
+// full-width-textarea cards -- the old layout "extend[ed] the list
+// unnecessarily" per direct feedback; this is meant to read like the table
+// view the final PDF itself now renders (see backend's
+// _bullets_box_flowable), not a sprawling form.
 function BulletEditor({ label, items, onChange }) {
   const update = (idx, field, value) => {
     const next = items.map((b, i) => i === idx ? { ...b, [field]: value } : b);
@@ -361,19 +435,27 @@ function BulletEditor({ label, items, onChange }) {
   return (
     <div style={{ marginBottom: '12px' }}>
       <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>{label}</div>
-      {items.map((b, idx) => (
-        <div key={idx} style={{ display: 'flex', gap: '8px', marginBottom: '6px', alignItems: 'flex-start' }}>
-          <input placeholder="Bold lead-in (e.g. Robust Revenue Growth)" value={b.heading}
-            onChange={e => update(idx, 'heading', e.target.value)}
-            style={{ flex: '0 0 220px', padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--panel-border)', background: 'var(--input-bg)', color: 'var(--text-main)', fontSize: '0.78rem', fontFamily: 'inherit' }} />
-          <textarea placeholder="Description text" value={b.text} rows={2}
-            onChange={e => update(idx, 'text', e.target.value)}
-            style={{ flex: 1, padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--panel-border)', background: 'var(--input-bg)', color: 'var(--text-main)', fontSize: '0.78rem', fontFamily: 'inherit', resize: 'vertical' }} />
-          <button onClick={() => remove(idx)} style={{ padding: '6px 8px', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.28)', background: 'rgba(239,68,68,0.08)', color: '#f87171', cursor: 'pointer' }}>
-            <Trash2 size={12} />
-          </button>
+      {items.length > 0 && (
+        <div style={{ border: '1px solid var(--panel-border)', borderRadius: '8px', overflow: 'hidden', marginBottom: '8px' }}>
+          {items.map((b, idx) => (
+            <div key={idx} style={{
+              display: 'grid', gridTemplateColumns: '200px 1fr 28px', gap: '8px', alignItems: 'start',
+              padding: '8px 10px', background: idx % 2 === 1 ? 'var(--input-bg)' : 'transparent',
+              borderTop: idx > 0 ? '1px solid var(--panel-border)' : 'none',
+            }}>
+              <input placeholder="Bold lead-in" value={b.heading}
+                onChange={e => update(idx, 'heading', e.target.value)}
+                style={{ padding: '5px 8px', borderRadius: '5px', border: '1px solid var(--panel-border)', background: 'var(--card-bg, transparent)', color: 'var(--text-main)', fontSize: '0.76rem', fontWeight: 600, fontFamily: 'inherit' }} />
+              <textarea placeholder="Description text" value={b.text} rows={1}
+                onChange={e => update(idx, 'text', e.target.value)}
+                style={{ padding: '5px 8px', borderRadius: '5px', border: '1px solid var(--panel-border)', background: 'var(--card-bg, transparent)', color: 'var(--text-main)', fontSize: '0.76rem', fontFamily: 'inherit', resize: 'vertical', minHeight: '28px' }} />
+              <button onClick={() => remove(idx)} style={{ padding: '5px 6px', borderRadius: '5px', border: '1px solid rgba(239,68,68,0.28)', background: 'rgba(239,68,68,0.08)', color: '#f87171', cursor: 'pointer' }}>
+                <Trash2 size={11} />
+              </button>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
       <button onClick={add} style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.1)', color: 'var(--primary)', fontSize: '0.74rem', cursor: 'pointer' }}>
         <Plus size={11} /> Add point
       </button>
@@ -392,6 +474,39 @@ function BasketChip({ label, muted }) {
       {label}
     </span>
   );
+}
+
+// Every /api/* route requires a Bearer token on the request itself -- a
+// plain <a href> or <img src> sends no such header and just gets a 401 JSON
+// body instead of the real file. Fetches the file as a blob with the auth
+// header attached, then hands the caller an object URL to use normally.
+function useAuthedBlobUrl(url) {
+  const [blobUrl, setBlobUrl] = useState(null);
+  useEffect(() => {
+    if (!url) { setBlobUrl(null); return; }
+    let revoke = null;
+    axios.get(url, { headers: authHeaders(), responseType: 'blob' })
+      .then(resp => {
+        const obj = window.URL.createObjectURL(resp.data);
+        revoke = obj;
+        setBlobUrl(obj);
+      })
+      .catch(() => setBlobUrl(null));
+    return () => { if (revoke) window.URL.revokeObjectURL(revoke); };
+  }, [url]);
+  return blobUrl;
+}
+
+function AuthedDocumentLink({ url, children }) {
+  const blobUrl = useAuthedBlobUrl(url);
+  if (!blobUrl) return <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{children}</span>;
+  return <a href={blobUrl} target="_blank" rel="noreferrer" style={{ display: 'block', fontSize: '0.78rem', color: 'var(--primary)', marginBottom: '8px' }}>{children}</a>;
+}
+
+function AuthedImage({ url, alt }) {
+  const blobUrl = useAuthedBlobUrl(url);
+  if (!blobUrl) return null;
+  return <img src={blobUrl} alt={alt} style={{ maxWidth: '100%', borderRadius: '6px', border: '1px solid var(--panel-border)', marginBottom: '8px', display: 'block' }} />;
 }
 
 function CompanyRow({ r, i, total, basketKey, hideOtherBaskets, expanded, onToggleExpand, onPatch, onUploadDocument, uploading, onRemove, inputStyle }) {
@@ -447,10 +562,9 @@ function CompanyRow({ r, i, total, basketKey, hideOtherBaskets, expanded, onTogg
           <div style={{ marginBottom: '14px' }}>
             <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>Result Update Document</div>
             {r.resultUpdateDocument && (
-              <a href={`${API}/admin/result-updates/document/${r.resultUpdateDocument}`} target="_blank" rel="noreferrer"
-                style={{ display: 'block', fontSize: '0.78rem', color: 'var(--primary)', marginBottom: '8px' }}>
+              <AuthedDocumentLink url={`${API}/admin/result-updates/document/${r.resultUpdateDocument}`}>
                 {r.resultUpdateDocument}
-              </a>
+              </AuthedDocumentLink>
             )}
             <label
               onDragOver={e => { e.preventDefault(); setDragOver(true); }}
@@ -491,6 +605,15 @@ function CompanyRow({ r, i, total, basketKey, hideOtherBaskets, expanded, onTogg
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+
+          {r.financialImages?.length > 0 && (
+            <div style={{ marginBottom: '14px' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>Financial Snapshot (image embedded in the uploaded document)</div>
+              {r.financialImages.map((img, idx) => (
+                <AuthedImage key={idx} url={`${API}/admin/result-updates/image/${img}`} alt="Financial snapshot" />
+              ))}
             </div>
           )}
 
