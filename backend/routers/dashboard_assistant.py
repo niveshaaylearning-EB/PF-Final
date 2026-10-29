@@ -43,24 +43,45 @@ router = APIRouter()
 _WEBPORTAL = "http://127.0.0.1:8000/wp"
 _GROQ_MODEL = "openai/gpt-oss-120b"
 _GEMINI_MODEL = "gemini-3.8-flash"
-# Confirmed live (2026-10-05) to actually invoke tools correctly -- several
-# other ":free" OpenRouter slugs either 404 (deprecated/paid-only now) or
-# silently fail, so don't swap this without re-testing tool_calls firsthand.
-_OPENROUTER_MODEL = "nvidia/nemotron-3-super-120b-a12b:free"
-_MAX_TOOL_ROUNDS = 6
+# Switched 2026-10-29 from a hardcoded free-model slug (nvidia/nemotron-3-
+# super-120b-a12b:free) to OpenRouter's own meta-router, which auto-selects
+# a currently-free model with tool-calling support -- confirmed live via a
+# direct curl that it returns proper tool_calls (routed to recursive/
+# flint-v1.0:free that call). The hardcoded slug had itself gone paid-only
+# (404 "unavailable for free") by the time this was next tested, exactly
+# the failure mode the old comment here warned about for OTHER models --
+# the router exists specifically so this doesn't keep recurring.
+_OPENROUTER_MODEL = "openrouter/free"
+# Confirmed live 2026-10-29: a question needing 2-3 tool calls took 30-56s
+# end to end, slow enough to risk a reverse-proxy gateway timeout -- this
+# looked like "the assistant doesn't work" rather than "it's just slow".
+# Capped at 3 (down from 6): a genuine 2-hop lookup (e.g. search_stock to
+# resolve a name, then a stock-specific tool with the resolved code) still
+# fits; a runaway open-ended chain doesn't. Confirmed live 2026-10-29 that
+# 3 was actually too tight -- a real cross-basket + benchmark comparison
+# question hit the cap and failed outright ("I needed too many steps")
+# instead of answering, because the model split it across more rounds than
+# hoped despite the parallel-tool-call instruction above. 4 restores that
+# case without going back to the original unbounded-feeling 6.
+_MAX_TOOL_ROUNDS = 4
 
 # Groq's free tier has a very low per-model TPM cap (8000 for gpt-oss-120b),
-# which this assistant has hit live more than once (context_length_exceeded,
-# then rate_limit_exceeded). Gemini and OpenRouter's free tiers are far more
-# generous and both expose an OpenAI-compatible endpoint, so each is a
-# drop-in fallback using the exact same AsyncOpenAI client / tool-calling
-# code -- no separate SDK needed. Try Groq first (already proven, fast);
-# fall back through the list only when the current provider's own call
-# fails for any reason (rate limit, context length, outage, etc).
+# which this assistant has hit live more than once -- each multi-round
+# tool-calling exchange resends the whole conversation so far (OpenAI-style
+# chat completions are stateless), so this cap is easy to blow on exactly
+# the multi-tool questions this assistant exists to answer. Gemini and
+# OpenRouter are drop-in alternatives via the same OpenAI-compatible
+# client/tool-calling code. Order matters, confirmed live 2026-10-29:
+# putting Gemini first (on the old assumption its free tier was "far more
+# generous") made things WORSE -- its actual free quota for this model is
+# only 20 requests PER DAY (not per-minute), so it was already exhausted
+# and failing on every single call. Groq stays first (the one that's
+# actually been reliable for real volume); OpenRouter second (now fixed,
+# see above); Gemini last, since 20/day is barely useful even as a backup.
 _PROVIDERS = [
     ("groq",       "GROQ_API_KEY",       "https://api.groq.com/openai/v1",                            _GROQ_MODEL),
-    ("gemini",     "GEMINI_API_KEY",     "https://generativelanguage.googleapis.com/v1beta/openai/",  _GEMINI_MODEL),
     ("openrouter", "OPENROUTER_API_KEY", "https://openrouter.ai/api/v1",                              _OPENROUTER_MODEL),
+    ("gemini",     "GEMINI_API_KEY",     "https://generativelanguage.googleapis.com/v1beta/openai/",  _GEMINI_MODEL),
 ]
 
 
@@ -549,7 +570,11 @@ Two different things can be named in a question, and they use DIFFERENT tools --
 - The 8 tracked COMPETITOR smallcases (external funds, e.g. GEM-Q Model, Consumer Durables Stars Tracker, Omni AI-Tech Global-AI Theme, AI & Data Center Theme, Wright Innovation Theme, Nirivantes TechWave Select Theme, Caprize Earnings Momentum Portfolio, Caprize Midcap & Smallcap Portfolio) -- use get_competitor_list / get_competitor_rebalance_history for these, matching by partial name.
 If a name in the question doesn't match a basket, check whether it's actually a competitor smallcase before saying no data exists.
 
-Call as many tools as needed to answer fully, including multiple baskets if the question spans more than one. Keep answers concise and concrete (real numbers/dates/names from the tool results), in plain prose or a short list -- no preamble. If the data needed isn't available through any tool, say so plainly instead of guessing."""
+Speed matters: request EVERY tool call you can already tell you'll need in a single response (parallel tool calls), rather than one tool, waiting, then deciding the next one -- e.g. for "compare basket A and B" call get_basket_returns for both in the same turn, not two separate round trips. Only make a second round of calls when a result genuinely can't be known until the first one comes back (e.g. search_stock to resolve a name before a stock-specific lookup).
+
+Never call the same tool with the same arguments twice -- if a result is missing/empty/incomplete, that won't change on a repeat call; either try a genuinely different tool or answer with whatever you do have and say plainly what's missing, rather than re-requesting it.
+
+Keep answers concise and concrete (real numbers/dates/names from the tool results), in plain prose or a short list -- no preamble. If the data needed isn't available through any tool, say so plainly instead of guessing."""
 
 
 async def _dispatch_tool(name: str, args: dict) -> dict:
@@ -587,12 +612,29 @@ async def ask_assistant(body: dict, request: Request):
         key = os.environ.get(env_var)
         if not key:
             continue
-        client = AsyncOpenAI(api_key=key, base_url=base_url)
+        # The SDK's default timeout is 10 minutes -- confirmed live 2026-10-29
+        # that with no explicit timeout, a single slow/stalled provider call
+        # just hangs the whole request near-indefinitely instead of failing
+        # over to the next provider, defeating the entire point of having a
+        # fallback chain. 20s per call is generous for a tool-calling round
+        # (each round should take a few seconds) while still failing fast
+        # enough that a genuinely stuck provider doesn't eat the user's wait.
+        client = AsyncOpenAI(api_key=key, base_url=base_url, timeout=20.0)
         # Fresh copy of messages per provider -- a failed attempt on one
         # provider must not leave its partial tool-call state polluting the
         # next provider's request.
         messages = list(base_messages)
         tools_used = []
+        # (name, sorted-args-json) -> already-computed result. Confirmed live
+        # 2026-10-29: when a tool's underlying data was degraded (an
+        # unrelated Yahoo Finance rate-limit storm at the time), the model
+        # re-called the EXACT SAME tool with the EXACT SAME args every round
+        # instead of trying something else or giving up -- burning the whole
+        # round budget on repeats of a call that was never going to return
+        # anything different. Short-circuiting a repeat to the already-known
+        # result (not re-hitting the real endpoint) breaks that loop and
+        # saves the latency of a pointless duplicate call either way.
+        seen_calls: dict[str, dict] = {}
         try:
             for _ in range(_MAX_TOOL_ROUNDS):
                 resp = await client.chat.completions.create(
@@ -608,16 +650,42 @@ async def ask_assistant(body: dict, request: Request):
                     for tc in msg.tool_calls:
                         args = json.loads(tc.function.arguments or "{}")
                         tools_used.append({"name": tc.function.name, "args": args})
-                        result = await _dispatch_tool(tc.function.name, args)
+                        cache_key = f"{tc.function.name}:{json.dumps(args, sort_keys=True)}"
+                        if cache_key in seen_calls:
+                            # Confirmed live 2026-10-29: the system-prompt
+                            # instruction alone doesn't reliably stop every
+                            # model from repeating an identical call when the
+                            # underlying data is empty/degraded (reasoning
+                            # models in particular keep "trying harder") --
+                            # this makes the stop a hard, enforced fact in
+                            # the tool result itself rather than a request.
+                            result = {"error": "You already called this exact tool with these exact arguments and got the result below -- it will not change on another identical call. Stop calling it and answer with what you have.",
+                                      "previousResult": seen_calls[cache_key]}
+                        else:
+                            result = await _dispatch_tool(tc.function.name, args)
+                            seen_calls[cache_key] = result
                         messages.append({
                             "role": "tool", "tool_call_id": tc.id,
                             "content": json.dumps(result, default=str),
                         })
                     continue
                 return {"answer": msg.content, "toolsUsed": tools_used, "provider": provider_name}
-            return {"answer": "I needed too many steps to answer that -- try asking something more specific.", "toolsUsed": tools_used, "provider": provider_name}
+            # Hit the round cap without the model volunteering a final
+            # answer -- confirmed live 2026-10-29 this can happen even with
+            # useful data already gathered (e.g. it got basket returns fine,
+            # then got stuck re-requesting a second, currently-empty tool).
+            # One last call with tool_choice="none" forces a real answer
+            # from whatever's already in the conversation instead of a dead-
+            # end "too many steps" message that wastes everything gathered
+            # so far.
+            messages.append({"role": "user", "content": "Answer now using only the data already retrieved above -- do not request any more tools, even if something is still missing. Say plainly what you don't have."})
+            resp = await client.chat.completions.create(
+                model=model, messages=messages, tool_choice="none", temperature=0.2, max_tokens=2000,
+            )
+            return {"answer": resp.choices[0].message.content, "toolsUsed": tools_used, "provider": provider_name}
         except Exception as e:
             errors[provider_name] = str(e)
+            print(f"[dashboard_assistant] {provider_name} failed: {e!r}")
             continue  # try the next provider
 
     if not errors:
