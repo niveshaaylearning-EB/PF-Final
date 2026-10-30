@@ -3607,7 +3607,7 @@
         "21 Jul 2026": 587.3625
       },
       "prevBuyEvents": "",
-      "prevSellEvents": "21 Jul 2026 * 4"
+      "prevSellEvents": ""
     },
     "ARIS": {
       "securityName": "Arisinfra Solutions Ltd",
@@ -3644,7 +3644,7 @@
     "BLACKBUCK": {
       "securityName": "Blackbuck Ltd",
       "segment": "Miscellaneous",
-      "buyEvents": "13 Feb 2025 * 2.5\n25 Mar 2025 * 1.5\n05 Feb 2026 * 1",
+      "buyEvents": "",
       "sellEvents": "",
       "buyOHLC": {
         "14 Feb 2025": 474.27,
@@ -3654,9 +3654,11 @@
         "25 Mar 2025": 416.84,
         "05 Feb 2026": 616.78
       },
-      "sellOHLC": {},
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "sellOHLC": {
+        "23 Oct 2026": 544.4625
+      },
+      "prevBuyEvents": "13 Feb 2025 * 2.5\n25 Mar 2025 * 1.5\n05 Feb 2026 * 1",
+      "prevSellEvents": "23 Oct 2026 * 5"
     },
     "CPPLUS": {
       "securityName": "Aditya Infotech Ltd",
@@ -3705,7 +3707,7 @@
         "21 Jul 2026": 330.675
       },
       "prevBuyEvents": "",
-      "prevSellEvents": "21 Jul 2026 * 3"
+      "prevSellEvents": ""
     },
     "GROWW": {
       "securityName": "Billionbrains Garage Ventures Ltd",
@@ -3720,7 +3722,7 @@
         "20 Aug 2026": 197.9175
       },
       "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevSellEvents": "20 Aug 2026 * 4"
     },
     "INTERARCH": {
       "securityName": "Interarch Building Solutions Ltd",
@@ -3784,7 +3786,7 @@
         "20 Aug 2026": 203.04
       },
       "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevSellEvents": "20 Aug 2026 * 5"
     },
     "MOBIKWIK": {
       "securityName": "One MobiKwik Systems Ltd",
@@ -3799,7 +3801,7 @@
         "20 Aug 2026": 195.965
       },
       "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevSellEvents": "20 Aug 2026 * 4"
     },
     "QPOWER": {
       "securityName": "Quality Power Electrical Equipments Ltd",
@@ -4326,7 +4328,7 @@
       "segment": "Cash",
       "prevBuyEvents": "",
       "prevSellEvents": "18 Sep 2026 * 3",
-      "buyEvents": "",
+      "buyEvents": "20 Aug 2026 * 3",
       "sellEvents": "",
       "buyOHLC": {
         "16 Dec 2025": 111.85,
@@ -4358,8 +4360,8 @@
       "sellOHLC": {
         "20 Aug 2026": 113.68
       },
-      "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevBuyEvents": "21 Jul 2026 * 3",
+      "prevSellEvents": "20 Aug 2026 * 3"
     },
     "KUSUMGAR": {
       "securityName": "Kusumgar Ltd",
@@ -4429,7 +4431,7 @@
     },
     "STEAMHOUSE": {
       "securityName": "Steamhouse India Ltd",
-      "segment": "Equity",
+      "segment": "BSE IPO",
       "buyEvents": "18 Sep 2026 * 4",
       "sellEvents": "",
       "buyOHLC": {
@@ -4446,6 +4448,18 @@
       "sellEvents": "",
       "buyOHLC": {
         "18 Sep 2026": 537.825
+      },
+      "sellOHLC": {},
+      "prevBuyEvents": "",
+      "prevSellEvents": ""
+    },
+    "IGIL": {
+      "securityName": "International Gemological Institute Ltd",
+      "segment": "BSE 400 MidSmallCap Index",
+      "buyEvents": "23 Oct 2026 * 5",
+      "sellEvents": "",
+      "buyOHLC": {
+        "23 Oct 2026": 369.2125
       },
       "sellOHLC": {},
       "prevBuyEvents": "",
@@ -9222,16 +9236,20 @@
       "sellOHLC": {}
     },
     "SHIPROCKET": {
-      "listingDate": "19-Aug-2026"
+      "listingDate": "19-Aug-2026",
+      "sellOHLC": {}
     },
     "INDOMIM": {
-      "listingDate": "30-Jul-2026"
+      "listingDate": "30-Jul-2026",
+      "sellOHLC": {}
     },
     "ESDS": {
-      "listingDate": "04-Sep-2026"
+      "listingDate": "04-Sep-2026",
+      "sellOHLC": {}
     },
     "SYMBIOTEC": {
-      "listingDate": "01-Sep-2026"
+      "listingDate": "01-Sep-2026",
+      "sellOHLC": {}
     }
   }
 }
