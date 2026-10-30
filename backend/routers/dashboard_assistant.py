@@ -603,9 +603,42 @@ async def ask_assistant(body: dict, request: Request):
     _MAX_HISTORY_MESSAGES = 8
     history = history[-_MAX_HISTORY_MESSAGES:]
 
-    base_messages = [{"role": "system", "content": _SYSTEM_PROMPT}] + history + [{"role": "user", "content": question}]
-
     from openai import AsyncOpenAI
+
+    # RAG-first fast path (added 2026-10-30): answer from a periodically-
+    # refreshed local snapshot in ONE LLM call, no live tool fetch, before
+    # falling back to the full tool-calling loop below. Covers the common
+    # case (holdings/returns/rebalances/competitors/corporate actions/
+    # watchlist/result-updates/benchmarks) much faster; anything time-
+    # critical or user-scoped (live prices, market snapshot, the asking
+    # admin's own simulator, rebalance alerts) isn't in the snapshot at all
+    # and always falls through to a real tool call instead.
+    import assistant_rag
+    await assistant_rag.ensure_fresh()
+    context = assistant_rag.retrieve(question)
+    if context:
+        rag_messages = (
+            [{"role": "system", "content": _SYSTEM_PROMPT + "\n\nAnswer using ONLY the dashboard data snapshot below (it may be up to 15 minutes old -- that's fine for holdings/returns/rebalances/etc, but say so if the question needs a live/real-time figure like current price). If the snapshot doesn't actually cover what's being asked, respond with EXACTLY: NEED_LIVE_DATA: <brief reason> and nothing else.\n\n--- DASHBOARD DATA SNAPSHOT ---\n" + context}]
+            + history + [{"role": "user", "content": question}]
+        )
+        for provider_name, env_var, base_url, model in _PROVIDERS:
+            key = os.environ.get(env_var)
+            if not key:
+                continue
+            client = AsyncOpenAI(api_key=key, base_url=base_url, timeout=20.0)
+            try:
+                resp = await client.chat.completions.create(
+                    model=model, messages=rag_messages, tool_choice="none", temperature=0.2, max_tokens=2000,
+                )
+                answer = resp.choices[0].message.content or ""
+                if not answer.strip().startswith("NEED_LIVE_DATA"):
+                    return {"answer": answer, "toolsUsed": [], "provider": provider_name, "source": "rag"}
+                break  # snapshot genuinely doesn't cover it -- fall through to live tools, no point trying other providers with the same context
+            except Exception as e:
+                print(f"[dashboard_assistant] RAG pass, {provider_name} failed: {e!r}")
+                continue  # this provider's own failure -- still worth trying the next one for the RAG pass
+
+    base_messages = [{"role": "system", "content": _SYSTEM_PROMPT}] + history + [{"role": "user", "content": question}]
 
     errors = {}
     for provider_name, env_var, base_url, model in _PROVIDERS:
@@ -669,7 +702,7 @@ async def ask_assistant(body: dict, request: Request):
                             "content": json.dumps(result, default=str),
                         })
                     continue
-                return {"answer": msg.content, "toolsUsed": tools_used, "provider": provider_name}
+                return {"answer": msg.content, "toolsUsed": tools_used, "provider": provider_name, "source": "tools"}
             # Hit the round cap without the model volunteering a final
             # answer -- confirmed live 2026-10-29 this can happen even with
             # useful data already gathered (e.g. it got basket returns fine,
@@ -682,7 +715,7 @@ async def ask_assistant(body: dict, request: Request):
             resp = await client.chat.completions.create(
                 model=model, messages=messages, tool_choice="none", temperature=0.2, max_tokens=2000,
             )
-            return {"answer": resp.choices[0].message.content, "toolsUsed": tools_used, "provider": provider_name}
+            return {"answer": resp.choices[0].message.content, "toolsUsed": tools_used, "provider": provider_name, "source": "tools"}
         except Exception as e:
             errors[provider_name] = str(e)
             print(f"[dashboard_assistant] {provider_name} failed: {e!r}")

@@ -43,6 +43,7 @@ historic_cache.json
 results_calendar_cache.json
 backend/historic_cache.json
 backend/results_calendar_cache.json
+backend/assistant_knowledge.json
 
 # ── Backups / Archives ────────────────────────────────────────────────────────
 *.zip

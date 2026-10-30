@@ -490,6 +490,13 @@ async def _startup_prewarm():
             print(f"[prewarm] Error: {e}")
     loop.create_task(_warm())
 
+    # Dashboard Assistant's RAG knowledge snapshot -- keeps itself warm on a
+    # fixed interval (see assistant_rag.py) so a user's first question after
+    # a cache turnover never pays for a cold, dozens-of-tool-calls build
+    # inline (confirmed live 2026-10-30 that blocked a real request).
+    import assistant_rag
+    loop.create_task(assistant_rag.start_background_refresh())
+
     # Start Results Calendar background daily refresher thread
     import threading
     def _calendar_bg_refresh_worker():
