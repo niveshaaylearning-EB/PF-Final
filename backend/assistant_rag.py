@@ -111,6 +111,17 @@ def _build_chunks() -> list[dict]:
             parts.append(f"Profile (sector/cap mix, last rebalance): {json.dumps(profile, default=str)}")
         except Exception as e:
             parts.append(f"Profile unavailable: {e}")
+        try:
+            # Full dated rebalance history, not just a count -- so a
+            # question like "how many rebalances between Jan and June" can
+            # be answered by counting the dated entries actually in this
+            # text, not just "was there a rebalance at all" (confirmed live
+            # 2026-10-30 this was missing entirely before -- only
+            # COMPETITOR rebalance history was in the snapshot).
+            rebalances = da._tool_get_rebalance_summary({"basket": key})
+            parts.append(f"Full dated rebalance history (added/removed/reweighted per date): {json.dumps(rebalances, default=str)}")
+        except Exception as e:
+            parts.append(f"Rebalance history unavailable: {e}")
         chunks.append({"id": f"basket:{key}", "text": "\n".join(parts)})
 
     try:

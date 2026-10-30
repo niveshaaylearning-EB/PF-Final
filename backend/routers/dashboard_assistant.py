@@ -617,8 +617,20 @@ async def ask_assistant(body: dict, request: Request):
     await assistant_rag.ensure_fresh()
     context = assistant_rag.retrieve(question)
     if context:
+        # Confirmed live 2026-10-30: forcing tool_choice="none" and relying
+        # on the model to voluntarily type the literal sentinel
+        # "NEED_LIVE_DATA" is NOT reliable -- when it wanted a tool it
+        # couldn't call (a date-range rebalance count, not in the
+        # snapshot), it hallucinated fake tool-call-looking text instead of
+        # the sentinel, and that garbage got returned as a real answer.
+        # Giving it REAL tool access here too makes "I need a tool" a
+        # genuine, reliable tool_calls response (the same mechanism proven
+        # throughout this whole assistant) instead of a fragile text
+        # convention -- if it calls a tool, that's the signal to fall
+        # through to the full live loop below; a plain-content reply is
+        # trusted as the real, grounded answer.
         rag_messages = (
-            [{"role": "system", "content": _SYSTEM_PROMPT + "\n\nAnswer using ONLY the dashboard data snapshot below (it may be up to 15 minutes old -- that's fine for holdings/returns/rebalances/etc, but say so if the question needs a live/real-time figure like current price). If the snapshot doesn't actually cover what's being asked, respond with EXACTLY: NEED_LIVE_DATA: <brief reason> and nothing else.\n\n--- DASHBOARD DATA SNAPSHOT ---\n" + context}]
+            [{"role": "system", "content": _SYSTEM_PROMPT + "\n\nA snapshot of current dashboard data is included below (it may be up to 15 minutes old -- fine for holdings/returns/rebalances/etc, but NOT for a live/real-time figure like current price). Answer directly from it when it genuinely covers the question. Only call a tool if the snapshot doesn't have what's needed (a custom period not shown, a date-range calculation, live data, etc).\n\n--- DASHBOARD DATA SNAPSHOT ---\n" + context}]
             + history + [{"role": "user", "content": question}]
         )
         for provider_name, env_var, base_url, model in _PROVIDERS:
@@ -628,12 +640,12 @@ async def ask_assistant(body: dict, request: Request):
             client = AsyncOpenAI(api_key=key, base_url=base_url, timeout=20.0)
             try:
                 resp = await client.chat.completions.create(
-                    model=model, messages=rag_messages, tool_choice="none", temperature=0.2, max_tokens=2000,
+                    model=model, messages=rag_messages, tools=_TOOL_SCHEMAS, tool_choice="auto", temperature=0.2, max_tokens=2000,
                 )
-                answer = resp.choices[0].message.content or ""
-                if not answer.strip().startswith("NEED_LIVE_DATA"):
-                    return {"answer": answer, "toolsUsed": [], "provider": provider_name, "source": "rag"}
-                break  # snapshot genuinely doesn't cover it -- fall through to live tools, no point trying other providers with the same context
+                msg = resp.choices[0].message
+                if not msg.tool_calls and msg.content:
+                    return {"answer": msg.content, "toolsUsed": [], "provider": provider_name, "source": "rag"}
+                break  # it wants a tool -- snapshot doesn't cover this, fall through to the real live loop (discard this attempt, start that loop fresh)
             except Exception as e:
                 print(f"[dashboard_assistant] RAG pass, {provider_name} failed: {e!r}")
                 continue  # this provider's own failure -- still worth trying the next one for the RAG pass
