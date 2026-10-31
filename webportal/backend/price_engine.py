@@ -708,22 +708,45 @@ def _parse_portfolio_pdf(raw: bytes) -> list:
 
 
 def _resolve_nse(company: str, portfolio: list, symbols: list) -> Optional[str]:
-    """Map company name → NSE code: portfolio match → symbols exact → symbols partial."""
+    """Map company name → NSE code: portfolio match → symbols exact → symbols partial.
+
+    Confirmed live 2026-10-31 that this silently resolved to the WRONG real
+    company: _norm_name() strips "industries"/"enterprises"/"ltd"/etc as
+    noise words, so "Aeroflex Industries Ltd" and "Aeroflex Enterprises
+    Ltd" -- two distinct, real, NSE-listed companies -- both normalize to
+    the identical "aeroflex", making even the "exact match" step genuinely
+    ambiguous, not just the partial-match step. The caller (rebalance.py)
+    has no manual-resolution fallback -- whatever this returns is used
+    directly as the stock's nseCode with no human review, so a wrong-but-
+    plausible-looking guess was silently fetching a completely different
+    company's price/data under our own holding's name. Every step now
+    requires its match to be UNIQUE (one single distinct NSE code) --
+    multiple genuine candidates returns None (ambiguous) rather than
+    picking whichever happened to come first in `symbols`, so the caller's
+    own already-existing None-handling (falls back to the raw name as an
+    obviously-invalid code) makes the failure visible and correctable
+    instead of silently wrong."""
     norm = _norm_name(company)
     # 1. Existing portfolio
-    for s in portfolio:
-        if _norm_name(s.get("securityName", "")) == norm:
-            return s["nseCode"]
+    portfolio_matches = {s["nseCode"] for s in portfolio if _norm_name(s.get("securityName", "")) == norm}
+    if len(portfolio_matches) == 1:
+        return next(iter(portfolio_matches))
+    if len(portfolio_matches) > 1:
+        return None
     # 2. NSE symbols exact
-    for sym in symbols:
-        if _norm_name(sym["name"]) == norm:
-            return sym["symbol"]
+    exact_matches = {sym["symbol"] for sym in symbols if _norm_name(sym["name"]) == norm}
+    if len(exact_matches) == 1:
+        return next(iter(exact_matches))
+    if len(exact_matches) > 1:
+        return None
     # 3. NSE symbols partial (only for names ≥6 chars to avoid false positives)
     if len(norm) >= 6:
-        for sym in symbols:
-            sn = _norm_name(sym["name"])
-            if norm in sn or sn in norm:
-                return sym["symbol"]
+        partial_matches = {
+            sym["symbol"] for sym in symbols
+            if (sn := _norm_name(sym["name"])) and (norm in sn or sn in norm)
+        }
+        if len(partial_matches) == 1:
+            return next(iter(partial_matches))
     return None
 
 
