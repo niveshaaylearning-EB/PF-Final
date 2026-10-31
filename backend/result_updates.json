@@ -2051,5 +2051,139 @@
     },
     "updatedAt": "23 Oct 2026 11:49 UTC",
     "financialImages": []
+  },
+  "LIQUIDCASE": {
+    "nseCode": "LIQUIDCASE",
+    "securityName": "LIQUIDCASE",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "financialImages": [],
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "31 Oct 2026 09:33 UTC"
+  },
+  "RKFORGE": {
+    "nseCode": "RKFORGE",
+    "securityName": "RKFORGE",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "financialImages": [],
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "31 Oct 2026 09:33 UTC"
+  },
+  "RACLGEAR": {
+    "nseCode": "RACLGEAR",
+    "securityName": "RACLGEAR",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "financialImages": [],
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "31 Oct 2026 09:33 UTC"
+  },
+  "SMSPHARMA": {
+    "nseCode": "SMSPHARMA",
+    "securityName": "SMSPHARMA",
+    "resultDate": "2026-11-04",
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "financialImages": [],
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "31 Oct 2026 09:33 UTC"
+  },
+  "BPLPHARMA": {
+    "nseCode": "BPLPHARMA",
+    "securityName": "BPLPHARMA",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "financialImages": [],
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Make_in_India": {
+        "label": "Make in India",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "31 Oct 2026 09:33 UTC"
+  },
+  "IGIL": {
+    "nseCode": "IGIL",
+    "securityName": "IGIL",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "financialImages": [],
+    "resultUpdateDocument": null,
+    "baskets": {
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "29 Oct 2026 05:32 UTC"
   }
 }
