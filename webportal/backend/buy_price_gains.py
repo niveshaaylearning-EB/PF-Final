@@ -1315,6 +1315,86 @@ async def save_basket(key: str, body: dict, background_tasks: BackgroundTasks, r
     return {"ok": True, "saved": len(portfolios[key])}
 
 
+@router.post("/api/basket/{key}/correct-nse-code")
+async def correct_nse_code(key: str, body: dict, background_tasks: BackgroundTasks, request: Request):
+    """Admin-only, surgical fix for one stock's wrongly-resolved NSE code --
+    added 2026-10-31 after confirming live that a name like "Aeroflex
+    Industries" can resolve to a completely different, real company
+    ("Aeroflex Enterprises", NSE: AEROENTER) because _resolve_nse's name
+    normalization strips "industries"/"enterprises"/"ltd" as noise words,
+    making the two genuinely indistinguishable by name alone -- see
+    price_engine.py's _resolve_nse docstring for the full story and the fix
+    to the resolver itself (this endpoint fixes already-wrong DATA; that fix
+    prevents it recurring for NEW rebalance uploads).
+
+    Deliberately NOT routed through the existing PUT /api/basket/{key} (used
+    by the page's "autoSave") -- that endpoint REPLACES the basket's entire
+    stocks/buyPriceDetails wholesale from whatever the client currently has
+    loaded, which only ever includes currently-ACTIVE (allocation > 0)
+    holdings. A wrong-code entry like this one often has NO active
+    allocation (it's a stray ledger entry, not a real position) and so
+    would simply vanish from that payload -- if that save endpoint were
+    reused here, it would silently delete any OTHER untouched ledger entry
+    not currently loaded in the page too. This endpoint instead loads fresh
+    from disk and changes only the one entry named, leaving everything else
+    in the basket completely untouched."""
+    _require_admin(request)
+    if key not in BASKET_DISPLAY_NAMES:
+        raise HTTPException(status_code=404, detail=f"Unknown basket: {key}")
+    old_code = (body.get("oldCode") or "").strip().upper()
+    new_code = (body.get("newCode") or "").strip().upper()
+    if not old_code or not new_code:
+        raise HTTPException(status_code=400, detail="oldCode and newCode are required")
+    if old_code == new_code:
+        raise HTTPException(status_code=400, detail="newCode is the same as oldCode")
+
+    from price_engine import _fetch_nse_symbols
+    symbols = await _fetch_nse_symbols()
+    match = next((s for s in symbols if s["symbol"] == new_code), None)
+    if not match:
+        raise HTTPException(status_code=400, detail=f"'{new_code}' is not a recognized NSE symbol -- check the spelling.")
+    correct_name = match["name"]
+
+    bp_data = _load_buy_price_data()
+    basket_bp = bp_data.get(key, {})
+    if old_code not in basket_bp:
+        raise HTTPException(status_code=404, detail=f"'{old_code}' has no buy price entry in this basket.")
+    if new_code in basket_bp:
+        raise HTTPException(status_code=409, detail=f"'{new_code}' already has its own buy price entry in this basket -- merging two entries isn't supported here, fix manually.")
+
+    _auto_save_rollback()
+    _push_undo_snapshot(key, f"before correcting NSE code {old_code} -> {new_code}")
+
+    entry = basket_bp.pop(old_code)
+    entry["securityName"] = correct_name
+    # These were fetched for the WRONG company under the old (wrong) code --
+    # clearing them so the background recalc below fetches fresh, correct
+    # prices for the actual new code instead of carrying over stale,
+    # wrong-company values.
+    entry.pop("buyOHLC", None)
+    entry.pop("sellOHLC", None)
+    entry.pop("buyOHLC_fallback", None)
+    basket_bp[new_code] = entry
+    bp_data[key] = basket_bp
+    _save_buy_price_data(bp_data)
+
+    portfolios = _load_portfolios()
+    basket_stocks = portfolios.get(key, [])
+    renamed_active = False
+    for s in basket_stocks:
+        if s.get("nseCode") == old_code:
+            s["nseCode"] = new_code
+            s.pop("buyPrice", None)  # also stale, fetched under the wrong code
+            renamed_active = True
+    if renamed_active:
+        portfolios[key] = basket_stocks
+        _save_portfolios(portfolios)
+
+    background_tasks.add_task(_recalc_basket_buy_prices, key)
+    background_tasks.add_task(_refresh_gains_file)
+    return {"ok": True, "oldCode": old_code, "newCode": new_code, "securityName": correct_name}
+
+
 @router.get("/api/gains-statement")
 async def get_gains_statement():
     """Return FIFO gains statement for all stocks with sell events.

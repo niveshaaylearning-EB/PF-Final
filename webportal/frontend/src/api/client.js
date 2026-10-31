@@ -33,6 +33,27 @@ export const saveBasket = (key, stocks, soldStocks, buyPriceDetails) => {
   }).then(r => r.json());
 };
 
+// Surgical single-entry fix for a wrongly-resolved NSE code -- unlike
+// saveBasket above, this only touches the one entry named (old/new code),
+// leaving every other entry in the basket (including ones not currently
+// loaded in the page, e.g. a stray ledger entry with no active allocation)
+// completely untouched. See buy_price_gains.py's correct_nse_code for why
+// saveBasket's wholesale replace isn't safe for this.
+export const correctNseCode = async (basketKey, oldCode, newCode) => {
+  const token = getAuthToken();
+  const resp = await fetch(`${BASE}/basket/${basketKey}/correct-nse-code`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify({ oldCode, newCode }),
+  });
+  const data = await resp.json().catch(() => null);
+  if (!resp.ok) throw new Error(data?.detail || `Request failed (${resp.status})`);
+  return data;
+};
+
 // ── Watchlist (centralized research pipeline, shared across all users) ──────
 const _authHeaders = () => {
   const token = getAuthToken();

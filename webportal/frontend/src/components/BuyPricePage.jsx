@@ -1,7 +1,7 @@
 import { API_BASE, getAuthToken } from '../api/base.js';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import * as XLSX from 'xlsx';
-import { fetchBasket, fetchLiveData, saveBasket } from '../api/client.js';
+import { fetchBasket, fetchLiveData, saveBasket, correctNseCode } from '../api/client.js';
 import RollbackButtons from './RollbackButtons.jsx';
 import ColumnFilter from './ColumnFilter.jsx';
 import RebalanceUploadModal from './RebalanceUploadModal.jsx';
@@ -109,6 +109,48 @@ const EventCell = ({ value, readOnly, onChange }) => {
   );
 };
 
+// Shared by every place that loads a basket's data (initial load, undo,
+// after a rebalance upload) -- also captures "orphan" buyPriceDetails
+// entries (a ledger entry with no corresponding active-allocation holding)
+// that the main table silently excludes entirely. Added 2026-10-31: a
+// wrongly-resolved NSE code (e.g. an upload that mis-resolved "Aeroflex
+// Industries" to the unrelated "Aeroflex Enterprises") very often has NO
+// active allocation, so it never appeared as an editable row at all --
+// nothing in the UI even showed it existed, let alone let it be fixed.
+function buildRowsAndOrphans(d) {
+  const details = d.buyPriceDetails || {};
+  const stocks  = d.stocks || [];
+  const stockMap = {};
+  stocks.forEach(s => { stockMap[s.nseCode] = s; });
+  const allKeys = new Set(stocks.filter(s => (s.allocation || 0) > 0).map(s => s.nseCode));
+
+  const rowFor = (nse) => {
+    const det = details[nse] || {};
+    const stk = stockMap[nse] || {};
+    return {
+      nseCode: nse, securityName: det.securityName || '',
+      segment: det.segment || '',
+      allocation: stk.allocation != null ? (stk.allocation * 100).toFixed(2) : '',
+      buyEvents: det.buyEvents || '', sellEvents: det.sellEvents || '',
+      prevBuyEvents: det.prevBuyEvents || '', prevSellEvents: det.prevSellEvents || '',
+      buyPrice: stk.buyPrice || null,
+    };
+  };
+
+  const built  = [...allKeys].map(rowFor);
+  // Confirmed live 2026-10-31: buy_price_data.json also carries a lot of
+  // entries with NO buy events at all (reference/placeholder rows, never an
+  // actual position) -- naively listing every non-active key surfaced 128
+  // of these as "untracked", drowning out the handful that are genuinely
+  // meaningful (a real past position, or a mis-resolved wrong-company
+  // ghost entry like the Aeroflex Industries/Enterprises mixup). Only
+  // entries with actual recorded buy activity are worth an admin's look.
+  const orphans = Object.keys(details)
+    .filter(nse => !allKeys.has(nse) && (details[nse].buyEvents || '').trim())
+    .map(rowFor);
+  return { built, orphans, stocks };
+}
+
 export default function BuyPricePage() {
   const [basketKey,        setBasketKey]        = useState(BASKET_OPTIONS[0].key);
   const [rows,             setRows]             = useState([]);
@@ -137,7 +179,51 @@ export default function BuyPricePage() {
   const [reportPreview,  setReportPreview]  = useState(null); // preview awaiting confirm
   const [confirmingReport, setConfirmingReport] = useState(false);
   const [pendingReports, setPendingReports] = useState([]); // from the daily background check, awaiting review
+  const [orphanRows, setOrphanRows] = useState([]); // buyPriceDetails entries with no active holding -- see buildRowsAndOrphans
+  const [correctingRow, setCorrectingRow] = useState(null); // row object currently being NSE-code-corrected, or null
+  const [newCodeInput, setNewCodeInput] = useState('');
+  const [correcting, setCorrecting] = useState(false);
+  const [correctError, setCorrectError] = useState('');
   const { isAdmin: userIsAdmin } = _getAdminState();
+
+  const reloadBasket = () => {
+    setLoading(true);
+    return fetchBasket(basketKey)
+      .then(d => {
+        const { built, orphans, stocks } = buildRowsAndOrphans(d);
+        stocksRef.current = stocks;
+        setRows(built);
+        setOrphanRows(orphans);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  };
+
+  const openCorrectModal = (row) => {
+    setCorrectError('');
+    setNewCodeInput(row.nseCode);
+    setCorrectingRow(row);
+  };
+
+  const handleCorrectNseCode = async () => {
+    const newCode = newCodeInput.trim().toUpperCase();
+    if (!newCode) { setCorrectError('Enter an NSE code.'); return; }
+    if (newCode === correctingRow.nseCode) { setCorrectError('That\'s already the current code.'); return; }
+    setCorrecting(true);
+    setCorrectError('');
+    try {
+      await correctNseCode(basketKey, correctingRow.nseCode, newCode);
+      setCorrectingRow(null);
+      setSaveMsg(`Corrected ${correctingRow.nseCode} → ${newCode}. Refreshing…`);
+      await reloadBasket();
+      refreshUndoCount();
+      setTimeout(() => setSaveMsg(''), 3000);
+    } catch (err) {
+      setCorrectError(err.message || 'Correction failed.');
+    } finally {
+      setCorrecting(false);
+    }
+  };
 
   const refreshPendingReports = () => {
     if (!userIsAdmin) return;
@@ -255,24 +341,10 @@ export default function BuyPricePage() {
       setUndoCount(data.remainingUndos);
       setLoading(true);
       const fresh = await fetch(`${API_BASE}/basket/${basketKey}`).then(r => r.json());
-      const details = fresh.buyPriceDetails || {};
-      const stocks  = fresh.stocks || [];
+      const { built, orphans, stocks } = buildRowsAndOrphans(fresh);
       stocksRef.current = stocks;
-      const stockMap = {};
-      stocks.forEach(s => { stockMap[s.nseCode] = s; });
-      const allKeys = new Set(stocks.filter(s => (s.allocation || 0) > 0).map(s => s.nseCode));
-      setRows([...allKeys].map(nse => {
-        const det = details[nse] || {};
-        const stk = stockMap[nse] || {};
-        return {
-          nseCode: nse, securityName: det.securityName || '',
-          segment: det.segment || '',
-          allocation: stk.allocation != null ? (stk.allocation * 100).toFixed(2) : '',
-          buyEvents: det.buyEvents || '', sellEvents: det.sellEvents || '',
-          prevBuyEvents: det.prevBuyEvents || '', prevSellEvents: det.prevSellEvents || '',
-          buyPrice: stk.buyPrice || null,
-        };
-      }));
+      setRows(built);
+      setOrphanRows(orphans);
       setSaveMsg('Undone!');
       setTimeout(() => setSaveMsg(''), 2000);
     } catch (err) {
@@ -297,32 +369,10 @@ export default function BuyPricePage() {
     setRows([]);
     fetchBasket(basketKey)
       .then(d => {
-        const details = d.buyPriceDetails || {};
-        const stocks  = d.stocks || [];
+        const { built, orphans, stocks } = buildRowsAndOrphans(d);
         stocksRef.current = stocks;
-
-        const stockMap = {};
-        stocks.forEach(s => { stockMap[s.nseCode] = s; });
-
-        const allKeys = new Set(stocks.filter(s => (s.allocation || 0) > 0).map(s => s.nseCode));
-
-        const built = [...allKeys].map(nse => {
-          const det = details[nse] || {};
-          const stk = stockMap[nse] || {};
-          return {
-            nseCode:        nse,
-            securityName:   det.securityName   || '',
-            segment:        det.segment        || '',
-            allocation:     stk.allocation != null ? (stk.allocation * 100).toFixed(2) : '',
-            buyEvents:      det.buyEvents      || '',
-            sellEvents:     det.sellEvents     || '',
-            prevBuyEvents:  det.prevBuyEvents  || '',
-            prevSellEvents: det.prevSellEvents || '',
-            buyPrice:       stk.buyPrice       || null,
-          };
-        });
-
         setRows(built);
+        setOrphanRows(orphans);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -524,24 +574,10 @@ export default function BuyPricePage() {
     setLoading(true);
     fetchBasket(basketKey)
       .then(d => {
-        const details = d.buyPriceDetails || {};
-        const stocks  = d.stocks || [];
+        const { built, orphans, stocks } = buildRowsAndOrphans(d);
         stocksRef.current = stocks;
-        const stockMap = {};
-        stocks.forEach(s => { stockMap[s.nseCode] = s; });
-        const allKeys = new Set(stocks.filter(s => (s.allocation || 0) > 0).map(s => s.nseCode));
-        setRows([...allKeys].map(nse => {
-          const det = details[nse] || {};
-          const stk = stockMap[nse] || {};
-          return {
-            nseCode: nse, securityName: det.securityName || '',
-            segment: det.segment || '',
-            allocation: stk.allocation != null ? (stk.allocation * 100).toFixed(2) : '',
-            buyEvents: det.buyEvents || '', sellEvents: det.sellEvents || '',
-            prevBuyEvents: det.prevBuyEvents || '', prevSellEvents: det.prevSellEvents || '',
-            buyPrice: stk.buyPrice || null,
-          };
-        }));
+        setRows(built);
+        setOrphanRows(orphans);
         refreshUndoCount();
       })
       .catch(() => {})
@@ -1042,9 +1078,16 @@ export default function BuyPricePage() {
                       {userIsAdmin && (
                         <>
                           <button
+                            className="bp-row-btn"
+                            title="Correct this stock's NSE code (e.g. it resolved to the wrong company)"
+                            onClick={() => openCorrectModal(row)}
+                            style={{ background: 'rgba(99,102,241,0.12)', color: 'var(--accent-blue)', borderColor: 'rgba(99,102,241,0.3)' }}
+                          >✎</button>
+                          <button
                             className="bp-row-btn bp-row-add"
                             title="Add stock below"
                             onClick={() => { setRows(prev => { const next = [...prev]; next.splice(idx_orig + 1, 0, { nseCode: '', securityName: '', segment: '', allocation: '', buyEvents: '', sellEvents: '', prevBuyEvents: '', prevSellEvents: '', buyPrice: null }); return next; }); }}
+                            style={{ marginLeft: '4px' }}
                           >+</button>
                           <button
                             className="bp-row-btn bp-row-remove"
@@ -1080,7 +1123,104 @@ export default function BuyPricePage() {
           </table>
         )}
       </div>
+
+      {orphanRows.length > 0 && (
+        <div style={{ marginTop: '1.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+            <i className="fa-solid fa-triangle-exclamation" style={{ color: '#fbbf24' }} />
+            <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.9rem' }}>Untracked Buy-Price Entries</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              ({orphanRows.length}) — in the ledger but not an active holding here. Often a wrongly-resolved NSE code (e.g. a rebalance upload mis-matched a company name) — correct or remove it below.
+            </span>
+          </div>
+          <table className="bp-table">
+            <thead>
+              <tr>
+                <th style={{ textAlign: 'left' }}>NSE Ticker</th>
+                <th style={{ textAlign: 'left' }}>Security Name</th>
+                <th style={{ textAlign: 'left' }}>Buy Events</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {orphanRows.map(row => (
+                <tr key={row.nseCode}>
+                  <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{row.nseCode}</td>
+                  <td style={{ color: 'var(--text-primary)' }}>{row.securityName || '—'}</td>
+                  <td style={{ color: 'var(--text-secondary)', fontSize: '0.78rem', whiteSpace: 'pre-line' }}>{row.buyEvents || '—'}</td>
+                  <td className="bp-action-cell">
+                    {userIsAdmin && (
+                      <button
+                        className="bp-row-btn"
+                        title="Correct this entry's NSE code"
+                        onClick={() => openCorrectModal(row)}
+                        style={{ background: 'rgba(99,102,241,0.12)', color: 'var(--accent-blue)', borderColor: 'rgba(99,102,241,0.3)' }}
+                      >✎ Correct</button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
+
+    {correctingRow && (
+      <div
+        onClick={() => !correcting && setCorrectingRow(null)}
+        style={{ position: 'fixed', inset: 0, background: 'var(--modal-overlay-bg)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      >
+        <div
+          onClick={e => e.stopPropagation()}
+          style={{ background: 'var(--modal-bg)', border: '1px solid var(--panel-border-hover)', borderRadius: '12px', padding: '1.5rem', minWidth: '420px' }}
+        >
+          <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1rem', marginBottom: '0.3rem' }}>Correct NSE Code</div>
+          <div style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', marginBottom: '1rem' }}>
+            Currently <strong style={{ color: 'var(--text-primary)' }}>{correctingRow.nseCode}</strong> ({correctingRow.securityName || 'unknown name'}).
+            Enter the correct NSE ticker — the security name and prices will be re-fetched for it automatically.
+          </div>
+          <input
+            className="bp-edit-input"
+            value={newCodeInput}
+            onChange={e => setNewCodeInput(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') handleCorrectNseCode(); }}
+            placeholder="e.g. AEROFLEX"
+            disabled={correcting}
+            style={{ width: '100%', boxSizing: 'border-box', fontWeight: 600, textTransform: 'uppercase' }}
+            autoFocus
+          />
+          {(() => {
+            const upper = newCodeInput.trim().toUpperCase();
+            const match = nseSymbols.find(s => s.symbol === upper);
+            if (!upper || upper === correctingRow.nseCode) return null;
+            return (
+              <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: match ? '#34d399' : '#fbbf24' }}>
+                {match ? `✓ ${match.name}` : '⚠ Not found in the NSE symbol list -- check spelling.'}
+              </div>
+            );
+          })()}
+          {correctError && <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#f87171' }}>{correctError}</div>}
+          <div style={{ marginTop: '1.2rem', display: 'flex', justifyContent: 'flex-end', gap: '0.6rem' }}>
+            <button
+              onClick={() => setCorrectingRow(null)}
+              disabled={correcting}
+              style={{ padding: '0.4rem 1rem', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', border: '1px solid var(--border-color)', background: 'var(--hover-bg)', color: 'var(--text-secondary)' }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleCorrectNseCode}
+              disabled={correcting}
+              style={{ padding: '0.4rem 1rem', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', border: '1px solid rgba(99,102,241,0.4)', background: 'rgba(99,102,241,0.15)', color: 'var(--accent-blue)' }}
+            >
+              {correcting ? 'Saving…' : 'Save Correction'}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
     {bpOpenFilter && (
       <ColumnFilter
         rows={rows}
