@@ -428,7 +428,78 @@ async def upload_and_parse_document(nse_code: str, request: Request, file: Uploa
     data[nse_code]["financialImages"] = image_names
     data[nse_code]["updatedAt"] = datetime.now(timezone.utc).strftime("%d %b %Y %H:%M UTC")
     _save(data)
-    return data[nse_code]
+    result = dict(data[nse_code])
+    if parsed.get("imagesSkipped"):
+        # Confirmed live 2026-11-02: a pasted screenshot can land in the
+        # .docx as EMF/WMF (a vector format) instead of PNG/JPEG, which
+        # nothing in this app's image pipeline can actually display --
+        # surfaced here so the admin knows to re-paste/re-save it as an
+        # image, instead of silently ending up with no financial snapshot.
+        result["imageWarning"] = (
+            f"Found {parsed['imagesSkipped']} image(s) in this document that couldn't be processed "
+            "(often a pasted screenshot saved in an unsupported format like EMF/WMF) -- "
+            "try re-saving it as a PNG or JPEG and pasting it in again, then re-upload."
+        )
+    return result
+
+
+@router.post("/api/admin/result-updates/{nse_code}/clear-document")
+def clear_document(nse_code: str, request: Request):
+    """Part 3 refinement (2026-11-02): "an option where one can delete the
+    entry field as well... to delete the fields which are of no use or
+    where wrong entries have been placed." Distinct from DELETE (which
+    stops tracking the company entirely) -- this resets just the uploaded
+    document/parsed content back to blank, for a company that was tracked
+    correctly but got the wrong document/table/bullets attached. The row
+    itself (and its checkboxes/result date) is left alone."""
+    _require_admin(request)
+    nse_code = nse_code.strip().upper()
+    data = _load()
+    row = data.get(nse_code)
+    if not row:
+        raise HTTPException(status_code=404, detail="Not found")
+    if row.get("resultUpdateDocument"):
+        try:
+            (_RAW_DOC_DIR / row["resultUpdateDocument"]).unlink(missing_ok=True)
+        except Exception:
+            pass
+    for img in row.get("financialImages") or []:
+        try:
+            (_IMAGE_DIR / img).unlink(missing_ok=True)
+        except Exception:
+            pass
+    row["resultUpdateDocument"] = None
+    row["financialImages"] = []
+    row["financialTable"] = None
+    row["operationalPerformance"] = []
+    row["outlook"] = []
+    row["updatedAt"] = datetime.now(timezone.utc).strftime("%d %b %Y %H:%M UTC")
+    data[nse_code] = row
+    _save(data)
+    return row
+
+
+@router.get("/api/admin/result-updates/{nse_code}/preview-pdf")
+def preview_pdf(nse_code: str, request: Request):
+    """Part 3 refinement (2026-11-02): "a button... like 'preview result'...
+    by clicking that, one can view the preview of the result update in a
+    separate tab for each such company" -- a single-company render of
+    exactly the same layout the merged PDF uses, so what's previewed is
+    what actually ships, generated on demand rather than cached."""
+    _require_admin(request)
+    nse_code = nse_code.strip().upper()
+    data = _load()
+    row = data.get(nse_code)
+    if not row:
+        raise HTTPException(status_code=404, detail="Not found")
+    if not row.get("resultUpdateDocument"):
+        raise HTTPException(status_code=400, detail="Upload a result update document for this company first.")
+
+    import result_update_pdf
+    import tempfile
+    out_path = Path(tempfile.gettempdir()) / f"result_update_preview_{nse_code}.pdf"
+    result_update_pdf.generate_merged_pdf(row.get("securityName", nse_code), [row], out_path, consolidated=False, image_dir=_IMAGE_DIR)
+    return FileResponse(str(out_path), filename=f"{nse_code}_preview.pdf", media_type="application/pdf")
 
 
 @router.get("/api/admin/result-updates/document/{filename}")
@@ -499,5 +570,18 @@ def generate_pdf(body: dict, request: Request):
     suffix = "consolidated" if consolidated else f"{len(rows)}companies"
     out_path = Path(tempfile.gettempdir()) / f"result_update_{basket}_{suffix}.pdf"
     result_update_pdf.generate_merged_pdf(basket_label, rows, out_path, consolidated=consolidated, image_dir=_IMAGE_DIR)
+
+    # Part 3 refinement (2026-11-02): "the sent result column shall get
+    # ticked automatically when the company is included in the result
+    # update pdf itself" -- `sent` previously had to be ticked by hand
+    # after the admin actually dispatched the generated PDF; now it's
+    # auto-confirmed the moment a company is actually written into one,
+    # since being included in a generated PDF IS it being sent.
+    now = datetime.now(timezone.utc).strftime("%d %b %Y %H:%M UTC")
+    for row in rows:
+        row["sent"] = True
+        row["updatedAt"] = now
+        data[row["nseCode"]] = row
+    _save(data)
 
     return FileResponse(str(out_path), filename=out_path.name, media_type="application/pdf")

@@ -21,11 +21,30 @@ name. A company whose financial snapshot instead arrived as a pasted-in
 picture (not a real Word table) gets that picture embedded directly
 instead -- see _company_flowables.
 
-Every page carries a light green border frame and the Niveshaay logo in
-the top-right corner (see _page_decoration), matching the real reference
-sample -- the logo asset lives at assets/niveshaay_logo.png, cropped
-2026-10-27 from a reference document the firm itself provided (there was
-no logo asset available before that).
+Every page carries the light-green/dark-green border frame and the
+Niveshaay logo in the top-right corner (see _page_decoration) -- the logo
+asset lives at assets/niveshaay_logo.png, cropped 2026-10-27 from a
+reference document the firm itself provided.
+
+2026-11-02 refinement: re-matched against a real multi-company reference
+sample (Niveshaay Techstack Theme_02.11.2026.pdf) point by point, per
+explicit instruction to copy its formatting exactly rather than
+approximate it:
+  - Body font is Times (serif) throughout, not Helvetica -- title, company
+    name, section headings, bullets, table text, disclosure footer, all of
+    it. Reportlab's built-in Times-Roman/Bold/Italic/BoldItalic cover this
+    with no font embedding needed.
+  - "Operational Performance:"/"Outlook:" are plain bold BLACK text, not
+    green.
+  - Operational Performance/Outlook bullets are a plain bulleted list
+    (round bullet + hanging indent), NOT the bordered box table added on
+    2026-10-27 -- that box was asked for at the time, but the real
+    reference sample unambiguously uses a plain list, and matching the
+    sample exactly now takes precedence.
+  - The page border itself is two-toned: a light mint outer band all
+    around, plus a noticeably darker olive-green band specifically along
+    the right and bottom edges (an asymmetric drop-shadow look), not a
+    uniform thin frame.
 """
 import html
 from pathlib import Path
@@ -39,44 +58,51 @@ from reportlab.platypus import (
 )
 
 _GREEN = colors.HexColor("#456232")
-_PAGE_BORDER_GREEN = colors.HexColor("#D7E4D3")
+_PAGE_BORDER_LIGHT = colors.HexColor("#D7E4D3")
+_PAGE_BORDER_DARK = colors.HexColor("#5B7A4C")
 _TABLE_HEADER_BG = colors.HexColor("#1F3864")   # dark navy, matches the sample's column-header row
 _TABLE_ROW_LIGHT = colors.HexColor("#E2EFDA")   # light mint green, regular line items
 _TABLE_ROW_BOLD = colors.HexColor("#A9D18E")    # darker green, subtotal/margin rows
-_BOX_BORDER = colors.HexColor("#456232")
-_BOX_ALT_ROW = colors.HexColor("#F2F6F0")
 
 _LOGO_PATH = Path(__file__).parent / "assets" / "niveshaay_logo.png"
 
 _styles = getSampleStyleSheet()
-_basket_title_style = ParagraphStyle("BasketTitle", parent=_styles["Title"], fontSize=18, textColor=_GREEN, spaceAfter=4)
-_consolidated_subtitle_style = ParagraphStyle("ConsolidatedSubtitle", parent=_styles["Normal"], fontSize=11, textColor=colors.black, alignment=1, spaceAfter=14)
-_company_style = ParagraphStyle("Company", parent=_styles["Heading1"], fontSize=15, textColor=colors.black, spaceBefore=10, spaceAfter=8)
-_section_style = ParagraphStyle("Section", parent=_styles["Heading2"], fontSize=12, textColor=_GREEN, spaceBefore=10, spaceAfter=6)
-_bullet_style = ParagraphStyle("Bullet", parent=_styles["Normal"], fontSize=10, leading=14)
-_footer_heading_style = ParagraphStyle("FooterHeading", parent=_styles["Heading3"], fontSize=11, textColor=colors.black, spaceBefore=10, spaceAfter=4)
-_footer_body_style = ParagraphStyle("FooterBody", parent=_styles["Normal"], fontSize=8, leading=11)
-_footer_subheading_style = ParagraphStyle("FooterSubheading", parent=_styles["Normal"], fontSize=8.5, leading=11, fontName="Helvetica-BoldOblique", spaceBefore=6, spaceAfter=3)
-_footer_numbered_style = ParagraphStyle("FooterNumbered", parent=_styles["Normal"], fontSize=8, leading=11, leftIndent=14, firstLineIndent=-14, spaceAfter=4)
-_table_header_style = ParagraphStyle("TableHeader", parent=_styles["Normal"], fontSize=8.5, textColor=colors.white, fontName="Helvetica-Bold")
-_table_cell_style = ParagraphStyle("TableCell", parent=_styles["Normal"], fontSize=8.5, textColor=colors.black)
-_table_cell_bold_style = ParagraphStyle("TableCellBold", parent=_styles["Normal"], fontSize=8.5, textColor=colors.black, fontName="Helvetica-Bold")
+_basket_title_style = ParagraphStyle("BasketTitle", parent=_styles["Title"], fontName="Times-Bold", fontSize=18, textColor=colors.black, spaceAfter=4)
+_consolidated_subtitle_style = ParagraphStyle("ConsolidatedSubtitle", parent=_styles["Normal"], fontName="Times-Roman", fontSize=11, textColor=colors.black, alignment=1, spaceAfter=14)
+_company_style = ParagraphStyle("Company", parent=_styles["Heading1"], fontName="Times-Bold", fontSize=15, textColor=colors.black, spaceBefore=10, spaceAfter=8)
+_section_style = ParagraphStyle("Section", parent=_styles["Heading2"], fontName="Times-Bold", fontSize=12, textColor=colors.black, spaceBefore=10, spaceAfter=6)
+_bullet_style = ParagraphStyle("Bullet", parent=_styles["Normal"], fontName="Times-Roman", fontSize=10.5, leading=15, leftIndent=16, firstLineIndent=-12, spaceAfter=8, bulletFontName="Times-Roman")
+_footer_heading_style = ParagraphStyle("FooterHeading", parent=_styles["Heading3"], fontName="Times-Bold", fontSize=11, textColor=colors.black, spaceBefore=10, spaceAfter=4)
+_footer_body_style = ParagraphStyle("FooterBody", parent=_styles["Normal"], fontName="Times-Roman", fontSize=9, leading=12.5)
+_footer_subheading_style = ParagraphStyle("FooterSubheading", parent=_styles["Normal"], fontName="Times-BoldItalic", fontSize=9.5, leading=12.5, spaceBefore=8, spaceAfter=4)
+_footer_numbered_style = ParagraphStyle("FooterNumbered", parent=_styles["Normal"], fontName="Times-Roman", fontSize=9, leading=12.5, leftIndent=16, firstLineIndent=-16, spaceAfter=8)
+_table_header_style = ParagraphStyle("TableHeader", parent=_styles["Normal"], fontName="Times-Bold", fontSize=8.5, textColor=colors.white)
+_table_cell_style = ParagraphStyle("TableCell", parent=_styles["Normal"], fontName="Times-Roman", fontSize=8.5, textColor=colors.black)
+_table_cell_bold_style = ParagraphStyle("TableCellBold", parent=_styles["Normal"], fontName="Times-Bold", fontSize=8.5, textColor=colors.black)
 
 
 def _page_decoration(canvas, doc):
-    """Drawn on every page: a light green border frame + the Niveshaay logo
-    in the top-right corner, matching the real reference sample (confirmed
-    live 2026-10-27 that neither was appearing in our output)."""
+    """Drawn on every page: the two-toned green border frame (light all
+    round, a darker accent specifically along the right+bottom edges) and
+    the Niveshaay logo in the top-right corner -- matching the real
+    reference sample's asymmetric "drop shadow" look, not a uniform frame."""
     canvas.saveState()
     w, h = A4
     margin = 0.7 * cm
-    canvas.setStrokeColor(_PAGE_BORDER_GREEN)
-    canvas.setLineWidth(2)
-    canvas.rect(margin, margin, w - 2 * margin, h - 2 * margin)
+    accent = 0.35 * cm
+    # Dark accent first (right + bottom), light frame drawn on top/around it
+    # so the two bands read as a single two-toned border, not two overlapping ones.
+    canvas.setFillColor(_PAGE_BORDER_DARK)
+    canvas.rect(margin + accent, margin, w - 2 * margin - accent, accent, stroke=0, fill=1)
+    canvas.rect(w - margin - accent, margin, accent, h - 2 * margin, stroke=0, fill=1)
+    canvas.setFillColor(_PAGE_BORDER_LIGHT)
+    canvas.rect(margin, margin + accent, w - 2 * margin - accent, h - 2 * margin - accent, stroke=0, fill=1)
+    canvas.setFillColor(colors.white)
+    canvas.rect(margin + accent, margin + 2 * accent, w - 2 * margin - 2 * accent, h - 2 * margin - 3 * accent, stroke=0, fill=1)
     if _LOGO_PATH.exists():
         logo_w = 3.2 * cm
         logo_h = logo_w * (577 / 1186)  # the cropped asset's own aspect ratio
-        canvas.drawImage(str(_LOGO_PATH), w - margin - logo_w - 0.3 * cm, h - margin - logo_h - 0.3 * cm,
+        canvas.drawImage(str(_LOGO_PATH), w - margin - accent - logo_w - 0.3 * cm, h - margin - logo_h - 0.3 * cm,
                           width=logo_w, height=logo_h, preserveAspectRatio=True, mask="auto")
     canvas.restoreState()
 
@@ -128,34 +154,22 @@ def _financial_table_flowable(financial_table: dict, max_width: float) -> Table:
     return tbl
 
 
-def _bullets_box_flowable(bullets: list, max_width: float) -> Table:
-    """Operational Performance / Outlook bullets rendered as rows in a single
-    bordered, alternately-shaded box -- replaces the old plain-paragraph
-    list, which ran down the page as an unbroken, unbounded list (confirmed
-    live 2026-10-27 -- "this extends the list unnecessarily... needs a
-    proper box like review that makes it more professional")."""
+def _bullet_paragraphs(bullets: list) -> list:
+    """Operational Performance / Outlook bullets as a plain bulleted list
+    (round bullet + hanging indent, bold lead-in phrase + regular text) --
+    matches the real reference sample exactly (confirmed live 2026-11-02
+    against Niveshaay Techstack Theme_02.11.2026.pdf). A bordered box was
+    tried here on 2026-10-27 per feedback at the time, but the real sample
+    unambiguously uses a plain list -- matching it exactly now wins."""
     if not bullets:
-        return None
-    rows = []
+        return []
+    flow = []
     for b in bullets:
         heading = _sanitize((b.get("heading") or "").strip())
         text = _sanitize((b.get("text") or "").strip())
         body = f"<b>{heading}:</b> {text}" if heading else text
-        rows.append([Paragraph(body, _bullet_style)])
-    tbl = Table(rows, colWidths=[max_width])
-    style_cmds = [
-        ("BOX", (0, 0), (-1, -1), 1, _BOX_BORDER),
-        ("INNERGRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#C9D6C3")),
-        ("TOPPADDING", (0, 0), (-1, -1), 6),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
-        ("LEFTPADDING", (0, 0), (-1, -1), 10),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 10),
-    ]
-    for i in range(len(rows)):
-        if i % 2 == 1:
-            style_cmds.append(("BACKGROUND", (0, i), (-1, i), _BOX_ALT_ROW))
-    tbl.setStyle(TableStyle(style_cmds))
-    return tbl
+        flow.append(Paragraph(body, _bullet_style, bulletText="•"))
+    return flow
 
 
 def _snapshot_image_flowables(image_paths: list, max_width: float) -> list:
@@ -261,16 +275,15 @@ def _company_flowables(row: dict, image_dir: Path) -> list:
     if image_names:
         flow.extend(_snapshot_image_flowables([image_dir / n for n in image_names], max_width=16.5 * cm))
 
-    op_box = _bullets_box_flowable(row.get("operationalPerformance"), max_width=16.5 * cm)
-    if op_box:
+    op_bullets = _bullet_paragraphs(row.get("operationalPerformance"))
+    if op_bullets:
         flow.append(Paragraph("Operational Performance:", _section_style))
-        flow.append(op_box)
-        flow.append(Spacer(1, 8))
+        flow.extend(op_bullets)
 
-    outlook_box = _bullets_box_flowable(row.get("outlook"), max_width=16.5 * cm)
-    if outlook_box:
+    outlook_bullets = _bullet_paragraphs(row.get("outlook"))
+    if outlook_bullets:
         flow.append(Paragraph("Outlook:", _section_style))
-        flow.append(outlook_box)
+        flow.extend(outlook_bullets)
 
     return flow
 

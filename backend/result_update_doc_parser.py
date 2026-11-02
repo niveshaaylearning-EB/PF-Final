@@ -120,19 +120,36 @@ def convert_doc_to_docx(src_path: Path, out_dir: Path) -> Path:
     return converted
 
 
-def extract_images(path: Path) -> list[bytes]:
-    """Returns the raw bytes of every embedded picture in the document, in
-    document order -- a .docx is just a zip, and every embedded image (no
-    matter how it's anchored/wrapped) lands under word/media/. Picture order
-    there matches insertion order in practice, which is good enough here
-    since a result-update document realistically carries at most one
-    financial-snapshot picture."""
+def extract_images(path: Path) -> dict:
+    """Returns {"images": [raw bytes, ...], "skipped": int} -- every
+    embedded picture in the document, in document order, that a browser can
+    actually display. A .docx is just a zip, and every embedded image (no
+    matter how it's anchored/wrapped) lands under word/media/, but NOT
+    every format found there is web-displayable: confirmed live 2026-11-02
+    ("the financial snapshot... is not present when the pdf is generated")
+    that a screenshot pasted into Word can land as EMF/WMF (a Windows
+    vector format Word sometimes prefers for clipboard pastes) instead of
+    PNG/JPEG -- we were writing those raw bytes out as if they were a real
+    raster image, which neither a browser <img> nor reportlab's Image
+    flowable can decode, so it silently rendered as nothing. Every
+    candidate is now opened with Pillow before being accepted; one that
+    fails to open is skipped (counted, not raised) rather than passed
+    through as unusable data."""
+    from PIL import Image as _PILImage
+    import io as _io
     images = []
+    skipped = 0
     with zipfile.ZipFile(path) as z:
         media_names = sorted(n for n in z.namelist() if n.startswith("word/media/"))
         for name in media_names:
-            images.append(z.read(name))
-    return images
+            data = z.read(name)
+            try:
+                with _PILImage.open(_io.BytesIO(data)) as im:
+                    im.verify()
+                images.append(data)
+            except Exception:
+                skipped += 1
+    return {"images": images, "skipped": skipped}
 
 
 def parse_result_update_document(path: Path) -> dict:
@@ -176,11 +193,12 @@ def parse_result_update_document(path: Path) -> dict:
         )
 
     financial_table = _parse_table(d.tables[0]) if d.tables else None
-    images = extract_images(path)
+    extracted = extract_images(path)
 
     return {
         "operationalPerformance": op_perf,
         "outlook": outlook,
         "financialTable": financial_table,
-        "images": images,
+        "images": extracted["images"],
+        "imagesSkipped": extracted["skipped"],
     }

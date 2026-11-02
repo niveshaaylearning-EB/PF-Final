@@ -118,11 +118,47 @@ export default function ResultUpdatesPage() {
         `${API}/admin/result-updates/${encodeURIComponent(r.nseCode)}/parse-document`,
         form, { headers: { ...authHeaders(), 'Content-Type': 'multipart/form-data' } }
       );
+      if (resp.data.imageWarning) setError(resp.data.imageWarning);
       setRows(prev => prev.map(x => x.nseCode === r.nseCode ? resp.data : x));
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to upload/parse document');
     } finally {
       setUploading(null);
+    }
+  };
+
+  const [previewing, setPreviewing] = useState(null); // nseCode currently previewing, or null
+  const previewResult = async (r) => {
+    // Opened synchronously (before the await) so browsers don't treat the
+    // later tab navigation as a non-user-gesture popup and block it.
+    const tab = window.open('', '_blank');
+    setPreviewing(r.nseCode);
+    setError('');
+    try {
+      const resp = await axios.get(`${API}/admin/result-updates/${encodeURIComponent(r.nseCode)}/preview-pdf`,
+        { headers: authHeaders(), responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([resp.data], { type: 'application/pdf' }));
+      if (tab) tab.location.href = url; else window.open(url, '_blank');
+    } catch (err) {
+      if (tab) tab.close();
+      setError(await blobErrorMessage(err) || 'Failed to generate preview.');
+    } finally {
+      setPreviewing(null);
+    }
+  };
+
+  const [clearing, setClearing] = useState(null); // nseCode currently clearing, or null
+  const clearDocument = async (r) => {
+    if (!window.confirm(`Clear the uploaded document, parsed bullets, and financial snapshot for ${r.securityName}? This does not stop tracking the company -- just removes the wrong/unwanted content.`)) return;
+    setClearing(r.nseCode);
+    setError('');
+    try {
+      const resp = await axios.post(`${API}/admin/result-updates/${encodeURIComponent(r.nseCode)}/clear-document`, {}, { headers: authHeaders() });
+      setRows(prev => prev.map(x => x.nseCode === r.nseCode ? resp.data : x));
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to clear document');
+    } finally {
+      setClearing(null);
     }
   };
 
@@ -334,6 +370,10 @@ export default function ResultUpdatesPage() {
                 onUploadDocument={(file) => uploadResultUpdateDocument(r, file)}
                 uploading={uploading === r.nseCode}
                 onRemove={() => removeRow(r)}
+                onPreview={() => previewResult(r)}
+                previewing={previewing === r.nseCode}
+                onClearDocument={() => clearDocument(r)}
+                clearing={clearing === r.nseCode}
                 inputStyle={inputStyle}
               />
             ))}
@@ -509,7 +549,7 @@ function AuthedImage({ url, alt }) {
   return <img src={blobUrl} alt={alt} style={{ maxWidth: '100%', borderRadius: '6px', border: '1px solid var(--panel-border)', marginBottom: '8px', display: 'block' }} />;
 }
 
-function CompanyRow({ r, i, total, basketKey, hideOtherBaskets, expanded, onToggleExpand, onPatch, onUploadDocument, uploading, onRemove, inputStyle }) {
+function CompanyRow({ r, i, total, basketKey, hideOtherBaskets, expanded, onToggleExpand, onPatch, onUploadDocument, uploading, onRemove, onPreview, previewing, onClearDocument, clearing, inputStyle }) {
   const [opPerf, setOpPerf] = useState(r.operationalPerformance || []);
   const [outlook, setOutlook] = useState(r.outlook || []);
   const [dragOver, setDragOver] = useState(false);
@@ -560,7 +600,21 @@ function CompanyRow({ r, i, total, basketKey, hideOtherBaskets, expanded, onTogg
       {expanded && (
         <div style={{ padding: '0 20px 18px 48px' }}>
           <div style={{ marginBottom: '14px' }}>
-            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>Result Update Document</div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', marginBottom: '6px' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)' }}>Result Update Document</div>
+              {r.resultUpdateDocument && (
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button onClick={onPreview} disabled={previewing} title="Open a formatted preview of this company's result update in a new tab"
+                    style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 10px', borderRadius: '6px', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.1)', color: 'var(--primary)', cursor: previewing ? 'default' : 'pointer', fontSize: '0.74rem', fontWeight: 600 }}>
+                    {previewing ? 'Opening…' : 'Preview Result'}
+                  </button>
+                  <button onClick={onClearDocument} disabled={clearing} title="Remove the uploaded document, parsed bullets, and financial snapshot for this company (keeps tracking it)"
+                    style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 10px', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.28)', background: 'rgba(239,68,68,0.08)', color: '#f87171', cursor: clearing ? 'default' : 'pointer', fontSize: '0.74rem', fontWeight: 600 }}>
+                    <Trash2 size={11} /> {clearing ? 'Clearing…' : 'Clear'}
+                  </button>
+                </div>
+              )}
+            </div>
             {r.resultUpdateDocument && (
               <AuthedDocumentLink url={`${API}/admin/result-updates/document/${r.resultUpdateDocument}`}>
                 {r.resultUpdateDocument}
