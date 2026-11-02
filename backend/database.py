@@ -345,8 +345,12 @@ def run_migrations():
                 conn.execute(text(sql))
                 conn.commit()
             except Exception:
-                # Column already exists — safe to ignore
-                pass
+                # Column already exists -- safe to ignore. On Postgres (unlike
+                # SQLite) a failed statement poisons the whole transaction, so
+                # every statement after the first "already exists" error would
+                # otherwise fail too with "current transaction is aborted" --
+                # the rollback clears that so the loop can keep going.
+                conn.rollback()
 
 
 run_migrations()

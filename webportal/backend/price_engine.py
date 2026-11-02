@@ -1083,8 +1083,14 @@ async def fetch_live_single(nse_code: str, skip_mc_pe: bool = False) -> Optional
 
 def _fetch_nse_symbols_from_local_db() -> list:
     """
-    Fallback source: the main backend's `nse_stocks` SQLite table (already
-    populated separately, see tools/sync_nse.py).
+    Fallback source: the main backend's `nse_stocks` table (already
+    populated separately, see tools/sync_nse.py). Reads through SQLAlchemy
+    against whatever DATABASE_URL the main backend is actually configured
+    with (SQLite locally, Postgres or anything else in production) -- this
+    used to open backend/portfolio.db directly via a raw sqlite3 connection
+    and simply gave up (returned []) the moment DATABASE_URL pointed
+    anywhere else, which would have silently emptied out this fallback
+    right when it's needed most (see the "frequently blocked" note below).
 
     Deliberately does NOT `import database` (backend/database.py) to get at
     it -- that module's default DATABASE_URL is `sqlite:///./portfolio.db`,
@@ -1093,22 +1099,25 @@ def _fetch_nse_symbols_from_local_db() -> list:
     app as its own process with cwd=webportal/backend, so importing that
     module from here would silently open (or even create) the wrong, empty
     portfolio.db in webportal/backend instead of the real one in backend/ --
-    reading the known file by absolute path instead sidesteps that entirely.
+    building our own throwaway engine from the same DATABASE_URL sidesteps
+    that entirely, for either backend.
     """
-    try:
-        if os.environ.get("DATABASE_URL", "sqlite").split(":", 1)[0] != "sqlite":
-            return []   # non-SQLite backend configured -- nothing we can read directly
+    db_url = os.environ.get("DATABASE_URL", "").strip()
+    if not db_url:
         backend_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'backend')
         db_path = os.path.join(backend_dir, 'portfolio.db')
         if not os.path.isfile(db_path):
             return []
-        import sqlite3
-        conn = sqlite3.connect(db_path)
+        db_url = f"sqlite:///{db_path}"
+    try:
+        from sqlalchemy import create_engine, text
+        engine = create_engine(db_url)
         try:
-            rows = conn.execute("SELECT code, name FROM nse_stocks").fetchall()
+            with engine.connect() as conn:
+                rows = conn.execute(text("SELECT code, name FROM nse_stocks")).fetchall()
             return [{"symbol": code, "name": name} for code, name in rows if code and name]
         finally:
-            conn.close()
+            engine.dispose()
     except Exception:
         return []
 
