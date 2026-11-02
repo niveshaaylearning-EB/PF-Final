@@ -30,7 +30,18 @@ export default function WhatsAppOptInModal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
+  const [resendCooldown, setResendCooldown] = useState(0);
   const location = useLocation();
+
+  // 30s cooldown on resend -- matches the backend's own 5/minute rate limit
+  // on request-phone-otp, and stops someone bashing the button into a 429
+  // while a WhatsApp delivery that's just slow (not failed) is still in
+  // flight.
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const t = setInterval(() => setResendCooldown(s => (s <= 1 ? 0 : s - 1)), 1000);
+    return () => clearInterval(t);
+  }, [resendCooldown]);
 
   // Re-checks on every route change, not just once on initial page load --
   // a plain mount-only effect (empty deps) misses a same-tab SPA login (no
@@ -68,8 +79,25 @@ export default function WhatsAppOptInModal() {
         { headers: { Authorization: `Bearer ${getToken()}` } });
       setStep('otp');
       setInfo(`Code sent via WhatsApp to ${phone}.`);
+      setResendCooldown(30);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to send code.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resendOtp = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      await axios.post(`${API_ROOT}/auth/profile/request-phone-otp`, { phone },
+        { headers: { Authorization: `Bearer ${getToken()}` } });
+      setCode('');
+      setInfo(`A new code was just sent via WhatsApp to ${phone}.`);
+      setResendCooldown(30);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to resend code.');
     } finally {
       setLoading(false);
     }
@@ -134,6 +162,16 @@ export default function WhatsAppOptInModal() {
                 {loading ? 'Verifying…' : 'Verify & Save'}
               </button>
             </div>
+            <button
+              onClick={resendOtp} disabled={loading || resendCooldown > 0}
+              style={{
+                width: '100%', marginTop: '10px', padding: '6px', background: 'none', border: 'none',
+                color: resendCooldown > 0 ? 'var(--text-muted)' : 'var(--primary)',
+                fontSize: '0.78rem', cursor: (loading || resendCooldown > 0) ? 'default' : 'pointer',
+              }}
+            >
+              {resendCooldown > 0 ? `Resend code (${resendCooldown}s)` : "Didn't get it? Resend code"}
+            </button>
           </>
         )}
 
