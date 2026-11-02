@@ -28,9 +28,7 @@ import math
 import re
 import time
 from collections import Counter
-from pathlib import Path
 
-_SNAPSHOT_FILE = Path(__file__).parent / "assistant_knowledge.json"
 _REFRESH_INTERVAL_SECONDS = 15 * 60
 
 _chunks: list[dict] = []   # [{"id": str, "text": str}, ...]
@@ -185,10 +183,6 @@ async def ensure_fresh(force: bool = False) -> None:
         _chunks = chunks
         _idf = idf
         _last_built = time.time()
-        try:
-            _SNAPSHOT_FILE.write_text(json.dumps({"builtAt": _last_built, "chunks": chunks}, default=str), encoding="utf-8")
-        except Exception as e:
-            print(f"[assistant_rag] could not persist snapshot: {e}")
         print(f"[assistant_rag] rebuilt knowledge snapshot: {len(chunks)} chunks")
 
 
