@@ -2,48 +2,18 @@
   "Green_Energy": [
     {
       "nseCode": "DHOOTTRANS",
-      "allocation": 0.05,
-      "buyPrice": 1576.3
+      "allocation": 0.06,
+      "buyPrice": 1567.83
     },
     {
-      "nseCode": "VAML",
+      "nseCode": "RKFORGE",
       "allocation": 0.02,
-      "buyPrice": 459.34
-    },
-    {
-      "nseCode": "EMMVEE",
-      "allocation": 0.03,
-      "buyPrice": 230.58,
-      "securityName": "Emmvee Photovoltaic Power Ltd"
-    },
-    {
-      "nseCode": "WAAREEENER",
-      "allocation": 0.04,
-      "buyPrice": 2772.7,
-      "securityName": "Waaree Energies Ltd"
-    },
-    {
-      "nseCode": "TRITURBINE",
-      "allocation": 0.03,
-      "buyPrice": 146.36,
-      "securityName": "Triveni Turbine Ltd"
-    },
-    {
-      "nseCode": "TDPOWERSYS",
-      "allocation": 0.05,
-      "buyPrice": 89.83,
-      "securityName": "TD Power Systems Ltd"
-    },
-    {
-      "nseCode": "BORORENEW",
-      "allocation": 0.03,
-      "buyPrice": 574.87,
-      "securityName": "Borosil Renewables Ltd"
+      "buyPrice": 661.48
     },
     {
       "nseCode": "EBGNG",
-      "allocation": 0.05,
-      "buyPrice": 335.98,
+      "allocation": 0.03,
+      "buyPrice": 339.69,
       "securityName": "GNG Electronics Ltd"
     },
     {
@@ -72,15 +42,44 @@
     },
     {
       "nseCode": "QPOWER",
-      "allocation": 0.05,
-      "buyPrice": 1084.13,
+      "allocation": 0.06,
+      "buyPrice": 1140.33,
       "securityName": "Quality Power Electrical Equipments Ltd"
     },
     {
-      "nseCode": "INOXINDIA",
+      "nseCode": "WAAREEENER",
+      "allocation": 0.04,
+      "buyPrice": 2772.7,
+      "securityName": "Waaree Energies Ltd"
+    },
+    {
+      "nseCode": "TRITURBINE",
+      "allocation": 0.03,
+      "buyPrice": 146.36,
+      "securityName": "Triveni Turbine Ltd"
+    },
+    {
+      "nseCode": "TDPOWERSYS",
       "allocation": 0.05,
-      "buyPrice": 1781.14,
+      "buyPrice": 89.83,
+      "securityName": "TD Power Systems Ltd"
+    },
+    {
+      "nseCode": "BORORENEW",
+      "allocation": 0.03,
+      "buyPrice": 574.87,
+      "securityName": "Borosil Renewables Ltd"
+    },
+    {
+      "nseCode": "INOXINDIA",
+      "allocation": 0.06,
+      "buyPrice": 1801.45,
       "securityName": "INOX India Ltd"
+    },
+    {
+      "nseCode": "AEROENTER",
+      "allocation": 0.03,
+      "buyPrice": 126.09
     },
     {
       "nseCode": "HBLENGINE",
@@ -89,21 +88,21 @@
       "securityName": "HBL Engineering Ltd"
     },
     {
-      "nseCode": "SYRMA",
-      "allocation": 0.06,
-      "buyPrice": 580.41,
-      "securityName": "Syrma SGS Technology Ltd"
-    },
-    {
       "nseCode": "AVALON",
       "allocation": 0.05,
       "buyPrice": 1141.06,
       "securityName": "Avalon Technologies Ltd"
     },
     {
+      "nseCode": "SYRMA",
+      "allocation": 0.06,
+      "buyPrice": 580.41,
+      "securityName": "Syrma SGS Technology Ltd"
+    },
+    {
       "nseCode": "SANSERA",
-      "allocation": 0.045,
-      "buyPrice": 1991.26,
+      "allocation": 0.035,
+      "buyPrice": 2000.03,
       "securityName": "Sansera Engineering Ltd"
     },
     {
@@ -113,15 +112,9 @@
       "securityName": "Jash Engineering Ltd"
     },
     {
-      "nseCode": "VEDL",
-      "allocation": 0.02,
-      "buyPrice": 601.19,
-      "securityName": "Vedanta Ltd"
-    },
-    {
       "nseCode": "SANGHVIMOV",
-      "allocation": 0.03,
-      "buyPrice": 509.85
+      "allocation": 0.05,
+      "buyPrice": 450.99
     },
     {
       "nseCode": "NEOGEN",
@@ -159,16 +152,6 @@
       "buyPrice": 1160.08
     },
     {
-      "nseCode": "KRN",
-      "allocation": 0.03,
-      "buyPrice": 879.07
-    },
-    {
-      "nseCode": "HFCL",
-      "allocation": 0.02,
-      "buyPrice": 128.42
-    },
-    {
       "nseCode": "SAILIFE",
       "allocation": 0.025,
       "buyPrice": 1244.15
@@ -184,9 +167,19 @@
       "buyPrice": 1266.39
     },
     {
+      "nseCode": "SMSPHARMA",
+      "allocation": 0.02,
+      "buyPrice": 504.56
+    },
+    {
       "nseCode": "SHILPAMED",
-      "allocation": 0.03,
-      "buyPrice": 791.79
+      "allocation": 0.05,
+      "buyPrice": 857.23
+    },
+    {
+      "nseCode": "INOXINDIA",
+      "allocation": 0.025,
+      "buyPrice": 1921.38
     },
     {
       "nseCode": "JYOTICNC",
@@ -196,19 +189,9 @@
       "segment": "Smallcap"
     },
     {
-      "nseCode": "INOXINDIA",
-      "allocation": 0.025,
-      "buyPrice": 1921.38
-    },
-    {
       "nseCode": "HLEGLAS",
       "allocation": 0.01,
       "buyPrice": 478.3
-    },
-    {
-      "nseCode": "TDPOWERSYS",
-      "allocation": 0.025,
-      "buyPrice": 162.89
     },
     {
       "nseCode": "STLTECH",
@@ -216,19 +199,34 @@
       "buyPrice": 427.76
     },
     {
-      "nseCode": "IDEAFORGE",
-      "allocation": 0.015,
-      "buyPrice": 768.11
+      "nseCode": "TDPOWERSYS",
+      "allocation": 0.025,
+      "buyPrice": 162.89
     },
     {
-      "nseCode": "SANSERA",
+      "nseCode": "SYRMA",
+      "allocation": 0.045,
+      "buyPrice": 686.18
+    },
+    {
+      "nseCode": "AVALON",
+      "allocation": 0.035,
+      "buyPrice": 1182.42
+    },
+    {
+      "nseCode": "CENTUM",
       "allocation": 0.05,
-      "buyPrice": 2136.68
+      "buyPrice": 2482.6
     },
     {
-      "nseCode": "ASTRAMICRO",
+      "nseCode": "AEROENTER",
       "allocation": 0.03,
-      "buyPrice": 1080.52
+      "buyPrice": 126.09
+    },
+    {
+      "nseCode": "SBCL",
+      "allocation": 0.07,
+      "buyPrice": 573.42
     },
     {
       "nseCode": "ETHOSLTD",
@@ -237,28 +235,18 @@
     },
     {
       "nseCode": "TIMEX",
-      "allocation": 0.04,
-      "buyPrice": 534.04
-    },
-    {
-      "nseCode": "AVALON",
-      "allocation": 0.035,
-      "buyPrice": 1182.42
-    },
-    {
-      "nseCode": "SYRMA",
-      "allocation": 0.045,
-      "buyPrice": 686.18
-    },
-    {
-      "nseCode": "CENTUM",
       "allocation": 0.05,
-      "buyPrice": 2482.6
+      "buyPrice": 551.37
     },
     {
-      "nseCode": "SBCL",
-      "allocation": 0.07,
-      "buyPrice": 573.42
+      "nseCode": "SANSERA",
+      "allocation": 0.05,
+      "buyPrice": 2136.68
+    },
+    {
+      "nseCode": "ASTRAMICRO",
+      "allocation": 0.015,
+      "buyPrice": 1048.2
     },
     {
       "nseCode": "NEOGEN",
@@ -328,12 +316,6 @@
       "buyPrice": 166.03
     },
     {
-      "nseCode": "BLACKBUCK",
-      "allocation": 0.05,
-      "buyPrice": 485.0,
-      "securityName": "Blackbuck Ltd"
-    },
-    {
       "nseCode": "SUDEEPPHRM",
       "allocation": 0.04,
       "buyPrice": 1141.1
@@ -391,6 +373,11 @@
       "securityName": "KRN Heat Exchanger and Refrigeration Ltd"
     },
     {
+      "nseCode": "IGIL",
+      "allocation": 0.05,
+      "buyPrice": 369.21
+    },
+    {
       "nseCode": "EXICOM",
       "allocation": 0.04,
       "buyPrice": 158.98
@@ -410,8 +397,8 @@
     },
     {
       "nseCode": "SSWL",
-      "allocation": 0.03,
-      "buyPrice": 372.31
+      "allocation": 0.04,
+      "buyPrice": 405.85
     },
     {
       "nseCode": "SHADOWFAX",
@@ -452,14 +439,14 @@
       "securityName": "Aeroflex Industries Ltd"
     },
     {
-      "nseCode": "TDPOWERSYS",
-      "allocation": 0.03,
-      "buyPrice": 659.13
-    },
-    {
       "nseCode": "STLTECH",
       "allocation": 0.07,
       "buyPrice": 431.48
+    },
+    {
+      "nseCode": "TDPOWERSYS",
+      "allocation": 0.03,
+      "buyPrice": 659.13
     },
     {
       "nseCode": "MANINDS",
@@ -467,21 +454,15 @@
       "buyPrice": 933.24
     },
     {
+      "nseCode": "LIQUIDCASE",
+      "allocation": 0.04,
+      "buyPrice": 116.68
+    },
+    {
       "nseCode": "SANSERA",
       "allocation": 0.07,
       "buyPrice": 2037.53,
       "securityName": "Sansera Engineering Ltd"
-    },
-    {
-      "nseCode": "YASHO",
-      "allocation": 0.05,
-      "buyPrice": 4202.73
-    },
-    {
-      "nseCode": "NEOGEN",
-      "allocation": 0.06,
-      "buyPrice": 1699.47,
-      "securityName": "Neogen Chemicals Ltd"
     },
     {
       "nseCode": "SAKAR",
@@ -494,6 +475,12 @@
       "buyPrice": 79.99
     },
     {
+      "nseCode": "NEOGEN",
+      "allocation": 0.06,
+      "buyPrice": 1699.47,
+      "securityName": "Neogen Chemicals Ltd"
+    },
+    {
       "nseCode": "E2E",
       "allocation": 0.08,
       "buyPrice": 354.87,
@@ -502,9 +489,9 @@
   ],
   "Techstack": [
     {
-      "nseCode": "URBANCO",
-      "allocation": 0.05,
-      "buyPrice": 121.58
+      "nseCode": "SHADOWFAX",
+      "allocation": 0.06,
+      "buyPrice": 216.16
     },
     {
       "nseCode": "MEESHO",
@@ -512,29 +499,9 @@
       "buyPrice": 164.34
     },
     {
-      "nseCode": "TEJASNET",
-      "allocation": 0.04,
-      "buyPrice": 592.7
-    },
-    {
-      "nseCode": "SYRMA",
-      "allocation": 0.04,
-      "buyPrice": 808.1
-    },
-    {
-      "nseCode": "SANSERA",
+      "nseCode": "URBANCO",
       "allocation": 0.05,
-      "buyPrice": 2141.73
-    },
-    {
-      "nseCode": "PARAS",
-      "allocation": 0.04,
-      "buyPrice": 636.35
-    },
-    {
-      "nseCode": "DATAPATTNS",
-      "allocation": 0.04,
-      "buyPrice": 3502.88
+      "buyPrice": 121.58
     },
     {
       "nseCode": "CPPLUS",
@@ -542,14 +509,34 @@
       "buyPrice": 2065.78
     },
     {
-      "nseCode": "AVANTEL",
-      "allocation": 0.05,
-      "buyPrice": 145.65
-    },
-    {
       "nseCode": "ATHERENERG",
       "allocation": 0.05,
       "buyPrice": 633.56
+    },
+    {
+      "nseCode": "SYRMA",
+      "allocation": 0.04,
+      "buyPrice": 808.1
+    },
+    {
+      "nseCode": "DATAPATTNS",
+      "allocation": 0.04,
+      "buyPrice": 3502.88
+    },
+    {
+      "nseCode": "PARAS",
+      "allocation": 0.04,
+      "buyPrice": 636.35
+    },
+    {
+      "nseCode": "SANSERA",
+      "allocation": 0.05,
+      "buyPrice": 2141.73
+    },
+    {
+      "nseCode": "AVANTEL",
+      "allocation": 0.05,
+      "buyPrice": 145.65
     },
     {
       "nseCode": "ASTRAMICRO",
@@ -557,44 +544,14 @@
       "buyPrice": 976.8
     },
     {
-      "nseCode": "STLTECH",
-      "allocation": 0.06,
-      "buyPrice": 232.65
-    },
-    {
-      "nseCode": "GENESYS",
-      "allocation": 0.05,
-      "buyPrice": 307.03
-    },
-    {
-      "nseCode": "E2E",
-      "allocation": 0.08,
-      "buyPrice": 256.67
-    },
-    {
-      "nseCode": "SHADOWFAX",
-      "allocation": 0.06,
-      "buyPrice": 216.16
-    },
-    {
-      "nseCode": "SASKEN",
+      "nseCode": "LIQUIDCASE",
       "allocation": 0.04,
-      "buyPrice": 1737.47
+      "buyPrice": 116.68
     },
     {
       "nseCode": "RPTECH",
       "allocation": 0.04,
       "buyPrice": 859.71
-    },
-    {
-      "nseCode": "REDINGTON",
-      "allocation": 0.03,
-      "buyPrice": 344.07
-    },
-    {
-      "nseCode": "NPST",
-      "allocation": 0.04,
-      "buyPrice": 1273.83
     },
     {
       "nseCode": "NETWEB",
@@ -607,6 +564,41 @@
       "buyPrice": 776.09
     },
     {
+      "nseCode": "AEROENTER",
+      "allocation": 0.03,
+      "buyPrice": 126.09
+    },
+    {
+      "nseCode": "NPST",
+      "allocation": 0.04,
+      "buyPrice": 1273.83
+    },
+    {
+      "nseCode": "TEJASNET",
+      "allocation": 0.02,
+      "buyPrice": 592.7
+    },
+    {
+      "nseCode": "REDINGTON",
+      "allocation": 0.03,
+      "buyPrice": 344.07
+    },
+    {
+      "nseCode": "STLTECH",
+      "allocation": 0.06,
+      "buyPrice": 232.65
+    },
+    {
+      "nseCode": "E2E",
+      "allocation": 0.08,
+      "buyPrice": 256.67
+    },
+    {
+      "nseCode": "SASKEN",
+      "allocation": 0.04,
+      "buyPrice": 1737.47
+    },
+    {
       "nseCode": "HFCL",
       "allocation": 0.04,
       "buyPrice": 128.42
@@ -614,20 +606,27 @@
   ],
   "Make_in_India": [
     {
-      "nseCode": "YASHO",
-      "allocation": 0.08,
-      "buyPrice": 2271.97,
-      "securityName": "Yasho Industries Ltd"
+      "nseCode": "SEDEMAC",
+      "allocation": 0.04,
+      "buyPrice": 2046.65
     },
     {
-      "nseCode": "PAUSHAKLTD",
+      "nseCode": "SBCL",
+      "allocation": 0.07,
+      "buyPrice": 556.54,
+      "securityName": "Shivalik Bimetal Controls Ltd"
+    },
+    {
+      "nseCode": "OMNI",
       "allocation": 0.05,
-      "buyPrice": 786.23
+      "buyPrice": 372.35,
+      "securityName": "Omnitech Engineering Ltd"
     },
     {
-      "nseCode": "XPROINDIA",
-      "allocation": 0.03,
-      "buyPrice": 1118.8
+      "nseCode": "QPOWER",
+      "allocation": 0.04,
+      "buyPrice": 1084.78,
+      "securityName": "Quality Power Electrical Equipments Ltd"
     },
     {
       "nseCode": "STLTECH",
@@ -636,16 +635,38 @@
       "securityName": "Sterlite Technologies Ltd"
     },
     {
-      "nseCode": "QPOWER",
-      "allocation": 0.03,
-      "buyPrice": 972.6,
-      "securityName": "Quality Power Electrical Equipments Ltd"
+      "nseCode": "AARTIPHARM",
+      "allocation": 0.06,
+      "buyPrice": 617.54,
+      "securityName": "Aarti Pharmalabs Ltd"
     },
     {
-      "nseCode": "OMNI",
+      "nseCode": "AEROFLEX",
+      "allocation": 0.03,
+      "buyPrice": 288.14,
+      "securityName": "Aeroflex Industries Ltd"
+    },
+    {
+      "nseCode": "AVALON",
+      "allocation": 0.06,
+      "buyPrice": 712.98,
+      "securityName": "Avalon Technologies Ltd"
+    },
+    {
+      "nseCode": "CENTUM",
       "allocation": 0.05,
-      "buyPrice": 372.35,
-      "securityName": "Omnitech Engineering Ltd"
+      "buyPrice": 2127.29,
+      "securityName": "Centum Electronics Ltd"
+    },
+    {
+      "nseCode": "BPLPHARMA",
+      "allocation": 0.05,
+      "buyPrice": 2139.47
+    },
+    {
+      "nseCode": "SMSPHARMA",
+      "allocation": 0.07,
+      "buyPrice": 504.56
     },
     {
       "nseCode": "SHILPAMED",
@@ -673,15 +694,9 @@
       "buyPrice": null
     },
     {
-      "nseCode": "SEDEMAC",
-      "allocation": 0.04,
-      "buyPrice": 2046.65
-    },
-    {
-      "nseCode": "SBCL",
-      "allocation": 0.07,
-      "buyPrice": 556.54,
-      "securityName": "Shivalik Bimetal Controls Ltd"
+      "nseCode": "XPROINDIA",
+      "allocation": 0.03,
+      "buyPrice": 1118.8
     },
     {
       "nseCode": "NEOGEN",
@@ -695,47 +710,23 @@
       "securityName": "KDDL Ltd"
     },
     {
-      "nseCode": "CENTUM",
-      "allocation": 0.05,
-      "buyPrice": 2127.29,
-      "securityName": "Centum Electronics Ltd"
-    },
-    {
-      "nseCode": "AVALON",
-      "allocation": 0.06,
-      "buyPrice": 712.98,
-      "securityName": "Avalon Technologies Ltd"
-    },
-    {
       "nseCode": "ASTRAMICRO",
       "allocation": 0.04,
       "buyPrice": 1145.4,
       "securityName": "Astra Microwave Products Ltd"
-    },
-    {
-      "nseCode": "AEROFLEX",
-      "allocation": 0.03,
-      "buyPrice": 288.14,
-      "securityName": "Aeroflex Industries Ltd"
-    },
-    {
-      "nseCode": "AARTIPHARM",
-      "allocation": 0.06,
-      "buyPrice": 617.54,
-      "securityName": "Aarti Pharmalabs Ltd"
     }
   ],
   "Consumer_Trends": [
     {
       "nseCode": "SEDEMAC",
-      "allocation": 0.04,
-      "buyPrice": 1654.83,
+      "allocation": 0.05,
+      "buyPrice": 2030.63,
       "securityName": "SEDEMAC Mechatronics Ltd"
     },
     {
       "nseCode": "SSWL",
-      "allocation": 0.04,
-      "buyPrice": 373.65
+      "allocation": 0.05,
+      "buyPrice": 506.45
     },
     {
       "nseCode": "SHADOWFAX",
@@ -744,8 +735,8 @@
     },
     {
       "nseCode": "URBANCO",
-      "allocation": 0.06,
-      "buyPrice": 126.36,
+      "allocation": 0.05,
+      "buyPrice": 129.39,
       "securityName": "Urban Company Ltd"
     },
     {
@@ -755,20 +746,10 @@
       "securityName": "Ather Energy Ltd"
     },
     {
-      "nseCode": "KRN",
+      "nseCode": "AARTIPHARM",
       "allocation": 0.04,
-      "buyPrice": 1120.4
-    },
-    {
-      "nseCode": "SBCL",
-      "allocation": 0.07,
-      "buyPrice": 792.04
-    },
-    {
-      "nseCode": "AEROFLEX",
-      "allocation": 0.04,
-      "buyPrice": 299.53,
-      "securityName": "Aeroflex Industries Ltd"
+      "buyPrice": 653.39,
+      "securityName": "Aarti Pharmalabs Ltd"
     },
     {
       "nseCode": "DIVGIITTS",
@@ -776,10 +757,15 @@
       "buyPrice": 941.14
     },
     {
-      "nseCode": "AARTIPHARM",
+      "nseCode": "RACLGEAR",
       "allocation": 0.04,
-      "buyPrice": 653.39,
-      "securityName": "Aarti Pharmalabs Ltd"
+      "buyPrice": 1389.15
+    },
+    {
+      "nseCode": "AEROFLEX",
+      "allocation": 0.06,
+      "buyPrice": 378.91,
+      "securityName": "Aeroflex Industries Ltd"
     },
     {
       "nseCode": "EMIL",
@@ -801,6 +787,11 @@
       "securityName": "Garware Hi-Tech Films Ltd"
     },
     {
+      "nseCode": "SBCL",
+      "allocation": 0.07,
+      "buyPrice": 792.04
+    },
+    {
       "nseCode": "CARYSIL",
       "allocation": 0.05,
       "buyPrice": 871.32,
@@ -817,10 +808,10 @@
       "buyPrice": 3249.76
     },
     {
-      "nseCode": "SHAILY",
-      "allocation": 0.04,
-      "buyPrice": 1455.76,
-      "securityName": "Shaily Engineering Plastics Ltd"
+      "nseCode": "MANORAMA",
+      "allocation": 0.05,
+      "buyPrice": 1228.52,
+      "securityName": "Manorama Industries Ltd"
     },
     {
       "nseCode": "XPROINDIA",
@@ -828,12 +819,6 @@
       "buyPrice": 1208.3,
       "securityName": "Xpro India Ltd",
       "segment": "Smallcap"
-    },
-    {
-      "nseCode": "MANORAMA",
-      "allocation": 0.04,
-      "buyPrice": 1082.84,
-      "securityName": "Manorama Industries Ltd"
     },
     {
       "nseCode": "E2E",
@@ -864,19 +849,9 @@
       "buyPrice": 110
     },
     {
-      "nseCode": "EBGNG",
-      "allocation": 0,
-      "buyPrice": 355
-    },
-    {
       "nseCode": "544531",
       "allocation": 0,
       "buyPrice": 191
-    },
-    {
-      "nseCode": "EMMVEE",
-      "allocation": 0,
-      "buyPrice": 217
     },
     {
       "nseCode": "KUSUMGAR",
@@ -901,759 +876,22 @@
     {
       "nseCode": "SYMBIOTEC",
       "allocation": null,
-      "buyPrice": 988.0
+      "buyPrice": 988
     },
     {
       "nseCode": "CMRGREEN",
       "allocation": 0,
-      "buyPrice": 268.0
-    }
-  ],
-  "Green_Energy_sold": [],
-  "IPO_Basket_sold": [],
-  "Trends_Triology_sold": [],
-  "Consumer_Trends_sold": [
-    {
-      "nseCode": "ATHERENERG",
-      "securityName": "Ather Energy Ltd",
-      "date": "05 May 2026",
-      "action": "Partially Sold",
-      "weightSold": 2.0,
-      "buyPrice": null,
-      "sellPrice": 941.16
-    },
-    {
-      "nseCode": "CARYSIL",
-      "securityName": "Carysil Ltd",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0473,
-      "buyPrice": null,
-      "sellPrice": 873.98
-    },
-    {
-      "nseCode": "CARTRADE",
-      "securityName": "Cartrade Tech Ltd",
-      "date": "05 May 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 1645.95
-    },
-    {
-      "nseCode": "GOKEX",
-      "securityName": "Gokaldas Exports Ltd",
-      "date": "25 Sep 2026",
-      "action": "Wholly Sold",
-      "weightSold": 3.0,
-      "buyPrice": null,
-      "sellPrice": 692.8375
-    },
-    {
-      "nseCode": "GOLDIAM",
-      "securityName": "Goldiam International Ltd",
-      "date": "10 Jun 2026",
-      "action": "Partially Sold",
-      "weightSold": 1.0,
-      "buyPrice": null,
-      "sellPrice": 438.7
-    },
-    {
-      "nseCode": "GOLDIAM",
-      "securityName": "Goldiam International Ltd",
-      "date": "30 Jun 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 439.4125
-    },
-    {
-      "nseCode": "GRWRHITECH",
-      "securityName": "Garware Hi-Tech Films Ltd",
-      "date": "04 Apr 2025",
-      "action": "Wholly Sold",
-      "weightSold": 5.0,
-      "buyPrice": null,
-      "sellPrice": 2859.03
-    },
-    {
-      "nseCode": "ICEMAKE",
-      "securityName": "Ice Make Refrigeration Ltd",
-      "date": "25 Sep 2026",
-      "action": "Wholly Sold",
-      "weightSold": 5.0,
-      "buyPrice": null,
-      "sellPrice": 662.05
-    },
-    {
-      "nseCode": "INDOFARM",
-      "securityName": "Indo Farm Equipment Ltd",
-      "date": "05 Feb 2026",
-      "action": "Partially Sold",
-      "weightSold": 2.0,
-      "buyPrice": null,
-      "sellPrice": 157.87
-    },
-    {
-      "nseCode": "INDOFARM",
-      "securityName": "Indo Farm Equipment Ltd",
-      "date": "22 May 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 126.88
-    },
-    {
-      "nseCode": "PARAGMILK",
-      "securityName": "Parag Milk Foods Ltd",
-      "date": "05 May 2026",
-      "action": "Wholly Sold",
-      "weightSold": 5.0,
-      "buyPrice": null,
-      "sellPrice": 221.51
-    },
-    {
-      "nseCode": "PICCADIL",
-      "securityName": "Piccadily Agro Industries Ltd",
-      "date": "05 Feb 2026",
-      "action": "Partially Sold",
-      "weightSold": 3.0,
-      "buyPrice": null,
-      "sellPrice": 576.89
-    },
-    {
-      "nseCode": "PICCADIL",
-      "securityName": "Piccadily Agro Industries Ltd",
-      "date": "27 May 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 579.8875
-    },
-    {
-      "nseCode": "POKARNA",
-      "securityName": "Pokarna Ltd",
-      "date": "04 Apr 2025",
-      "action": "Wholly Sold",
-      "weightSold": 5.0,
-      "buyPrice": null,
-      "sellPrice": 864.69
-    },
-    {
-      "nseCode": "POKARNA",
-      "securityName": "Pokarna Ltd",
-      "date": "22 May 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 826.46
-    },
-    {
-      "nseCode": "V2RETAIL",
-      "securityName": "V2 Retail Ltd",
-      "date": "21 Nov 2025",
-      "action": "Partially Sold",
-      "weightSold": 1.0,
-      "buyPrice": null,
-      "sellPrice": 235.49
-    },
-    {
-      "nseCode": "V2RETAIL",
-      "securityName": "V2 Retail Ltd",
-      "date": "22 May 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 231.94
+      "buyPrice": 268
     },
     {
       "nseCode": "EBGNG",
-      "securityName": "GNG Electronics Ltd",
-      "date": "04 Aug 2026",
-      "action": "Wholly Sold",
-      "weightSold": 1.0,
-      "buyPrice": null,
-      "sellPrice": 521.8875
-    },
-    {
-      "nseCode": "EBGNG",
-      "securityName": "GNG Electronics Ltd",
-      "date": "10 Aug 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 538.3875
-    },
-    {
-      "nseCode": "URBANCO",
-      "securityName": "Urban Company Ltd",
-      "date": "30 Jun 2026",
-      "action": "Partially Sold",
-      "weightSold": 1.0,
-      "buyPrice": null,
-      "sellPrice": 131.2425
-    },
-    {
-      "nseCode": "AARTIPHARM",
-      "securityName": "Aarti Pharmalabs Ltd",
-      "date": "10 Jun 2026",
-      "action": "Partially Sold",
-      "weightSold": 1.0,
-      "buyPrice": null,
-      "sellPrice": 624.55
-    },
-    {
-      "nseCode": "MEESHO",
-      "securityName": "Meesho Ltd",
-      "date": "04 Aug 2026",
-      "action": "Wholly Sold",
-      "weightSold": 3.0,
-      "buyPrice": null,
-      "sellPrice": 192.7075
+      "allocation": 0,
+      "buyPrice": 355.0
     },
     {
       "nseCode": "EMMVEE",
-      "securityName": "Emmvee Photovoltaic Power Ltd",
-      "date": "22 May 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 263.0
-    },
-    {
-      "nseCode": "HFCL",
-      "securityName": "HFCL Ltd",
-      "date": "04 Aug 2026",
-      "action": "Wholly Sold",
-      "weightSold": 2.0,
-      "buyPrice": null,
-      "sellPrice": 203.1
-    },
-    {
-      "nseCode": "HFCL",
-      "securityName": "HFCL Ltd",
-      "date": "10 Aug 2026",
-      "action": "Wholly Sold",
-      "weightSold": 3.0,
-      "buyPrice": null,
-      "sellPrice": 211.6
-    },
-    {
-      "nseCode": "LIQUIDCASE",
-      "securityName": "LIQUIDCASE",
-      "date": "13 Apr 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 113.6,
-      "allocation": 1.0
-    },
-    {
-      "nseCode": "LIQUIDCASE",
-      "securityName": "LIQUIDCASE",
-      "date": "04 Aug 2026",
-      "action": "Wholly Sold",
-      "weightSold": 1.002,
-      "buyPrice": null,
-      "sellPrice": 115.3075
-    },
-    {
-      "nseCode": "WONDERLA",
-      "securityName": "WONDERLA",
-      "date": "12 Jun 2024",
-      "action": "Wholly Sold",
-      "weightSold": 3.0277,
-      "buyPrice": null,
-      "sellPrice": 881.76
-    },
-    {
-      "nseCode": "AGI",
-      "securityName": "AGI",
-      "date": "12 Jun 2024",
-      "action": "Wholly Sold",
-      "weightSold": 5.0462,
-      "buyPrice": null,
-      "sellPrice": 714.07
-    },
-    {
-      "nseCode": "BOROSCI",
-      "securityName": "BOROSCI",
-      "date": "13 Jun 2024",
-      "action": "Wholly Sold",
-      "weightSold": 0.937,
-      "buyPrice": null,
-      "sellPrice": 143.51
-    },
-    {
-      "nseCode": "DHARMAJ",
-      "securityName": "DHARMAJ",
-      "date": "20 Feb 2025",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 183.24
-    },
-    {
-      "nseCode": "DHANUKA",
-      "securityName": "DHANUKA",
-      "date": "20 Feb 2025",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 1311.1
-    },
-    {
-      "nseCode": "DOLLAR",
-      "securityName": "DOLLAR",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 2.0469,
-      "buyPrice": null,
-      "sellPrice": 573.9
-    },
-    {
-      "nseCode": "DOLLAR",
-      "securityName": "DOLLAR",
-      "date": "20 Feb 2025",
-      "action": "Wholly Sold",
-      "weightSold": 3.0,
-      "buyPrice": null,
-      "sellPrice": 378.25
-    },
-    {
-      "nseCode": "ARVINDFASN",
-      "securityName": "ARVINDFASN",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 4.0654,
-      "buyPrice": null,
-      "sellPrice": 472.69
-    },
-    {
-      "nseCode": "ARVINDFASN",
-      "securityName": "ARVINDFASN",
-      "date": "20 Feb 2025",
-      "action": "Wholly Sold",
-      "weightSold": 3.0,
-      "buyPrice": null,
-      "sellPrice": 421.53
-    },
-    {
-      "nseCode": "EMIL",
-      "securityName": "EMIL",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0378,
-      "buyPrice": null,
-      "sellPrice": 240.93
-    },
-    {
-      "nseCode": "EMIL",
-      "securityName": "EMIL",
-      "date": "20 Feb 2025",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 130.41
-    },
-    {
-      "nseCode": "JYOTHYLAB",
-      "securityName": "JYOTHYLAB",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0378,
-      "buyPrice": null,
-      "sellPrice": 450.98
-    },
-    {
-      "nseCode": "JYOTHYLAB",
-      "securityName": "JYOTHYLAB",
-      "date": "20 Feb 2025",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 347.94
-    },
-    {
-      "nseCode": "BOROLTD",
-      "securityName": "BOROLTD",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0387,
-      "buyPrice": null,
-      "sellPrice": 317.51
-    },
-    {
-      "nseCode": "BOROLTD",
-      "securityName": "BOROLTD",
-      "date": "13 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0839,
-      "buyPrice": null,
-      "sellPrice": 327.55
-    },
-    {
-      "nseCode": "BOROLTD",
-      "securityName": "BOROLTD",
-      "date": "20 Feb 2025",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 319.05
-    },
-    {
-      "nseCode": "GREENLAM",
-      "securityName": "GREENLAM",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0473,
-      "buyPrice": null,
-      "sellPrice": 304.98
-    },
-    {
-      "nseCode": "GREENLAM",
-      "securityName": "GREENLAM",
-      "date": "20 Feb 2025",
-      "action": "Partially Sold",
-      "weightSold": 1.0,
-      "buyPrice": null,
-      "sellPrice": 267.22
-    },
-    {
-      "nseCode": "GREENLAM",
-      "securityName": "GREENLAM",
-      "date": "04 Apr 2025",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 224.0
-    },
-    {
-      "nseCode": "TORNTPOWER",
-      "securityName": "TORNTPOWER",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0473,
-      "buyPrice": null,
-      "sellPrice": 1597.01
-    },
-    {
-      "nseCode": "TORNTPOWER",
-      "securityName": "TORNTPOWER",
-      "date": "21 Jul 2025",
-      "action": "Wholly Sold",
-      "weightSold": 5.0,
-      "buyPrice": null,
-      "sellPrice": 1366.75
-    },
-    {
-      "nseCode": "360ONE",
-      "securityName": "360ONE",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0378,
-      "buyPrice": null,
-      "sellPrice": 788.15
-    },
-    {
-      "nseCode": "360ONE",
-      "securityName": "360ONE",
-      "date": "28 Aug 2025",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 1058.92
-    },
-    {
-      "nseCode": "VADILALIND",
-      "securityName": "VADILALIND",
-      "date": "28 Aug 2025",
-      "action": "Wholly Sold",
-      "weightSold": 3.0,
-      "buyPrice": null,
-      "sellPrice": 5000.25
-    },
-    {
-      "nseCode": "FORCEMOT",
-      "securityName": "FORCEMOT",
-      "date": "28 Aug 2025",
-      "action": "Wholly Sold",
-      "weightSold": 5.0,
-      "buyPrice": null,
-      "sellPrice": 19676.5
-    },
-    {
-      "nseCode": "LTFOODS",
-      "securityName": "LTFOODS",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0378,
-      "buyPrice": null,
-      "sellPrice": 248.77
-    },
-    {
-      "nseCode": "LTFOODS",
-      "securityName": "LTFOODS",
-      "date": "28 Aug 2025",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 431.05
-    },
-    {
-      "nseCode": "NUVAMA",
-      "securityName": "NUVAMA",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0473,
-      "buyPrice": null,
-      "sellPrice": 1019.03
-    },
-    {
-      "nseCode": "NUVAMA",
-      "securityName": "NUVAMA",
-      "date": "11 Sep 2025",
-      "action": "Wholly Sold",
-      "weightSold": 5.0,
-      "buyPrice": null,
-      "sellPrice": 1258.43
-    },
-    {
-      "nseCode": "MCX",
-      "securityName": "MCX",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0473,
-      "buyPrice": null,
-      "sellPrice": 752.75
-    },
-    {
-      "nseCode": "MCX",
-      "securityName": "MCX",
-      "date": "11 Sep 2025",
-      "action": "Wholly Sold",
-      "weightSold": 5.0,
-      "buyPrice": null,
-      "sellPrice": 1518.2
-    },
-    {
-      "nseCode": "INDIGO",
-      "securityName": "INDIGO",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0662,
-      "buyPrice": null,
-      "sellPrice": 4342.06
-    },
-    {
-      "nseCode": "INDIGO",
-      "securityName": "INDIGO",
-      "date": "28 Aug 2025",
-      "action": "Partially Sold",
-      "weightSold": 1.0,
-      "buyPrice": null,
-      "sellPrice": 5796.62
-    },
-    {
-      "nseCode": "INDIGO",
-      "securityName": "INDIGO",
-      "date": "21 Nov 2025",
-      "action": "Wholly Sold",
-      "weightSold": 6.0,
-      "buyPrice": null,
-      "sellPrice": 5814.25
-    },
-    {
-      "nseCode": "TATAPOWER",
-      "securityName": "TATAPOWER",
-      "date": "21 Nov 2025",
-      "action": "Wholly Sold",
-      "weightSold": 5.0,
-      "buyPrice": null,
-      "sellPrice": 387.74
-    },
-    {
-      "nseCode": "ZAGGLE",
-      "securityName": "ZAGGLE",
-      "date": "05 Feb 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 292.95
-    },
-    {
-      "nseCode": "LEMONTREE",
-      "securityName": "LEMONTREE",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0378,
-      "buyPrice": null,
-      "sellPrice": 144.37
-    },
-    {
-      "nseCode": "LEMONTREE",
-      "securityName": "LEMONTREE",
-      "date": "17 Mar 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 104.91
-    },
-    {
-      "nseCode": "MOLDTKPAC",
-      "securityName": "MOLDTKPAC",
-      "date": "17 Mar 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 489.88
-    },
-    {
-      "nseCode": "JMFINANCIL",
-      "securityName": "JMFINANCIL",
-      "date": "17 Mar 2026",
-      "action": "Wholly Sold",
-      "weightSold": 3.0,
-      "buyPrice": null,
-      "sellPrice": 119.83
-    },
-    {
-      "nseCode": "ASALCBR",
-      "securityName": "ASALCBR",
-      "date": "17 Mar 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 709.1
-    },
-    {
-      "nseCode": "IXIGO",
-      "securityName": "IXIGO",
-      "date": "17 Mar 2026",
-      "action": "Wholly Sold",
-      "weightSold": 3.0,
-      "buyPrice": null,
-      "sellPrice": 162.72
-    },
-    {
-      "nseCode": "KFINTECH",
-      "securityName": "KFINTECH",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0473,
-      "buyPrice": null,
-      "sellPrice": 731.79
-    },
-    {
-      "nseCode": "KFINTECH",
-      "securityName": "KFINTECH",
-      "date": "17 Mar 2026",
-      "action": "Wholly Sold",
-      "weightSold": 5.0,
-      "buyPrice": null,
-      "sellPrice": 905.41
-    },
-    {
-      "nseCode": "MOBIKWIK",
-      "securityName": "MOBIKWIK",
-      "date": "17 Mar 2026",
-      "action": "Wholly Sold",
-      "weightSold": 3.0,
-      "buyPrice": null,
-      "sellPrice": 183.13
-    },
-    {
-      "nseCode": "GODFRYPHLP",
-      "securityName": "GODFRYPHLP",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0378,
-      "buyPrice": null,
-      "sellPrice": 1292.42
-    },
-    {
-      "nseCode": "GODFRYPHLP",
-      "securityName": "GODFRYPHLP",
-      "date": "21 Nov 2025",
-      "action": "Partially Sold",
-      "weightSold": 1.0,
-      "buyPrice": null,
-      "sellPrice": 2915.75
-    },
-    {
-      "nseCode": "GODFRYPHLP",
-      "securityName": "GODFRYPHLP",
-      "date": "13 Apr 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 2043.48
-    },
-    {
-      "nseCode": "ETHOSLTD",
-      "securityName": "ETHOSLTD",
-      "date": "12 Jun 2024",
-      "action": "Partially Sold",
-      "weightSold": 0.0473,
-      "buyPrice": null,
-      "sellPrice": 2540.15
-    },
-    {
-      "nseCode": "ETHOSLTD",
-      "securityName": "ETHOSLTD",
-      "date": "28 Aug 2025",
-      "action": "Partially Sold",
-      "weightSold": 1.0,
-      "buyPrice": null,
-      "sellPrice": 2339.65
-    },
-    {
-      "nseCode": "ETHOSLTD",
-      "securityName": "ETHOSLTD",
-      "date": "13 Apr 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 2411.58
-    },
-    {
-      "nseCode": "YATRA",
-      "securityName": "YATRA",
-      "date": "13 Apr 2026",
-      "action": "Wholly Sold",
-      "weightSold": 5.0,
-      "buyPrice": null,
-      "sellPrice": 101.43
-    },
-    {
-      "nseCode": "RAMRAT",
-      "securityName": "Ram Ratna Wires Ltd",
-      "date": "10 Jun 2026",
-      "action": "Partially Sold",
-      "weightSold": 1.0,
-      "buyPrice": null,
-      "sellPrice": 364.775
-    },
-    {
-      "nseCode": "RAMRAT",
-      "securityName": "Ram Ratna Wires Ltd",
-      "date": "30 Jun 2026",
-      "action": "Wholly Sold",
-      "weightSold": 3.0,
-      "buyPrice": null,
-      "sellPrice": 403.5625
-    },
-    {
-      "nseCode": "SSWL",
-      "securityName": "Steel Strips Wheels Ltd",
-      "date": "04 Aug 2026",
-      "action": "Wholly Sold",
-      "weightSold": 4.0,
-      "buyPrice": null,
-      "sellPrice": 317.375
+      "allocation": 0,
+      "buyPrice": 217.0
     }
-  ],
-  "Mid_Small_Cap_sold": [],
-  "Techstack_sold": [],
-  "Make_in_India_sold": []
+  ]
 }

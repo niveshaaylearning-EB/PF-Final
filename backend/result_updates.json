@@ -35,8 +35,50 @@
     "received": false,
     "checked": false,
     "sent": false,
-    "operationalPerformance": [],
-    "outlook": [],
+    "operationalPerformance": [
+      {
+        "heading": "Record Financial Results",
+        "text": "In Q2 FY27, revenue grew 61% YoY to ₹1,930 crore, while standalone EBITDA rose 107% YoY to ₹237 crore, driving EBITDA margins up to 12.3% from 9.6% in Q2 FY26. Q2 PAT expanded 209% YoY to ₹119 crore. For H1 FY27, revenue reached ₹3,440 crore (+44% YoY) and PAT stood at ₹190 crore (+115% YoY)."
+      },
+      {
+        "heading": "Per-Wheel Margin Growth",
+        "text": "EBITDA per wheel increased to ₹404 in Q2 FY27 (up from ₹242 in Q2 FY26) and ₹362 for H1 FY27. This margin growth was driven by a richer product mix with a higher share of aluminum wheels, increased export contribution, cost optimizations, and pass-through price revisions for non-raw material input costs."
+      },
+      {
+        "heading": "Segment Performance",
+        "text": "The alloy wheel segment contributed ~45% of Q2 FY27 revenue (~42% in H1 FY27), delivering volumes of ~12 lakh units in Q2 and 23 lakh units in H1. Commercial vehicle (CV) wheels recorded the highest growth across segments, while tractor wheel market share improved from 43% to 45%."
+      },
+      {
+        "heading": "Export Revenue Recovery",
+        "text": "Export revenue grew 69% YoY in Q2 FY27 to ₹187 crore following a soft Q1, taking H1 FY27 export revenue to ₹314 crore (+16% YoY) due to market diversification across Europe, Asia, and Latin America."
+      },
+      {
+        "heading": "Organic Capacity Expansion",
+        "text": "Debottlenecking at the Mehsana plant improved productivity by ~10% without capital expenditure, raising annualized aluminum wheel capacity to ~5.4 million units amidst near-full utilization."
+      }
+    ],
+    "outlook": [
+      {
+        "heading": "Upgraded Performance Guidance",
+        "text": "Management expects to maintain or exceed the EBITDA per wheel level of ₹404 in upcoming quarters, surpassing original FY27 guidance of >20% revenue growth and >₹310 EBITDA per wheel. FY27 export revenue is projected to exceed the ₹600 crore target, with a 3-year export target set at ₹1,500–2,000 crore."
+      },
+      {
+        "heading": "Bhuj Capacity Expansion",
+        "text": "The Bhuj facility additions are on track, with the 1.1 million unit aluminum knuckle plant commencing commercial production in Q4 FY27 and the 1.2 million unit aluminum wheel expansion starting in April 2027 (taking total aluminum wheel capacity to 6.6 million units)."
+      },
+      {
+        "heading": "Greenfield Sambhajinagar Facility",
+        "text": "Board approved a greenfield project in Sambhajinagar (Aurangabad) with an outlay of ~₹1,400 crore spread over 60 months. The facility will add 2.5 million alloy wheels, 2.8 million steel wheels, and a hot stamping line targeted to generate ₹400 crore in revenue. Plant commissioning for trials is expected in Q2 CY27."
+      },
+      {
+        "heading": "FY27 Capex Budget",
+        "text": "Total planned expenditure exceeds ₹600 crore for FY27, comprising ₹420 crore for Bhuj, ₹120 crore to expand tractor wheel capacity by 0.5 million sets at Dappar, and ₹70 crore for automation and machinery replacement."
+      },
+      {
+        "heading": "Return Profile",
+        "text": "Management targets project ROCE above 20–24% for new capital investments, driven by closer proximity to OEM customers in Maharashtra, reduced freight costs, and higher plant automation."
+      }
+    ],
     "baskets": {
       "Trends_Triology": {
         "label": "Trends Triology",
@@ -47,11 +89,15 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "05 Oct 2026 11:42 UTC",
+    "updatedAt": "31 Oct 2026 10:42 UTC",
     "sentResults": false,
     "financialTable": null,
-    "resultUpdateDocument": null,
-    "financialImages": []
+    "resultUpdateDocument": "SSWL.docx",
+    "financialImages": [
+      "SSWL_0.png",
+      "SSWL_1.png",
+      "SSWL_2.png"
+    ]
   },
   "DHOOTTRANS": {
     "nseCode": "DHOOTTRANS",
@@ -89,7 +135,7 @@
     "baskets": {
       "Green_Energy": {
         "label": "Green Energy",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "23 Oct 2026 07:09 UTC",
@@ -110,7 +156,7 @@
     "baskets": {
       "Green_Energy": {
         "label": "Green Energy",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "23 Oct 2026 07:09 UTC",
@@ -211,7 +257,7 @@
   "EBGNG": {
     "nseCode": "EBGNG",
     "securityName": "GNG Electronics Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-03",
     "received": false,
     "checked": false,
     "sent": false,
@@ -315,7 +361,7 @@
   "SBCL": {
     "nseCode": "SBCL",
     "securityName": "Shivalik Bimetal Controls Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-04",
     "received": false,
     "checked": false,
     "sent": false,
@@ -348,7 +394,7 @@
   "QPOWER": {
     "nseCode": "QPOWER",
     "securityName": "Quality Power Electrical Equipments Ltd",
-    "resultDate": null,
+    "resultDate": "2026-10-31",
     "received": false,
     "checked": false,
     "sent": false,
@@ -381,7 +427,7 @@
   "INOXINDIA": {
     "nseCode": "INOXINDIA",
     "securityName": "INOX India Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-03",
     "received": false,
     "checked": false,
     "sent": false,
@@ -456,7 +502,7 @@
   "AVALON": {
     "nseCode": "AVALON",
     "securityName": "Avalon Technologies Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-12",
     "received": false,
     "checked": false,
     "sent": false,
@@ -485,7 +531,7 @@
   "SANSERA": {
     "nseCode": "SANSERA",
     "securityName": "Sansera Engineering Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-05",
     "received": false,
     "checked": false,
     "sent": false,
@@ -551,7 +597,7 @@
     "baskets": {
       "Green_Energy": {
         "label": "Green Energy",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "23 Oct 2026 07:09 UTC",
@@ -560,7 +606,7 @@
   "SANGHVIMOV": {
     "nseCode": "SANGHVIMOV",
     "securityName": "SANGHVIMOV",
-    "resultDate": null,
+    "resultDate": "2026-11-02",
     "received": false,
     "checked": false,
     "sent": false,
@@ -581,7 +627,7 @@
   "NEOGEN": {
     "nseCode": "NEOGEN",
     "securityName": "Neogen Chemicals Ltd",
-    "resultDate": null,
+    "resultDate": "2026-10-31",
     "received": false,
     "checked": false,
     "sent": false,
@@ -734,7 +780,7 @@
     "baskets": {
       "Mid_Small_Cap": {
         "label": "Mid & Small Cap",
-        "currentlyHeld": true
+        "currentlyHeld": false
       },
       "IPO_Basket": {
         "label": "IPO Basket",
@@ -742,7 +788,7 @@
       },
       "Consumer_Trends": {
         "label": "Consumer Trends",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "23 Oct 2026 07:09 UTC",
@@ -763,7 +809,7 @@
     "baskets": {
       "Mid_Small_Cap": {
         "label": "Mid & Small Cap",
-        "currentlyHeld": true
+        "currentlyHeld": false
       },
       "Techstack": {
         "label": "Techstack",
@@ -777,9 +823,9 @@
     "nseCode": "AARTIPHARM",
     "securityName": "AARTIPHARM",
     "resultDate": "2026-10-28",
-    "received": false,
-    "checked": false,
-    "sent": false,
+    "received": true,
+    "checked": true,
+    "sent": true,
     "sentResults": false,
     "operationalPerformance": [],
     "outlook": [],
@@ -799,7 +845,7 @@
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC",
+    "updatedAt": "31 Oct 2026 11:44 UTC",
     "financialImages": []
   },
   "ACUTAAS": {
@@ -830,7 +876,7 @@
   "SHILPAMED": {
     "nseCode": "SHILPAMED",
     "securityName": "SHILPAMED",
-    "resultDate": null,
+    "resultDate": "2026-11-05",
     "received": false,
     "checked": false,
     "sent": false,
@@ -855,7 +901,7 @@
   "JYOTICNC": {
     "nseCode": "JYOTICNC",
     "securityName": "Jyoti CNC Automation Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-03",
     "received": false,
     "checked": false,
     "sent": false,
@@ -942,7 +988,7 @@
     "baskets": {
       "Mid_Small_Cap": {
         "label": "Mid & Small Cap",
-        "currentlyHeld": true
+        "currentlyHeld": false
       },
       "Techstack": {
         "label": "Techstack",
@@ -1030,7 +1076,7 @@
   "CENTUM": {
     "nseCode": "CENTUM",
     "securityName": "CENTUM",
-    "resultDate": null,
+    "resultDate": "2026-11-04",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1130,7 +1176,7 @@
   "SEDEMAC": {
     "nseCode": "SEDEMAC",
     "securityName": "SEDEMAC Mechatronics Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-03",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1163,7 +1209,7 @@
   "OMNI": {
     "nseCode": "OMNI",
     "securityName": "Omnitech Engineering Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-04",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1255,7 +1301,7 @@
   "KUSUMGAR": {
     "nseCode": "KUSUMGAR",
     "securityName": "KUSUMGAR",
-    "resultDate": null,
+    "resultDate": "2026-11-05",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1288,7 +1334,7 @@
     "baskets": {
       "IPO_Basket": {
         "label": "IPO Basket",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "23 Oct 2026 07:09 UTC",
@@ -1318,7 +1364,7 @@
   "ATLANTAELE": {
     "nseCode": "ATLANTAELE",
     "securityName": "ATLANTAELE",
-    "resultDate": null,
+    "resultDate": "2026-10-31",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1389,7 +1435,7 @@
   "EXICOM": {
     "nseCode": "EXICOM",
     "securityName": "EXICOM",
-    "resultDate": null,
+    "resultDate": "2026-11-04",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1497,11 +1543,11 @@
     "baskets": {
       "Trends_Triology": {
         "label": "Trends Triology",
-        "currentlyHeld": true
+        "currentlyHeld": false
       },
       "Make_in_India": {
         "label": "Make in India",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "23 Oct 2026 07:09 UTC",
@@ -1561,22 +1607,43 @@
     "nseCode": "MEESHO",
     "securityName": "MEESHO",
     "resultDate": "2026-10-28",
-    "received": false,
-    "checked": false,
-    "sent": false,
-    "sentResults": false,
+    "received": true,
+    "checked": true,
+    "sent": true,
+    "sentResults": true,
     "operationalPerformance": [],
-    "outlook": [],
+    "outlook": [
+      {
+        "heading": "",
+        "text": "Expects FY27 full-year contribution margins to show substantial YoY improvement over FY26, restoring logistics spreads closer to FY25 levels, while selectively reinvesting cost savings into lower pricing to drive long-term flywheels."
+      },
+      {
+        "heading": "Cost Leverage",
+        "text": "Server costs as a percentage of NMV are expected to normalize to baseline levels by Q4 FY27, with overall fixed costs targeted to decrease to ~3% of NMV by FY31."
+      },
+      {
+        "heading": "Capital Allocation",
+        "text": "Annual investment for new initiatives, including the newly acquired Kirana Club, remains capped at INR 200 crore, while logistics automation capex will continue to be largely partner-funded."
+      },
+      {
+        "heading": "Monetization Strategy",
+        "text": "Reiterated strategy against charging consumer platform fees, choosing instead to scale monetization via advertising take rates, ad monetization tailwinds into FY28, and expanding seller/consumer financial services."
+      }
+    ],
     "financialTable": null,
-    "resultUpdateDocument": null,
+    "resultUpdateDocument": "MEESHO.docx",
     "baskets": {
       "Techstack": {
         "label": "Techstack",
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC",
-    "financialImages": []
+    "updatedAt": "29 Oct 2026 05:36 UTC",
+    "financialImages": [
+      "MEESHO_0.png",
+      "MEESHO_1.png",
+      "MEESHO_2.png"
+    ]
   },
   "TEJASNET": {
     "nseCode": "TEJASNET",
@@ -1623,7 +1690,7 @@
   "DATAPATTNS": {
     "nseCode": "DATAPATTNS",
     "securityName": "DATAPATTNS",
-    "resultDate": null,
+    "resultDate": "2026-11-06",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1677,7 +1744,7 @@
     "baskets": {
       "Techstack": {
         "label": "Techstack",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "23 Oct 2026 07:09 UTC",
@@ -1728,7 +1795,7 @@
   "REDINGTON": {
     "nseCode": "REDINGTON",
     "securityName": "REDINGTON",
-    "resultDate": null,
+    "resultDate": "2026-11-04",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1771,22 +1838,75 @@
     "nseCode": "NETWEB",
     "securityName": "NETWEB",
     "resultDate": "2026-10-24",
-    "received": false,
-    "checked": false,
-    "sent": false,
-    "sentResults": false,
-    "operationalPerformance": [],
-    "outlook": [],
+    "received": true,
+    "checked": true,
+    "sent": true,
+    "sentResults": true,
+    "operationalPerformance": [
+      {
+        "heading": "Record Quarterly Growth",
+        "text": "Netweb Technologies reported a 335.7% YoY increase in Q2 FY27 revenue from operations to ₹1,323 crore. Operating EBITDA grew 334% YoY to ₹197 crore with a 14.9% margin, while PAT rose 348.8% YoY to ₹137 crore with a 10.2% margin."
+      },
+      {
+        "heading": "First-Half Execution",
+        "text": "H1 FY27 revenue reached ₹2,143 crore, up 254.2% YoY, with an EBITDA margin of 15.1% (₹323 crore). H1 FY27 PAT stood at ₹222 crore, up 258.5% YoY, surpassing full-year FY26 PAT of ₹206 crore within six months. RoE and RoCE stood at 31.4% and 38.6%, respectively."
+      },
+      {
+        "heading": "Revenue Mix Breakdown",
+        "text": "AI systems served as the core growth driver in Q2 FY27, contributing ₹773 crore (58.4% of revenue) and growing 1,068% YoY. High-Performance Computing (HPC) and Private Cloud contributed ₹248 crore and ₹245 crore, respectively."
+      },
+      {
+        "heading": "Order Book & Capital",
+        "text": "Confirmed order book stood at ₹2,629 crore as of September 30, 2026, alongside an additional L1 position of ₹653 crore. The company maintained a zero net debt position with ₹14 crore net cash and had utilized ₹767 crore of its ₹1,200 crore QIP proceeds, leaving ₹403 crore unutilized."
+      },
+      {
+        "heading": "Working Capital Dynamics",
+        "text": "Cash conversion cycle stood at 94 days in Q2 FY27, with receivable days improving to 62 days and inventory days at 117 days to support upcoming order fulfillment. Netweb added 49 new customers during H1 FY27."
+      }
+    ],
+    "outlook": [
+      {
+        "heading": "Revenue & Growth Guidance",
+        "text": "Management reaffirmed its full-year FY27 revenue target of ₹4,000 crore and maintained its 30%–40% CAGR guidance over the next 2–3 years, backed by an active business pipeline of ₹11,152 crore with a historical conversion rate of ~60%."
+      },
+      {
+        "heading": "",
+        "text": "Margin"
+      },
+      {
+        "heading": "",
+        "text": "Outlook:"
+      },
+      {
+        "heading": "",
+        "text": "The company expects operating EBITDA margins to remain stable around 13%–14%, relying on operating leverage from large-scale enterprise orders to offset short-term gross margin fluctuations from component price pressures."
+      },
+      {
+        "heading": "R&D & Taiwan Subsidiary",
+        "text": "Board approved the setup of a 100% owned R&D subsidiary in Taiwan to recruit local hardware design engineers and accelerate product development capabilities."
+      },
+      {
+        "heading": "Product Roadmap",
+        "text": "Design work for NVIDIA Vera Rubin platforms has commenced, including schematic and Gerber file creation, with plans to make systems commercially available to customers by January."
+      },
+      {
+        "heading": "Sovereign AI Opportunities",
+        "text": "Netweb is targeting more than half of the 5-year outlay for National Supercomputing Mission 2.0 (NSM 2.0) and expects strong participation in IndiaAI Mission RFPs (via C-DAC empanelment), CSP expansions, and domestic BFSI adoption."
+      }
+    ],
     "financialTable": null,
-    "resultUpdateDocument": null,
+    "resultUpdateDocument": "NETWEB.doc",
     "baskets": {
       "Techstack": {
         "label": "Techstack",
         "currentlyHeld": true
       }
     },
-    "updatedAt": "23 Oct 2026 07:09 UTC",
-    "financialImages": []
+    "updatedAt": "29 Oct 2026 05:36 UTC",
+    "financialImages": [
+      "NETWEB_0.jpg",
+      "NETWEB_1.png"
+    ]
   },
   "PAUSHAKLTD": {
     "nseCode": "PAUSHAKLTD",
@@ -1803,7 +1923,7 @@
     "baskets": {
       "Make_in_India": {
         "label": "Make in India",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "23 Oct 2026 07:09 UTC",
@@ -1883,7 +2003,7 @@
   "DIVGIITTS": {
     "nseCode": "DIVGIITTS",
     "securityName": "DIVGIITTS",
-    "resultDate": null,
+    "resultDate": "2026-11-02",
     "received": false,
     "checked": false,
     "sent": false,
@@ -2000,7 +2120,7 @@
     "baskets": {
       "Consumer_Trends": {
         "label": "Consumer Trends",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "23 Oct 2026 07:09 UTC",
@@ -2030,7 +2150,7 @@
   "CPPLUS": {
     "nseCode": "CPPLUS",
     "securityName": "Aditya Infotech Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-05",
     "received": false,
     "checked": false,
     "sent": false,
@@ -2052,9 +2172,9 @@
     "updatedAt": "23 Oct 2026 11:49 UTC",
     "financialImages": []
   },
-  "LIQUIDCASE": {
-    "nseCode": "LIQUIDCASE",
-    "securityName": "LIQUIDCASE",
+  "IGIL": {
+    "nseCode": "IGIL",
+    "securityName": "IGIL",
     "resultDate": null,
     "received": false,
     "checked": false,
@@ -2066,16 +2186,12 @@
     "financialImages": [],
     "resultUpdateDocument": null,
     "baskets": {
-      "Trends_Triology": {
-        "label": "Trends Triology",
-        "currentlyHeld": true
-      },
-      "Techstack": {
-        "label": "Techstack",
+      "IPO_Basket": {
+        "label": "IPO Basket",
         "currentlyHeld": true
       }
     },
-    "updatedAt": "31 Oct 2026 09:33 UTC"
+    "updatedAt": "29 Oct 2026 05:32 UTC"
   },
   "RKFORGE": {
     "nseCode": "RKFORGE",
@@ -2098,10 +2214,10 @@
     },
     "updatedAt": "31 Oct 2026 09:33 UTC"
   },
-  "RACLGEAR": {
-    "nseCode": "RACLGEAR",
-    "securityName": "RACLGEAR",
-    "resultDate": null,
+  "AEROENTER": {
+    "nseCode": "AEROENTER",
+    "securityName": "AEROENTER",
+    "resultDate": "2026-11-04",
     "received": false,
     "checked": false,
     "sent": false,
@@ -2112,8 +2228,16 @@
     "financialImages": [],
     "resultUpdateDocument": null,
     "baskets": {
-      "Consumer_Trends": {
-        "label": "Consumer Trends",
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      },
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
         "currentlyHeld": true
       }
     },
@@ -2144,6 +2268,31 @@
     },
     "updatedAt": "31 Oct 2026 09:33 UTC"
   },
+  "LIQUIDCASE": {
+    "nseCode": "LIQUIDCASE",
+    "securityName": "LIQUIDCASE",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "financialImages": [],
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Trends_Triology": {
+        "label": "Trends Triology",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "31 Oct 2026 09:33 UTC"
+  },
   "BPLPHARMA": {
     "nseCode": "BPLPHARMA",
     "securityName": "BPLPHARMA",
@@ -2165,9 +2314,9 @@
     },
     "updatedAt": "31 Oct 2026 09:33 UTC"
   },
-  "IGIL": {
-    "nseCode": "IGIL",
-    "securityName": "IGIL",
+  "RACLGEAR": {
+    "nseCode": "RACLGEAR",
+    "securityName": "RACLGEAR",
     "resultDate": null,
     "received": false,
     "checked": false,
@@ -2179,11 +2328,11 @@
     "financialImages": [],
     "resultUpdateDocument": null,
     "baskets": {
-      "IPO_Basket": {
-        "label": "IPO Basket",
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
         "currentlyHeld": true
       }
     },
-    "updatedAt": "29 Oct 2026 05:32 UTC"
+    "updatedAt": "31 Oct 2026 09:33 UTC"
   }
 }
