@@ -186,7 +186,7 @@
   "TRITURBINE": {
     "nseCode": "TRITURBINE",
     "securityName": "Triveni Turbine Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-11",
     "received": false,
     "checked": false,
     "sent": false,
@@ -207,7 +207,7 @@
   "TDPOWERSYS": {
     "nseCode": "TDPOWERSYS",
     "securityName": "TD Power Systems Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-12",
     "received": false,
     "checked": false,
     "sent": false,
@@ -743,7 +743,7 @@
   "MANINDS": {
     "nseCode": "MANINDS",
     "securityName": "Man Industries (India) Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-12",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1001,7 +1001,7 @@
   "ASTRAMICRO": {
     "nseCode": "ASTRAMICRO",
     "securityName": "ASTRAMICRO",
-    "resultDate": null,
+    "resultDate": "2026-11-12",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1030,7 +1030,7 @@
   "ETHOSLTD": {
     "nseCode": "ETHOSLTD",
     "securityName": "ETHOSLTD",
-    "resultDate": null,
+    "resultDate": "2026-11-12",
     "received": false,
     "checked": false,
     "sent": false,
@@ -2129,7 +2129,7 @@
   "MANORAMA": {
     "nseCode": "MANORAMA",
     "securityName": "Manorama Industries Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-12",
     "received": false,
     "checked": false,
     "sent": false,
