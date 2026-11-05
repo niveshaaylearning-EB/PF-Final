@@ -1,4 +1,4 @@
-import { API_BASE } from './api/base.js';
+import { API_BASE, getAuthToken } from './api/base.js';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import './App.css';
 import { fetchBasket, fetchLiveData, fetchLiveStock, saveBasket, fetchBasketStockMap, fetchBasketWeightMap, fetchPerformanceBatch } from './api/client.js';
@@ -212,9 +212,27 @@ const mergeRowLive = (row, live) => {
 const MAX_HISTORY = 15;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Read edit permission from URL param set by the main app
+// Edit permission: admin status is now the real gate (2026-11-05, per direct
+// instruction -- "in actual holdings except watchlist, restrict only editing
+// ... to admins"). `?edit=0` still forces read-only on top of that (e.g. a
+// shareable read-only link), but no longer being an admin was previously
+// enough on its own to get full edit rights, which this closes. Same
+// unsigned-payload JWT decode already used by BuyPricePage/PLStatementPage/
+// CorporateActionsPage -- fine for a UI-only gate since every mutating
+// endpoint already enforces admin server-side independently.
+const _FOUNDER_FALLBACK = new Set(['jay.chaudhari@niveshaay.com', 'nukul.madaan@niveshaay.com', 'nakshatra.rathi@niveshaay.com']);
+const _getAdminState = () => {
+  try {
+    const t = getAuthToken();
+    if (!t) return { isAdmin: false };
+    const payload = JSON.parse(atob(t.split('.')[1]));
+    if (payload.exp && Date.now() > payload.exp * 1000) return { isAdmin: false };
+    const email = (payload.sub || '').toLowerCase().trim();
+    return { isAdmin: (payload.admin === true || _FOUNDER_FALLBACK.has(email)) };
+  } catch { return { isAdmin: false }; }
+};
 const _qp = new URLSearchParams(window.location.search);
-const READ_ONLY = _qp.get('edit') === '0';
+const READ_ONLY = _qp.get('edit') === '0' || !_getAdminState().isAdmin;
 
 export default function App() {
   const _path = window.location.pathname.replace(/^\/wp/, '') || '/';
