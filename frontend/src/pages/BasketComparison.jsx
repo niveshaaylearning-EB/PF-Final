@@ -45,9 +45,17 @@ export default function BasketComparison() {
     </div>
   );
 
+  // The backend appends a synthetic "basket" for the shared benchmark index
+  // (isIndex: true) so the period-returns table below can show it as a
+  // comparison column alongside every real basket -- kept out of the summary
+  // card grids above, since those are about our own baskets' performance.
+  const realBaskets = baskets.filter(b => !b.isIndex);
+  const indexEntry  = baskets.find(b => b.isIndex);
+  const tableColumns = indexEntry ? [...realBaskets, indexEntry] : realBaskets;
+
   const FEATURED = ['green energy', 'mid & small cap', 'mid and small cap'];
-  const featured = baskets.filter(b => FEATURED.some(f => b.name.toLowerCase().includes(f)));
-  const rest     = baskets.filter(b => !FEATURED.some(f => b.name.toLowerCase().includes(f)));
+  const featured = realBaskets.filter(b => FEATURED.some(f => b.name.toLowerCase().includes(f)));
+  const rest     = realBaskets.filter(b => !FEATURED.some(f => b.name.toLowerCase().includes(f)));
 
   function BasketCard({ b, large }) {
     const overall = b.historic?.Overall;
@@ -125,9 +133,14 @@ export default function BasketComparison() {
             <thead>
               <tr style={{ background: 'rgba(255,255,255,0.02)' }}>
                 <th style={{ padding: '10px 16px', textAlign: 'left', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Period</th>
-                {baskets.map(b => (
-                  <th key={b.id} style={{ padding: '10px 12px', textAlign: 'center', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
-                    {b.name.replace(/^NIA\s*/,'')}
+                {tableColumns.map(b => (
+                  <th key={b.id} style={{
+                    padding: '10px 12px', textAlign: 'center', fontWeight: 600, fontSize: '0.75rem', whiteSpace: 'nowrap',
+                    color: b.isIndex ? 'var(--text-main)' : 'var(--text-muted)',
+                    fontStyle: b.isIndex ? 'italic' : 'normal',
+                    borderLeft: b.isIndex ? '2px solid rgba(255,255,255,0.12)' : 'none',
+                  }}>
+                    {b.isIndex ? `${b.name} (Index)` : b.name.replace(/^NIA\s*/,'')}
                   </th>
                 ))}
               </tr>
@@ -136,7 +149,10 @@ export default function BasketComparison() {
               {(viewType === 'cagr' ? ['1Y', '3Y', '5Y'] : PERIODS).map((p) => {
                 const isActive  = p === activePeriod;
                 const isOverall = p === 'Overall';
-                const vals = baskets.map(b => {
+                // Best/worst badges are about ranking our OWN baskets against
+                // each other -- the index column is a reference line, not a
+                // competitor, so it's excluded from this comparison.
+                const vals = realBaskets.map(b => {
                   const h = b.historic?.[p];
                   return viewType === 'net' ? (h?.net ?? null) : (h?.cagr ?? null);
                 });
@@ -155,17 +171,19 @@ export default function BasketComparison() {
                         <span style={{ marginLeft: '6px', fontSize: '0.65rem', color: 'var(--primary)', background: 'rgba(99,102,241,0.25)', padding: '1px 5px', borderRadius: '8px' }}>selected</span>
                       )}
                     </td>
-                    {baskets.map((b) => {
+                    {tableColumns.map((b) => {
                       const h = b.historic?.[p];
                       const v = viewType === 'net' ? (h?.net ?? null) : (h?.cagr ?? null);
-                      const isBest  = v != null && v === best;
-                      const isWorst = v != null && v === worst && worst !== best;
+                      const isBest  = !b.isIndex && v != null && v === best;
+                      const isWorst = !b.isIndex && v != null && v === worst && worst !== best;
                       return (
                         <td key={b.id} style={{
                           textAlign: 'center', padding: '10px 12px',
                           color: v == null ? 'var(--text-muted)' : v >= 0 ? 'var(--positive)' : 'var(--negative)',
                           fontWeight: isBest ? 800 : 500,
+                          fontStyle: b.isIndex ? 'italic' : 'normal',
                           background: isBest ? 'rgba(16,185,129,0.08)' : isWorst ? 'rgba(239,68,68,0.06)' : 'transparent',
+                          borderLeft: b.isIndex ? '2px solid rgba(255,255,255,0.12)' : 'none',
                           whiteSpace: 'nowrap',
                         }}>
                           {v == null ? '—' : `${v >= 0 ? '+' : ''}${v.toFixed(2)}%`}

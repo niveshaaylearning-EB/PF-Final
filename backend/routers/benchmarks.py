@@ -157,15 +157,13 @@ def get_basket_comparison():
         key = basket_name.lower().replace("nia ", "").strip()
         return _BASKET_INCEPTION_MAP.get(key)
 
-    def _period_returns(basket_key: str, basket_name: str) -> dict:
-        if not hi or basket_key not in hi:
-            return {}
-        idx_data = hi[basket_key].get("data", [])
+    def _period_returns(idx_data: list, inception_str: "str | None", value_field: str = "value") -> dict:
         if not idx_data:
             return {}
         latest_pt = max(idx_data, key=lambda d: d["date"])
-        lv = float(latest_pt["value"])
-        inception_str = _get_inception(basket_name)
+        if latest_pt.get(value_field) is None:
+            return {}
+        lv = float(latest_pt[value_field])
         result = {}
         for label, days in [("1M", 30), ("3M", 91), ("6M", 182), ("1Y", 365), ("3Y", 1095), ("5Y", 1825)]:
             period_start = (today - timedelta(days=days)).isoformat()
@@ -178,9 +176,9 @@ def get_basket_comparison():
             else:
                 after = [d for d in idx_data if d["date"] >= period_start]
                 base_pt = min(after, key=lambda d: d["date"]) if after else None
-            if not base_pt:
+            if not base_pt or base_pt.get(value_field) is None:
                 continue
-            bv = float(base_pt["value"])
+            bv = float(base_pt[value_field])
             if bv <= 0:
                 continue
             years = max(
@@ -196,8 +194,8 @@ def get_basket_comparison():
             if not inc_exact:
                 after_inc = [d for d in idx_data if d["date"] >= inception_str]
                 inc_exact = min(after_inc, key=lambda d: d["date"]) if after_inc else None
-            if inc_exact:
-                bv_inc = float(inc_exact["value"])
+            if inc_exact and inc_exact.get(value_field) is not None:
+                bv_inc = float(inc_exact[value_field])
                 if bv_inc > 0:
                     years_inc = max(
                         (datetime.strptime(latest_pt["date"], "%Y-%m-%d") - datetime.strptime(inc_exact["date"], "%Y-%m-%d")).days / 365.25,
@@ -215,11 +213,32 @@ def get_basket_comparison():
         if clean_name in _BASKET_EXCLUDE_NAMES:
             continue
         inception = _get_inception(bdata["name"])
+        idx_data = (hi.get(bid) or {}).get("data", []) if hi else []
         out.append({
             "id":        bid,
             "name":      bdata["name"],
             "stats":     bdata["stats"],
             "inception": inception,
-            "historic":  _period_returns(bid, bdata["name"]),
+            "historic":  _period_returns(idx_data, inception),
         })
+
+    # Benchmark ("NIFTY Smallcap 100") column -- every basket's historical_index.json
+    # entry already carries the SAME index's values alongside its own under
+    # "benchmark" (confirmed live: all 7 baskets map to "NIFTY Smallcap 100"), so
+    # rather than a fresh Yahoo Finance fetch, reuse whichever basket's own index
+    # history goes back furthest (Mid & Small Cap, since 2019-09-19) to maximise
+    # how many of the 1M/3M/6M/1Y/3Y/5Y/Since-Inception periods have data.
+    if hi:
+        longest_key = max(hi, key=lambda k: len(hi[k].get("data", [])))
+        longest_data = hi[longest_key].get("data", [])
+        bench_name = hi[longest_key].get("benchmark") or "Benchmark Index"
+        if longest_data:
+            out.append({
+                "id":        "__index__",
+                "name":      bench_name,
+                "stats":     {"stock_count": None},
+                "inception": longest_data[0]["date"],
+                "historic":  _period_returns(longest_data, longest_data[0]["date"], value_field="benchmark"),
+                "isIndex":   True,
+            })
     return out
