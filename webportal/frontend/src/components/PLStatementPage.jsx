@@ -425,10 +425,12 @@ export default function PLStatementPage() {
                 border: '1px solid var(--border)', background: 'var(--card-bg)', color: '#f87171',
               }}>Clear</button>
             )}
-            <button onClick={addRow} style={{
-              padding: '0.32rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer',
-              border: '1px solid #22c55e', background: 'rgba(34,197,94,0.08)', color: '#22c55e',
-            }}>+ Add Row</button>
+            {userIsAdmin && (
+              <button onClick={addRow} style={{
+                padding: '0.32rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer',
+                border: '1px solid #22c55e', background: 'rgba(34,197,94,0.08)', color: '#22c55e',
+              }}>+ Add Row</button>
+            )}
             <button onClick={exportXlsx} disabled={displayRows.length === 0} style={{
               padding: '0.32rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer',
               border: '1px solid var(--accent-blue)', background: 'rgba(59,130,246,0.1)', color: 'var(--accent-blue)',
@@ -570,18 +572,19 @@ export default function PLStatementPage() {
                         <input defaultValue={row.buyDate} onBlur={e => setExtraRows(prev => prev.map(r => r._key === row._key ? { ...r, buyDate: e.target.value } : r))} style={cellInput} placeholder="DD Mon YYYY" />
                       ) : fmtDate(row.buyDate)}
                     </td>
-                    {/* Sell Price — editable */}
+                    {/* Sell Price — editable by admins only (2026-11-05) */}
                     <td className="pl-td-right">
                       <input
                         type="number" step="0.01"
                         defaultValue={ov.sellPrice !== undefined ? ov.sellPrice ?? '' : row.sellPrice ?? ''}
                         key={`sp-${row._key}-${ov.sellPrice}`}
                         onBlur={e => setOv(row._key, 'sellPrice', e.target.value, row)}
-                        style={{ ...cellInput, textAlign: 'right', width: '6rem', color: ov.sellPrice !== undefined ? '#fbbf24' : 'inherit' }}
+                        disabled={!userIsAdmin}
+                        style={{ ...cellInput, textAlign: 'right', width: '6rem', color: ov.sellPrice !== undefined ? '#fbbf24' : 'inherit', cursor: userIsAdmin ? 'text' : 'default', opacity: userIsAdmin ? 1 : 0.7 }}
                         placeholder="₹"
                       />
                     </td>
-                    {/* Avg Buy Price — editable, Save button for single-lot rows */}
+                    {/* Avg Buy Price — editable by admins only, Save button for single-lot rows */}
                     <td className="pl-td-right">
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', justifyContent: 'flex-end' }}>
                         <input
@@ -589,7 +592,8 @@ export default function PLStatementPage() {
                           defaultValue={ov.buyPrice !== undefined ? ov.buyPrice ?? '' : row.buyPrice ?? ''}
                           key={`bp-${row._key}-${ov.buyPrice}`}
                           onBlur={e => setOv(row._key, 'buyPrice', e.target.value, row)}
-                          style={{ ...cellInput, textAlign: 'right', width: '5.5rem', color: ov.buyPrice !== undefined ? '#fbbf24' : 'inherit' }}
+                          disabled={!userIsAdmin}
+                          style={{ ...cellInput, textAlign: 'right', width: '5.5rem', color: ov.buyPrice !== undefined ? '#fbbf24' : 'inherit', cursor: userIsAdmin ? 'text' : 'default', opacity: userIsAdmin ? 1 : 0.7 }}
                           placeholder="₹"
                         />
                         {userIsAdmin && pendingSave[row._key] && (
