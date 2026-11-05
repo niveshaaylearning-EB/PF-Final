@@ -509,7 +509,7 @@ export default function PLStatementPage() {
                     </th>
                   );
                 })}
-                <th style={{ width: '3rem' }}></th>
+                {userIsAdmin && <th style={{ width: '3rem' }}></th>}
               </tr>
               {/* Column filter row */}
               {showFilters && (
@@ -524,7 +524,8 @@ export default function PLStatementPage() {
                   </th>
                   <th></th>
                   <th><input value={colFilters.buyDate} onChange={e => setColF('buyDate', e.target.value)} placeholder="e.g. 2024" style={fStyle} /></th>
-                  <th></th><th></th><th></th><th></th>
+                  <th></th><th></th><th></th>
+                  {userIsAdmin && <th></th>}
                 </tr>
               )}
             </thead>
@@ -606,14 +607,16 @@ export default function PLStatementPage() {
                     <td className={`pl-td-right pl-gain-cell ${isGain ? 'pl-positive' : isLoss ? 'pl-negative' : ''}`}>
                       {fmtPct(row.gainPct)}
                     </td>
-                    {/* Remove button */}
-                    <td style={{ textAlign: 'center', padding: '0 0.25rem' }}>
-                      <button onClick={() => deleteRow(row._key)} title="Remove row" style={{
-                        background: 'none', border: '1px solid #475569', borderRadius: '4px',
-                        color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '0.8rem', lineHeight: 1,
-                        padding: '1px 5px', fontWeight: 700,
-                      }}>−</button>
-                    </td>
+                    {/* Remove button -- admin-only per direct feedback (2026-11-05) */}
+                    {userIsAdmin && (
+                      <td style={{ textAlign: 'center', padding: '0 0.25rem' }}>
+                        <button onClick={() => deleteRow(row._key)} title="Remove row" style={{
+                          background: 'none', border: '1px solid #475569', borderRadius: '4px',
+                          color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '0.8rem', lineHeight: 1,
+                          padding: '1px 5px', fontWeight: 700,
+                        }}>−</button>
+                      </td>
+                    )}
                   </tr>
                 );
               })}
