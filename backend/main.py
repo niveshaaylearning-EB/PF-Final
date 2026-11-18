@@ -374,16 +374,31 @@ async def _startup_prewarm():
                         existing.password_hash = rec["password_hash"]
                     if "is_approved" in rec:
                         existing.is_approved = rec["is_approved"]
-                    # is_admin/whatsapp_phone were missing from this restore path
-                    # entirely -- confirmed live 2026-10-22: a verified WhatsApp
-                    # number (set and tested the same day) was silently wiped by
-                    # a later redeploy, since _dump_allowed_emails() never even
-                    # serialized it to the GitHub-backed JSON this loop reads
-                    # from, let alone restored it here. Same gap existed for
-                    # admin-grant status.
-                    if "is_admin" in rec:
+                    # Fill-in-only, never clobber, for these two -- confirmed
+                    # live 2026-11-18 that the earlier unconditional-overwrite
+                    # version of this code (added 2026-10-22 to fix a
+                    # "whatsapp number wiped on redeploy" report) was ITSELF
+                    # the cause of every later recurrence of that exact same
+                    # report: allowed_emails_data.json is never kept in sync
+                    # with the live DB on production (GITHUB_TOKEN isn't set
+                    # there, so _push_allowed_emails only writes the local
+                    # file, which the image rebuild on every redeploy resets
+                    # back to its last git-committed state -- a state that
+                    # has literally never had a phone number in it, in any
+                    # commit). So `"whatsapp_phone" in rec` was true on every
+                    # redeploy with rec["whatsapp_phone"] == None, and this
+                    # loop dutifully overwrote the real, live DB value (which
+                    # DOES survive redeploys via the /data disk -- only this
+                    # restore step was destroying it) with that null, every
+                    # single time. Only ever filling in a value this file
+                    # actually HAS, never erasing one the DB already has,
+                    # keeps this restore path doing its real job (recovering
+                    # from genuine data loss) without being a recurring cause
+                    # of the exact thing it was meant to prevent. Same latent
+                    # risk existed for is_admin grants -- fixed the same way.
+                    if rec.get("is_admin"):
                         existing.is_admin = rec["is_admin"]
-                    if "whatsapp_phone" in rec:
+                    if rec.get("whatsapp_phone"):
                         existing.whatsapp_phone = rec["whatsapp_phone"]
         # Restore access requests
         _sync_access_requests_to_db(db_s)
