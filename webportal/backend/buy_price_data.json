@@ -1209,17 +1209,16 @@
       "prevBuyEvents": "",
       "prevSellEvents": ""
     },
-    "AEROENTER": {
-      "securityName": "Aeroflex Industries Ltd",
+    "AEROFLEX": {
+      "securityName": "Aeroflex Industries Limited",
       "segment": "BSE Industrials",
       "buyEvents": "30 Oct 2026 * 3",
       "sellEvents": "",
-      "buyOHLC": {
-        "30 Oct 2026": 126.0925
-      },
-      "sellOHLC": {},
       "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevSellEvents": "",
+      "buyOHLC": {
+        "30 Oct 2026": 537.6875
+      }
     }
   },
   "Mid_Small_Cap": {
@@ -3645,17 +3644,16 @@
       "prevBuyEvents": "",
       "prevSellEvents": ""
     },
-    "AEROENTER": {
-      "securityName": "Aeroflex Industries Ltd",
+    "AEROFLEX": {
+      "securityName": "Aeroflex Industries Limited",
       "segment": "BSE Industrials",
       "buyEvents": "30 Oct 2026 * 3",
       "sellEvents": "",
-      "buyOHLC": {
-        "30 Oct 2026": 126.0925
-      },
-      "sellOHLC": {},
       "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevSellEvents": "",
+      "buyOHLC": {
+        "30 Oct 2026": 537.6875
+      }
     }
   },
   "IPO_Basket": {
@@ -6531,17 +6529,16 @@
       "prevBuyEvents": "20 Aug 2026 * 3",
       "prevSellEvents": "04 Aug 2026 * 3"
     },
-    "AEROENTER": {
-      "securityName": "Aeroflex Industries Ltd",
+    "AEROFLEX": {
+      "securityName": "Aeroflex Industries Limited",
       "segment": "BSE Industrials",
       "buyEvents": "30 Oct 2026 * 3",
       "sellEvents": "",
-      "buyOHLC": {
-        "30 Oct 2026": 126.0925
-      },
-      "sellOHLC": {},
       "prevBuyEvents": "",
-      "prevSellEvents": ""
+      "prevSellEvents": "",
+      "buyOHLC": {
+        "30 Oct 2026": 537.6875
+      }
     }
   },
   "Make_in_India": {
