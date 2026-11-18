@@ -119,13 +119,13 @@ def _anthropic_usage_load() -> dict:
 def _anthropic_cap_exceeded() -> bool:
     """App-level spend guard only -- tracks an ESTIMATE of this month's
     Haiku 5.5 cost in a local file and refuses further Anthropic calls past
-    ANTHROPIC_MONTHLY_CAP_USD (default $10) once exceeded, falling through to
+    ANTHROPIC_MONTHLY_CAP_USD (default $15) once exceeded, falling through to
     the free providers below instead. This is NOT a real billing limit: if
     this file is lost/reset, or multiple backend instances run without
     shared storage, it undercounts. Set an actual hard spend limit on this
     key in the Anthropic Console as the real backstop -- this is a
     best-effort extra layer on top of that, not a replacement for it."""
-    cap = float(os.environ.get("ANTHROPIC_MONTHLY_CAP_USD", "10"))
+    cap = float(os.environ.get("ANTHROPIC_MONTHLY_CAP_USD", "15"))
     usage = _anthropic_usage_load()
     import datetime
     month = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m")
