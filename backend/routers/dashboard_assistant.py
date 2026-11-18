@@ -1,5 +1,6 @@
-"""Dashboard Assistant -- a tool-calling LLM (Groq, with Gemini/OpenRouter
-free-tier fallbacks -- see _PROVIDERS) that answers natural-language
+"""Dashboard Assistant -- a tool-calling LLM (Anthropic Haiku 5.5 first, with
+Groq/OpenRouter/Gemini free-tier fallbacks -- see _PROVIDERS) that answers
+natural-language
 questions about what's actually in this dashboard: basket holdings, buy
 prices, rebalance history/summary, basket returns/profile/overlap, stock
 exposure and cross-basket detail, live prices, benchmarks, watchlist,
@@ -41,6 +42,7 @@ from auth import is_admin_email
 router = APIRouter()
 
 _WEBPORTAL = "http://127.0.0.1:8000/wp"
+_ANTHROPIC_MODEL = "claude-haiku-5-5"
 _GROQ_MODEL = "openai/gpt-oss-120b"
 _GEMINI_MODEL = "gemini-3.8-flash"
 # Switched 2026-10-29 from a hardcoded free-model slug (nvidia/nemotron-3-
@@ -78,11 +80,190 @@ _MAX_TOOL_ROUNDS = 4
 # and failing on every single call. Groq stays first (the one that's
 # actually been reliable for real volume); OpenRouter second (now fixed,
 # see above); Gemini last, since 20/day is barely useful even as a backup.
+# Anthropic goes FIRST (added 2026-11-18) -- it's paid and actually reliable,
+# unlike the free tiers below which exist only because this assistant used to
+# have no paid option at all. Haiku 5.5 only (cheap, fits a FAQ assistant);
+# see _anthropic_cap_exceeded() for the spend guard that keeps it from running
+# past a configured monthly budget on this postpaid key.
 _PROVIDERS = [
+    ("anthropic",  "ANTHROPIC_API_KEY",  "anthropic://native",                                        _ANTHROPIC_MODEL),
     ("groq",       "GROQ_API_KEY",       "https://api.groq.com/openai/v1",                            _GROQ_MODEL),
     ("openrouter", "OPENROUTER_API_KEY", "https://openrouter.ai/api/v1",                              _OPENROUTER_MODEL),
     ("gemini",     "GEMINI_API_KEY",     "https://generativelanguage.googleapis.com/v1beta/openai/",  _GEMINI_MODEL),
 ]
+
+# ── Anthropic support ─────────────────────────────────────────────────────
+# Anthropic's Messages API has a different shape than the OpenAI-compatible
+# chat-completions endpoint every other provider above speaks (tool_use
+# content blocks + a top-level `system` param, vs. tool_calls + a system
+# message in the list, etc.) -- rather than forking the whole request loop
+# below into a provider-specific branch, _AnthropicCompatClient translates
+# both directions so the EXISTING loop (built for the OpenAI shape) works
+# against Anthropic completely unchanged.
+
+# Haiku 5.5 pricing (prompts <=100K tokens, which every call here is) -- used
+# only for the local spend-guard estimate below, not for anything billed.
+_ANTHROPIC_INPUT_PER_MTOK = 0.10
+_ANTHROPIC_OUTPUT_PER_MTOK = 0.50
+
+_ANTHROPIC_USAGE_FILE = Path(__file__).parent.parent / "anthropic_usage.json"
+
+
+def _anthropic_usage_load() -> dict:
+    try:
+        return json.loads(_ANTHROPIC_USAGE_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _anthropic_cap_exceeded() -> bool:
+    """App-level spend guard only -- tracks an ESTIMATE of this month's
+    Haiku 5.5 cost in a local file and refuses further Anthropic calls past
+    ANTHROPIC_MONTHLY_CAP_USD (default $10) once exceeded, falling through to
+    the free providers below instead. This is NOT a real billing limit: if
+    this file is lost/reset, or multiple backend instances run without
+    shared storage, it undercounts. Set an actual hard spend limit on this
+    key in the Anthropic Console as the real backstop -- this is a
+    best-effort extra layer on top of that, not a replacement for it."""
+    cap = float(os.environ.get("ANTHROPIC_MONTHLY_CAP_USD", "10"))
+    usage = _anthropic_usage_load()
+    import datetime
+    month = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m")
+    return usage.get("month") == month and usage.get("cost_usd", 0) >= cap
+
+
+def _anthropic_record_cost(usage) -> None:
+    import datetime
+    month = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m")
+    data = _anthropic_usage_load()
+    if data.get("month") != month:
+        data = {"month": month, "cost_usd": 0.0}
+    cost = (
+        (usage.input_tokens or 0) / 1_000_000 * _ANTHROPIC_INPUT_PER_MTOK
+        + (usage.output_tokens or 0) / 1_000_000 * _ANTHROPIC_OUTPUT_PER_MTOK
+    )
+    data["cost_usd"] = data.get("cost_usd", 0.0) + cost
+    try:
+        _ANTHROPIC_USAGE_FILE.write_text(json.dumps(data), encoding="utf-8")
+    except Exception as e:
+        print(f"[dashboard_assistant] failed to persist anthropic usage: {e!r}")
+
+
+def _oai_tools_to_anthropic(tools: list[dict]) -> list[dict]:
+    return [
+        {"name": t["function"]["name"], "description": t["function"]["description"], "input_schema": t["function"]["parameters"]}
+        for t in tools
+    ]
+
+
+def _oai_messages_to_anthropic(messages: list[dict]) -> tuple[str, list[dict]]:
+    """Converts the OpenAI-shape chat-completions messages list this module's
+    loop builds/appends to into (system_text, anthropic_messages). Anthropic
+    requires all tool_result blocks answering one assistant turn's tool_use
+    blocks to be combined into a SINGLE following user message -- the OpenAI
+    shape instead appends one role="tool" message per call, so consecutive
+    "tool" messages are grouped back into one user turn here."""
+    system_parts = []
+    out = []
+    pending_results = []
+
+    def flush():
+        nonlocal pending_results
+        if pending_results:
+            out.append({"role": "user", "content": pending_results})
+            pending_results = []
+
+    for m in messages:
+        role = m.get("role")
+        if role == "system":
+            flush()
+            if m.get("content"):
+                system_parts.append(m["content"])
+        elif role == "user":
+            flush()
+            out.append({"role": "user", "content": m.get("content") or ""})
+        elif role == "assistant":
+            flush()
+            blocks = []
+            if m.get("content"):
+                blocks.append({"type": "text", "text": m["content"]})
+            for tc in (m.get("tool_calls") or []):
+                fn = tc["function"]
+                try:
+                    tc_input = json.loads(fn.get("arguments") or "{}")
+                except Exception:
+                    tc_input = {}
+                blocks.append({"type": "tool_use", "id": tc["id"], "name": fn["name"], "input": tc_input})
+            out.append({"role": "assistant", "content": blocks})
+        elif role == "tool":
+            pending_results.append({"type": "tool_result", "tool_use_id": m["tool_call_id"], "content": m.get("content") or ""})
+    flush()
+    return "\n\n".join(system_parts), out
+
+
+class _ShimFunction:
+    def __init__(self, name, arguments):
+        self.name = name
+        self.arguments = arguments
+
+
+class _ShimToolCall:
+    def __init__(self, call_id, name, arguments):
+        self.id = call_id
+        self.function = _ShimFunction(name, arguments)
+
+    def model_dump(self):
+        return {"id": self.id, "type": "function", "function": {"name": self.function.name, "arguments": self.function.arguments}}
+
+
+class _AnthropicCompatClient:
+    """Mimics the subset of AsyncOpenAI's `client.chat.completions.create(...)`
+    surface this module's loop actually calls, so that loop needs no
+    provider-specific branches. See module docstring above `_PROVIDERS`."""
+
+    def __init__(self, api_key: str):
+        import anthropic
+        self._client = anthropic.AsyncAnthropic(api_key=api_key)
+        self.chat = self._Chat(self)
+
+    class _Chat:
+        def __init__(self, outer):
+            self.completions = outer._Completions(outer)
+
+    class _Completions:
+        def __init__(self, outer):
+            self._outer = outer
+
+        async def create(self, model, messages, tools=None, tool_choice="auto", temperature=None, max_tokens=2000):
+            system_text, anth_messages = _oai_messages_to_anthropic(messages)
+            kwargs = {}
+            if system_text:
+                kwargs["system"] = system_text
+            if tools:
+                kwargs["tools"] = _oai_tools_to_anthropic(tools)
+                kwargs["tool_choice"] = {"type": "none"} if tool_choice == "none" else {"type": "auto"}
+            resp = await self._outer._client.messages.create(
+                model=model, max_tokens=max_tokens,
+                messages=anth_messages, output_config={"effort": "low"}, **kwargs,
+            )
+            _anthropic_record_cost(resp.usage)
+            text = None
+            tool_calls = []
+            for block in resp.content:
+                if block.type == "text" and block.text:
+                    text = (text or "") + block.text
+                elif block.type == "tool_use":
+                    tool_calls.append(_ShimToolCall(block.id, block.name, json.dumps(block.input)))
+            message = type("Msg", (), {"content": text, "tool_calls": tool_calls or None})()
+            choice = type("Choice", (), {"message": message})()
+            return type("Resp", (), {"choices": [choice]})()
+
+
+def _make_llm_client(base_url: str, api_key: str):
+    if base_url == "anthropic://native":
+        return _AnthropicCompatClient(api_key=api_key)
+    from openai import AsyncOpenAI
+    return AsyncOpenAI(api_key=api_key, base_url=base_url, timeout=20.0)
 
 
 def _require_admin(request: Request) -> str:
@@ -603,8 +784,6 @@ async def ask_assistant(body: dict, request: Request):
     _MAX_HISTORY_MESSAGES = 8
     history = history[-_MAX_HISTORY_MESSAGES:]
 
-    from openai import AsyncOpenAI
-
     # RAG-first fast path (added 2026-10-30): answer from a periodically-
     # refreshed local snapshot in ONE LLM call, no live tool fetch, before
     # falling back to the full tool-calling loop below. Covers the common
@@ -637,7 +816,10 @@ async def ask_assistant(body: dict, request: Request):
             key = os.environ.get(env_var)
             if not key:
                 continue
-            client = AsyncOpenAI(api_key=key, base_url=base_url, timeout=20.0)
+            if provider_name == "anthropic" and _anthropic_cap_exceeded():
+                print("[dashboard_assistant] Anthropic monthly cap reached -- skipping to free providers")
+                continue
+            client = _make_llm_client(base_url, key)
             try:
                 resp = await client.chat.completions.create(
                     model=model, messages=rag_messages, tools=_TOOL_SCHEMAS, tool_choice="auto", temperature=0.2, max_tokens=2000,
@@ -657,6 +839,9 @@ async def ask_assistant(body: dict, request: Request):
         key = os.environ.get(env_var)
         if not key:
             continue
+        if provider_name == "anthropic" and _anthropic_cap_exceeded():
+            print("[dashboard_assistant] Anthropic monthly cap reached -- skipping to free providers")
+            continue
         # The SDK's default timeout is 10 minutes -- confirmed live 2026-10-29
         # that with no explicit timeout, a single slow/stalled provider call
         # just hangs the whole request near-indefinitely instead of failing
@@ -664,7 +849,7 @@ async def ask_assistant(body: dict, request: Request):
         # fallback chain. 20s per call is generous for a tool-calling round
         # (each round should take a few seconds) while still failing fast
         # enough that a genuinely stuck provider doesn't eat the user's wait.
-        client = AsyncOpenAI(api_key=key, base_url=base_url, timeout=20.0)
+        client = _make_llm_client(base_url, key)
         # Fresh copy of messages per provider -- a failed attempt on one
         # provider must not leave its partial tool-call state polluting the
         # next provider's request.
@@ -734,5 +919,5 @@ async def ask_assistant(body: dict, request: Request):
             continue  # try the next provider
 
     if not errors:
-        return {"answer": None, "error": "No AI provider configured -- set GROQ_API_KEY or GEMINI_API_KEY."}
+        return {"answer": None, "error": "No AI provider configured -- set ANTHROPIC_API_KEY, GROQ_API_KEY, or GEMINI_API_KEY."}
     return {"answer": None, "error": f"All AI providers failed: {errors}"}
