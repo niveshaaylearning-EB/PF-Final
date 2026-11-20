@@ -115,6 +115,10 @@
       "Green_Energy": {
         "label": "Green Energy",
         "currentlyHeld": true
+      },
+      "IPO_Basket": {
+        "label": "IPO Basket",
+        "currentlyHeld": true
       }
     },
     "updatedAt": "27 Oct 2026 06:23 UTC",
@@ -303,7 +307,7 @@
   "ENRIN": {
     "nseCode": "ENRIN",
     "securityName": "Siemens Energy India Ltd",
-    "resultDate": null,
+    "resultDate": "2026-11-25",
     "received": false,
     "checked": false,
     "sent": false,
@@ -1426,7 +1430,7 @@
     "baskets": {
       "IPO_Basket": {
         "label": "IPO Basket",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "23 Oct 2026 07:09 UTC",
@@ -1522,6 +1526,18 @@
       },
       "Consumer_Trends": {
         "label": "Consumer Trends",
+        "currentlyHeld": true
+      },
+      "Green_Energy": {
+        "label": "Green Energy",
+        "currentlyHeld": true
+      },
+      "Mid_Small_Cap": {
+        "label": "Mid & Small Cap",
+        "currentlyHeld": true
+      },
+      "Techstack": {
+        "label": "Techstack",
         "currentlyHeld": true
       }
     },
@@ -2036,7 +2052,7 @@
     "baskets": {
       "Consumer_Trends": {
         "label": "Consumer Trends",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "23 Oct 2026 07:09 UTC",
@@ -2099,7 +2115,7 @@
     "baskets": {
       "Consumer_Trends": {
         "label": "Consumer Trends",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "23 Oct 2026 07:09 UTC",
@@ -2230,15 +2246,15 @@
     "baskets": {
       "Green_Energy": {
         "label": "Green Energy",
-        "currentlyHeld": true
+        "currentlyHeld": false
       },
       "Mid_Small_Cap": {
         "label": "Mid & Small Cap",
-        "currentlyHeld": true
+        "currentlyHeld": false
       },
       "Techstack": {
         "label": "Techstack",
-        "currentlyHeld": true
+        "currentlyHeld": false
       }
     },
     "updatedAt": "31 Oct 2026 09:33 UTC"
@@ -2334,5 +2350,47 @@
       }
     },
     "updatedAt": "31 Oct 2026 09:33 UTC"
+  },
+  "ROLEXRINGS": {
+    "nseCode": "ROLEXRINGS",
+    "securityName": "ROLEXRINGS",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "financialImages": [],
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "20 Nov 2026 07:53 UTC"
+  },
+  "PARAGMILK": {
+    "nseCode": "PARAGMILK",
+    "securityName": "PARAGMILK",
+    "resultDate": null,
+    "received": false,
+    "checked": false,
+    "sent": false,
+    "sentResults": false,
+    "operationalPerformance": [],
+    "outlook": [],
+    "financialTable": null,
+    "financialImages": [],
+    "resultUpdateDocument": null,
+    "baskets": {
+      "Consumer_Trends": {
+        "label": "Consumer Trends",
+        "currentlyHeld": true
+      }
+    },
+    "updatedAt": "20 Nov 2026 07:53 UTC"
   }
 }

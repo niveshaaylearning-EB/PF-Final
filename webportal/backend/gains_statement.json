@@ -8353,39 +8353,27 @@
         }
       ]
     },
-    "BLACKBUCK": {
-      "securityName": "Blackbuck Ltd",
-      "prevSeriesGains": [
+    "EBGNG": {
+      "securityName": "GNG Electronics Ltd",
+      "prevSeriesGains": [],
+      "currentSeriesGains": [
         {
-          "sellDate": "23 Oct 2026",
-          "sellWeight": 5.0,
-          "sellPrice": 544.4625,
-          "sellType": "Full Exit",
+          "sellDate": "06 Nov 2026",
+          "sellWeight": 4.0,
+          "sellPrice": 639.75,
+          "sellType": "Partial Sell",
           "lots": [
             {
-              "buyDate": "13 Feb 2025",
-              "weight": 2.5,
-              "buyPrice": 473.18,
-              "gainPct": 15.06
-            },
-            {
-              "buyDate": "25 Mar 2025",
-              "weight": 1.5,
-              "buyPrice": 416.84,
-              "gainPct": 30.62
-            },
-            {
-              "buyDate": "05 Feb 2026",
-              "weight": 1.0,
-              "buyPrice": 616.78,
-              "gainPct": -11.73
+              "buyDate": "31 Jul 2025",
+              "weight": 4.0,
+              "buyPrice": 330.4,
+              "gainPct": 93.63
             }
           ],
-          "weightedGainPct": 14.37,
-          "weightedAvgBuyPrice": 484.998
+          "weightedGainPct": 93.63,
+          "weightedAvgBuyPrice": 330.4
         }
-      ],
-      "currentSeriesGains": []
+      ]
     },
     "INTERARCH": {
       "securityName": "Interarch Building Solutions Ltd",
@@ -9051,28 +9039,6 @@
         }
       ]
     },
-    "GAUDIUMIVF": {
-      "securityName": "Gaudium IVF and Women Health Ltd",
-      "prevSeriesGains": [
-        {
-          "sellDate": "20 Aug 2026",
-          "sellWeight": 3.0,
-          "sellPrice": 113.68,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "21 Jul 2026",
-              "weight": 3.0,
-              "buyPrice": 152.0575,
-              "gainPct": -25.24
-            }
-          ],
-          "weightedGainPct": -25.24,
-          "weightedAvgBuyPrice": 152.0575
-        }
-      ],
-      "currentSeriesGains": []
-    },
     "SUDEEPPHRM": {
       "securityName": "Sudeep Pharma Ltd",
       "prevSeriesGains": [
@@ -9139,24 +9105,24 @@
       ],
       "currentSeriesGains": []
     },
-    "ELLEN": {
-      "securityName": "Ellenbarrie Industrial Gases Ltd",
+    "IGIL": {
+      "securityName": "International Gemological Institute Ltd",
       "prevSeriesGains": [
         {
-          "sellDate": "21 Jul 2026",
-          "sellWeight": 4.0,
-          "sellPrice": 292.2625,
+          "sellDate": "18 Sep 2026",
+          "sellWeight": 5.0,
+          "sellPrice": 326.15,
           "sellType": "Full Exit",
           "lots": [
             {
-              "buyDate": "20 Aug 2026",
-              "weight": 4.0,
-              "buyPrice": 329.5875,
-              "gainPct": -11.32
+              "buyDate": "23 Oct 2026",
+              "weight": 5.0,
+              "buyPrice": 369.2125,
+              "gainPct": -11.66
             }
           ],
-          "weightedGainPct": -11.32,
-          "weightedAvgBuyPrice": 329.5875
+          "weightedGainPct": -11.66,
+          "weightedAvgBuyPrice": 369.2125
         }
       ],
       "currentSeriesGains": []
@@ -14675,8 +14641,7 @@
     },
     "CARYSIL": {
       "securityName": "Carysil Ltd",
-      "prevSeriesGains": [],
-      "currentSeriesGains": [
+      "prevSeriesGains": [
         {
           "sellDate": "12 Jun 2024",
           "sellWeight": 0.0473,
@@ -14692,8 +14657,25 @@
           ],
           "weightedGainPct": 0.31,
           "weightedAvgBuyPrice": 871.32
+        },
+        {
+          "sellDate": "16 Nov 2026",
+          "sellWeight": 5.0,
+          "sellPrice": 957.25,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "13 Nov 2023",
+              "weight": 4.9989,
+              "buyPrice": 871.32,
+              "gainPct": 9.86
+            }
+          ],
+          "weightedGainPct": 9.86,
+          "weightedAvgBuyPrice": 871.32
         }
-      ]
+      ],
+      "currentSeriesGains": []
     },
     "CARTRADE": {
       "securityName": "Cartrade Tech Ltd",
@@ -14883,6 +14865,28 @@
         }
       ]
     },
+    "MANORAMA": {
+      "securityName": "Manorama Industries Ltd",
+      "prevSeriesGains": [],
+      "currentSeriesGains": [
+        {
+          "sellDate": "25 Sep 2026",
+          "sellWeight": 1.0,
+          "sellPrice": 1874.75,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "20 Feb 2025",
+              "weight": 1.0,
+              "buyPrice": 1082.84,
+              "gainPct": 73.13
+            }
+          ],
+          "weightedGainPct": 73.13,
+          "weightedAvgBuyPrice": 1082.84
+        }
+      ]
+    },
     "PARAGMILK": {
       "securityName": "Parag Milk Foods Ltd",
       "prevSeriesGains": [],
@@ -14891,7 +14895,7 @@
           "sellDate": "05 May 2026",
           "sellWeight": 5.0,
           "sellPrice": 221.51,
-          "sellType": "Full Exit",
+          "sellType": "Partial Sell",
           "lots": [
             {
               "buyDate": "11 Sep 2025",
@@ -15000,28 +15004,6 @@
         }
       ]
     },
-    "SHAILY": {
-      "securityName": "Shaily Engineering Plastics Ltd",
-      "prevSeriesGains": [
-        {
-          "sellDate": "30 Oct 2026",
-          "sellWeight": 4.0,
-          "sellPrice": 3133.85,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "20 Feb 2025",
-              "weight": 4.0,
-              "buyPrice": 1455.76,
-              "gainPct": 115.27
-            }
-          ],
-          "weightedGainPct": 115.27,
-          "weightedAvgBuyPrice": 1455.76
-        }
-      ],
-      "currentSeriesGains": []
-    },
     "V2RETAIL": {
       "securityName": "V2 Retail Ltd",
       "prevSeriesGains": [],
@@ -15057,6 +15039,50 @@
           ],
           "weightedGainPct": 27.75,
           "weightedAvgBuyPrice": 181.56
+        }
+      ]
+    },
+    "SEDEMAC": {
+      "securityName": "SEDEMAC Mechatronics Ltd",
+      "prevSeriesGains": [],
+      "currentSeriesGains": [
+        {
+          "sellDate": "25 Sep 2026",
+          "sellWeight": 1.0,
+          "sellPrice": 3404.075,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "13 Apr 2026",
+              "weight": 1.0,
+              "buyPrice": 1654.83,
+              "gainPct": 105.71
+            }
+          ],
+          "weightedGainPct": 105.71,
+          "weightedAvgBuyPrice": 1654.83
+        }
+      ]
+    },
+    "AEROFLEX": {
+      "securityName": "Aeroflex Industries Ltd",
+      "prevSeriesGains": [],
+      "currentSeriesGains": [
+        {
+          "sellDate": "25 Sep 2026",
+          "sellWeight": 2.0,
+          "sellPrice": 528.025,
+          "sellType": "Partial Sell",
+          "lots": [
+            {
+              "buyDate": "17 Mar 2026",
+              "weight": 2.0,
+              "buyPrice": 249.71,
+              "gainPct": 111.46
+            }
+          ],
+          "weightedGainPct": 111.46,
+          "weightedAvgBuyPrice": 249.71
         }
       ]
     },
@@ -15141,28 +15167,6 @@
           "weightedAvgBuyPrice": 234.1
         }
       ]
-    },
-    "KRN": {
-      "securityName": "KRN Heat Exchanger and Refrigeration Ltd",
-      "prevSeriesGains": [
-        {
-          "sellDate": "30 Oct 2026",
-          "sellWeight": 4.0,
-          "sellPrice": 1147.2,
-          "sellType": "Full Exit",
-          "lots": [
-            {
-              "buyDate": "22 May 2026",
-              "weight": 4.0,
-              "buyPrice": 1120.4,
-              "gainPct": 2.39
-            }
-          ],
-          "weightedGainPct": 2.39,
-          "weightedAvgBuyPrice": 1120.4
-        }
-      ],
-      "currentSeriesGains": []
     },
     "LIQUIDCASE": {
       "securityName": "LIQUIDCASE",
@@ -15383,8 +15387,7 @@
     },
     "EMIL": {
       "securityName": "EMIL",
-      "prevSeriesGains": [],
-      "currentSeriesGains": [
+      "prevSeriesGains": [
         {
           "sellDate": "12 Jun 2024",
           "sellWeight": 0.0378,
@@ -15422,8 +15425,25 @@
           ],
           "weightedGainPct": -30.91,
           "weightedAvgBuyPrice": 188.7515
+        },
+        {
+          "sellDate": "16 Nov 2026",
+          "sellWeight": 5.0,
+          "sellPrice": 139.84,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "25 Sep 2026",
+              "weight": 4.9991,
+              "buyPrice": 195.4475,
+              "gainPct": -28.45
+            }
+          ],
+          "weightedGainPct": -28.45,
+          "weightedAvgBuyPrice": 195.4475
         }
-      ]
+      ],
+      "currentSeriesGains": []
     },
     "JYOTHYLAB": {
       "securityName": "JYOTHYLAB",
@@ -16293,6 +16313,45 @@
           ],
           "weightedGainPct": -15.06,
           "weightedAvgBuyPrice": 373.65
+        }
+      ],
+      "currentSeriesGains": [
+        {
+          "sellDate": "25 Sep 2026",
+          "sellWeight": 1.0,
+          "sellPrice": 381.2125,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "30 Oct 2026",
+              "weight": 1.0,
+              "buyPrice": 506.45,
+              "gainPct": -24.73
+            }
+          ],
+          "weightedGainPct": -24.73,
+          "weightedAvgBuyPrice": 506.45
+        }
+      ]
+    },
+    "RACLGEAR": {
+      "securityName": "RACL Geartech Ltd",
+      "prevSeriesGains": [
+        {
+          "sellDate": "25 Sep 2026",
+          "sellWeight": 4.0,
+          "sellPrice": 1675.625,
+          "sellType": "Full Exit",
+          "lots": [
+            {
+              "buyDate": "30 Oct 2026",
+              "weight": 4.0,
+              "buyPrice": 1389.15,
+              "gainPct": 20.62
+            }
+          ],
+          "weightedGainPct": 20.62,
+          "weightedAvgBuyPrice": 1389.15
         }
       ],
       "currentSeriesGains": []
