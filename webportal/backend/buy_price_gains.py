@@ -1093,6 +1093,24 @@ async def get_basket(key: str, background_tasks: BackgroundTasks):
     }
 
 
+@router.get("/api/admin/basket-buy-dates/{key}")
+async def basket_buy_dates(key: str):
+    """Read-only, open to any logged-in user: earliest still-open buy-lot
+    date per currently-held NSE code in basket `key` -- feeds the Competitor
+    Analysis stock-by-stock table's "date added" hover. Same FIFO lot logic
+    as /api/stock-detail (a stock fully sold and re-bought shows its CURRENT
+    entry date, not its original one)."""
+    bp_data = _load_buy_price_data().get(key, {})
+    result = {}
+    for code, det in bp_data.items():
+        buy_events = _parse_buy_events(det.get("buyEvents") or "")
+        sell_events = _parse_buy_events(det.get("sellEvents") or "")
+        open_lots = _current_series_buy_events(buy_events, sell_events)
+        if open_lots:
+            result[code] = min((d for d, _ in open_lots), key=_date_to_ts)
+    return {"buyDates": result}
+
+
 @router.get("/api/stock-detail/{nse_code}")
 async def stock_detail(nse_code: str):
     """For the cross-basket search's "click a stock to see detail" feature --

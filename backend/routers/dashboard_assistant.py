@@ -37,8 +37,6 @@ from pathlib import Path
 import requests as _http
 from fastapi import APIRouter, HTTPException, Request
 
-from auth import is_admin_email
-
 router = APIRouter()
 
 _WEBPORTAL = "http://127.0.0.1:8000/wp"
@@ -266,13 +264,6 @@ def _make_llm_client(base_url: str, api_key: str):
     return AsyncOpenAI(api_key=api_key, base_url=base_url, timeout=20.0)
 
 
-def _require_admin(request: Request) -> str:
-    user = getattr(request.state, "user", None)
-    if not is_admin_email(user):
-        raise HTTPException(status_code=403, detail="Admin access required.")
-    return user
-
-
 # ── Tool implementations -- each one is plain synchronous code (requests/file
 # I/O), always run via asyncio.to_thread() below so it never blocks the
 # event loop, including the self-loopback HTTP calls some of them make. ──────
@@ -371,6 +362,30 @@ def _tool_get_competitor_rebalance_history(args: dict) -> dict:
             if args.get("includeFullHistory"):
                 result["fullRebalanceHistory"] = (c.get("fullRebalanceHistory") or [])[-3:]
             return result
+    return {"error": "No matching competitor -- call get_competitor_list to see the exact key/label spelling."}
+
+
+def _tool_get_competitor_holdings(args: dict) -> dict:
+    # get_competitor_list strips out `stocks` (too large to include for
+    # every competitor in one call -- see its own comment), and
+    # get_competitor_rebalance_history only ever returns CHANGES (added/
+    # removed/reweighted), never a full current holding list -- confirmed
+    # live 2026-11-21 that with neither tool the model had no way to answer
+    # "what does <competitor> currently hold" except by replaying rebalance
+    # deltas with no starting point, and said so rather than guessing. This
+    # is the missing piece: current full holdings (name, weight, NSE code,
+    # sector, market-cap segment) for ONE competitor, straight from the same
+    # "Stocks & Weights" data competitor_login.py already scrapes/parses.
+    data = _wp_get("/api/admin/competitor-list")
+    key = (args.get("competitorKey") or "").strip().lower()
+    label = (args.get("competitorLabel") or "").strip().lower()
+    for c in data.get("competitors") or []:
+        if (key and c.get("key") == key) or (label and label in (c.get("label") or "").lower()):
+            return {
+                "key": c.get("key"), "label": c.get("label"), "manager": c.get("manager"),
+                "stocks": c.get("stocks"), "marketCapMix": c.get("marketCapMix"),
+                "lastFetched": c.get("lastFetched"),
+            }
     return {"error": "No matching competitor -- call get_competitor_list to see the exact key/label spelling."}
 
 
@@ -557,6 +572,7 @@ _TOOL_IMPLS = {
     "get_watchlist": _tool_get_watchlist,
     "get_competitor_list": _tool_get_competitor_list,
     "get_competitor_rebalance_history": _tool_get_competitor_rebalance_history,
+    "get_competitor_holdings": _tool_get_competitor_holdings,
     "get_result_update_status": _tool_get_result_update_status,
     "get_results_calendar": _tool_get_results_calendar,
     "get_stock_exposure": _tool_get_stock_exposure,
@@ -625,12 +641,20 @@ _TOOL_SCHEMAS = [
     }},
     {"type": "function", "function": {
         "name": "get_competitor_list",
-        "description": "Every one of the 8 tracked COMPETITOR smallcases (external funds we benchmark against, e.g. GEM-Q Model, Omni AI-Tech Global-AI Theme, Wright Innovation Theme, Caprize Earnings Momentum Portfolio -- NOT our own baskets): key, label, fund manager, current stocks, CAGR, and rebalance history. Call this to see the exact key/label list if a competitor's name is ambiguous.",
+        "description": "Every one of the 8 tracked COMPETITOR smallcases (external funds we benchmark against, e.g. GEM-Q Model, Omni AI-Tech Global-AI Theme, Wright Innovation Theme, Caprize Earnings Momentum Portfolio -- NOT our own baskets): key, label, fund manager, CAGR, and launch date. Does NOT include current stock holdings -- use get_competitor_holdings for that. Call this to see the exact key/label list if a competitor's name is ambiguous.",
         "parameters": {"type": "object", "properties": {}},
     }},
     {"type": "function", "function": {
+        "name": "get_competitor_holdings",
+        "description": "One COMPETITOR smallcase's CURRENT full holdings: every stock it holds right now with its weight %, NSE code, sector, and market-cap segment. This is the right tool for 'what does X hold' / 'X's weights' questions -- get_competitor_rebalance_history only gives CHANGES (added/removed/reweighted), not a full current list. Match by key or a partial/fuzzy label (e.g. 'Omni' matches 'Omni AI-Tech Global-AI Theme').",
+        "parameters": {"type": "object", "properties": {
+            "competitorKey": {"type": "string"},
+            "competitorLabel": {"type": "string", "description": "Partial name is fine, e.g. 'Omni' or 'GEM-Q'"},
+        }},
+    }},
+    {"type": "function", "function": {
         "name": "get_competitor_rebalance_history",
-        "description": "One COMPETITOR smallcase's rebalance history (not one of our own baskets -- use get_rebalance_history for those). Match by key or a partial/fuzzy label (e.g. 'Omni' matches 'Omni AI-Tech Global-AI Theme').",
+        "description": "One COMPETITOR smallcase's rebalance CHANGES over time -- stocks added/removed/reweighted on each date, not a full current holding list (use get_competitor_holdings for that). Match by key or a partial/fuzzy label (e.g. 'Omni' matches 'Omni AI-Tech Global-AI Theme').",
         "parameters": {"type": "object", "properties": {
             "competitorKey": {"type": "string"},
             "competitorLabel": {"type": "string", "description": "Partial name is fine, e.g. 'Omni' or 'GEM-Q'"},
@@ -748,7 +772,7 @@ _SYSTEM_PROMPT = f"""You are the Niveshaay dashboard's own assistant. Answer que
 
 Two different things can be named in a question, and they use DIFFERENT tools -- never assume a name must be one of OUR baskets just because no basket matches it:
 - OUR OWN baskets (the {len(_BASKET_KEYS_HINT.split(', '))} listed above) -- holdings, rebalances, returns, gains, corporate actions, watchlist, result updates.
-- The 8 tracked COMPETITOR smallcases (external funds, e.g. GEM-Q Model, Consumer Durables Stars Tracker, Omni AI-Tech Global-AI Theme, AI & Data Center Theme, Wright Innovation Theme, Nirivantes TechWave Select Theme, Caprize Earnings Momentum Portfolio, Caprize Midcap & Smallcap Portfolio) -- use get_competitor_list / get_competitor_rebalance_history for these, matching by partial name.
+- The 8 tracked COMPETITOR smallcases (external funds, e.g. GEM-Q Model, Consumer Durables Stars Tracker, Omni AI-Tech Global-AI Theme, AI & Data Center Theme, Wright Innovation Theme, Nirivantes TechWave Select Theme, Caprize Earnings Momentum Portfolio, Caprize Midcap & Smallcap Portfolio) -- use get_competitor_list to resolve the exact key/label, get_competitor_holdings for what a competitor currently holds (full stock list with weights), and get_competitor_rebalance_history only for what changed and when. Never try to reconstruct a competitor's current full holdings from rebalance-history changes alone -- call get_competitor_holdings instead.
 If a name in the question doesn't match a basket, check whether it's actually a competitor smallcase before saying no data exists.
 
 Speed matters: request EVERY tool call you can already tell you'll need in a single response (parallel tool calls), rather than one tool, waiting, then deciding the next one -- e.g. for "compare basket A and B" call get_basket_returns for both in the same turn, not two separate round trips. Only make a second round of calls when a result genuinely can't be known until the first one comes back (e.g. search_stock to resolve a name before a stock-specific lookup).
@@ -770,7 +794,12 @@ async def _dispatch_tool(name: str, args: dict) -> dict:
 
 @router.post("/api/admin/assistant/ask")
 async def ask_assistant(body: dict, request: Request):
-    _require_admin(request)
+    # Opened to every logged-in user (2026-11-21, by request) -- JWTMiddleware
+    # already requires a valid Bearer token for every /api/* route, so this
+    # is no longer admin-gated on top of that; every tool this assistant can
+    # call is itself read-only and already open to any logged-in user per
+    # the app's "non-admins view everything" permission model, so nothing
+    # downstream needed to change.
     _current_auth_header.set(request.headers.get("Authorization", ""))
     question = (body.get("question") or "").strip()
     if not question:

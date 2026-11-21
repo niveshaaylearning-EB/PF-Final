@@ -24,7 +24,7 @@ function shiftIsoDate(iso, deltaDays) {
 // Same semantics as CalculateReturnPage.jsx's findClosest: exact match first,
 // else the next available date after the target, else the closest date
 // before it -- kept identical so this always agrees with "Calculate Return".
-function findClosestPoint(data, targetDate) {
+export function findClosestPoint(data, targetDate) {
   const exact = data.find(d => d.date === targetDate);
   if (exact) return exact;
   const next = data.find(d => d.date > targetDate);

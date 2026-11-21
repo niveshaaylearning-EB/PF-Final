@@ -1,13 +1,70 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
-import { getToken, isAdmin } from '../utils/auth.js';
+import { MessageCircle, X, Send, Loader2, Download } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { getToken, isLoggedIn, getEmail } from '../utils/auth.js';
 import { API_BASE } from '../config.js';
 
+// Assistant replies come back as markdown (tables, bold, bullet lists --
+// e.g. the "Caprize's early buys" multi-tenure comparison table), which was
+// previously dumped as raw pipe-table text (whiteSpace: pre-wrap only, no
+// parsing) -- confirmed unreadable live, 2026-11-21. react-markdown + GFM
+// renders it properly; only the per-element inline styles below are needed
+// since this widget doesn't load a global markdown stylesheet.
+const MARKDOWN_COMPONENTS = {
+  p: ({ node, ...props }) => <p style={{ margin: '0 0 6px', lineHeight: 1.5 }} {...props} />,
+  strong: ({ node, ...props }) => <strong style={{ fontWeight: 700 }} {...props} />,
+  ul: ({ node, ...props }) => <ul style={{ margin: '0 0 6px', paddingLeft: '18px' }} {...props} />,
+  ol: ({ node, ...props }) => <ol style={{ margin: '0 0 6px', paddingLeft: '18px' }} {...props} />,
+  li: ({ node, ...props }) => <li style={{ marginBottom: '2px' }} {...props} />,
+  table: ({ node, ...props }) => (
+    <div style={{ overflowX: 'auto', margin: '4px 0 8px' }}>
+      <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.78rem' }} {...props} />
+    </div>
+  ),
+  thead: ({ node, ...props }) => <thead style={{ background: 'rgba(99,102,241,0.12)' }} {...props} />,
+  th: ({ node, ...props }) => <th style={{ border: '1px solid var(--panel-border)', padding: '4px 8px', textAlign: 'left', fontWeight: 700 }} {...props} />,
+  td: ({ node, ...props }) => <td style={{ border: '1px solid var(--panel-border)', padding: '4px 8px' }} {...props} />,
+  code: ({ node, ...props }) => <code style={{ background: 'rgba(127,127,127,0.15)', borderRadius: '4px', padding: '1px 4px', fontSize: '0.78rem' }} {...props} />,
+  h1: ({ node, ...props }) => <div style={{ fontWeight: 700, fontSize: '0.9rem', margin: '4px 0' }} {...props} />,
+  h2: ({ node, ...props }) => <div style={{ fontWeight: 700, fontSize: '0.86rem', margin: '4px 0' }} {...props} />,
+  h3: ({ node, ...props }) => <div style={{ fontWeight: 700, fontSize: '0.84rem', margin: '4px 0' }} {...props} />,
+};
+
+function exportChatAsMarkdown(messages) {
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+  const lines = [
+    '# Dashboard Assistant — chat export',
+    '',
+    `Exported: ${new Date().toLocaleString()}`,
+    `User: ${getEmail() || 'unknown'}`,
+    '',
+    '---',
+    '',
+  ];
+  messages.forEach(m => {
+    lines.push(m.role === 'user' ? '## You' : '## Assistant');
+    lines.push('');
+    lines.push(m.content);
+    lines.push('');
+  });
+  const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `dashboard-assistant-chat-${stamp}.md`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 // Floating chat widget, mounted once in App.jsx so it's available on every
-// page. Admin-only for now (per the user's own choice, 2026-10-05) -- the
-// backend endpoint it talks to (/api/admin/assistant/ask) is admin-gated
-// regardless, this just avoids showing a button non-admins can't use.
+// page. Opened to every logged-in user (2026-11-21, by request -- was
+// admin-only before that); the backend endpoint it talks to (/api/admin/
+// assistant/ask) still requires a valid login via JWTMiddleware, same as
+// every other /api/* route, but no longer an admin one specifically.
 
 export default function DashboardAssistant() {
   const [open, setOpen] = useState(false);
@@ -21,7 +78,7 @@ export default function DashboardAssistant() {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages, loading]);
 
-  if (!isAdmin()) return null;
+  if (!isLoggedIn()) return null;
 
   const send = async () => {
     const question = input.trim();
@@ -72,9 +129,16 @@ export default function DashboardAssistant() {
               <MessageCircle size={16} color="var(--primary)" />
               <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)' }}>Dashboard Assistant</span>
             </div>
-            <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', padding: 0 }}>
-              <X size={16} />
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <button onClick={() => exportChatAsMarkdown(messages)} disabled={messages.length === 0}
+                title="Export this chat as a Markdown file"
+                style={{ background: 'none', border: 'none', color: messages.length === 0 ? 'var(--text-muted)' : 'var(--text-main)', cursor: messages.length === 0 ? 'not-allowed' : 'pointer', display: 'flex', padding: 0, opacity: messages.length === 0 ? 0.4 : 1 }}>
+                <Download size={15} />
+              </button>
+              <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', padding: 0 }}>
+                <X size={16} />
+              </button>
+            </div>
           </div>
 
           <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -86,12 +150,15 @@ export default function DashboardAssistant() {
             {messages.map((m, i) => (
               <div key={i} style={{
                 alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
-                maxWidth: '85%', padding: '8px 12px', borderRadius: '10px', fontSize: '0.82rem', lineHeight: 1.5, whiteSpace: 'pre-wrap',
+                maxWidth: '85%', padding: '8px 12px', borderRadius: '10px', fontSize: '0.82rem', lineHeight: 1.5,
+                whiteSpace: m.role === 'user' ? 'pre-wrap' : 'normal',
                 background: m.role === 'user' ? 'var(--primary)' : 'var(--input-bg)',
                 color: m.role === 'user' ? '#fff' : 'var(--text-main)',
                 border: m.role === 'user' ? 'none' : '1px solid var(--panel-border)',
               }}>
-                {m.content}
+                {m.role === 'user' ? m.content : (
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} components={MARKDOWN_COMPONENTS}>{m.content}</ReactMarkdown>
+                )}
               </div>
             ))}
             {loading && (

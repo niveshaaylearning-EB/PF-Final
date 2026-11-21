@@ -29,7 +29,7 @@ import {
 import { fetchBasket } from '../api/client.js';
 import { BASKET_OPTIONS } from './Header.jsx';
 import CompetitorLoginModal from './CompetitorLoginModal.jsx';
-import { computeTenureReturn } from '../utils/tenureReturn.js';
+import { computeTenureReturn, findClosestPoint } from '../utils/tenureReturn.js';
 import { getTheme, THEME_SYNC_TYPE } from '../utils/theme.js';
 
 // Niveshaay brand palette (brandbook.pdf) -- applied to this page only, per
@@ -323,6 +323,9 @@ export default function CompetitorAnalysisPage() {
   const [ourProfile, setOurProfile] = useState(null);
   const [ourProfileLoading, setOurProfileLoading] = useState(false);
   const [ourRebalanceHistory, setOurRebalanceHistory] = useState(null);
+  const [ourBuyDates, setOurBuyDates] = useState(null);
+  const [stockReturns, setStockReturns] = useState({});
+  const [hoverTip, setHoverTip] = useState(null); // {x, y, lines: string[]}
   const [returnTenure, setReturnTenure] = useState('1Y');
   const [sortMode, setSortMode] = useState('diff');
   const [statusFilter, setStatusFilter] = useState('all'); // all | common | ours | theirs
@@ -366,10 +369,14 @@ export default function CompetitorAnalysisPage() {
   };
 
   useEffect(() => {
-    if (!compareBasket) { setOurStocks(null); setOurSeries(null); setOurProfile(null); setOurRebalanceHistory(null); setOurProfileLoading(false); return; }
+    if (!compareBasket) { setOurStocks(null); setOurSeries(null); setOurProfile(null); setOurRebalanceHistory(null); setOurBuyDates(null); setOurProfileLoading(false); return; }
     const token = getAuthToken();
     const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
     fetchBasket(compareBasket).then(d => setOurStocks(d.stocks || [])).catch(() => setOurStocks(null));
+    fetch(`${API_BASE}/admin/basket-buy-dates/${compareBasket}`, { headers: authHeaders })
+      .then(r => r.json())
+      .then(d => setOurBuyDates(d.buyDates || {}))
+      .catch(() => setOurBuyDates(null));
     fetch(`${API_BASE}/index-history`, { headers: authHeaders })
       .then(r => r.json())
       .then(d => setOurSeries(d[compareBasket]?.data || null))
@@ -533,6 +540,43 @@ export default function CompetitorAnalysisPage() {
     }
     return rows.sort(sorters[sortMode] || sorters.diff);
   }, [comparisonRows, statusFilter, search, sortMode]);
+
+  // First date each stock shows up with status 'new' in theirRebalanceHistory
+  // (ascending scan, so the FIRST addition wins) -- competitor equivalent of
+  // ourBuyDates. Only as good as the rebalance history we have: a stock held
+  // since before the earliest recorded date has no entry here (shown as
+  // "unknown" by the hover tooltip, never guessed).
+  const theirAddedDates = useMemo(() => {
+    const byCode = {}, byName = {};
+    if (!theirRebalanceHistory?.length) return { byCode, byName };
+    const asc = theirRebalanceHistory
+      .filter(h => (h.type || 'rebalance') === 'rebalance' && h.changes)
+      .sort((a, b) => parseLooseDate(a.date) - parseLooseDate(b.date));
+    asc.forEach(h => {
+      h.changes.forEach(c => {
+        if (c.status !== 'new') return;
+        const code = c.nseCode ? c.nseCode.toUpperCase() : null;
+        if (code && !byCode[code]) byCode[code] = h.date;
+        const norm = normalizeStockName(c.name);
+        if (norm && !byName[norm]) byName[norm] = h.date;
+      });
+    });
+    return { byCode, byName };
+  }, [theirRebalanceHistory]);
+
+  // 1M/3M/6M/1Y % returns per NSE code for the Stock-by-Stock table, real
+  // Yahoo daily bars via price_engine.fetch_performance_batch (same source
+  // already used elsewhere in this app) -- a code with too little history
+  // for a tenure just comes back null for that tenure, shown as "—".
+  useEffect(() => {
+    if (!comparisonRows) return;
+    const codes = [...new Set(comparisonRows.all.map(r => r.nseCode).filter(Boolean))];
+    if (codes.length === 0) { setStockReturns({}); return; }
+    fetch(`${API_BASE}/performance?codes=${encodeURIComponent(codes.join(','))}`)
+      .then(r => r.json())
+      .then(setStockReturns)
+      .catch(() => setStockReturns({}));
+  }, [comparisonRows]);
 
   const [metricsLoading, setMetricsLoading] = useState(false);
   useEffect(() => {
@@ -1001,22 +1045,45 @@ export default function CompetitorAnalysisPage() {
                   <option value="name" style={{ color: BRAND_INK, background: '#fff' }}>Sort: Name</option>
                 </select>
               </div>
-              <div style={{ maxHeight: '460px', overflowY: 'auto' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr 85px 85px 85px 75px 90px 100px', gap: '0.5rem', padding: '0.5rem 0.9rem', background: pal.headerRow, fontSize: '0.66rem', fontWeight: 700, color: pal.muted, textTransform: 'uppercase', position: 'sticky', top: 0, borderBottom: `1px solid ${pal.border}` }}>
-                  <span>Stock</span><span>Sector</span><span style={{ textAlign: 'right' }}>Mkt Cap</span><span style={{ textAlign: 'right' }}>P/E</span><span style={{ textAlign: 'right' }}>Ours</span><span style={{ textAlign: 'right' }}>Theirs</span><span style={{ textAlign: 'right' }}>Diff</span><span style={{ textAlign: 'center' }}>Status</span>
+              <div style={{ maxHeight: '460px', overflow: 'auto' }}>
+                <div style={{ minWidth: '920px', display: 'grid', gridTemplateColumns: '1.6fr 1fr 85px 70px 55px 55px 55px 55px 75px 75px 80px 95px', gap: '0.5rem', padding: '0.5rem 0.9rem', background: pal.headerRow, fontSize: '0.66rem', fontWeight: 700, color: pal.muted, textTransform: 'uppercase', position: 'sticky', top: 0, borderBottom: `1px solid ${pal.border}` }}>
+                  <span>Stock</span><span>Sector</span><span style={{ textAlign: 'right' }}>Mkt Cap</span><span style={{ textAlign: 'right' }}>P/E</span>
+                  <span style={{ textAlign: 'right' }}>1M</span><span style={{ textAlign: 'right' }}>3M</span><span style={{ textAlign: 'right' }}>6M</span><span style={{ textAlign: 'right' }}>1Y</span>
+                  <span style={{ textAlign: 'right' }}>Ours</span><span style={{ textAlign: 'right' }}>Theirs</span><span style={{ textAlign: 'right' }}>Diff</span><span style={{ textAlign: 'center' }}>Status</span>
                 </div>
                 {sortedFilteredRows.map((r, i) => {
                   const metrics = r.nseCode ? stockMetrics[r.nseCode.toUpperCase()] : null;
+                  const perf = r.nseCode ? stockReturns[r.nseCode.toUpperCase()] : null;
                   const status = r.ourWeight > 0 && r.theirWeight > 0
                     ? { label: 'Common', bg: pal.headerRow, fg: pal.heading }
                     : r.ourWeight > 0 ? { label: 'Ours only', bg: pal.headerRow, fg: OURS_COLOR }
                     : { label: 'Theirs only', bg: pal.headerRow, fg: THEIRS_COLOR };
+                  const addedLines = [];
+                  if (r.ourWeight > 0) {
+                    const d = r.nseCode && ourBuyDates ? ourBuyDates[r.nseCode.toUpperCase()] : null;
+                    addedLines.push(`${ourBasketLabel}: added ${d || 'date unknown'}`);
+                  }
+                  if (r.theirWeight > 0) {
+                    const d = (r.nseCode && theirAddedDates.byCode[r.nseCode.toUpperCase()]) || theirAddedDates.byName[normalizeStockName(r.name)];
+                    addedLines.push(`${selected.label}: added ${d || 'unknown (predates tracked history)'}`);
+                  }
+                  const retCell = (val) => (
+                    <span style={{ textAlign: 'right', color: val == null ? pal.mutedLight : val >= 0 ? POS : NEG, fontSize: '0.72rem' }}>
+                      {val == null ? '—' : `${val >= 0 ? '+' : ''}${(val * 100).toFixed(1)}%`}
+                    </span>
+                  );
                   return (
-                    <div key={r.key} style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr 85px 85px 85px 75px 90px 100px', gap: '0.5rem', padding: '0.4rem 0.9rem', fontSize: '0.76rem', alignItems: 'center', background: i % 2 ? pal.rowA : pal.rowB, borderTop: `1px solid ${pal.rowDivider}` }}>
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: pal.text }}>{r.name} {r.nseCode && <span style={{ opacity: 0.5 }}>({r.nseCode})</span>}</span>
+                    <div key={r.key} style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr 85px 70px 55px 55px 55px 55px 75px 75px 80px 95px', gap: '0.5rem', padding: '0.4rem 0.9rem', fontSize: '0.76rem', alignItems: 'center', background: i % 2 ? pal.rowA : pal.rowB, borderTop: `1px solid ${pal.rowDivider}` }}>
+                      <span
+                        onMouseEnter={addedLines.length ? (e) => setHoverTip({ x: e.clientX, y: e.clientY, lines: addedLines }) : undefined}
+                        onMouseLeave={addedLines.length ? () => setHoverTip(null) : undefined}
+                        style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: pal.text, cursor: addedLines.length ? 'help' : 'default' }}>
+                        {r.name} {r.nseCode && <span style={{ opacity: 0.5 }}>({r.nseCode})</span>}
+                      </span>
                       <span style={{ color: pal.muted, fontSize: '0.72rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.sector || '—'}</span>
                       <span style={{ textAlign: 'right', color: pal.muted }}>{metrics?.marketCapCr ? `₹${Math.round(metrics.marketCapCr)}Cr` : metricsLoading ? '…' : '—'}</span>
                       <span style={{ textAlign: 'right', color: pal.muted }}>{metrics?.peRatio ? metrics.peRatio.toFixed(1) : metricsLoading ? '…' : '—'}</span>
+                      {retCell(perf?.['1M'])}{retCell(perf?.['3M'])}{retCell(perf?.['6M'])}{retCell(perf?.['1Y'])}
                       <span style={{ textAlign: 'right', color: pal.muted }}>{r.ourWeight ? `${r.ourWeight.toFixed(2)}%` : '0%'}</span>
                       <span style={{ textAlign: 'right', color: pal.muted }}>{r.theirWeight ? `${r.theirWeight.toFixed(2)}%` : '0%'}</span>
                       <span style={{ textAlign: 'right', fontWeight: 600, color: r.diff > 0 ? POS : r.diff < 0 ? NEG : pal.muted }}>{r.diff > 0 ? '+' : ''}{r.diff.toFixed(2)}</span>
@@ -1027,6 +1094,17 @@ export default function CompetitorAnalysisPage() {
               </div>
             </Card>
 
+            {hoverTip && (
+              <div style={{
+                position: 'fixed', left: hoverTip.x + 14, top: hoverTip.y + 14, zIndex: 1000,
+                background: pal.cardBg, border: `1px solid ${pal.border}`, borderRadius: '8px',
+                padding: '0.5rem 0.7rem', fontSize: '0.72rem', color: pal.text, boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
+                pointerEvents: 'none', maxWidth: '280px',
+              }}>
+                {hoverTip.lines.map((l, i) => <div key={i} style={{ whiteSpace: 'nowrap' }}>{l}</div>)}
+              </div>
+            )}
+
             {/* Rebalance history -- side by side, each row using a fixed-width
                 value column (not flex space-between) so the "Increased
                 4.0% -> 5.0%" text never wraps onto its own line even at
@@ -1035,8 +1113,8 @@ export default function CompetitorAnalysisPage() {
             <Card id="rebalance" style={{ scrollMarginTop: '12px' }}>
               <SectionTitle>Rebalance History</SectionTitle>
               <div style={{ padding: '0.9rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.2rem' }}>
-                <RebalanceHistoryPanel label={ourBasketLabel} color={OURS_COLOR} history={ourRebalanceHistory} />
-                <RebalanceHistoryPanel label={selected.label} color={THEIRS_COLOR} history={theirRebalanceHistory}
+                <RebalanceHistoryPanel label={ourBasketLabel} color={OURS_COLOR} history={ourRebalanceHistory} series={ourSeries} />
+                <RebalanceHistoryPanel label={selected.label} color={THEIRS_COLOR} history={theirRebalanceHistory} series={selected.performanceSeries}
                   limitedNote="smallcase only exposes exact stock-level detail for the most recent rebalance -- older dates show added/removed counts only." />
               </div>
             </Card>
@@ -1197,9 +1275,36 @@ const _STATUS_LABEL = { new: 'New', increased: 'Increased', decreased: 'Reduced'
 // Our own baskets have full history (rebalance_history.json records every
 // date); competitors only ever expose exact detail for their most recent
 // rebalance (see limitedNote), older dates show counts only.
-export function RebalanceHistoryPanel({ label, color, history, limitedNote }) {
+export function RebalanceHistoryPanel({ label, color, history, series, limitedNote }) {
   const pal = usePalette();
   const [expanded, setExpanded] = useState(null);
+
+  // Ascending copy of just the real rebalance dates (launch/summary rows
+  // excluded), used to find "the next rebalance after this one" so the
+  // post-rebalance return badge below knows where its window ends.
+  const ascRebalances = useMemo(
+    () => (history || []).filter(h => (h.type || 'rebalance') === 'rebalance').sort((a, b) => parseLooseDate(a.date) - parseLooseDate(b.date)),
+    [history]
+  );
+
+  // Basket-index return from this rebalance date to the NEXT rebalance (or
+  // to the latest available data point if this is the most recent one) --
+  // lets you see at a glance whether a given rebalance call paid off, not
+  // just what changed. null (shown as nothing) when there isn't enough
+  // series history to measure it, never a fabricated number.
+  function postRebalanceReturn(h) {
+    if (!series || series.length < 2) return null;
+    const fromIso = toIsoDate(h.date);
+    if (!fromIso) return null;
+    const idx = ascRebalances.findIndex(x => x.date === h.date);
+    const next = idx >= 0 ? ascRebalances[idx + 1] : null;
+    const toIso = next ? toIsoDate(next.date) : null;
+    const basePt = findClosestPoint(series, fromIso);
+    const endPt = toIso ? findClosestPoint(series, toIso) : series[series.length - 1];
+    if (!basePt?.value || !endPt?.value || basePt.date >= endPt.date) return null;
+    return { pct: (endPt.value - basePt.value) / basePt.value, ongoing: !toIso };
+  }
+
   return (
     <div>
       <div style={{ fontSize: '0.8rem', fontWeight: 700, color, marginBottom: '0.5rem' }}>{label}</div>
@@ -1229,6 +1334,7 @@ export function RebalanceHistoryPanel({ label, color, history, limitedNote }) {
               );
             }
             const isOpen = expanded === h.date;
+            const rebalReturn = postRebalanceReturn(h);
             return (
               <div key={h.date} style={{ borderBottom: `1px solid ${pal.borderSoft}` }}>
                 <div onClick={() => setExpanded(isOpen ? null : h.date)}
@@ -1237,7 +1343,13 @@ export function RebalanceHistoryPanel({ label, color, history, limitedNote }) {
                     <i className={`fa-solid fa-caret-${isOpen ? 'down' : 'right'}`} style={{ marginRight: '0.4rem', fontSize: '0.68rem', color: pal.mutedLight }} />
                     {h.date}
                   </span>
-                  <span style={{ display: 'flex', gap: '0.5rem', fontSize: '0.68rem' }}>
+                  <span style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', fontSize: '0.68rem' }}>
+                    {rebalReturn && (
+                      <span title={rebalReturn.ongoing ? 'Basket-index return from this rebalance to the latest available data' : 'Basket-index return from this rebalance to the next one'}
+                        style={{ color: rebalReturn.pct >= 0 ? POS : NEG, fontWeight: 700 }}>
+                        {rebalReturn.pct >= 0 ? '+' : ''}{(rebalReturn.pct * 100).toFixed(1)}% {rebalReturn.ongoing ? '(so far)' : 'to next rebal.'}
+                      </span>
+                    )}
                     {!!h.counts.new && <span style={{ color: POS }}>+{h.counts.new} new</span>}
                     {!!h.counts.increased && <span style={{ color: POS }}>{h.counts.increased} up</span>}
                     {!!h.counts.decreased && <span style={{ color: NEG }}>{h.counts.decreased} down</span>}

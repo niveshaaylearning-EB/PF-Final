@@ -7,15 +7,21 @@ sector concentration the competitor avoided, stocks they caught and we
 didn't, etc. Grounded only in the data handed to it -- the prompt explicitly
 forbids inventing numbers not present in the summary.
 
-Uses Groq's free tier (OpenAI-compatible API, just a different base_url +
-model) rather than OpenAI directly -- the OpenAI key in .env is valid but
-that account has no billing/credits set up, confirmed live (2026-10-02,
-insufficient_quota). Swapping back just means changing _PROVIDER below.
+Tries Anthropic (Haiku 5.5) first when ANTHROPIC_API_KEY is set and the
+shared monthly spend cap isn't exceeded -- same key/cap the Dashboard
+Assistant uses (see backend/routers/dashboard_assistant.py), sharing its
+exact usage file (_ANTHROPIC_USAGE_FILE below) rather than each feature
+getting its own cap, which would silently double the real ceiling. Falls
+back to Groq's free tier (OpenAI-compatible API) when there's no Anthropic
+key, the cap is hit, or the Anthropic call itself errors -- never to OpenAI
+directly, since that account has no billing/credits set up (confirmed live
+2026-10-02, insufficient_quota).
 
 Cached per (basket, competitor, digest-of-summary) so the same underlying
 data never pays for a second LLM call -- only a genuinely new rebalance on
 either side (which changes the summary and therefore the digest) triggers a
 fresh generation."""
+import datetime
 import hashlib
 import json
 import os
@@ -24,12 +30,69 @@ from pathlib import Path
 
 _CACHE_FILE = Path(__file__).parent / "rebalance_insights_cache.json"
 
+_ANTHROPIC_MODEL = "claude-haiku-5-5"
+_ANTHROPIC_INPUT_PER_MTOK = 0.10
+_ANTHROPIC_OUTPUT_PER_MTOK = 0.50
+# Same file backend/routers/dashboard_assistant.py writes to (this repo is
+# deployed as one process with webportal mounted under /wp -- see backend/
+# main.py's importlib load of webportal/backend/main.py) -- a shared path
+# by convention, not a cross-module import, so this file still works if
+# webportal is ever run standalone.
+_ANTHROPIC_USAGE_FILE = Path(__file__).parent.parent.parent / "backend" / "anthropic_usage.json"
+
 # Groq's API is OpenAI-compatible -- same `openai` client library, just a
 # different base_url, API key, and model name.
-_PROVIDER = "groq"
 _GROQ_BASE_URL = "https://api.groq.com/openai/v1"
 _GROQ_MODEL = "openai/gpt-oss-120b"
 _OPENAI_MODEL = "gpt-4o-mini"
+
+
+def _anthropic_usage_load() -> dict:
+    try:
+        return json.loads(_ANTHROPIC_USAGE_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _anthropic_cap_exceeded() -> bool:
+    cap = float(os.environ.get("ANTHROPIC_MONTHLY_CAP_USD", "15"))
+    usage = _anthropic_usage_load()
+    month = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m")
+    return usage.get("month") == month and usage.get("cost_usd", 0) >= cap
+
+
+def _anthropic_record_cost(usage) -> None:
+    month = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m")
+    cost = (usage.input_tokens / 1_000_000) * _ANTHROPIC_INPUT_PER_MTOK + (usage.output_tokens / 1_000_000) * _ANTHROPIC_OUTPUT_PER_MTOK
+    current = _anthropic_usage_load()
+    prior = current.get("cost_usd", 0) if current.get("month") == month else 0
+    try:
+        _ANTHROPIC_USAGE_FILE.write_text(json.dumps({"month": month, "cost_usd": prior + cost}), encoding="utf-8")
+    except Exception:
+        pass
+
+
+async def _call_anthropic(summary: dict) -> str | None:
+    """Returns the raw response text, or None if Anthropic isn't usable right
+    now (no key, cap hit, or a call error) -- callers fall back to Groq."""
+    key = os.environ.get("ANTHROPIC_API_KEY")
+    if not key or _anthropic_cap_exceeded():
+        return None
+    try:
+        import anthropic
+        client = anthropic.AsyncAnthropic(api_key=key)
+        resp = await client.messages.create(
+            model=_ANTHROPIC_MODEL,
+            max_tokens=2000,
+            system=_SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": json.dumps(summary, default=str)}],
+            output_config={"effort": "low"},
+        )
+        _anthropic_record_cost(resp.usage)
+        return "".join(b.text for b in resp.content if b.type == "text").strip()
+    except Exception as e:
+        print(f"[rebalance_insights] Anthropic call failed, falling back to Groq: {e}")
+        return None
 
 _SYSTEM_PROMPT = """You are a portfolio analyst comparing OUR equity basket against ONE competitor's smallcase portfolio. You are given a JSON summary of real, already-computed data: recent rebalance changes on both sides (with real buy/sell dates and, where available, real OHLC-average prices and weights), sector/market-cap mix, returns, and "timing insight" matches (stocks both portfolios added/removed within 30 days of each other, with the actual price each side paid).
 
@@ -87,15 +150,6 @@ async def generate_insights(basket: str, competitor_key: str, summary: dict) -> 
     Never raises -- a provider error or an unparsable response comes back as
     {"good": None, "bad": None, "error": str} so the frontend can show a
     clear message instead of a blank crash."""
-    if _PROVIDER == "groq":
-        key = os.environ.get("GROQ_API_KEY")
-        key_name, base_url, model = "GROQ_API_KEY", _GROQ_BASE_URL, _GROQ_MODEL
-    else:
-        key = os.environ.get("OPENAI_API_KEY")
-        key_name, base_url, model = "OPENAI_API_KEY", None, _OPENAI_MODEL
-    if not key:
-        return {"good": None, "bad": None, "error": f"{key_name} not set"}
-
     digest = _digest(summary)
     cache_key = f"{basket}|{competitor_key}|{digest}"
     cache = _load_cache()
@@ -103,20 +157,30 @@ async def generate_insights(basket: str, competitor_key: str, summary: dict) -> 
     if cached and "good" in cached:
         return {"good": cached["good"], "bad": cached["bad"], "cached": True, "generatedAt": cached["generatedAt"]}
 
+    text = await _call_anthropic(summary)
+
+    if text is None:
+        key = os.environ.get("GROQ_API_KEY")
+        if not key:
+            return {"good": None, "bad": None, "error": "No AI provider available -- ANTHROPIC_API_KEY cap reached/unset and GROQ_API_KEY not set"}
+        try:
+            from openai import AsyncOpenAI
+            client = AsyncOpenAI(api_key=key, base_url=_GROQ_BASE_URL)
+            resp = await client.chat.completions.create(
+                model=_GROQ_MODEL,
+                messages=[
+                    {"role": "system", "content": _SYSTEM_PROMPT},
+                    {"role": "user", "content": json.dumps(summary, default=str)},
+                ],
+                temperature=0.3,
+                max_tokens=2000,
+                response_format={"type": "json_object"},
+            )
+            text = (resp.choices[0].message.content or "").strip()
+        except Exception as e:
+            return {"good": None, "bad": None, "error": str(e)}
+
     try:
-        from openai import AsyncOpenAI
-        client = AsyncOpenAI(api_key=key, base_url=base_url) if base_url else AsyncOpenAI(api_key=key)
-        resp = await client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": _SYSTEM_PROMPT},
-                {"role": "user", "content": json.dumps(summary, default=str)},
-            ],
-            temperature=0.3,
-            max_tokens=2000,
-            response_format={"type": "json_object"},
-        )
-        text = (resp.choices[0].message.content or "").strip()
         parsed = _parse_good_bad(text)
     except Exception as e:
         return {"good": None, "bad": None, "error": str(e)}

@@ -21554,6 +21554,7106 @@
   "consumer_durables_stars": {
     "key": "consumer_durables_stars",
     "label": "Consumer Durables Stars Tracker",
-    "manager": "Quantace Research"
+    "manager": "Quantace Research",
+    "stocks": [
+      {
+        "name": "Stocks & Segments Holding Type Weightage Welspun Living Ltd",
+        "weight": 11.11,
+        "nseCode": null,
+        "sector": null,
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Nitin Spinners Ltd",
+        "weight": 11.11,
+        "nseCode": "NITINSPIN",
+        "sector": "Other Textile Products",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Arvind Ltd",
+        "weight": 11.12,
+        "nseCode": "ARVIND",
+        "sector": "Garments & Apparels",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Ather Energy Ltd",
+        "weight": 11.11,
+        "nseCode": "ATHERENERG",
+        "sector": "2/3 Wheelers",
+        "capSegment": "Midcap"
+      },
+      {
+        "name": "Sansera Engineering Limited",
+        "weight": 11.11,
+        "nseCode": "SANSERA",
+        "sector": "Auto Components & Equipments",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Nazara Technologies Limited",
+        "weight": 11.11,
+        "nseCode": "NAZARA",
+        "sector": "Digital Entertainment",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Tips Music Ltd",
+        "weight": 11.11,
+        "nseCode": "TIPSMUSIC",
+        "sector": "Media & Entertainment",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Entero Healthcare Solutions Ltd",
+        "weight": 11.11,
+        "nseCode": "ENTERO",
+        "sector": "Pharmacy Retail",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Lenskart Solutions Ltd",
+        "weight": 11.11,
+        "nseCode": "LENSKART",
+        "sector": "Speciality Retail",
+        "capSegment": "Largecap"
+      }
+    ],
+    "cagr": 32.49,
+    "rebalanceTimeline": [
+      {
+        "date": "10 Apr, 2023",
+        "type": "launch"
+      },
+      {
+        "date": "2 Nov, 2026",
+        "type": "summary",
+        "rangeStart": "24 Apr, 2023",
+        "rangeEnd": "2 Nov, 2026",
+        "rebalanceCount": 189
+      },
+      {
+        "date": "9 Nov, 2026",
+        "assetsAdded": 2,
+        "assetsRemoved": 2,
+        "type": "rebalance"
+      },
+      {
+        "date": "16 Nov, 2026",
+        "assetsAdded": 1,
+        "assetsRemoved": 1,
+        "type": "rebalance"
+      },
+      {
+        "date": "23 Nov, 2026",
+        "assetsAdded": 2,
+        "assetsRemoved": 2,
+        "type": "rebalance"
+      }
+    ],
+    "fullRebalanceHistory": [
+      {
+        "date": "2026-11-16",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Nazara Technologies Limited",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "NAZARA"
+          },
+          {
+            "name": "Restaurant Brands Asia Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "RBA"
+          }
+        ]
+      },
+      {
+        "date": "2026-11-09",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 1,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Ather Energy Ltd",
+            "oldWeight": 11.12,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "ATHERENERG"
+          },
+          {
+            "name": "Steel Strips Wheels Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "SSWL"
+          },
+          {
+            "name": "Arvind Ltd",
+            "oldWeight": null,
+            "newWeight": 11.12,
+            "status": "new",
+            "nseCode": "ARVIND"
+          },
+          {
+            "name": "Bluestone Jewellery and Lifestyle Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BLUESTONE"
+          },
+          {
+            "name": "Sona BLW Precision Forgings Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SONACOMS"
+          }
+        ]
+      },
+      {
+        "date": "2026-11-02",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Entero Healthcare Solutions Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "ENTERO"
+          },
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "STYLAMIND"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-26",
+        "counts": {
+          "new": 1,
+          "increased": 1,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Ather Energy Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 11.12,
+            "status": "increased",
+            "nseCode": "ATHERENERG"
+          },
+          {
+            "name": "Restaurant Brands Asia Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "RBA"
+          },
+          {
+            "name": "Arvind Ltd",
+            "oldWeight": 11.12,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ARVIND"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-19",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "STYLAMIND"
+          },
+          {
+            "name": "Entero Healthcare Solutions Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ENTERO"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-12",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Sona BLW Precision Forgings Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "SONACOMS"
+          },
+          {
+            "name": "Welspun Living Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "WELSPUNLIV"
+          },
+          {
+            "name": "Uniparts India Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "UNIPARTS"
+          },
+          {
+            "name": "Prime Focus Limited",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PFOCUS"
+          }
+        ]
+      },
+      {
+        "date": "2026-09-21",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Sansera Engineering Limited",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "SANSERA"
+          },
+          {
+            "name": "CarTrade Tech Limited",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CARTRADE"
+          }
+        ]
+      },
+      {
+        "date": "2026-09-15",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 1,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Ather Energy Ltd",
+            "oldWeight": 11.12,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "ATHERENERG"
+          },
+          {
+            "name": "Arvind Ltd",
+            "oldWeight": null,
+            "newWeight": 11.12,
+            "status": "new",
+            "nseCode": "ARVIND"
+          },
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "STYLAMIND"
+          }
+        ]
+      },
+      {
+        "date": "2026-09-07",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Bluestone Jewellery and Lifestyle Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "BLUESTONE"
+          },
+          {
+            "name": "Sansera Engineering Limited",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SANSERA"
+          }
+        ]
+      },
+      {
+        "date": "2026-09-01",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Entero Healthcare Solutions Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "ENTERO"
+          },
+          {
+            "name": "Nitin Spinners Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "NITINSPIN"
+          },
+          {
+            "name": "Divgi TorqTransfer Systems Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "DIVGIITTS"
+          },
+          {
+            "name": "Shaily Engineering Plastics Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SHAILY"
+          }
+        ]
+      },
+      {
+        "date": "2026-08-24",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 8,
+          "removed": 0
+        },
+        "changes": [
+          {
+            "name": "Uniparts India Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "UNIPARTS"
+          },
+          {
+            "name": "Sansera Engineering Limited",
+            "oldWeight": 12.5,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "SANSERA"
+          },
+          {
+            "name": "Divgi TorqTransfer Systems Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "DIVGIITTS"
+          },
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "STYLAMIND"
+          },
+          {
+            "name": "Sky Gold and Diamonds Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "SKYGOLD"
+          },
+          {
+            "name": "Shaily Engineering Plastics Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "SHAILY"
+          },
+          {
+            "name": "Prime Focus Limited",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "PFOCUS"
+          },
+          {
+            "name": "CarTrade Tech Limited",
+            "oldWeight": 12.5,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "CARTRADE"
+          },
+          {
+            "name": "Ather Energy Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.12,
+            "status": "decreased",
+            "nseCode": "ATHERENERG"
+          }
+        ]
+      },
+      {
+        "date": "2026-08-18",
+        "counts": {
+          "new": 1,
+          "increased": 7,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Uniparts India Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "UNIPARTS"
+          },
+          {
+            "name": "Sansera Engineering Limited",
+            "oldWeight": 11.11,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "SANSERA"
+          },
+          {
+            "name": "Divgi TorqTransfer Systems Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "DIVGIITTS"
+          },
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "STYLAMIND"
+          },
+          {
+            "name": "Sky Gold and Diamonds Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "SKYGOLD"
+          },
+          {
+            "name": "Shaily Engineering Plastics Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "SHAILY"
+          },
+          {
+            "name": "CarTrade Tech Limited",
+            "oldWeight": 11.11,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "CARTRADE"
+          },
+          {
+            "name": "Ather Energy Ltd",
+            "oldWeight": 11.12,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "ATHERENERG"
+          },
+          {
+            "name": "Belrise Industries Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BELRISE"
+          },
+          {
+            "name": "Aditya Vision Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AVL"
+          }
+        ]
+      },
+      {
+        "date": "2026-08-11",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "STYLAMIND"
+          },
+          {
+            "name": "Sky Gold and Diamonds Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "SKYGOLD"
+          },
+          {
+            "name": "SJS Enterprises Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "FSN E-Commerce Ventures Limited",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "NYKAA"
+          }
+        ]
+      },
+      {
+        "date": "2026-08-04",
+        "counts": {
+          "new": 2,
+          "increased": 1,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "SJS Enterprises Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Aditya Vision Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "AVL"
+          },
+          {
+            "name": "Ather Energy Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 11.12,
+            "status": "increased",
+            "nseCode": "ATHERENERG"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": 11.11,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "STYLAMIND"
+          }
+        ]
+      },
+      {
+        "date": "2026-07-27",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 8,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Uniparts India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.11,
+            "status": "new",
+            "nseCode": "UNIPARTS"
+          },
+          {
+            "name": "Sansera Engineering Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "SANSERA"
+          },
+          {
+            "name": "Belrise Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "BELRISE"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "STYLAMIND"
+          },
+          {
+            "name": "Shaily Engineering Plastics Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "SHAILY"
+          },
+          {
+            "name": "FSN E-Commerce Ventures Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "NYKAA"
+          },
+          {
+            "name": "CarTrade Tech Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "CARTRADE"
+          },
+          {
+            "name": "Ather Energy Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 11.11,
+            "status": "decreased",
+            "nseCode": "ATHERENERG"
+          },
+          {
+            "name": "Aditya Vision Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AVL"
+          }
+        ]
+      },
+      {
+        "date": "2026-07-13",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Belrise Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BELRISE"
+          },
+          {
+            "name": "Arvind Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ARVIND"
+          }
+        ]
+      },
+      {
+        "date": "2026-07-06",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Arvind Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "ARVIND"
+          },
+          {
+            "name": "Belrise Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BELRISE"
+          }
+        ]
+      },
+      {
+        "date": "2026-06-29",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Shaily Engineering Plastics Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SHAILY"
+          },
+          {
+            "name": "Ather Energy Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "ATHERENERG"
+          },
+          {
+            "name": "Vardhman Textiles Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VTL"
+          },
+          {
+            "name": "Uniparts India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "UNIPARTS"
+          },
+          {
+            "name": "Craftsman Automation Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CRAFTSMAN"
+          }
+        ]
+      },
+      {
+        "date": "2026-06-22",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Craftsman Automation Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CRAFTSMAN"
+          },
+          {
+            "name": "Aditya Vision Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "AVL"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Ather Energy Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ATHERENERG"
+          }
+        ]
+      },
+      {
+        "date": "2026-06-15",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "Uniparts India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "UNIPARTS"
+          },
+          {
+            "name": "Belrise Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BELRISE"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Shaily Engineering Plastics Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SHAILY"
+          },
+          {
+            "name": "Craftsman Automation Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CRAFTSMAN"
+          },
+          {
+            "name": "Aditya Vision Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AVL"
+          }
+        ]
+      },
+      {
+        "date": "2026-06-08",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "FSN E-Commerce Ventures Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "NYKAA"
+          },
+          {
+            "name": "CarTrade Tech Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CARTRADE"
+          },
+          {
+            "name": "SJS Enterprises Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Ashiana Housing Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ASHIANA"
+          }
+        ]
+      },
+      {
+        "date": "2026-05-18",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Vardhman Textiles Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VTL"
+          },
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "STYLAMIND"
+          },
+          {
+            "name": "Aditya Vision Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "AVL"
+          },
+          {
+            "name": "Ather Energy Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "ATHERENERG"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LUMAXIND"
+          },
+          {
+            "name": "Prime Focus Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PFOCUS"
+          }
+        ]
+      },
+      {
+        "date": "2026-05-11",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "SJS Enterprises Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Prime Focus Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "PFOCUS"
+          },
+          {
+            "name": "Uniparts India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "UNIPARTS"
+          },
+          {
+            "name": "SPR Auto Technologies Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SHRIPISTON"
+          },
+          {
+            "name": "Belrise Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BELRISE"
+          }
+        ]
+      },
+      {
+        "date": "2026-05-04",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Shaily Engineering Plastics Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SHAILY"
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Divgi TorqTransfer Systems Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "DIVGIITTS"
+          }
+        ]
+      },
+      {
+        "date": "2026-04-27",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "LUMAXIND"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Prime Focus Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PFOCUS"
+          }
+        ]
+      },
+      {
+        "date": "2026-04-20",
+        "counts": {
+          "new": 5,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 5
+        },
+        "changes": [
+          {
+            "name": "SPR Auto Technologies Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SHRIPISTON"
+          },
+          {
+            "name": "Divgi TorqTransfer Systems Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "DIVGIITTS"
+          },
+          {
+            "name": "Craftsman Automation Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CRAFTSMAN"
+          },
+          {
+            "name": "Prime Focus Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "PFOCUS"
+          },
+          {
+            "name": "Ashiana Housing Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "ASHIANA"
+          },
+          {
+            "name": "SJS Enterprises Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Ramkrishna Forgings Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "RKFORGE"
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LUMAXIND"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "TITAN"
+          }
+        ]
+      },
+      {
+        "date": "2026-04-13",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "SJS Enterprises Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Sansera Engineering Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SANSERA"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "LUMAXIND"
+          },
+          {
+            "name": "Vardhman Textiles Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VTL"
+          },
+          {
+            "name": "Prime Focus Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PFOCUS"
+          },
+          {
+            "name": "Entero Healthcare Solutions Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ENTERO"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-30",
+        "counts": {
+          "new": 5,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 5
+        },
+        "changes": [
+          {
+            "name": "Vardhman Textiles Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VTL"
+          },
+          {
+            "name": "Uniparts India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "UNIPARTS"
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Prime Focus Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "PFOCUS"
+          },
+          {
+            "name": "Wonderla Holidays Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "WONDERLA"
+          },
+          {
+            "name": "VIP Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VIPIND"
+          },
+          {
+            "name": "Divgi TorqTransfer Systems Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "DIVGIITTS"
+          },
+          {
+            "name": "Craftsman Automation Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CRAFTSMAN"
+          },
+          {
+            "name": "EIH Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "EIHOTEL"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-09",
+        "counts": {
+          "new": 7,
+          "increased": 0,
+          "decreased": 2,
+          "removed": 6
+        },
+        "changes": [
+          {
+            "name": "Wonderla Holidays Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "WONDERLA"
+          },
+          {
+            "name": "VIP Industries Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VIPIND"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Ramkrishna Forgings Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "RKFORGE"
+          },
+          {
+            "name": "Divgi TorqTransfer Systems Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "DIVGIITTS"
+          },
+          {
+            "name": "Craftsman Automation Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "CRAFTSMAN"
+          },
+          {
+            "name": "Belrise Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BELRISE"
+          },
+          {
+            "name": "Entero Healthcare Solutions Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "ENTERO"
+          },
+          {
+            "name": "EIH Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "EIHOTEL"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "SJS Enterprises Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LUMAXIND"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Eicher Motors Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "EICHERMOT"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-02",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "SJS Enterprises Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Eicher Motors Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "EICHERMOT"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Asian Paints Limited",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ASIANPAINT"
+          }
+        ]
+      },
+      {
+        "date": "2026-02-25",
+        "counts": {
+          "new": 0,
+          "increased": 8,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "LUMAXIND"
+          },
+          {
+            "name": "Craftsman Automation Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "CRAFTSMAN"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Asian Paints Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "ASIANPAINT"
+          },
+          {
+            "name": "Yatra Online Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "YATRA"
+          }
+        ]
+      },
+      {
+        "date": "2026-02-09",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Yatra Online Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "YATRA"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "LUMAXIND"
+          },
+          {
+            "name": "Prime Focus Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PFOCUS"
+          },
+          {
+            "name": "Force Motors Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "FORCEMOT"
+          }
+        ]
+      },
+      {
+        "date": "2026-01-27",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Force Motors Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "FORCEMOT"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LUMAXIND"
+          }
+        ]
+      },
+      {
+        "date": "2026-01-19",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Craftsman Automation Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CRAFTSMAN"
+          },
+          {
+            "name": "Maruti Suzuki India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "MARUTI"
+          },
+          {
+            "name": "LG Balakrishnan & Bros Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LGBBROSLTD"
+          }
+        ]
+      },
+      {
+        "date": "2026-01-12",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "LUMAXIND"
+          },
+          {
+            "name": "LG Balakrishnan & Bros Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "LGBBROSLTD"
+          },
+          {
+            "name": "Asian Paints Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "ASIANPAINT"
+          },
+          {
+            "name": "Yatra Online Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "YATRA"
+          },
+          {
+            "name": "SPR Auto Technologies Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SHRIPISTON"
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Force Motors Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "FORCEMOT"
+          }
+        ]
+      },
+      {
+        "date": "2026-01-05",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Maruti Suzuki India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "MARUTI"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LUMAXIND"
+          }
+        ]
+      },
+      {
+        "date": "2025-12-29",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "SPR Auto Technologies Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SHRIPISTON"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "THANGAMAYL"
+          }
+        ]
+      },
+      {
+        "date": "2025-12-22",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Prime Focus Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "PFOCUS"
+          },
+          {
+            "name": "Maruti Suzuki India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "MARUTI"
+          }
+        ]
+      },
+      {
+        "date": "2025-12-15",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Force Motors Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "FORCEMOT"
+          },
+          {
+            "name": "Sirca Paints India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SIRCA"
+          }
+        ]
+      },
+      {
+        "date": "2025-12-08",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Yatra Online Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "YATRA"
+          },
+          {
+            "name": "CarTrade Tech Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CARTRADE"
+          }
+        ]
+      },
+      {
+        "date": "2025-12-01",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 7,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Sirca Paints India Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "SIRCA"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Maruti Suzuki India Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "MARUTI"
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "LUMAXIND"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "CarTrade Tech Limited",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "CARTRADE"
+          },
+          {
+            "name": "Yatra Online Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "YATRA"
+          }
+        ]
+      },
+      {
+        "date": "2025-11-24",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 7,
+          "removed": 0
+        },
+        "changes": [
+          {
+            "name": "Yatra Online Ltd",
+            "oldWeight": 14.2857,
+            "newWeight": 12.5,
+            "status": "decreased",
+            "nseCode": "YATRA"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 14.2857,
+            "newWeight": 12.5,
+            "status": "decreased",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Sirca Paints India Ltd",
+            "oldWeight": 14.2857,
+            "newWeight": 12.5,
+            "status": "decreased",
+            "nseCode": "SIRCA"
+          },
+          {
+            "name": "Maruti Suzuki India Ltd",
+            "oldWeight": 14.2857,
+            "newWeight": 12.5,
+            "status": "decreased",
+            "nseCode": "MARUTI"
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": 14.2857,
+            "newWeight": 12.5,
+            "status": "decreased",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": 14.2857,
+            "newWeight": 12.5,
+            "status": "decreased",
+            "nseCode": "LUMAXIND"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "CarTrade Tech Limited",
+            "oldWeight": 14.2857,
+            "newWeight": 12.5,
+            "status": "decreased",
+            "nseCode": "CARTRADE"
+          }
+        ]
+      },
+      {
+        "date": "2025-11-17",
+        "counts": {
+          "new": 3,
+          "increased": 4,
+          "decreased": 0,
+          "removed": 5
+        },
+        "changes": [
+          {
+            "name": "Yatra Online Ltd",
+            "oldWeight": null,
+            "newWeight": 14.2857,
+            "status": "new",
+            "nseCode": "YATRA"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 14.2857,
+            "status": "increased",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Sirca Paints India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 14.2857,
+            "status": "increased",
+            "nseCode": "SIRCA"
+          },
+          {
+            "name": "Maruti Suzuki India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 14.2857,
+            "status": "increased",
+            "nseCode": "MARUTI"
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 14.2857,
+            "status": "increased",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 14.2857,
+            "status": "new",
+            "nseCode": "LUMAXIND"
+          },
+          {
+            "name": "CarTrade Tech Limited",
+            "oldWeight": null,
+            "newWeight": 14.2857,
+            "status": "new",
+            "nseCode": "CARTRADE"
+          },
+          {
+            "name": "Force Motors Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "FORCEMOT"
+          },
+          {
+            "name": "Gabriel India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "GABRIEL"
+          },
+          {
+            "name": "Banco Products (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Le Travenues Technology Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "IXIGO"
+          },
+          {
+            "name": "CEAT Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CEATLTD"
+          }
+        ]
+      },
+      {
+        "date": "2025-11-10",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 5,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Sirca Paints India Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "SIRCA"
+          },
+          {
+            "name": "Maruti Suzuki India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "MARUTI"
+          },
+          {
+            "name": "Force Motors Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "FORCEMOT"
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Gabriel India Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "GABRIEL"
+          },
+          {
+            "name": "Banco Products (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Le Travenues Technology Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "IXIGO"
+          },
+          {
+            "name": "CEAT Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CEATLTD"
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "FSN E-Commerce Ventures Limited",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "NYKAA"
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LUMAXIND"
+          }
+        ]
+      },
+      {
+        "date": "2025-11-03",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "FSN E-Commerce Ventures Limited",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "NYKAA"
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Force Motors Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "FORCEMOT"
+          },
+          {
+            "name": "Le Travenues Technology Limited",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "IXIGO"
+          },
+          {
+            "name": "CEAT Limited",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CEATLTD"
+          },
+          {
+            "name": "CarTrade Tech Limited",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CARTRADE"
+          }
+        ]
+      },
+      {
+        "date": "2025-10-27",
+        "counts": {
+          "new": 5,
+          "increased": 3,
+          "decreased": 0,
+          "removed": 6
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Sirca Paints India Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "SIRCA"
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Lumax Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "LUMAXIND"
+          },
+          {
+            "name": "Gabriel India Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "GABRIEL"
+          },
+          {
+            "name": "Le Travenues Technology Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "IXIGO"
+          },
+          {
+            "name": "CEAT Limited",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "CEATLTD"
+          },
+          {
+            "name": "CarTrade Tech Limited",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "CARTRADE"
+          },
+          {
+            "name": "Yatra Online Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "YATRA"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Force Motors Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "FORCEMOT"
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "JSWDULUX"
+          }
+        ]
+      },
+      {
+        "date": "2025-10-20",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Yatra Online Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "YATRA"
+          },
+          {
+            "name": "Lumax Auto Technologies Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "LUMAXTECH"
+          },
+          {
+            "name": "Le Travenues Technology Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "IXIGO"
+          },
+          {
+            "name": "Force Motors Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "FORCEMOT"
+          },
+          {
+            "name": "Sky Gold and Diamonds Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SKYGOLD"
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "KAJARIACER"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AMBER"
+          }
+        ]
+      },
+      {
+        "date": "2025-10-13",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 5,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Sky Gold and Diamonds Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SKYGOLD"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 16.6667,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": 16.6667,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "KAJARIACER"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 16.6667,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": 16.6667,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "JSWDULUX"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 16.6667,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": 16.6667,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CENTURYPLY"
+          }
+        ]
+      },
+      {
+        "date": "2025-10-06",
+        "counts": {
+          "new": 0,
+          "increased": 6,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 12.5,
+            "newWeight": 16.6667,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 16.6667,
+            "status": "increased",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 12.5,
+            "newWeight": 16.6667,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 16.6667,
+            "status": "increased",
+            "nseCode": "CENTURYPLY"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 16.6667,
+            "status": "increased",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 16.6667,
+            "status": "increased",
+            "nseCode": "JSWDULUX"
+          },
+          {
+            "name": "Eureka Forbes Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "EUREKAFORB"
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "DIXON"
+          }
+        ]
+      },
+      {
+        "date": "2025-09-29",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Eureka Forbes Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "EUREKAFORB"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "PC Jeweller Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PCJEWELLER"
+          }
+        ]
+      },
+      {
+        "date": "2025-09-15",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "JSWDULUX"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BLUESTARCO"
+          }
+        ]
+      },
+      {
+        "date": "2025-09-08",
+        "counts": {
+          "new": 1,
+          "increased": 7,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "PC Jeweller Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "PCJEWELLER"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "CENTURYPLY"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "JSWDULUX"
+          }
+        ]
+      },
+      {
+        "date": "2025-09-01",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "JSWDULUX"
+          },
+          {
+            "name": "PC Jeweller Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PCJEWELLER"
+          },
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "KAJARIACER"
+          }
+        ]
+      },
+      {
+        "date": "2025-08-25",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 5,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 14.2857,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 14.2857,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "PC Jeweller Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "PCJEWELLER"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 14.2857,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "KAJARIACER"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 14.2857,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": 14.2857,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "CENTURYPLY"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": 14.2857,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Asian Paints Limited",
+            "oldWeight": 14.2857,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ASIANPAINT"
+          }
+        ]
+      },
+      {
+        "date": "2025-08-18",
+        "counts": {
+          "new": 1,
+          "increased": 6,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 14.2857,
+            "status": "increased",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 14.2857,
+            "status": "increased",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 12.5,
+            "newWeight": 14.2857,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 14.2857,
+            "status": "increased",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 12.5,
+            "newWeight": 14.2857,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 14.2857,
+            "status": "increased",
+            "nseCode": "CENTURYPLY"
+          },
+          {
+            "name": "Asian Paints Limited",
+            "oldWeight": null,
+            "newWeight": 14.2857,
+            "status": "new",
+            "nseCode": "ASIANPAINT"
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "JSWDULUX"
+          }
+        ]
+      },
+      {
+        "date": "2025-08-11",
+        "counts": {
+          "new": 2,
+          "increased": 6,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "CENTURYPLY"
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "JSWDULUX"
+          },
+          {
+            "name": "PC Jeweller Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PCJEWELLER"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AMBER"
+          }
+        ]
+      },
+      {
+        "date": "2025-08-04",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "PC Jeweller Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "PCJEWELLER"
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CENTURYPLY"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "GREENPLY"
+          },
+          {
+            "name": "Greenpanel Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "GREENPANEL"
+          }
+        ]
+      },
+      {
+        "date": "2025-07-28",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "GREENPLY"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "JSWDULUX"
+          },
+          {
+            "name": "VIP Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VIPIND"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "KAJARIACER"
+          },
+          {
+            "name": "Indigo Paints Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "INDIGOPNTS"
+          }
+        ]
+      },
+      {
+        "date": "2025-07-21",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Indigo Paints Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "INDIGOPNTS"
+          },
+          {
+            "name": "Greenpanel Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "GREENPANEL"
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "PC Jeweller Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PCJEWELLER"
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "JSWDULUX"
+          }
+        ]
+      },
+      {
+        "date": "2025-07-14",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "JSWDULUX"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Indigo Paints Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "INDIGOPNTS"
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          }
+        ]
+      },
+      {
+        "date": "2025-07-07",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Indigo Paints Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "INDIGOPNTS"
+          },
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "IFBIND"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PGEL"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-30",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Campus Activewear Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CAMPUS"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-23",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Campus Activewear Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CAMPUS"
+          },
+          {
+            "name": "Ethos Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ETHOSLTD"
+          },
+          {
+            "name": "Cera Sanitaryware Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CERA"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CENTURYPLY"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-16",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "VIP Industries Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VIPIND"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "PC Jeweller Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "PCJEWELLER"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CROMPTON"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-09",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "IFBIND"
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "GREENPLY"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-02",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "KAJARIACER"
+          },
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "GREENPLY"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CENTURYPLY"
+          },
+          {
+            "name": "Cera Sanitaryware Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CERA"
+          },
+          {
+            "name": "Whirlpool of India Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "WHIRLPOOL"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Symphony Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SYMPHONY"
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "JSWDULUX"
+          }
+        ]
+      },
+      {
+        "date": "2025-05-26",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "VIP Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VIPIND"
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          }
+        ]
+      },
+      {
+        "date": "2025-05-19",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Symphony Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SYMPHONY"
+          },
+          {
+            "name": "Ethos Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "ETHOSLTD"
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "JSWDULUX"
+          },
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BOSCH-HCIL"
+          },
+          {
+            "name": "Kansai Nerolac Paints Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "KANSAINER"
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HAVELLS"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          }
+        ]
+      },
+      {
+        "date": "2025-05-12",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BOSCH-HCIL"
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "HAVELLS"
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Asian Paints Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ASIANPAINT"
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "DIXON"
+          }
+        ]
+      },
+      {
+        "date": "2025-05-05",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Whirlpool of India Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "WHIRLPOOL"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "VIP Industries Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VIPIND"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "JSWDULUX"
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HAVELLS"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CENTURYPLY"
+          }
+        ]
+      },
+      {
+        "date": "2025-04-28",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "Kansai Nerolac Paints Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "KANSAINER"
+          },
+          {
+            "name": "JSW Dulux Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "JSWDULUX"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BOSCH-HCIL"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AMBER"
+          }
+        ]
+      },
+      {
+        "date": "2025-04-21",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "HAVELLS"
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BOSCH-HCIL"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CENTURYPLY"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Bata India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BATAINDIA"
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "THANGAMAYL"
+          }
+        ]
+      },
+      {
+        "date": "2025-04-15",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Bata India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BATAINDIA"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          }
+        ]
+      },
+      {
+        "date": "2025-04-01",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Thangamayil Jewellery Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "THANGAMAYL"
+          },
+          {
+            "name": "Orient Electric Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ORIENTELEC"
+          },
+          {
+            "name": "Kansai Nerolac Paints Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "KANSAINER"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CENTURYPLY"
+          }
+        ]
+      },
+      {
+        "date": "2025-03-24",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Orient Electric Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "ORIENTELEC"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CENTURYPLY"
+          },
+          {
+            "name": "Bata India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BATAINDIA"
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HAVELLS"
+          }
+        ]
+      },
+      {
+        "date": "2025-03-17",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Bata India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BATAINDIA"
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "HAVELLS"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Orient Electric Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ORIENTELEC"
+          },
+          {
+            "name": "Symphony Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SYMPHONY"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          }
+        ]
+      },
+      {
+        "date": "2025-03-10",
+        "counts": {
+          "new": 3,
+          "increased": 6,
+          "decreased": 0,
+          "removed": 6
+        },
+        "changes": [
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 8.3333,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Orient Electric Ltd",
+            "oldWeight": 8.3333,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "ORIENTELEC"
+          },
+          {
+            "name": "Symphony Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SYMPHONY"
+          },
+          {
+            "name": "Asian Paints Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "ASIANPAINT"
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": 8.3333,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Kansai Nerolac Paints Ltd",
+            "oldWeight": 8.3333,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "KANSAINER"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 8.3333,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 8.3333,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Bata India Ltd",
+            "oldWeight": 8.3333,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BATAINDIA"
+          },
+          {
+            "name": "Campus Activewear Ltd",
+            "oldWeight": 8.3333,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CAMPUS"
+          },
+          {
+            "name": "Metro Brands Ltd",
+            "oldWeight": 8.3333,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "METROBRAND"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": 8.3333,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CENTURYPLY"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 8.3333,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": 8.3333,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HAVELLS"
+          }
+        ]
+      },
+      {
+        "date": "2025-02-24",
+        "counts": {
+          "new": 5,
+          "increased": 0,
+          "decreased": 7,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Bata India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 8.3333,
+            "status": "decreased",
+            "nseCode": "BATAINDIA"
+          },
+          {
+            "name": "Campus Activewear Ltd",
+            "oldWeight": null,
+            "newWeight": 8.3333,
+            "status": "new",
+            "nseCode": "CAMPUS"
+          },
+          {
+            "name": "Metro Brands Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 8.3333,
+            "status": "decreased",
+            "nseCode": "METROBRAND"
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 8.3333,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Kansai Nerolac Paints Ltd",
+            "oldWeight": null,
+            "newWeight": 8.3333,
+            "status": "new",
+            "nseCode": "KANSAINER"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 8.3333,
+            "status": "new",
+            "nseCode": "CENTURYPLY"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 8.3333,
+            "status": "decreased",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Orient Electric Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 8.3333,
+            "status": "decreased",
+            "nseCode": "ORIENTELEC"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 11.1111,
+            "newWeight": 8.3333,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": null,
+            "newWeight": 8.3333,
+            "status": "new",
+            "nseCode": "HAVELLS"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": null,
+            "newWeight": 8.3333,
+            "status": "new",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 11.1111,
+            "newWeight": 8.3333,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Greenpanel Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "GREENPANEL"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "TITAN"
+          }
+        ]
+      },
+      {
+        "date": "2025-02-17",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "Bata India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BATAINDIA"
+          },
+          {
+            "name": "Berger Paints India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CENTURYPLY"
+          }
+        ]
+      },
+      {
+        "date": "2025-02-10",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Century Plyboards (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CENTURYPLY"
+          },
+          {
+            "name": "Metro Brands Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "METROBRAND"
+          },
+          {
+            "name": "Bata India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BATAINDIA"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Symphony Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SYMPHONY"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "TITAN"
+          }
+        ]
+      },
+      {
+        "date": "2025-02-03",
+        "counts": {
+          "new": 4,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Bata India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BATAINDIA"
+          },
+          {
+            "name": "Orient Electric Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "ORIENTELEC"
+          },
+          {
+            "name": "Symphony Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SYMPHONY"
+          },
+          {
+            "name": "Greenpanel Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "GREENPANEL"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Metro Brands Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "METROBRAND"
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PGEL"
+          }
+        ]
+      },
+      {
+        "date": "2025-01-27",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "RedTape",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "REDTAPE"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CROMPTON"
+          }
+        ]
+      },
+      {
+        "date": "2025-01-20",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "STYLAMIND"
+          }
+        ]
+      },
+      {
+        "date": "2025-01-13",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Metro Brands Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "METROBRAND"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "DIXON"
+          }
+        ]
+      },
+      {
+        "date": "2025-01-06",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CROMPTON"
+          }
+        ]
+      },
+      {
+        "date": "2024-12-30",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 7,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "STYLAMIND"
+          },
+          {
+            "name": "RedTape",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "REDTAPE"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SAFARI"
+          }
+        ]
+      },
+      {
+        "date": "2024-12-23",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "RedTape",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "REDTAPE"
+          },
+          {
+            "name": "Senco Gold Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SENCO"
+          }
+        ]
+      },
+      {
+        "date": "2024-12-02",
+        "counts": {
+          "new": 2,
+          "increased": 6,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "STYLAMIND"
+          },
+          {
+            "name": "Senco Gold Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "SENCO"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HAVELLS"
+          }
+        ]
+      },
+      {
+        "date": "2024-11-18",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          }
+        ]
+      },
+      {
+        "date": "2024-11-04",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 8,
+          "removed": 0
+        },
+        "changes": [
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "HAVELLS"
+          },
+          {
+            "name": "Stylam Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "STYLAMIND"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 12.5,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": null
+          }
+        ]
+      },
+      {
+        "date": "2024-10-30",
+        "counts": {
+          "new": 4,
+          "increased": 4,
+          "decreased": 0,
+          "removed": 5
+        },
+        "changes": [
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": null,
+            "newWeight": 12.5,
+            "status": "new",
+            "nseCode": "HAVELLS"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 11.1111,
+            "newWeight": 12.5,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Symphony Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SYMPHONY"
+          },
+          {
+            "name": "Senco Gold Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SENCO"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "IFBIND"
+          },
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "GREENPLY"
+          }
+        ]
+      },
+      {
+        "date": "2024-10-28",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BLUESTARCO"
+          }
+        ]
+      },
+      {
+        "date": "2024-10-21",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BOSCH-HCIL"
+          }
+        ]
+      },
+      {
+        "date": "2024-10-14",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "IFBIND"
+          },
+          {
+            "name": "Ethos Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ETHOSLTD"
+          }
+        ]
+      },
+      {
+        "date": "2024-10-07",
+        "counts": {
+          "new": 0,
+          "increased": 9,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "Symphony Limited",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "SYMPHONY"
+          },
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "BOSCH-HCIL"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Senco Gold Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "SENCO"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "Ethos Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "ETHOSLTD"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "GREENPLY"
+          },
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "IFBIND"
+          }
+        ]
+      },
+      {
+        "date": "2024-09-30",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 9,
+          "removed": 0
+        },
+        "changes": [
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "Symphony Limited",
+            "oldWeight": null,
+            "newWeight": 10.0,
+            "status": "new",
+            "nseCode": "SYMPHONY"
+          },
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "BOSCH-HCIL"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Senco Gold Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "SENCO"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "Ethos Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "ETHOSLTD"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "IFBIND"
+          },
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "GREENPLY"
+          }
+        ]
+      },
+      {
+        "date": "2024-09-09",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BOSCH-HCIL"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          }
+        ]
+      },
+      {
+        "date": "2024-08-26",
+        "counts": {
+          "new": 1,
+          "increased": 8,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Senco Gold Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "SENCO"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "Ethos Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "ETHOSLTD"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "IFBIND"
+          },
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "GREENPLY"
+          },
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BOSCH-HCIL"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 10.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CROMPTON"
+          }
+        ]
+      },
+      {
+        "date": "2024-08-19",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 9,
+          "removed": 0
+        },
+        "changes": [
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Senco Gold Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "SENCO"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "Ethos Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "ETHOSLTD"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": null,
+            "newWeight": 10.0,
+            "status": "new",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "BOSCH-HCIL"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "IFBIND"
+          },
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "GREENPLY"
+          }
+        ]
+      },
+      {
+        "date": "2024-08-12",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Senco Gold Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SENCO"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Whirlpool of India Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "WHIRLPOOL"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PGEL"
+          }
+        ]
+      },
+      {
+        "date": "2024-08-05",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Whirlpool of India Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "WHIRLPOOL"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          }
+        ]
+      },
+      {
+        "date": "2024-07-29",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "GREENPLY"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CROMPTON"
+          }
+        ]
+      },
+      {
+        "date": "2024-07-22",
+        "counts": {
+          "new": 1,
+          "increased": 8,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "Ethos Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "ETHOSLTD"
+          },
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "BOSCH-HCIL"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 11.1111,
+            "status": "increased",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "IFBIND"
+          },
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": 10.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "GREENPLY"
+          }
+        ]
+      },
+      {
+        "date": "2024-07-15",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 9,
+          "removed": 0
+        },
+        "changes": [
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "BOSCH-HCIL"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "Ethos Ltd",
+            "oldWeight": null,
+            "newWeight": 10.0,
+            "status": "new",
+            "nseCode": "ETHOSLTD"
+          },
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 10.0,
+            "status": "decreased",
+            "nseCode": "GREENPLY"
+          }
+        ]
+      },
+      {
+        "date": "2024-07-08",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "IFBIND"
+          }
+        ]
+      },
+      {
+        "date": "2024-06-24",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "GREENPLY"
+          },
+          {
+            "name": "Responsive Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "RESPONIND"
+          }
+        ]
+      },
+      {
+        "date": "2024-06-18",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "IFBIND"
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          }
+        ]
+      },
+      {
+        "date": "2024-06-10",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SAFARI"
+          }
+        ]
+      },
+      {
+        "date": "2024-06-03",
+        "counts": {
+          "new": 3,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 3
+        },
+        "changes": [
+          {
+            "name": "Bosch Home Comfort India Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "BOSCH-HCIL"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Safari Industries (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "SAFARI"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "IFBIND"
+          },
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": 11.1111,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "GREENPLY"
+          }
+        ]
+      },
+      {
+        "date": "2024-05-27",
+        "counts": {
+          "new": 5,
+          "increased": 0,
+          "decreased": 4,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Crompton Greaves Consumer Electricals Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "CROMPTON"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Responsive Industries Limited",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "RESPONIND"
+          },
+          {
+            "name": "PG Electroplast Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "PGEL"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 20.0,
+            "newWeight": 11.1111,
+            "status": "decreased",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "IFB Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "IFBIND"
+          },
+          {
+            "name": "Greenply Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 11.1111,
+            "status": "new",
+            "nseCode": "GREENPLY"
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HAVELLS"
+          }
+        ]
+      },
+      {
+        "date": "2024-05-06",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "HAVELLS"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AMBER"
+          }
+        ]
+      },
+      {
+        "date": "2024-04-08",
+        "counts": {
+          "new": 0,
+          "increased": 5,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": 16.6667,
+            "newWeight": 20.0,
+            "status": "increased",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 16.6667,
+            "newWeight": 20.0,
+            "status": "increased",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 16.6667,
+            "newWeight": 20.0,
+            "status": "increased",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 16.6667,
+            "newWeight": 20.0,
+            "status": "increased",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": 16.6667,
+            "newWeight": 20.0,
+            "status": "increased",
+            "nseCode": "KALYANKJIL"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 16.6667,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          }
+        ]
+      },
+      {
+        "date": "2024-04-01",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 5,
+          "removed": 0
+        },
+        "changes": [
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 16.6667,
+            "status": "decreased",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 16.6667,
+            "status": "decreased",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 16.6667,
+            "status": "decreased",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 16.6667,
+            "status": "decreased",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 20.0,
+            "newWeight": 16.6667,
+            "status": "decreased",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Kalyan Jewellers India Limited",
+            "oldWeight": null,
+            "newWeight": 16.6667,
+            "status": "new",
+            "nseCode": "KALYANKJIL"
+          }
+        ]
+      },
+      {
+        "date": "2024-03-11",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "TITAN"
+          }
+        ]
+      },
+      {
+        "date": "2024-01-23",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "KAJARIACER"
+          }
+        ]
+      },
+      {
+        "date": "2024-01-15",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "KAJARIACER"
+          },
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VOLTAS"
+          }
+        ]
+      },
+      {
+        "date": "2023-12-26",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Voltas Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "VOLTAS"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          }
+        ]
+      },
+      {
+        "date": "2023-11-23",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "KAJARIACER"
+          }
+        ]
+      },
+      {
+        "date": "2023-11-13",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "KAJARIACER"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          }
+        ]
+      },
+      {
+        "date": "2023-10-23",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "KAJARIACER"
+          }
+        ]
+      },
+      {
+        "date": "2023-10-03",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "KAJARIACER"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          }
+        ]
+      },
+      {
+        "date": "2023-09-25",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "KAJARIACER"
+          }
+        ]
+      },
+      {
+        "date": "2023-09-11",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          }
+        ]
+      },
+      {
+        "date": "2023-08-21",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "TITAN"
+          }
+        ]
+      },
+      {
+        "date": "2023-08-07",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AMBER"
+          }
+        ]
+      },
+      {
+        "date": "2023-07-31",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "DIXON"
+          }
+        ]
+      },
+      {
+        "date": "2023-07-17",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HAVELLS"
+          }
+        ]
+      },
+      {
+        "date": "2023-07-10",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "HAVELLS"
+          },
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "AMBER"
+          }
+        ]
+      },
+      {
+        "date": "2023-06-26",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "BLUESTARCO"
+          },
+          {
+            "name": "Amber Enterprises India Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "AMBER"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HAVELLS"
+          }
+        ]
+      },
+      {
+        "date": "2023-06-19",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Dixon Technologies (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "DIXON"
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BLUESTARCO"
+          }
+        ]
+      },
+      {
+        "date": "2023-06-12",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Havells India Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "HAVELLS"
+          },
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          }
+        ]
+      },
+      {
+        "date": "2023-05-15",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Titan Company Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "TITAN"
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VGUARD"
+          }
+        ]
+      },
+      {
+        "date": "2023-04-17",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Kajaria Ceramics Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "KAJARIACER"
+          },
+          {
+            "name": "Rajesh Exports Ltd",
+            "oldWeight": 20.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "RAJESHEXPO"
+          }
+        ]
+      },
+      {
+        "date": "2023-04-10",
+        "counts": {
+          "new": 5,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 0
+        },
+        "changes": [
+          {
+            "name": "Nippon India Silver ETF",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "V-Guard Industries Limited",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "VGUARD"
+          },
+          {
+            "name": "Rajesh Exports Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "RAJESHEXPO"
+          },
+          {
+            "name": "Nippon India ETF Gold BeES",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Blue Star Ltd",
+            "oldWeight": null,
+            "newWeight": 20.0,
+            "status": "new",
+            "nseCode": "BLUESTARCO"
+          }
+        ]
+      }
+    ],
+    "marketCapMix": {
+      "Smallcap": 77.78,
+      "Midcap": 11.11,
+      "Largecap": 11.11
+    },
+    "performanceSeries": [
+      {
+        "date": "2023-04-10",
+        "value": 100
+      },
+      {
+        "date": "2023-04-28",
+        "value": 99.33238865785574
+      },
+      {
+        "date": "2023-05-18",
+        "value": 98.65108887893939
+      },
+      {
+        "date": "2023-06-06",
+        "value": 101.23534975343676
+      },
+      {
+        "date": "2023-06-23",
+        "value": 100.91540254731436
+      },
+      {
+        "date": "2023-07-13",
+        "value": 101.68326929838183
+      },
+      {
+        "date": "2023-08-01",
+        "value": 101.72324195272351
+      },
+      {
+        "date": "2023-08-21",
+        "value": 105.8060469529709
+      },
+      {
+        "date": "2023-09-07",
+        "value": 108.50618100096922
+      },
+      {
+        "date": "2023-09-27",
+        "value": 111.71072456372491
+      },
+      {
+        "date": "2023-10-17",
+        "value": 112.11013788818279
+      },
+      {
+        "date": "2023-11-06",
+        "value": 113.63903777098085
+      },
+      {
+        "date": "2023-11-24",
+        "value": 114.66636309339472
+      },
+      {
+        "date": "2023-12-14",
+        "value": 119.19718896316624
+      },
+      {
+        "date": "2024-01-03",
+        "value": 119.82454943973876
+      },
+      {
+        "date": "2024-01-20",
+        "value": 128.5948716138514
+      },
+      {
+        "date": "2024-02-09",
+        "value": 134.2084937832279
+      },
+      {
+        "date": "2024-02-28",
+        "value": 137.02008366154297
+      },
+      {
+        "date": "2024-03-19",
+        "value": 131.86806230515757
+      },
+      {
+        "date": "2024-04-09",
+        "value": 148.89857342131302
+      },
+      {
+        "date": "2024-04-30",
+        "value": 156.7727977161137
+      },
+      {
+        "date": "2024-05-21",
+        "value": 161.79377453095012
+      },
+      {
+        "date": "2024-06-07",
+        "value": 167.16954748882318
+      },
+      {
+        "date": "2024-06-27",
+        "value": 182.06584408189448
+      },
+      {
+        "date": "2024-07-16",
+        "value": 189.64089577642076
+      },
+      {
+        "date": "2024-08-05",
+        "value": 193.2069828457773
+      },
+      {
+        "date": "2024-08-23",
+        "value": 209.05539638371675
+      },
+      {
+        "date": "2024-09-11",
+        "value": 216.50368866299155
+      },
+      {
+        "date": "2024-09-30",
+        "value": 231.5157348185357
+      },
+      {
+        "date": "2024-10-18",
+        "value": 238.0651262003356
+      },
+      {
+        "date": "2024-11-07",
+        "value": 215.1012368321489
+      },
+      {
+        "date": "2024-11-28",
+        "value": 216.21550542828962
+      },
+      {
+        "date": "2024-12-17",
+        "value": 234.02706728794362
+      },
+      {
+        "date": "2025-01-06",
+        "value": 230.78752534596975
+      },
+      {
+        "date": "2025-01-23",
+        "value": 205.52932089220297
+      },
+      {
+        "date": "2025-02-10",
+        "value": 207.9214734530779
+      },
+      {
+        "date": "2025-02-28",
+        "value": 182.2056259022542
+      },
+      {
+        "date": "2025-03-20",
+        "value": 198.04112521480772
+      },
+      {
+        "date": "2025-04-09",
+        "value": 187.69359955587
+      },
+      {
+        "date": "2025-05-02",
+        "value": 190.39408849740772
+      },
+      {
+        "date": "2025-05-21",
+        "value": 198.02074868623754
+      },
+      {
+        "date": "2025-06-09",
+        "value": 195.33861582075144
+      },
+      {
+        "date": "2025-06-26",
+        "value": 194.22707432520966
+      },
+      {
+        "date": "2025-07-15",
+        "value": 208.73984405090192
+      },
+      {
+        "date": "2025-08-01",
+        "value": 197.07206864439584
+      },
+      {
+        "date": "2025-08-21",
+        "value": 185.96273015538523
+      },
+      {
+        "date": "2025-09-10",
+        "value": 192.74371814629689
+      },
+      {
+        "date": "2025-09-29",
+        "value": 192.32568321425154
+      },
+      {
+        "date": "2025-10-17",
+        "value": 200.76740586494253
+      },
+      {
+        "date": "2025-11-10",
+        "value": 197.17166105723805
+      },
+      {
+        "date": "2025-11-27",
+        "value": 193.6945459810827
+      },
+      {
+        "date": "2025-12-16",
+        "value": 197.4628495113102
+      },
+      {
+        "date": "2026-01-05",
+        "value": 214.52398794104923
+      },
+      {
+        "date": "2026-01-23",
+        "value": 202.49215063718813
+      },
+      {
+        "date": "2026-02-11",
+        "value": 225.05608630121117
+      },
+      {
+        "date": "2026-03-02",
+        "value": 217.78616168465882
+      },
+      {
+        "date": "2026-03-20",
+        "value": 199.63230972861496
+      },
+      {
+        "date": "2026-04-13",
+        "value": 212.460953458046
+      },
+      {
+        "date": "2026-05-04",
+        "value": 209.75399553808094
+      },
+      {
+        "date": "2026-05-21",
+        "value": 212.04864716120622
+      },
+      {
+        "date": "2026-06-10",
+        "value": 227.88884870372115
+      },
+      {
+        "date": "2026-06-30",
+        "value": 244.24658604258514
+      },
+      {
+        "date": "2026-07-17",
+        "value": 243.61989776293342
+      },
+      {
+        "date": "2026-08-05",
+        "value": 259.93801154011584
+      },
+      {
+        "date": "2026-08-24",
+        "value": 260.4189010056377
+      },
+      {
+        "date": "2026-09-10",
+        "value": 267.29802097344395
+      },
+      {
+        "date": "2026-09-30",
+        "value": 254.7068969716269
+      },
+      {
+        "date": "2026-10-21",
+        "value": 243.2111964044534
+      },
+      {
+        "date": "2026-11-09",
+        "value": 269.50357884508765
+      },
+      {
+        "date": "2026-11-20",
+        "value": 270.98383100452577
+      }
+    ],
+    "launchDate": "10 Apr 2023",
+    "latestRebalanceDetail": [
+      {
+        "section": "addition",
+        "companyName": "Lenskart Solutions Ltd",
+        "holdingType": "Largecap",
+        "newWeight": 11.11,
+        "delta": 11.11
+      },
+      {
+        "section": "addition",
+        "companyName": "Tips Music Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 11.11,
+        "delta": 11.11
+      },
+      {
+        "section": "removal",
+        "companyName": "Sky Gold and Diamonds Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 11.11
+      },
+      {
+        "section": "removal",
+        "companyName": "Steel Strips Wheels Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 11.11
+      },
+      {
+        "section": "no_change",
+        "companyName": "Arvind Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 11.12,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Ather Energy Ltd",
+        "holdingType": "Midcap",
+        "newWeight": 11.11,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Entero Healthcare Solutions Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 11.11,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Nazara Technologies Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 11.11,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Nitin Spinners Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 11.11,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Sansera Engineering Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 11.11,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Welspun Living Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 11.11,
+        "delta": null
+      }
+    ],
+    "lastFetched": "21 Nov 2026 07:34 UTC"
   }
 }
