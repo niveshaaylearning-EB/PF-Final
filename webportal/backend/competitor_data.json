@@ -7,7 +7,7 @@
       {
         "name": "Stocks & Segments Holding Type Weightage Aditya Birla Sun Life AMC Ltd",
         "weight": 7.14,
-        "nseCode": "ABSLAMC",
+        "nseCode": null,
         "sector": null,
         "capSegment": "Smallcap"
       },
@@ -50,7 +50,7 @@
         "name": "Samvardhana Motherson International Ltd",
         "weight": 7.15,
         "nseCode": "MOTHERSON",
-        "sector": "Auto Parts",
+        "sector": null,
         "capSegment": "Largecap"
       },
       {
@@ -216,7 +216,7 @@
             "nseCode": "PGIL"
           },
           {
-            "name": "Samvardhana Motherson International Ltd",
+            "name": "Samvardhana Motherson International Limited",
             "oldWeight": 7.6923,
             "newWeight": 7.15,
             "status": "decreased",
@@ -311,7 +311,7 @@
             "nseCode": "ABSLAMC"
           },
           {
-            "name": "Samvardhana Motherson International Ltd",
+            "name": "Samvardhana Motherson International Limited",
             "oldWeight": 7.8333,
             "newWeight": 7.6923,
             "status": "decreased",
@@ -360,7 +360,7 @@
             "nseCode": "CUMMINSIND"
           },
           {
-            "name": "Union Bank of India Ltd",
+            "name": "Union Bank of India",
             "oldWeight": 7.8333,
             "newWeight": 0,
             "status": "removed",
@@ -406,7 +406,7 @@
         },
         "changes": [
           {
-            "name": "Union Bank of India Ltd",
+            "name": "Union Bank of India",
             "oldWeight": null,
             "newWeight": 7.8333,
             "status": "new",
@@ -441,7 +441,7 @@
             "nseCode": "ABSLAMC"
           },
           {
-            "name": "Samvardhana Motherson International Ltd",
+            "name": "Samvardhana Motherson International Limited",
             "oldWeight": null,
             "newWeight": 7.8333,
             "status": "new",
@@ -525,7 +525,7 @@
             "nseCode": "CHOLAFIN"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": 6.6667,
             "newWeight": 0,
             "status": "removed",
@@ -613,7 +613,7 @@
             "nseCode": "CHOLAFIN"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": 7.1154,
             "newWeight": 6.6667,
             "status": "decreased",
@@ -669,7 +669,7 @@
             "nseCode": "ABDL"
           },
           {
-            "name": "Indian Hotels Company Ltd",
+            "name": "The Indian Hotels Company Limited",
             "oldWeight": 7.1154,
             "newWeight": 0,
             "status": "removed",
@@ -743,7 +743,7 @@
             "nseCode": "MUTHOOTFIN"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": 11.0,
             "newWeight": 7.1154,
             "status": "decreased",
@@ -764,7 +764,7 @@
             "nseCode": "LEMONTREE"
           },
           {
-            "name": "Indian Hotels Company Ltd",
+            "name": "The Indian Hotels Company Limited",
             "oldWeight": 7.4167,
             "newWeight": 7.1154,
             "status": "decreased",
@@ -873,7 +873,7 @@
             "nseCode": null
           },
           {
-            "name": "Indian Hotels Company Ltd",
+            "name": "The Indian Hotels Company Limited",
             "oldWeight": 9.7778,
             "newWeight": 7.4167,
             "status": "decreased",
@@ -915,7 +915,7 @@
             "nseCode": "BEL"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": 12.0,
             "newWeight": 11.0,
             "status": "decreased",
@@ -989,7 +989,7 @@
             "nseCode": "AVANTIFEED"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": null,
             "newWeight": 12.0,
             "status": "new",
@@ -1024,7 +1024,7 @@
             "nseCode": "GABRIEL"
           },
           {
-            "name": "Indian Hotels Company Ltd",
+            "name": "The Indian Hotels Company Limited",
             "oldWeight": 7.6667,
             "newWeight": 9.7778,
             "status": "increased",
@@ -1073,7 +1073,7 @@
             "nseCode": "KAYNES"
           },
           {
-            "name": "Apar Industries Ltd",
+            "name": "APAR Industries Limited",
             "oldWeight": 8.0,
             "newWeight": 0,
             "status": "removed",
@@ -1119,7 +1119,7 @@
             "nseCode": "KIRLPNU"
           },
           {
-            "name": "Indian Hotels Company Ltd",
+            "name": "The Indian Hotels Company Limited",
             "oldWeight": null,
             "newWeight": 7.6667,
             "status": "new",
@@ -1281,7 +1281,7 @@
             "nseCode": "KAYNES"
           },
           {
-            "name": "Apar Industries Ltd",
+            "name": "APAR Industries Limited",
             "oldWeight": 9.0,
             "newWeight": 8.0,
             "status": "decreased",
@@ -1397,11 +1397,11 @@
             "nseCode": "ASTRAMICRO"
           },
           {
-            "name": "South Indian Bank Ltd",
+            "name": "The South Indian Bank Limited",
             "oldWeight": 8.2727,
             "newWeight": 0,
             "status": "removed",
-            "nseCode": "INDIANB"
+            "nseCode": "SOUTHBANK"
           },
           {
             "name": "Karur Vysya Bank Ltd",
@@ -1450,11 +1450,11 @@
             "nseCode": "VBL"
           },
           {
-            "name": "South Indian Bank Ltd",
+            "name": "The South Indian Bank Limited",
             "oldWeight": 8.3333,
             "newWeight": 8.2727,
             "status": "decreased",
-            "nseCode": "INDIANB"
+            "nseCode": "SOUTHBANK"
           },
           {
             "name": "Karur Vysya Bank Ltd",
@@ -1520,7 +1520,7 @@
             "nseCode": "CIEINDIA"
           },
           {
-            "name": "Apar Industries Ltd",
+            "name": "APAR Industries Limited",
             "oldWeight": null,
             "newWeight": 9.0,
             "status": "new",
@@ -1541,7 +1541,7 @@
             "nseCode": "SIEMENS"
           },
           {
-            "name": "ABB India Ltd",
+            "name": "ABB India Limited.",
             "oldWeight": 8.3333,
             "newWeight": 0,
             "status": "removed",
@@ -1566,11 +1566,11 @@
             "nseCode": "KALYANKJIL"
           },
           {
-            "name": "South Indian Bank Ltd",
+            "name": "The South Indian Bank Limited",
             "oldWeight": null,
             "newWeight": 8.3333,
             "status": "new",
-            "nseCode": "INDIANB"
+            "nseCode": "SOUTHBANK"
           },
           {
             "name": "Garden Reach Shipbuilders & Engineers Ltd",
@@ -1654,7 +1654,7 @@
             "nseCode": "APLAPOLLO"
           },
           {
-            "name": "Apar Industries Ltd",
+            "name": "APAR Industries Limited",
             "oldWeight": 8.3333,
             "newWeight": 0,
             "status": "removed",
@@ -1700,7 +1700,7 @@
             "nseCode": "SIEMENS"
           },
           {
-            "name": "ABB India Ltd",
+            "name": "ABB India Limited.",
             "oldWeight": null,
             "newWeight": 8.3333,
             "status": "new",
@@ -1749,7 +1749,7 @@
             "nseCode": "APLAPOLLO"
           },
           {
-            "name": "Apar Industries Ltd",
+            "name": "APAR Industries Limited",
             "oldWeight": 9.0909,
             "newWeight": 8.3333,
             "status": "decreased",
@@ -1851,7 +1851,7 @@
             "nseCode": "APLAPOLLO"
           },
           {
-            "name": "Apar Industries Ltd",
+            "name": "APAR Industries Limited",
             "oldWeight": null,
             "newWeight": 9.0909,
             "status": "new",
@@ -3233,7 +3233,7 @@
             "nseCode": "VBL"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": 12.5,
             "newWeight": 0,
             "status": "removed",
@@ -3254,7 +3254,7 @@
             "nseCode": "UPL"
           },
           {
-            "name": "V-Mart Retail Limited",
+            "name": "V-Mart Retail Ltd",
             "oldWeight": 12.5,
             "newWeight": 0,
             "status": "removed",
@@ -3272,7 +3272,7 @@
         },
         "changes": [
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": 13.0,
             "newWeight": 12.5,
             "status": "decreased",
@@ -3321,7 +3321,7 @@
             "nseCode": "VBL"
           },
           {
-            "name": "V-Mart Retail Limited",
+            "name": "V-Mart Retail Ltd",
             "oldWeight": 13.0,
             "newWeight": 12.5,
             "status": "decreased",
@@ -3363,11 +3363,11 @@
             "nseCode": "JKPAPER"
           },
           {
-            "name": "V I P Industries Ltd",
+            "name": "VIP Industries Limited",
             "oldWeight": 8.2222,
             "newWeight": 0,
             "status": "removed",
-            "nseCode": null
+            "nseCode": "VIPIND"
           }
         ]
       },
@@ -3388,14 +3388,14 @@
             "nseCode": "DMART"
           },
           {
-            "name": "V-Mart Retail Limited",
+            "name": "V-Mart Retail Ltd",
             "oldWeight": null,
             "newWeight": 13.0,
             "status": "new",
             "nseCode": "VMART"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": null,
             "newWeight": 13.0,
             "status": "new",
@@ -3451,11 +3451,11 @@
             "nseCode": "UPL"
           },
           {
-            "name": "V I P Industries Ltd",
+            "name": "VIP Industries Limited",
             "oldWeight": null,
             "newWeight": 8.2222,
             "status": "new",
-            "nseCode": null
+            "nseCode": "VIPIND"
           }
         ]
       }
@@ -3743,8 +3743,12 @@
         "value": 537.4528382135188
       },
       {
-        "date": "2026-10-01",
-        "value": 527.4749941449826
+        "date": "2026-11-03",
+        "value": 526.5204461841747
+      },
+      {
+        "date": "2026-11-20",
+        "value": 560.7504957158751
       }
     ],
     "launchDate": "02 Jan 2019",
@@ -3862,7 +3866,7 @@
         "delta": 0.55
       }
     ],
-    "lastFetched": "02 Oct 2026 12:55 UTC"
+    "lastFetched": "21 Nov 2026 07:34 UTC"
   },
   "omni_ai_tech": {
     "key": "omni_ai_tech",
@@ -3929,7 +3933,7 @@
         "name": "Bajaj Finance Ltd",
         "weight": 12.0,
         "nseCode": "BAJFINANCE",
-        "sector": "Banking Services",
+        "sector": null,
         "capSegment": "Largecap"
       },
       {
@@ -4082,7 +4086,7 @@
             "nseCode": "BHARTIARTL"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": null,
             "newWeight": 12.0,
             "status": "new",
@@ -4282,11 +4286,11 @@
             "nseCode": "WIPRO"
           },
           {
-            "name": "LTM Ltd",
+            "name": "LTM Limited",
             "oldWeight": 4.0,
             "newWeight": 0,
             "status": "removed",
-            "nseCode": null
+            "nseCode": "LTM"
           }
         ]
       },
@@ -4370,11 +4374,11 @@
             "nseCode": "MASTEK"
           },
           {
-            "name": "LTM Ltd",
+            "name": "LTM Limited",
             "oldWeight": 1.7,
             "newWeight": 4.0,
             "status": "increased",
-            "nseCode": null
+            "nseCode": "LTM"
           },
           {
             "name": "Larsen and Toubro Ltd",
@@ -4535,11 +4539,11 @@
             "nseCode": "LTTS"
           },
           {
-            "name": "LTM Ltd",
+            "name": "LTM Limited",
             "oldWeight": 2.6,
             "newWeight": 1.7,
             "status": "decreased",
-            "nseCode": null
+            "nseCode": "LTM"
           },
           {
             "name": "Larsen and Toubro Ltd",
@@ -4686,11 +4690,11 @@
             "nseCode": "LTTS"
           },
           {
-            "name": "LTM Ltd",
+            "name": "LTM Limited",
             "oldWeight": 2.45,
             "newWeight": 2.6,
             "status": "increased",
-            "nseCode": null
+            "nseCode": "LTM"
           },
           {
             "name": "Larsen and Toubro Ltd",
@@ -4767,11 +4771,11 @@
             "nseCode": "LTTS"
           },
           {
-            "name": "LTM Ltd",
+            "name": "LTM Limited",
             "oldWeight": 2.2,
             "newWeight": 2.45,
             "status": "increased",
-            "nseCode": null
+            "nseCode": "LTM"
           },
           {
             "name": "Larsen and Toubro Ltd",
@@ -5136,11 +5140,11 @@
             "nseCode": "LTTS"
           },
           {
-            "name": "LTM Ltd",
+            "name": "LTM Limited",
             "oldWeight": null,
             "newWeight": 2.2,
             "status": "new",
-            "nseCode": null
+            "nseCode": "LTM"
           },
           {
             "name": "Larsen and Toubro Ltd",
@@ -5333,7 +5337,7 @@
             "oldWeight": 1.9,
             "newWeight": 0,
             "status": "removed",
-            "nseCode": "LTM"
+            "nseCode": null
           }
         ]
       },
@@ -5407,7 +5411,7 @@
             "oldWeight": 2.24,
             "newWeight": 1.9,
             "status": "decreased",
-            "nseCode": "LTM"
+            "nseCode": null
           },
           {
             "name": "Mphasis Ltd",
@@ -5480,11 +5484,11 @@
             "nseCode": null
           },
           {
-            "name": "LTM Ltd",
+            "name": "LTM Limited",
             "oldWeight": 2.8,
             "newWeight": 0,
             "status": "removed",
-            "nseCode": null
+            "nseCode": "LTM"
           },
           {
             "name": "Tata Elxsi Ltd",
@@ -5533,11 +5537,11 @@
             "nseCode": "KPITTECH"
           },
           {
-            "name": "LTM Ltd",
+            "name": "LTM Limited",
             "oldWeight": 4.2,
             "newWeight": 2.8,
             "status": "decreased",
-            "nseCode": null
+            "nseCode": "LTM"
           },
           {
             "name": "L&T Technology Services Ltd",
@@ -5551,7 +5555,7 @@
             "oldWeight": 4.2,
             "newWeight": 2.24,
             "status": "decreased",
-            "nseCode": "LTM"
+            "nseCode": null
           },
           {
             "name": "Mphasis Ltd",
@@ -5649,11 +5653,11 @@
             "nseCode": "KPITTECH"
           },
           {
-            "name": "LTM Ltd",
+            "name": "LTM Limited",
             "oldWeight": null,
             "newWeight": 4.2,
             "status": "new",
-            "nseCode": null
+            "nseCode": "LTM"
           },
           {
             "name": "L&T Technology Services Ltd",
@@ -5667,7 +5671,7 @@
             "oldWeight": null,
             "newWeight": 4.2,
             "status": "new",
-            "nseCode": "LTM"
+            "nseCode": null
           },
           {
             "name": "Mphasis Ltd",
@@ -5745,284 +5749,276 @@
         "value": 100
       },
       {
-        "date": "2021-10-01",
-        "value": 99.7093499950339
+        "date": "2021-10-04",
+        "value": 100.52250404371767
       },
       {
-        "date": "2021-10-28",
-        "value": 103.11543224168454
+        "date": "2021-11-01",
+        "value": 104.21026659708843
       },
       {
-        "date": "2021-11-26",
-        "value": 104.98245044801078
+        "date": "2021-12-01",
+        "value": 107.51391867644824
       },
       {
-        "date": "2021-12-22",
-        "value": 108.8404820383812
+        "date": "2021-12-28",
+        "value": 113.8947205411352
       },
       {
-        "date": "2022-01-17",
-        "value": 112.94681897689347
+        "date": "2022-01-24",
+        "value": 103.52122803787606
       },
       {
-        "date": "2022-02-11",
-        "value": 103.3351589492624
+        "date": "2022-02-21",
+        "value": 99.7175461558205
       },
       {
-        "date": "2022-03-10",
-        "value": 100.70469272510962
+        "date": "2022-03-22",
+        "value": 104.41261942553345
       },
       {
-        "date": "2022-04-06",
-        "value": 107.0694098581275
+        "date": "2022-04-20",
+        "value": 100.57020578984087
       },
       {
-        "date": "2022-05-05",
-        "value": 96.76995304721027
+        "date": "2022-05-18",
+        "value": 93.36961210597391
       },
       {
-        "date": "2022-05-31",
-        "value": 92.4739374204531
+        "date": "2022-06-14",
+        "value": 86.67098394922556
       },
       {
-        "date": "2022-06-24",
-        "value": 85.51828194260332
+        "date": "2022-07-11",
+        "value": 86.8347729814851
       },
       {
-        "date": "2022-07-20",
-        "value": 88.74439380707749
+        "date": "2022-08-05",
+        "value": 93.30221302741631
       },
       {
-        "date": "2022-08-17",
-        "value": 94.62873426788747
+        "date": "2022-09-06",
+        "value": 88.64196133292342
       },
       {
-        "date": "2022-09-13",
-        "value": 91.69235970895231
+        "date": "2022-10-03",
+        "value": 84.0509848597761
       },
       {
-        "date": "2022-10-10",
-        "value": 86.37728945226996
+        "date": "2022-11-02",
+        "value": 88.82707867384065
       },
       {
-        "date": "2022-11-07",
-        "value": 86.95783279388532
+        "date": "2022-11-30",
+        "value": 90.97344553048819
       },
       {
-        "date": "2022-12-02",
-        "value": 93.45428231234418
-      },
-      {
-        "date": "2022-12-28",
-        "value": 87.82989837249308
+        "date": "2022-12-27",
+        "value": 88.27984851337476
       },
       {
         "date": "2023-01-23",
         "value": 90.84080746692725
       },
       {
-        "date": "2023-02-17",
-        "value": 95.81125926058768
+        "date": "2023-02-20",
+        "value": 96.31462820032665
       },
       {
-        "date": "2023-03-16",
-        "value": 93.09706407964961
+        "date": "2023-03-20",
+        "value": 93.56377165990224
       },
       {
-        "date": "2023-04-17",
-        "value": 94.54969150628213
+        "date": "2023-04-20",
+        "value": 94.3644241637981
       },
       {
-        "date": "2023-05-12",
-        "value": 99.87333133862361
+        "date": "2023-05-18",
+        "value": 101.11107163101371
       },
       {
-        "date": "2023-06-07",
-        "value": 107.44363743656004
+        "date": "2023-06-14",
+        "value": 108.35479524714587
       },
       {
-        "date": "2023-07-04",
-        "value": 110.25636425389388
+        "date": "2023-07-12",
+        "value": 109.69702004853242
       },
       {
-        "date": "2023-07-28",
-        "value": 115.14551967246493
+        "date": "2023-08-08",
+        "value": 117.12081040675457
       },
       {
-        "date": "2023-08-24",
-        "value": 118.18493332488617
+        "date": "2023-09-05",
+        "value": 124.79544195469134
       },
       {
-        "date": "2023-09-20",
-        "value": 122.66667454111334
+        "date": "2023-10-04",
+        "value": 119.24632963500864
       },
       {
-        "date": "2023-10-17",
-        "value": 122.85141809526412
+        "date": "2023-11-01",
+        "value": 118.0679080680236
       },
       {
-        "date": "2023-11-13",
-        "value": 123.76358685407604
+        "date": "2023-11-30",
+        "value": 131.08895377568803
       },
       {
-        "date": "2023-12-11",
-        "value": 133.37527443590974
+        "date": "2023-12-28",
+        "value": 141.98301243233306
       },
       {
-        "date": "2024-01-05",
-        "value": 139.60392435835956
+        "date": "2024-01-24",
+        "value": 146.1745275334131
       },
       {
-        "date": "2024-02-01",
-        "value": 144.74473044699317
+        "date": "2024-02-21",
+        "value": 147.3054597399324
       },
       {
-        "date": "2024-02-27",
-        "value": 151.79174832490844
+        "date": "2024-03-20",
+        "value": 147.27486738131535
       },
       {
-        "date": "2024-03-26",
-        "value": 149.08348901199008
+        "date": "2024-04-22",
+        "value": 148.8597964924098
       },
       {
-        "date": "2024-04-24",
-        "value": 148.7131390594861
-      },
-      {
-        "date": "2024-05-22",
-        "value": 150.43146367184735
+        "date": "2024-05-21",
+        "value": 149.96793945102723
       },
       {
         "date": "2024-06-18",
         "value": 158.02040207672303
       },
       {
-        "date": "2024-07-12",
-        "value": 171.3105543974864
+        "date": "2024-07-15",
+        "value": 171.90085872020163
       },
       {
-        "date": "2024-08-08",
-        "value": 157.25856548105168
+        "date": "2024-08-12",
+        "value": 159.79216185269516
       },
       {
-        "date": "2024-09-04",
-        "value": 167.70400418624098
+        "date": "2024-09-09",
+        "value": 165.71049318489935
       },
       {
-        "date": "2024-09-30",
-        "value": 168.19140491264105
+        "date": "2024-10-07",
+        "value": 165.8663294861407
       },
       {
-        "date": "2024-10-25",
-        "value": 168.31508518070464
+        "date": "2024-11-04",
+        "value": 167.45632644657132
       },
       {
-        "date": "2024-11-25",
-        "value": 180.7486423768197
+        "date": "2024-12-03",
+        "value": 189.87557919268124
       },
       {
-        "date": "2024-12-19",
-        "value": 195.0065343823612
+        "date": "2024-12-31",
+        "value": 187.09607448529724
       },
       {
-        "date": "2025-01-15",
-        "value": 182.85358603225214
+        "date": "2025-01-27",
+        "value": 175.56628118204543
       },
       {
-        "date": "2025-02-07",
-        "value": 179.51014989689153
+        "date": "2025-02-20",
+        "value": 170.04941324032492
       },
       {
-        "date": "2025-03-06",
-        "value": 161.1895904073468
+        "date": "2025-03-21",
+        "value": 158.65235884384876
       },
       {
-        "date": "2025-04-03",
-        "value": 150.84183691920416
+        "date": "2025-04-23",
+        "value": 153.03799338448906
       },
       {
-        "date": "2025-05-05",
-        "value": 156.16253012720898
+        "date": "2025-05-21",
+        "value": 165.87609258960043
       },
       {
-        "date": "2025-05-29",
-        "value": 166.27756933536705
+        "date": "2025-06-17",
+        "value": 174.18157506408215
       },
       {
-        "date": "2025-06-24",
-        "value": 171.09394046338045
+        "date": "2025-07-14",
+        "value": 171.04170876125806
       },
       {
-        "date": "2025-07-18",
-        "value": 171.4210502036124
+        "date": "2025-08-08",
+        "value": 158.9387577554428
       },
       {
-        "date": "2025-08-13",
-        "value": 160.23305726806225
+        "date": "2025-09-08",
+        "value": 159.85108402252695
       },
       {
-        "date": "2025-09-10",
-        "value": 164.5621829726575
-      },
-      {
-        "date": "2025-10-07",
-        "value": 161.40855115034668
+        "date": "2025-10-06",
+        "value": 161.89301030216254
       },
       {
         "date": "2025-11-04",
         "value": 159.55518645667948
       },
       {
-        "date": "2025-12-01",
-        "value": 161.11566381825696
+        "date": "2025-12-02",
+        "value": 161.0211186593053
       },
       {
-        "date": "2025-12-26",
-        "value": 161.51772812937193
+        "date": "2025-12-30",
+        "value": 158.6559164099738
       },
       {
-        "date": "2026-01-22",
-        "value": 152.65686713471018
+        "date": "2026-01-28",
+        "value": 152.95505524737672
       },
       {
-        "date": "2026-02-17",
-        "value": 144.14449542164976
+        "date": "2026-02-23",
+        "value": 140.90108577585747
       },
       {
-        "date": "2026-03-16",
-        "value": 125.50666917910962
+        "date": "2026-03-23",
+        "value": 121.44060925189189
       },
       {
-        "date": "2026-04-15",
-        "value": 137.45095679202768
+        "date": "2026-04-23",
+        "value": 137.99309397015173
       },
       {
-        "date": "2026-05-12",
-        "value": 133.96820675364404
+        "date": "2026-05-21",
+        "value": 135.93182068023543
       },
       {
-        "date": "2026-06-08",
-        "value": 135.06920542571254
+        "date": "2026-06-18",
+        "value": 142.27942655666533
       },
       {
-        "date": "2026-07-03",
-        "value": 144.52512858530648
+        "date": "2026-07-16",
+        "value": 149.5673994663834
       },
       {
-        "date": "2026-07-29",
-        "value": 152.42521173168555
+        "date": "2026-08-12",
+        "value": 157.99127058463915
       },
       {
-        "date": "2026-08-24",
-        "value": 158.1316113187037
+        "date": "2026-09-08",
+        "value": 154.67918656102688
       },
       {
-        "date": "2026-09-18",
-        "value": 155.25458906225558
+        "date": "2026-10-07",
+        "value": 149.97929801959145
       },
       {
-        "date": "2026-10-01",
-        "value": 147.5756103803356
+        "date": "2026-11-04",
+        "value": 157.21780651179728
+      },
+      {
+        "date": "2026-11-20",
+        "value": 159.41548980861526
       }
     ],
     "launchDate": "06 Sep 2021",
@@ -6119,7 +6115,7 @@
         "delta": null
       }
     ],
-    "lastFetched": "02 Oct 2026 12:55 UTC"
+    "lastFetched": "21 Nov 2026 07:34 UTC"
   },
   "ai_data_center": {
     "key": "ai_data_center",
@@ -6128,70 +6124,98 @@
     "stocks": [
       {
         "name": "Clean Max Enviro Energy Solutions Ltd",
-        "weight": 3.0,
+        "weight": 4.0,
         "nseCode": "CLEANMAX",
         "sector": "Renewable Energy",
         "capSegment": null
       },
       {
+        "name": "Netweb Technologies India Ltd",
+        "weight": 5.0,
+        "nseCode": "NETWEB",
+        "sector": "IT Services & Consulting",
+        "capSegment": null
+      },
+      {
+        "name": "Coforge Limited",
+        "weight": 5.0,
+        "nseCode": "COFORGE",
+        "sector": "IT Services & Consulting",
+        "capSegment": null
+      },
+      {
         "name": "Aeroflex Industries Ltd",
-        "weight": 3.0,
-        "nseCode": "AEROENTER",
+        "weight": 5.0,
+        "nseCode": null,
         "sector": "Iron & Steel",
         "capSegment": null
       },
       {
-        "name": "Kaynes Technology India Ltd",
-        "weight": 5.0,
-        "nseCode": "KAYNES",
-        "sector": "Electrical Components & Equipments",
-        "capSegment": null
-      },
-      {
-        "name": "RailTel Corporation of India Limited",
-        "weight": 3.0,
-        "nseCode": "RAILTEL",
-        "sector": "Communication & Networking",
-        "capSegment": null
-      },
-      {
-        "name": "Tata Communications Ltd",
-        "weight": 4.0,
-        "nseCode": "TATACOMM",
-        "sector": "Telecom Services",
-        "capSegment": null
-      },
-      {
         "name": "Schneider Electric Infrastructure Ltd",
-        "weight": 3.0,
+        "weight": 4.0,
         "nseCode": "SCHNEIDER",
         "sector": "Heavy Electrical Equipments",
         "capSegment": null
       },
       {
-        "name": "Kirloskar Oil Engines Ltd",
-        "weight": 3.0,
-        "nseCode": "KIRLOSENG",
-        "sector": "Industrial Machinery",
+        "name": "GE Vernova T&D India Ltd",
+        "weight": 5.5,
+        "nseCode": "GVT&D",
+        "sector": "Heavy Electrical Equipments",
         "capSegment": null
       },
       {
-        "name": "E2E Networks Ltd",
-        "weight": 3.0,
-        "nseCode": "E2E",
+        "name": "Persistent Systems Ltd",
+        "weight": 6.5,
+        "nseCode": "PERSISTENT",
         "sector": "Software Services",
         "capSegment": null
       },
       {
         "name": "Black Box Ltd",
-        "weight": 3.0,
+        "weight": 5.0,
         "nseCode": "BBOX",
         "sector": "Software Services",
         "capSegment": null
       },
       {
-        "name": "APL Apollo Tubes Ltd",
+        "name": "Kirloskar Oil Engines Ltd",
         "weight": 4.0,
+        "nseCode": "KIRLOSENG",
+        "sector": "Industrial Machinery",
+        "capSegment": null
+      },
+      {
+        "name": "Cummins India Ltd",
+        "weight": 5.5,
+        "nseCode": "CUMMINSIND",
+        "sector": "Industrial Machinery",
+        "capSegment": null
+      },
+      {
+        "name": "HBL Engineering Ltd",
+        "weight": 5.0,
+        "nseCode": "HBLENGINE",
+        "sector": "Batteries",
+        "capSegment": null
+      },
+      {
+        "name": "Centum Electronics Ltd",
+        "weight": 4.0,
+        "nseCode": "CENTUM",
+        "sector": "Electronic Equipments",
+        "capSegment": null
+      },
+      {
+        "name": "Bharti Airtel Ltd",
+        "weight": 5.0,
+        "nseCode": "BHARTIARTL",
+        "sector": "Telecom Services",
+        "capSegment": null
+      },
+      {
+        "name": "APL Apollo Tubes Ltd",
+        "weight": 5.0,
         "nseCode": "APLAPOLLO",
         "sector": "Building Products - Pipes",
         "capSegment": null
@@ -6204,17 +6228,11 @@
         "type": "launch"
       },
       {
-        "date": "4 Jun, 2026",
+        "date": "4 Aug, 2026",
         "type": "summary",
         "rangeStart": "24 Apr, 2026",
-        "rangeEnd": "4 Jun, 2026",
-        "rebalanceCount": 3
-      },
-      {
-        "date": "4 Aug, 2026",
-        "assetsAdded": 5,
-        "assetsRemoved": 5,
-        "type": "rebalance"
+        "rangeEnd": "4 Aug, 2026",
+        "rebalanceCount": 4
       },
       {
         "date": "17 Sep, 2026",
@@ -6227,9 +6245,173 @@
         "assetsAdded": 2,
         "assetsRemoved": 13,
         "type": "rebalance"
+      },
+      {
+        "date": "28 Oct, 2026",
+        "assetsAdded": 9,
+        "assetsRemoved": 5,
+        "type": "rebalance"
       }
     ],
     "fullRebalanceHistory": [
+      {
+        "date": "2026-10-28",
+        "counts": {
+          "new": 9,
+          "increased": 6,
+          "decreased": 1,
+          "removed": 5
+        },
+        "changes": [
+          {
+            "name": "Clean Max Enviro Energy Solutions Ltd",
+            "oldWeight": 3.0,
+            "newWeight": 4.0,
+            "status": "increased",
+            "nseCode": "CLEANMAX"
+          },
+          {
+            "name": "Zerodha Nifty 1D Rate Liquid ETF",
+            "oldWeight": 35.0,
+            "newWeight": 25.0,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Netweb Technologies India Ltd",
+            "oldWeight": null,
+            "newWeight": 5.0,
+            "status": "new",
+            "nseCode": "NETWEB"
+          },
+          {
+            "name": "Coforge Limited",
+            "oldWeight": null,
+            "newWeight": 5.0,
+            "status": "new",
+            "nseCode": "COFORGE"
+          },
+          {
+            "name": "Aeroflex Industries Ltd",
+            "oldWeight": 3.0,
+            "newWeight": 5.0,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Schneider Electric Infrastructure Ltd",
+            "oldWeight": 3.0,
+            "newWeight": 4.0,
+            "status": "increased",
+            "nseCode": "SCHNEIDER"
+          },
+          {
+            "name": "GE Vernova T&D India Ltd",
+            "oldWeight": null,
+            "newWeight": 5.5,
+            "status": "new",
+            "nseCode": "GVT&D"
+          },
+          {
+            "name": "ABB India Limited.",
+            "oldWeight": null,
+            "newWeight": 6.5,
+            "status": "new",
+            "nseCode": "ABB"
+          },
+          {
+            "name": "Persistent Systems Ltd",
+            "oldWeight": null,
+            "newWeight": 6.5,
+            "status": "new",
+            "nseCode": "PERSISTENT"
+          },
+          {
+            "name": "Black Box Ltd",
+            "oldWeight": 3.0,
+            "newWeight": 5.0,
+            "status": "increased",
+            "nseCode": "BBOX"
+          },
+          {
+            "name": "Kirloskar Oil Engines Ltd",
+            "oldWeight": 3.0,
+            "newWeight": 4.0,
+            "status": "increased",
+            "nseCode": "KIRLOSENG"
+          },
+          {
+            "name": "Cummins India Ltd",
+            "oldWeight": null,
+            "newWeight": 5.5,
+            "status": "new",
+            "nseCode": "CUMMINSIND"
+          },
+          {
+            "name": "HBL Engineering Ltd",
+            "oldWeight": null,
+            "newWeight": 5.0,
+            "status": "new",
+            "nseCode": "HBLENGINE"
+          },
+          {
+            "name": "Centum Electronics Ltd",
+            "oldWeight": null,
+            "newWeight": 4.0,
+            "status": "new",
+            "nseCode": "CENTUM"
+          },
+          {
+            "name": "Bharti Airtel Ltd",
+            "oldWeight": null,
+            "newWeight": 5.0,
+            "status": "new",
+            "nseCode": "BHARTIARTL"
+          },
+          {
+            "name": "APL Apollo Tubes Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 5.0,
+            "status": "increased",
+            "nseCode": "APLAPOLLO"
+          },
+          {
+            "name": "Kotak Nifty 1D Rate Liquid ETF",
+            "oldWeight": 31.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Kaynes Technology India Ltd",
+            "oldWeight": 5.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "KAYNES"
+          },
+          {
+            "name": "RailTel Corporation of India Limited",
+            "oldWeight": 3.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "RAILTEL"
+          },
+          {
+            "name": "Tata Communications Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "TATACOMM"
+          },
+          {
+            "name": "E2E Networks Ltd",
+            "oldWeight": 3.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "E2E"
+          }
+        ]
+      },
       {
         "date": "2026-09-29",
         "counts": {
@@ -6265,7 +6447,7 @@
             "oldWeight": 4.0,
             "newWeight": 3.0,
             "status": "decreased",
-            "nseCode": "AEROENTER"
+            "nseCode": null
           },
           {
             "name": "Kaynes Technology India Ltd",
@@ -6458,7 +6640,7 @@
             "oldWeight": null,
             "newWeight": 4.0,
             "status": "new",
-            "nseCode": "AEROENTER"
+            "nseCode": null
           },
           {
             "name": "Lodha Developers Ltd",
@@ -6594,7 +6776,7 @@
             "nseCode": "SIEMENS"
           },
           {
-            "name": "ABB India Ltd",
+            "name": "ABB India Limited.",
             "oldWeight": 10.0,
             "newWeight": 0,
             "status": "removed",
@@ -6682,7 +6864,7 @@
             "nseCode": "SCHNEIDER"
           },
           {
-            "name": "ABB India Ltd",
+            "name": "ABB India Limited.",
             "oldWeight": 6.6667,
             "newWeight": 10.0,
             "status": "increased",
@@ -6826,7 +7008,7 @@
             "nseCode": "CGPOWER"
           },
           {
-            "name": "ABB India Ltd",
+            "name": "ABB India Limited.",
             "oldWeight": 7.6923,
             "newWeight": 6.6667,
             "status": "decreased",
@@ -6963,7 +7145,7 @@
             "nseCode": "CGPOWER"
           },
           {
-            "name": "ABB India Ltd",
+            "name": "ABB India Limited.",
             "oldWeight": 9.0,
             "newWeight": 7.6923,
             "status": "decreased",
@@ -7079,7 +7261,7 @@
             "nseCode": "CGPOWER"
           },
           {
-            "name": "ABB India Ltd",
+            "name": "ABB India Limited.",
             "oldWeight": 7.142,
             "newWeight": 9.0,
             "status": "increased",
@@ -7209,7 +7391,7 @@
             "nseCode": "CGPOWER"
           },
           {
-            "name": "ABB India Ltd",
+            "name": "ABB India Limited.",
             "oldWeight": null,
             "newWeight": 7.142,
             "status": "new",
@@ -7275,8 +7457,9 @@
       }
     ],
     "marketCapMix": {
-      "Midcap": 8.0,
-      "Smallcap": 26.0
+      "Largecap": 17.0,
+      "Midcap": 22.0,
+      "Smallcap": 36.0
     },
     "performanceSeries": [
       {
@@ -7284,515 +7467,419 @@
         "value": 100
       },
       {
-        "date": "2026-01-23",
-        "value": 98.486341208377
-      },
-      {
-        "date": "2026-01-28",
-        "value": 101.60508840212307
+        "date": "2026-01-27",
+        "value": 98.56752855995407
       },
       {
         "date": "2026-01-30",
         "value": 103.9497794426937
       },
       {
-        "date": "2026-02-02",
-        "value": 106.58306318652735
-      },
-      {
-        "date": "2026-02-04",
-        "value": 110.66702486103217
+        "date": "2026-02-03",
+        "value": 110.78677216236366
       },
       {
         "date": "2026-02-06",
         "value": 110.91208136683991
       },
       {
-        "date": "2026-02-10",
-        "value": 114.91976066056294
-      },
-      {
-        "date": "2026-02-12",
-        "value": 114.48828828635914
+        "date": "2026-02-11",
+        "value": 115.30249642072953
       },
       {
         "date": "2026-02-16",
         "value": 113.27100259781285
       },
       {
-        "date": "2026-02-18",
-        "value": 118.84710801422868
-      },
-      {
-        "date": "2026-02-20",
-        "value": 119.49607434011995
+        "date": "2026-02-19",
+        "value": 117.99032323746347
       },
       {
         "date": "2026-02-24",
         "value": 117.37066736809314
       },
       {
-        "date": "2026-02-26",
-        "value": 119.26927554423013
-      },
-      {
-        "date": "2026-03-02",
-        "value": 115.82740548871887
+        "date": "2026-02-27",
+        "value": 119.06251956380942
       },
       {
         "date": "2026-03-05",
         "value": 112.89138302889425
       },
       {
-        "date": "2026-03-09",
-        "value": 111.03522362619734
-      },
-      {
-        "date": "2026-03-11",
-        "value": 112.41618271673214
+        "date": "2026-03-10",
+        "value": 113.17928179212886
       },
       {
         "date": "2026-03-13",
         "value": 109.51573594371074
       },
       {
-        "date": "2026-03-17",
-        "value": 109.21339272984252
-      },
-      {
-        "date": "2026-03-19",
-        "value": 108.30064277271316
+        "date": "2026-03-18",
+        "value": 111.22360483420125
       },
       {
         "date": "2026-03-23",
         "value": 104.16007019459856
       },
       {
-        "date": "2026-03-25",
-        "value": 108.48801040386046
-      },
-      {
-        "date": "2026-03-30",
-        "value": 101.69200046585411
+        "date": "2026-03-27",
+        "value": 105.22076112527338
       },
       {
         "date": "2026-04-02",
         "value": 106.34017410030384
       },
       {
-        "date": "2026-04-07",
-        "value": 108.60583179490058
-      },
-      {
-        "date": "2026-04-09",
-        "value": 112.92890658546261
+        "date": "2026-04-08",
+        "value": 113.66049647641789
       },
       {
         "date": "2026-04-13",
         "value": 115.86295998628412
       },
       {
-        "date": "2026-04-16",
-        "value": 120.57695720799056
-      },
-      {
-        "date": "2026-04-20",
-        "value": 123.35813815280292
+        "date": "2026-04-17",
+        "value": 122.87086386039869
       },
       {
         "date": "2026-04-22",
         "value": 126.33890356046439
       },
       {
-        "date": "2026-04-24",
-        "value": 124.01427843534204
-      },
-      {
-        "date": "2026-04-28",
-        "value": 126.24605142266259
+        "date": "2026-04-27",
+        "value": 126.25742980465773
       },
       {
         "date": "2026-04-30",
         "value": 126.60966376107541
       },
       {
-        "date": "2026-05-05",
-        "value": 129.39176857753844
-      },
-      {
-        "date": "2026-05-07",
-        "value": 134.02245777919467
+        "date": "2026-05-06",
+        "value": 131.12268389718645
       },
       {
         "date": "2026-05-11",
         "value": 133.27745233386045
       },
       {
-        "date": "2026-05-13",
-        "value": 128.4522044654624
-      },
-      {
-        "date": "2026-05-15",
-        "value": 129.2897595863106
+        "date": "2026-05-14",
+        "value": 130.82892983262613
       },
       {
         "date": "2026-05-19",
         "value": 128.8763168760843
       },
       {
-        "date": "2026-05-21",
-        "value": 134.99579944312484
-      },
-      {
-        "date": "2026-05-25",
-        "value": 138.56097055256308
+        "date": "2026-05-22",
+        "value": 136.37020263352784
       },
       {
         "date": "2026-05-27",
         "value": 141.40539419763923
       },
       {
-        "date": "2026-06-01",
-        "value": 140.98622954205018
-      },
-      {
-        "date": "2026-06-03",
-        "value": 141.89256473501246
+        "date": "2026-06-02",
+        "value": 142.7143720908409
       },
       {
         "date": "2026-06-05",
         "value": 144.27920839871067
       },
       {
-        "date": "2026-06-09",
-        "value": 139.02378718181373
-      },
-      {
-        "date": "2026-06-11",
-        "value": 135.49651057133494
+        "date": "2026-06-10",
+        "value": 137.1130254539784
       },
       {
         "date": "2026-06-15",
         "value": 140.60883135799668
       },
       {
-        "date": "2026-06-17",
-        "value": 143.65445616817368
-      },
-      {
-        "date": "2026-06-19",
-        "value": 146.7632915296889
+        "date": "2026-06-18",
+        "value": 145.6128364173146
       },
       {
         "date": "2026-06-23",
         "value": 146.55476642790774
       },
       {
-        "date": "2026-06-25",
-        "value": 144.6454313745802
-      },
-      {
-        "date": "2026-06-30",
-        "value": 142.6105603862514
+        "date": "2026-06-29",
+        "value": 143.1566580453576
       },
       {
         "date": "2026-07-02",
         "value": 143.6590563116941
       },
       {
-        "date": "2026-07-06",
-        "value": 142.54917435014312
-      },
-      {
-        "date": "2026-07-08",
-        "value": 138.52683748832968
+        "date": "2026-07-07",
+        "value": 139.6439457132198
       },
       {
         "date": "2026-07-10",
         "value": 140.207663228143
       },
       {
-        "date": "2026-07-14",
-        "value": 138.78808779704863
-      },
-      {
-        "date": "2026-07-16",
-        "value": 141.3042532238651
+        "date": "2026-07-15",
+        "value": 140.4589001948844
       },
       {
         "date": "2026-07-20",
         "value": 140.35601242951626
       },
       {
-        "date": "2026-07-22",
-        "value": 141.8074740452078
-      },
-      {
-        "date": "2026-07-24",
-        "value": 140.60960049952826
+        "date": "2026-07-23",
+        "value": 140.97179678062633
       },
       {
         "date": "2026-07-28",
         "value": 139.5715106439532
       },
       {
-        "date": "2026-07-30",
-        "value": 138.82963654118473
-      },
-      {
-        "date": "2026-08-03",
-        "value": 143.68782092783144
+        "date": "2026-07-31",
+        "value": 142.11835187061507
       },
       {
         "date": "2026-08-05",
         "value": 146.66345334534404
       },
       {
-        "date": "2026-08-07",
-        "value": 147.3691543095886
-      },
-      {
-        "date": "2026-08-11",
-        "value": 148.15981122150205
+        "date": "2026-08-10",
+        "value": 148.25466788080917
       },
       {
         "date": "2026-08-13",
         "value": 150.34105985311368
       },
       {
-        "date": "2026-08-17",
-        "value": 149.26716946572114
-      },
-      {
-        "date": "2026-08-19",
-        "value": 145.78484522000187
+        "date": "2026-08-18",
+        "value": 148.19705482035505
       },
       {
         "date": "2026-08-21",
         "value": 146.29827164692034
       },
       {
-        "date": "2026-08-25",
-        "value": 145.36193257556042
-      },
-      {
-        "date": "2026-08-27",
-        "value": 144.1622154900679
+        "date": "2026-08-26",
+        "value": 144.562406157234
       },
       {
         "date": "2026-08-31",
         "value": 144.58810109012262
       },
       {
-        "date": "2026-09-02",
-        "value": 141.9776616034077
-      },
-      {
-        "date": "2026-09-04",
-        "value": 140.81842338902612
+        "date": "2026-09-03",
+        "value": 142.15088454232236
       },
       {
         "date": "2026-09-08",
         "value": 140.83846671940356
       },
       {
-        "date": "2026-09-10",
-        "value": 139.16909353186128
-      },
-      {
-        "date": "2026-09-15",
-        "value": 135.77617712512617
+        "date": "2026-09-11",
+        "value": 139.66522481848097
       },
       {
         "date": "2026-09-17",
         "value": 137.46315720319268
       },
       {
-        "date": "2026-09-21",
-        "value": 140.3401530793817
-      },
-      {
-        "date": "2026-09-23",
-        "value": 142.33021047311976
+        "date": "2026-09-22",
+        "value": 140.5181160554799
       },
       {
         "date": "2026-09-25",
         "value": 140.59667181288174
       },
       {
-        "date": "2026-09-29",
-        "value": 138.64117034424086
+        "date": "2026-09-30",
+        "value": 138.37013027044694
       },
       {
-        "date": "2026-10-01",
-        "value": 137.8542643212744
+        "date": "2026-10-06",
+        "value": 139.10825757735486
+      },
+      {
+        "date": "2026-10-09",
+        "value": 137.97614816209241
+      },
+      {
+        "date": "2026-10-14",
+        "value": 139.03213189835566
+      },
+      {
+        "date": "2026-10-19",
+        "value": 137.13438158565694
+      },
+      {
+        "date": "2026-10-23",
+        "value": 134.14730120507485
+      },
+      {
+        "date": "2026-10-28",
+        "value": 135.79386492081812
+      },
+      {
+        "date": "2026-11-02",
+        "value": 136.23803530654985
+      },
+      {
+        "date": "2026-11-05",
+        "value": 136.66473498727075
+      },
+      {
+        "date": "2026-11-11",
+        "value": 136.38098478092638
+      },
+      {
+        "date": "2026-11-16",
+        "value": 136.99134544210506
+      },
+      {
+        "date": "2026-11-19",
+        "value": 136.87338020670924
+      },
+      {
+        "date": "2026-11-20",
+        "value": 136.30901778667277
       }
     ],
     "launchDate": "21 Jan 2026",
     "latestRebalanceDetail": [
       {
-        "section": "increase",
-        "companyName": "Kaynes Technology India Ltd",
+        "section": "addition",
+        "companyName": "ABB India Ltd",
+        "holdingType": "Largecap",
+        "newWeight": 6.5,
+        "delta": 6.5
+      },
+      {
+        "section": "addition",
+        "companyName": "Persistent Systems Ltd",
+        "holdingType": "Midcap",
+        "newWeight": 6.5,
+        "delta": 6.5
+      },
+      {
+        "section": "addition",
+        "companyName": "Cummins India Ltd",
+        "holdingType": "Largecap",
+        "newWeight": 5.5,
+        "delta": 5.5
+      },
+      {
+        "section": "addition",
+        "companyName": "GE Vernova T&D India Ltd",
+        "holdingType": "Midcap",
+        "newWeight": 5.5,
+        "delta": 5.5
+      },
+      {
+        "section": "addition",
+        "companyName": "Bharti Airtel Ltd",
+        "holdingType": "Largecap",
+        "newWeight": 5.0,
+        "delta": 5.0
+      },
+      {
+        "section": "addition",
+        "companyName": "Coforge Limited",
+        "holdingType": "Midcap",
+        "newWeight": 5.0,
+        "delta": 5.0
+      },
+      {
+        "section": "addition",
+        "companyName": "HBL Engineering Ltd",
         "holdingType": "Smallcap",
+        "newWeight": 5.0,
+        "delta": 5.0
+      },
+      {
+        "section": "addition",
+        "companyName": "Netweb Technologies India Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 5.0,
+        "delta": 5.0
+      },
+      {
+        "section": "addition",
+        "companyName": "Centum Electronics Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": 4.0
+      },
+      {
+        "section": "increase",
+        "companyName": "Aeroflex Industries Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 5.0,
+        "delta": 2.0
+      },
+      {
+        "section": "increase",
+        "companyName": "APL Apollo Tubes Ltd",
+        "holdingType": "Midcap",
         "newWeight": 5.0,
         "delta": 1.0
       },
       {
-        "section": "removal",
-        "companyName": "Centum Electronics Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 0.0,
-        "delta": 6.0
-      },
-      {
-        "section": "removal",
-        "companyName": "Cummins India Ltd",
-        "holdingType": "Largecap",
-        "newWeight": 0.0,
-        "delta": 6.0
-      },
-      {
-        "section": "removal",
-        "companyName": "Cyient DLM Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 0.0,
-        "delta": 4.0
-      },
-      {
-        "section": "removal",
-        "companyName": "Dynamic Cables Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 0.0,
-        "delta": 4.0
-      },
-      {
-        "section": "removal",
-        "companyName": "Exide Industries Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 0.0,
-        "delta": 4.0
-      },
-      {
-        "section": "removal",
-        "companyName": "Finolex Cables Limited",
-        "holdingType": "Smallcap",
-        "newWeight": 0.0,
-        "delta": 4.0
-      },
-      {
-        "section": "removal",
-        "companyName": "GE Vernova T&D India Ltd",
-        "holdingType": "Largecap",
-        "newWeight": 0.0,
-        "delta": 6.0
-      },
-      {
-        "section": "removal",
-        "companyName": "HBL Engineering Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 0.0,
-        "delta": 4.0
-      },
-      {
-        "section": "removal",
-        "companyName": "Kalpataru Projects International Limited",
-        "holdingType": "Smallcap",
-        "newWeight": 0.0,
-        "delta": 4.0
-      },
-      {
-        "section": "removal",
-        "companyName": "Lodha Developers Ltd",
-        "holdingType": "Largecap",
-        "newWeight": 0.0,
-        "delta": 4.0
-      },
-      {
-        "section": "removal",
-        "companyName": "Moschip Technologies Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 0.0,
-        "delta": 4.0
-      },
-      {
-        "section": "removal",
-        "companyName": "Netweb Technologies India Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 0.0,
-        "delta": 6.0
-      },
-      {
-        "section": "removal",
-        "companyName": "Tejas Networks Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 0.0,
-        "delta": 4.0
-      },
-      {
-        "section": "decrease",
-        "companyName": "Aeroflex Industries Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 3.0,
-        "delta": 1.0
-      },
-      {
-        "section": "decrease",
+        "section": "increase",
         "companyName": "Black Box Ltd",
         "holdingType": "Smallcap",
-        "newWeight": 3.0,
-        "delta": 1.0
+        "newWeight": 5.0,
+        "delta": 2.0
       },
       {
-        "section": "decrease",
+        "section": "increase",
         "companyName": "Clean Max Enviro Energy Solutions Ltd",
         "holdingType": "Smallcap",
-        "newWeight": 3.0,
+        "newWeight": 4.0,
         "delta": 1.0
       },
       {
-        "section": "decrease",
-        "companyName": "E2E Networks Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 3.0,
-        "delta": 1.0
-      },
-      {
-        "section": "decrease",
+        "section": "increase",
         "companyName": "Kirloskar Oil Engines Ltd",
         "holdingType": "Smallcap",
-        "newWeight": 3.0,
+        "newWeight": 4.0,
         "delta": 1.0
       },
       {
-        "section": "decrease",
-        "companyName": "RailTel Corporation of India Limited",
-        "holdingType": "Smallcap",
-        "newWeight": 3.0,
-        "delta": 1.0
-      },
-      {
-        "section": "decrease",
+        "section": "increase",
         "companyName": "Schneider Electric Infrastructure Ltd",
         "holdingType": "Smallcap",
-        "newWeight": 3.0,
+        "newWeight": 4.0,
         "delta": 1.0
       },
       {
-        "section": "no_change",
-        "companyName": "APL Apollo Tubes Ltd",
-        "holdingType": "Midcap",
-        "newWeight": 4.0,
-        "delta": null
+        "section": "removal",
+        "companyName": "E2E Networks Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 3.0
       },
       {
-        "section": "no_change",
+        "section": "removal",
+        "companyName": "Kaynes Technology India Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 5.0
+      },
+      {
+        "section": "removal",
+        "companyName": "RailTel Corporation of India Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 3.0
+      },
+      {
+        "section": "removal",
         "companyName": "Tata Communications Ltd",
         "holdingType": "Midcap",
-        "newWeight": 4.0,
-        "delta": null
+        "newWeight": 0.0,
+        "delta": 4.0
       }
     ],
-    "lastFetched": "02 Oct 2026 07:32 UTC"
+    "lastFetched": "21 Nov 2026 07:34 UTC"
   },
   "wright_innovation": {
     "key": "wright_innovation",
@@ -7800,159 +7887,478 @@
     "manager": "Wright Research",
     "stocks": [
       {
-        "name": "Stocks & Segments Holding Type Weightage Samvardhana Motherson International Ltd",
-        "weight": 10.36,
-        "nseCode": "MOTHERSON",
+        "name": "Stocks & Segments Holding Type Weightage Shilpa Medicare Ltd",
+        "weight": 9.12,
+        "nseCode": "SHILPAMED",
         "sector": null,
-        "capSegment": "Largecap"
-      },
-      {
-        "name": "GNA Axles Ltd",
-        "weight": 8.65,
-        "nseCode": "GNA",
-        "sector": "Auto Parts",
-        "capSegment": "Smallcap"
-      },
-      {
-        "name": "Sona BLW Precision Forgings Ltd",
-        "weight": 5.0,
-        "nseCode": "SONACOMS",
-        "sector": "Auto Parts",
-        "capSegment": "Midcap"
-      },
-      {
-        "name": "Akums Drugs and Pharmaceuticals Ltd",
-        "weight": 5.0,
-        "nseCode": "AKUMS",
-        "sector": "Pharmaceuticals",
         "capSegment": "Smallcap"
       },
       {
         "name": "Laurus Labs Ltd",
-        "weight": 5.0,
+        "weight": 7.71,
         "nseCode": "LAURUSLABS",
-        "sector": "Pharmaceuticals",
+        "sector": "Pharmaceuticals & Drugs",
+        "capSegment": "Largecap"
+      },
+      {
+        "name": "Akums Drugs and Pharmaceuticals Ltd",
+        "weight": 6.88,
+        "nseCode": "AKUMS",
+        "sector": "Pharmaceuticals & Drugs",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Sai Life Sciences Limited",
+        "weight": 5.97,
+        "nseCode": "SAILIFE",
+        "sector": "Pharmaceuticals & Drugs",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Aurobindo Pharma Limited",
+        "weight": 5.97,
+        "nseCode": "AUROPHARMA",
+        "sector": "Pharmaceuticals & Drugs",
         "capSegment": "Midcap"
       },
       {
-        "name": "Sun Pharma Advanced Research Co Ltd",
-        "weight": 4.66,
-        "nseCode": "SPARC",
-        "sector": "Pharmaceuticals",
+        "name": "GNA Axles Ltd",
+        "weight": 11.29,
+        "nseCode": "GNA",
+        "sector": "Auto Ancillary",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Sona BLW Precision Forgings Ltd",
+        "weight": 7.47,
+        "nseCode": "SONACOMS",
+        "sector": "Auto Ancillary",
+        "capSegment": "Midcap"
+      },
+      {
+        "name": "Syrma SGS Technology Limited",
+        "weight": 5.97,
+        "nseCode": "SYRMA",
+        "sector": "Electronics - Components",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Avalon Technologies Ltd",
+        "weight": 5.89,
+        "nseCode": "AVALON",
+        "sector": "Electronics - Components",
         "capSegment": "Smallcap"
       },
       {
         "name": "Sterlite Technologies Ltd",
-        "weight": 6.84,
+        "weight": 8.62,
         "nseCode": "STLTECH",
-        "sector": "Telecom Equipments",
+        "sector": "Cable",
         "capSegment": "Midcap"
-      },
-      {
-        "name": "HFCL Ltd",
-        "weight": 4.59,
-        "nseCode": "HFCL",
-        "sector": "Telecom Equipments",
-        "capSegment": "Smallcap"
-      },
-      {
-        "name": "FSN E-Commerce Ventures Limited",
-        "weight": 6.83,
-        "nseCode": "NYKAA",
-        "sector": "Wellness Services",
-        "capSegment": "Midcap"
-      },
-      {
-        "name": "Angel One Ltd",
-        "weight": 6.61,
-        "nseCode": "ANGELONE",
-        "sector": "Investment Banking & Brokerage",
-        "capSegment": "Smallcap"
-      },
-      {
-        "name": "Adani Power Ltd",
-        "weight": 6.53,
-        "nseCode": "ADANIPOWER",
-        "sector": "Power Generation",
-        "capSegment": "Largecap"
-      },
-      {
-        "name": "Honasa Consumer Ltd",
-        "weight": 5.0,
-        "nseCode": "HONASA",
-        "sector": "FMCG - Personal Products",
-        "capSegment": "Smallcap"
       },
       {
         "name": "Ather Energy Ltd",
-        "weight": 5.0,
+        "weight": 8.03,
         "nseCode": "ATHERENERG",
-        "sector": "Two Wheelers",
+        "sector": "Automobile Two & Three Wheelers",
         "capSegment": "Midcap"
       },
       {
-        "name": "Himadri Speciality Chemical Ltd",
-        "weight": 4.98,
-        "nseCode": "HSCL",
-        "sector": "Commodity Chemicals",
+        "name": "Honasa Consumer Ltd",
+        "weight": 6.46,
+        "nseCode": "HONASA",
+        "sector": "E-Commerce/Products",
         "capSegment": "Smallcap"
       },
       {
         "name": "RateGain Travel Technologies Limited",
-        "weight": 4.11,
+        "weight": 5.43,
         "nseCode": "RATEGAIN",
-        "sector": "Software Services",
+        "sector": "IT - Software",
         "capSegment": "Smallcap"
       },
       {
         "name": "Grindwell Norton Ltd",
-        "weight": 4.04,
+        "weight": 5.19,
         "nseCode": "GRINDWELL",
-        "sector": "Industrial Machinery",
+        "sector": "Abrasives",
         "capSegment": "Smallcap"
-      },
-      {
-        "name": "Bharat Heavy Electricals Ltd",
-        "weight": 3.74,
-        "nseCode": "BHEL",
-        "sector": "Heavy Electrical Equipments",
-        "capSegment": "Largecap"
-      },
-      {
-        "name": "Hindalco Industries Ltd",
-        "weight": 3.06,
-        "nseCode": "HINDALCO",
-        "sector": "Metals - Aluminium",
-        "capSegment": "Largecap"
       }
     ],
-    "cagr": 17.53,
+    "cagr": 17.13,
     "rebalanceTimeline": [
       {
         "date": "27 Sep, 2021",
         "type": "launch"
       },
       {
-        "date": "1 Jul, 2026",
+        "date": "1 Oct, 2026",
         "type": "summary",
         "rangeStart": "25 Nov, 2021",
-        "rangeEnd": "1 Jul, 2026",
-        "rebalanceCount": 56
+        "rangeEnd": "1 Oct, 2026",
+        "rebalanceCount": 59
       },
       {
-        "date": "4 Aug, 2026",
-        "assetsAdded": 4,
-        "assetsRemoved": 5,
+        "date": "19 Oct, 2026",
+        "assetsAdded": 2,
+        "assetsRemoved": 1,
         "type": "rebalance"
       },
       {
-        "date": "1 Oct, 2026",
+        "date": "26 Oct, 2026",
+        "assetsAdded": null,
+        "assetsRemoved": null,
+        "type": "rebalance"
+      },
+      {
+        "date": "5 Nov, 2026",
         "assetsAdded": 4,
-        "assetsRemoved": 3,
+        "assetsRemoved": 4,
         "type": "rebalance"
       }
     ],
     "fullRebalanceHistory": [
+      {
+        "date": "2026-11-05",
+        "counts": {
+          "new": 4,
+          "increased": 10,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Ather Energy Ltd",
+            "oldWeight": 4.5,
+            "newWeight": 8.03,
+            "status": "increased",
+            "nseCode": "ATHERENERG"
+          },
+          {
+            "name": "Sai Life Sciences Limited",
+            "oldWeight": null,
+            "newWeight": 5.97,
+            "status": "new",
+            "nseCode": "SAILIFE"
+          },
+          {
+            "name": "Akums Drugs and Pharmaceuticals Ltd",
+            "oldWeight": 4.5,
+            "newWeight": 6.88,
+            "status": "increased",
+            "nseCode": "AKUMS"
+          },
+          {
+            "name": "Shilpa Medicare Ltd",
+            "oldWeight": 5.88,
+            "newWeight": 9.12,
+            "status": "increased",
+            "nseCode": "SHILPAMED"
+          },
+          {
+            "name": "Laurus Labs Ltd",
+            "oldWeight": 4.5,
+            "newWeight": 7.71,
+            "status": "increased",
+            "nseCode": "LAURUSLABS"
+          },
+          {
+            "name": "Aurobindo Pharma Limited",
+            "oldWeight": null,
+            "newWeight": 5.97,
+            "status": "new",
+            "nseCode": "AUROPHARMA"
+          },
+          {
+            "name": "Honasa Consumer Ltd",
+            "oldWeight": 4.5,
+            "newWeight": 6.46,
+            "status": "increased",
+            "nseCode": "HONASA"
+          },
+          {
+            "name": "Syrma SGS Technology Limited",
+            "oldWeight": null,
+            "newWeight": 5.97,
+            "status": "new",
+            "nseCode": "SYRMA"
+          },
+          {
+            "name": "Avalon Technologies Ltd",
+            "oldWeight": null,
+            "newWeight": 5.89,
+            "status": "new",
+            "nseCode": "AVALON"
+          },
+          {
+            "name": "RateGain Travel Technologies Limited",
+            "oldWeight": 3.7,
+            "newWeight": 5.43,
+            "status": "increased",
+            "nseCode": "RATEGAIN"
+          },
+          {
+            "name": "Sona BLW Precision Forgings Ltd",
+            "oldWeight": 4.5,
+            "newWeight": 7.47,
+            "status": "increased",
+            "nseCode": "SONACOMS"
+          },
+          {
+            "name": "GNA Axles Ltd",
+            "oldWeight": 7.79,
+            "newWeight": 11.29,
+            "status": "increased",
+            "nseCode": "GNA"
+          },
+          {
+            "name": "Sterlite Technologies Ltd",
+            "oldWeight": 6.16,
+            "newWeight": 8.62,
+            "status": "increased",
+            "nseCode": "STLTECH"
+          },
+          {
+            "name": "Grindwell Norton Ltd",
+            "oldWeight": 3.64,
+            "newWeight": 5.19,
+            "status": "increased",
+            "nseCode": "GRINDWELL"
+          },
+          {
+            "name": "Zerodha Nifty 1D Rate Liquid ETF",
+            "oldWeight": 33.52,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": null
+          },
+          {
+            "name": "Samvardhana Motherson International Limited",
+            "oldWeight": 9.31,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "MOTHERSON"
+          },
+          {
+            "name": "HFCL Ltd",
+            "oldWeight": 4.13,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HFCL"
+          },
+          {
+            "name": "Bharat Heavy Electricals Ltd",
+            "oldWeight": 3.37,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BHEL"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-26",
+        "counts": {
+          "new": 0,
+          "increased": 1,
+          "decreased": 0,
+          "removed": 5
+        },
+        "changes": [
+          {
+            "name": "Zerodha Nifty 1D Rate Liquid ETF",
+            "oldWeight": 10.0,
+            "newWeight": 33.52,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "FSN E-Commerce Ventures Limited",
+            "oldWeight": 6.15,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "NYKAA"
+          },
+          {
+            "name": "Angel One Ltd",
+            "oldWeight": 5.95,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ANGELONE"
+          },
+          {
+            "name": "Sun Pharma Advanced Research Co Ltd",
+            "oldWeight": 4.19,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SPARC"
+          },
+          {
+            "name": "Himadri Speciality Chemical Ltd",
+            "oldWeight": 4.48,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HSCL"
+          },
+          {
+            "name": "Hindalco Industries Ltd",
+            "oldWeight": 2.75,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HINDALCO"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-19",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 17,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Ather Energy Ltd",
+            "oldWeight": 5.0,
+            "newWeight": 4.5,
+            "status": "decreased",
+            "nseCode": "ATHERENERG"
+          },
+          {
+            "name": "Akums Drugs and Pharmaceuticals Ltd",
+            "oldWeight": 5.0,
+            "newWeight": 4.5,
+            "status": "decreased",
+            "nseCode": "AKUMS"
+          },
+          {
+            "name": "Zerodha Nifty 1D Rate Liquid ETF",
+            "oldWeight": null,
+            "newWeight": 10.0,
+            "status": "new",
+            "nseCode": null
+          },
+          {
+            "name": "Honasa Consumer Ltd",
+            "oldWeight": 5.0,
+            "newWeight": 4.5,
+            "status": "decreased",
+            "nseCode": "HONASA"
+          },
+          {
+            "name": "RateGain Travel Technologies Limited",
+            "oldWeight": 4.11,
+            "newWeight": 3.7,
+            "status": "decreased",
+            "nseCode": "RATEGAIN"
+          },
+          {
+            "name": "FSN E-Commerce Ventures Limited",
+            "oldWeight": 6.83,
+            "newWeight": 6.15,
+            "status": "decreased",
+            "nseCode": "NYKAA"
+          },
+          {
+            "name": "Sona BLW Precision Forgings Ltd",
+            "oldWeight": 5.0,
+            "newWeight": 4.5,
+            "status": "decreased",
+            "nseCode": "SONACOMS"
+          },
+          {
+            "name": "Samvardhana Motherson International Limited",
+            "oldWeight": 10.36,
+            "newWeight": 9.31,
+            "status": "decreased",
+            "nseCode": "MOTHERSON"
+          },
+          {
+            "name": "GNA Axles Ltd",
+            "oldWeight": 8.65,
+            "newWeight": 7.79,
+            "status": "decreased",
+            "nseCode": "GNA"
+          },
+          {
+            "name": "Angel One Ltd",
+            "oldWeight": 6.61,
+            "newWeight": 5.95,
+            "status": "decreased",
+            "nseCode": "ANGELONE"
+          },
+          {
+            "name": "Sterlite Technologies Ltd",
+            "oldWeight": 6.84,
+            "newWeight": 6.16,
+            "status": "decreased",
+            "nseCode": "STLTECH"
+          },
+          {
+            "name": "Sun Pharma Advanced Research Co Ltd",
+            "oldWeight": 4.66,
+            "newWeight": 4.19,
+            "status": "decreased",
+            "nseCode": "SPARC"
+          },
+          {
+            "name": "Shilpa Medicare Ltd",
+            "oldWeight": null,
+            "newWeight": 5.88,
+            "status": "new",
+            "nseCode": "SHILPAMED"
+          },
+          {
+            "name": "Laurus Labs Ltd",
+            "oldWeight": 5.0,
+            "newWeight": 4.5,
+            "status": "decreased",
+            "nseCode": "LAURUSLABS"
+          },
+          {
+            "name": "Himadri Speciality Chemical Ltd",
+            "oldWeight": 4.98,
+            "newWeight": 4.48,
+            "status": "decreased",
+            "nseCode": "HSCL"
+          },
+          {
+            "name": "Hindalco Industries Ltd",
+            "oldWeight": 3.06,
+            "newWeight": 2.75,
+            "status": "decreased",
+            "nseCode": "HINDALCO"
+          },
+          {
+            "name": "HFCL Ltd",
+            "oldWeight": 4.59,
+            "newWeight": 4.13,
+            "status": "decreased",
+            "nseCode": "HFCL"
+          },
+          {
+            "name": "Grindwell Norton Ltd",
+            "oldWeight": 4.04,
+            "newWeight": 3.64,
+            "status": "decreased",
+            "nseCode": "GRINDWELL"
+          },
+          {
+            "name": "Bharat Heavy Electricals Ltd",
+            "oldWeight": 3.74,
+            "newWeight": 3.37,
+            "status": "decreased",
+            "nseCode": "BHEL"
+          },
+          {
+            "name": "Adani Power Ltd",
+            "oldWeight": 6.53,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "ADANIPOWER"
+          }
+        ]
+      },
       {
         "date": "2026-10-01",
         "counts": {
@@ -8019,7 +8425,7 @@
             "nseCode": "SONACOMS"
           },
           {
-            "name": "Samvardhana Motherson International Ltd",
+            "name": "Samvardhana Motherson International Limited",
             "oldWeight": 10.77,
             "newWeight": 10.36,
             "status": "decreased",
@@ -8156,7 +8562,7 @@
             "nseCode": "SONACOMS"
           },
           {
-            "name": "Samvardhana Motherson International Ltd",
+            "name": "Samvardhana Motherson International Limited",
             "oldWeight": 9.5759,
             "newWeight": 10.77,
             "status": "increased",
@@ -8342,7 +8748,7 @@
             "nseCode": "HINDALCO"
           },
           {
-            "name": "Samvardhana Motherson International Ltd",
+            "name": "Samvardhana Motherson International Limited",
             "oldWeight": 8.312,
             "newWeight": 9.5759,
             "status": "increased",
@@ -8500,7 +8906,7 @@
             "nseCode": "HINDALCO"
           },
           {
-            "name": "Samvardhana Motherson International Ltd",
+            "name": "Samvardhana Motherson International Limited",
             "oldWeight": 7.8271,
             "newWeight": 8.312,
             "status": "increased",
@@ -8651,7 +9057,7 @@
             "nseCode": "HINDALCO"
           },
           {
-            "name": "Samvardhana Motherson International Ltd",
+            "name": "Samvardhana Motherson International Limited",
             "oldWeight": 6.5182,
             "newWeight": 7.8271,
             "status": "increased",
@@ -8788,7 +9194,7 @@
             "nseCode": "HINDALCO"
           },
           {
-            "name": "Samvardhana Motherson International Ltd",
+            "name": "Samvardhana Motherson International Limited",
             "oldWeight": 6.0955,
             "newWeight": 6.5182,
             "status": "increased",
@@ -8946,7 +9352,7 @@
             "nseCode": "HINDALCO"
           },
           {
-            "name": "Samvardhana Motherson International Ltd",
+            "name": "Samvardhana Motherson International Limited",
             "oldWeight": null,
             "newWeight": 6.0955,
             "status": "new",
@@ -9030,7 +9436,7 @@
             "nseCode": "ENDURANCE"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": 3.1091,
             "newWeight": 0,
             "status": "removed",
@@ -9160,7 +9566,7 @@
             "nseCode": "IIFL"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": 3.0556,
             "newWeight": 3.1091,
             "status": "increased",
@@ -9346,7 +9752,7 @@
             "nseCode": "HINDALCO"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": 3.1807,
             "newWeight": 3.0556,
             "status": "decreased",
@@ -9504,7 +9910,7 @@
             "nseCode": "BPCL"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": null,
             "newWeight": 3.1807,
             "status": "new",
@@ -15451,7 +15857,7 @@
             "nseCode": "LATENTVIEW"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": 13.11,
             "newWeight": 0,
             "status": "removed",
@@ -15490,7 +15896,7 @@
         },
         "changes": [
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": 13.83,
             "newWeight": 13.11,
             "status": "decreased",
@@ -15669,7 +16075,7 @@
             "nseCode": "EXIDEIND"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": 15.22,
             "newWeight": 13.83,
             "status": "decreased",
@@ -15848,7 +16254,7 @@
             "nseCode": "EXIDEIND"
           },
           {
-            "name": "Bajaj Finance Ltd",
+            "name": "Bajaj Finance Limited",
             "oldWeight": null,
             "newWeight": 15.22,
             "status": "new",
@@ -17082,9 +17488,9 @@
       }
     ],
     "marketCapMix": {
-      "Largecap": 23.69,
-      "Smallcap": 47.64,
-      "Midcap": 28.67
+      "Smallcap": 62.2,
+      "Largecap": 7.71,
+      "Midcap": 30.09
     },
     "performanceSeries": [
       {
@@ -17364,161 +17770,134 @@
         "value": 227.152920897314
       },
       {
-        "date": "2026-10-01",
-        "value": 221.6616351585005
+        "date": "2026-10-09",
+        "value": 223.3483046542902
+      },
+      {
+        "date": "2026-11-05",
+        "value": 221.22559301705795
+      },
+      {
+        "date": "2026-11-20",
+        "value": 213.09598517990267
       }
     ],
     "launchDate": "27 Sep 2021",
     "latestRebalanceDetail": [
       {
         "section": "addition",
-        "companyName": "Akums Drugs and Pharmaceuticals Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 5.0,
-        "delta": 5.0
-      },
-      {
-        "section": "addition",
-        "companyName": "Ather Energy Ltd",
+        "companyName": "Aurobindo Pharma Limited",
         "holdingType": "Midcap",
-        "newWeight": 5.0,
-        "delta": 5.0
+        "newWeight": 5.97,
+        "delta": 5.97
       },
       {
         "section": "addition",
-        "companyName": "Honasa Consumer Ltd",
+        "companyName": "Sai Life Sciences Limited",
         "holdingType": "Smallcap",
-        "newWeight": 5.0,
-        "delta": 5.0
+        "newWeight": 5.97,
+        "delta": 5.97
       },
       {
         "section": "addition",
-        "companyName": "Laurus Labs Ltd",
-        "holdingType": "Midcap",
-        "newWeight": 5.0,
-        "delta": 5.0
+        "companyName": "Syrma SGS Technology Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 5.97,
+        "delta": 5.97
+      },
+      {
+        "section": "addition",
+        "companyName": "Avalon Technologies Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 5.89,
+        "delta": 5.89
       },
       {
         "section": "increase",
         "companyName": "GNA Axles Ltd",
         "holdingType": "Smallcap",
-        "newWeight": 8.65,
-        "delta": 1.06
+        "newWeight": 11.29,
+        "delta": 3.5
+      },
+      {
+        "section": "increase",
+        "companyName": "Shilpa Medicare Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 9.12,
+        "delta": 3.24
       },
       {
         "section": "increase",
         "companyName": "Sterlite Technologies Ltd",
         "holdingType": "Midcap",
-        "newWeight": 6.84,
-        "delta": 1.28
+        "newWeight": 8.62,
+        "delta": 2.46
       },
       {
         "section": "increase",
-        "companyName": "Adani Power Ltd",
+        "companyName": "Ather Energy Ltd",
+        "holdingType": "Midcap",
+        "newWeight": 8.03,
+        "delta": 3.53
+      },
+      {
+        "section": "increase",
+        "companyName": "Laurus Labs Ltd",
         "holdingType": "Largecap",
-        "newWeight": 6.53,
-        "delta": 0.17
+        "newWeight": 7.71,
+        "delta": 3.21
       },
       {
         "section": "increase",
         "companyName": "Sona BLW Precision Forgings Ltd",
         "holdingType": "Midcap",
-        "newWeight": 5.0,
-        "delta": 1.29
+        "newWeight": 7.47,
+        "delta": 2.97
       },
       {
         "section": "increase",
-        "companyName": "Himadri Speciality Chemical Ltd",
+        "companyName": "Akums Drugs and Pharmaceuticals Ltd",
         "holdingType": "Smallcap",
-        "newWeight": 4.98,
-        "delta": 0.23
+        "newWeight": 6.88,
+        "delta": 2.38
       },
       {
         "section": "increase",
-        "companyName": "Sun Pharma Advanced Research Co Ltd",
+        "companyName": "Honasa Consumer Ltd",
         "holdingType": "Smallcap",
-        "newWeight": 4.66,
-        "delta": 0.37
+        "newWeight": 6.46,
+        "delta": 1.96
       },
       {
         "section": "increase",
         "companyName": "RateGain Travel Technologies Limited",
         "holdingType": "Smallcap",
-        "newWeight": 4.11,
-        "delta": 1.04
+        "newWeight": 5.43,
+        "delta": 1.73
       },
       {
         "section": "increase",
         "companyName": "Grindwell Norton Ltd",
         "holdingType": "Smallcap",
-        "newWeight": 4.04,
-        "delta": 0.74
+        "newWeight": 5.19,
+        "delta": 1.55
       },
       {
         "section": "removal",
-        "companyName": "Ashok Leyland Limited",
-        "holdingType": "Midcap",
-        "newWeight": 0.0,
-        "delta": 8.02
-      },
-      {
-        "section": "removal",
-        "companyName": "National Aluminium Co Ltd",
-        "holdingType": "Midcap",
-        "newWeight": 0.0,
-        "delta": 9.84
-      },
-      {
-        "section": "removal",
-        "companyName": "TVS Motor Company Limited",
-        "holdingType": "Largecap",
-        "newWeight": 0.0,
-        "delta": 6.89
-      },
-      {
-        "section": "decrease",
-        "companyName": "Samvardhana Motherson International Ltd",
-        "holdingType": "Largecap",
-        "newWeight": 10.36,
-        "delta": 0.41
-      },
-      {
-        "section": "decrease",
-        "companyName": "FSN E-Commerce Ventures Limited",
-        "holdingType": "Midcap",
-        "newWeight": 6.83,
-        "delta": 0.21
-      },
-      {
-        "section": "decrease",
-        "companyName": "Angel One Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 6.61,
-        "delta": 0.08
-      },
-      {
-        "section": "decrease",
-        "companyName": "HFCL Ltd",
-        "holdingType": "Smallcap",
-        "newWeight": 4.59,
-        "delta": 0.51
-      },
-      {
-        "section": "decrease",
         "companyName": "Bharat Heavy Electricals Ltd",
         "holdingType": "Largecap",
-        "newWeight": 3.74,
-        "delta": 0.13
+        "newWeight": 0.0,
+        "delta": 3.37
       },
       {
-        "section": "decrease",
-        "companyName": "Hindalco Industries Ltd",
-        "holdingType": "Largecap",
-        "newWeight": 3.06,
-        "delta": 0.08
+        "section": "removal",
+        "companyName": "HFCL Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 4.13
       }
     ],
-    "lastFetched": "02 Oct 2026 07:32 UTC"
+    "lastFetched": "21 Nov 2026 07:34 UTC"
   },
   "nirivantes_techwave": {
     "key": "nirivantes_techwave",
@@ -17526,130 +17905,130 @@
     "manager": "NIRIVANTES RESEARCH",
     "stocks": [
       {
-        "name": "Tejas Networks Ltd",
-        "weight": 5.0,
-        "nseCode": "TEJASNET",
-        "sector": "Telecom Equipments",
-        "capSegment": null
-      },
-      {
-        "name": "Tata Consultancy Services Ltd",
+        "name": "Stocks & Segments Holding Type Weightage Tata Consultancy Services Ltd",
         "weight": 6.0,
         "nseCode": "TCS",
-        "sector": "IT Services & Consulting",
-        "capSegment": null
+        "sector": null,
+        "capSegment": "Largecap"
       },
       {
         "name": "Sonata Software Ltd",
         "weight": 6.0,
         "nseCode": "SONATSOFTW",
         "sector": "IT Services & Consulting",
-        "capSegment": null
+        "capSegment": "Smallcap"
       },
       {
-        "name": "Saksoft Ltd",
-        "weight": 5.0,
-        "nseCode": "SAKSOFT",
-        "sector": "IT Services & Consulting",
-        "capSegment": null
-      },
-      {
-        "name": "Netweb Technologies India Ltd",
-        "weight": 5.0,
-        "nseCode": "NETWEB",
-        "sector": "IT Services & Consulting",
-        "capSegment": null
-      },
-      {
-        "name": "LTM Ltd",
+        "name": "LTM Limited",
         "weight": 6.0,
-        "nseCode": null,
+        "nseCode": "LTM",
         "sector": "IT Services & Consulting",
-        "capSegment": null
+        "capSegment": "Largecap"
       },
       {
         "name": "KPIT Technologies Ltd",
         "weight": 6.0,
         "nseCode": "KPITTECH",
         "sector": "IT Services & Consulting",
-        "capSegment": null
-      },
-      {
-        "name": "Infosys Limited",
-        "weight": 5.0,
-        "nseCode": "INFY",
-        "sector": "IT Services & Consulting",
-        "capSegment": null
-      },
-      {
-        "name": "HCL Technologies Ltd",
-        "weight": 5.0,
-        "nseCode": "HCLTECH",
-        "sector": "IT Services & Consulting",
-        "capSegment": null
+        "capSegment": "Smallcap"
       },
       {
         "name": "Coforge Limited",
         "weight": 6.0,
         "nseCode": "COFORGE",
         "sector": "IT Services & Consulting",
-        "capSegment": null
+        "capSegment": "Midcap"
       },
       {
-        "name": "Tata Elxsi Ltd",
-        "weight": 6.0,
-        "nseCode": "TATAELXSI",
-        "sector": "Software Services",
-        "capSegment": null
-      },
-      {
-        "name": "RateGain Travel Technologies Limited",
+        "name": "Saksoft Ltd",
         "weight": 5.0,
-        "nseCode": "RATEGAIN",
-        "sector": "Software Services",
-        "capSegment": null
+        "nseCode": "SAKSOFT",
+        "sector": "IT Services & Consulting",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Netweb Technologies India Ltd",
+        "weight": 5.0,
+        "nseCode": "NETWEB",
+        "sector": "IT Services & Consulting",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Infosys Limited",
+        "weight": 5.0,
+        "nseCode": "INFY",
+        "sector": "IT Services & Consulting",
+        "capSegment": "Largecap"
+      },
+      {
+        "name": "HCL Technologies Ltd",
+        "weight": 5.0,
+        "nseCode": "HCLTECH",
+        "sector": "IT Services & Consulting",
+        "capSegment": "Largecap"
       },
       {
         "name": "Persistent Systems Ltd",
         "weight": 8.0,
         "nseCode": "PERSISTENT",
         "sector": "Software Services",
-        "capSegment": null
+        "capSegment": "Midcap"
       },
       {
-        "name": "Newgen Software Technologies Ltd",
-        "weight": 5.0,
-        "nseCode": "NEWGEN",
+        "name": "Tata Elxsi Ltd",
+        "weight": 6.0,
+        "nseCode": "TATAELXSI",
         "sector": "Software Services",
-        "capSegment": null
+        "capSegment": "Smallcap"
       },
       {
         "name": "Intellect Design Arena Ltd",
         "weight": 6.0,
         "nseCode": "INTELLECT",
         "sector": "Software Services",
-        "capSegment": null
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "RateGain Travel Technologies Limited",
+        "weight": 5.0,
+        "nseCode": "RATEGAIN",
+        "sector": "Software Services",
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Newgen Software Technologies Ltd",
+        "weight": 5.0,
+        "nseCode": "NEWGEN",
+        "sector": "Software Services",
+        "capSegment": "Smallcap"
       },
       {
         "name": "E2E Networks Ltd",
         "weight": 5.0,
         "nseCode": "E2E",
         "sector": "Software Services",
-        "capSegment": null
+        "capSegment": "Smallcap"
       },
       {
         "name": "Cyient Limited",
         "weight": 5.0,
         "nseCode": "CYIENT",
         "sector": "Software Services",
-        "capSegment": null
+        "capSegment": "Smallcap"
       },
       {
         "name": "Black Box Ltd",
         "weight": 5.0,
         "nseCode": "BBOX",
         "sector": "Software Services",
-        "capSegment": null
+        "capSegment": "Smallcap"
+      },
+      {
+        "name": "Tejas Networks Ltd",
+        "weight": 5.0,
+        "nseCode": "TEJASNET",
+        "sector": "Telecom Equipments",
+        "capSegment": "Smallcap"
       }
     ],
     "cagr": null,
@@ -17705,11 +18084,11 @@
             "nseCode": "NETWEB"
           },
           {
-            "name": "LTM Ltd",
+            "name": "LTM Limited",
             "oldWeight": null,
             "newWeight": 6.0,
             "status": "new",
-            "nseCode": null
+            "nseCode": "LTM"
           },
           {
             "name": "KPIT Technologies Ltd",
@@ -17800,8 +18179,8 @@
     ],
     "marketCapMix": {
       "Largecap": 22.0,
-      "Midcap": 14.0,
-      "Smallcap": 64.0
+      "Smallcap": 64.0,
+      "Midcap": 14.0
     },
     "performanceSeries": [
       {
@@ -18063,11 +18442,143 @@
       {
         "date": "2026-10-01",
         "value": 101.69092357765737
+      },
+      {
+        "date": "2026-10-05",
+        "value": 102.61267506993735
+      },
+      {
+        "date": "2026-10-06",
+        "value": 103.03037091931968
+      },
+      {
+        "date": "2026-10-07",
+        "value": 102.60554069510303
+      },
+      {
+        "date": "2026-10-08",
+        "value": 100.93963555577574
+      },
+      {
+        "date": "2026-10-09",
+        "value": 103.69528797380637
+      },
+      {
+        "date": "2026-10-12",
+        "value": 104.64397893305521
+      },
+      {
+        "date": "2026-10-13",
+        "value": 108.3864382676936
+      },
+      {
+        "date": "2026-10-14",
+        "value": 109.56855325188157
+      },
+      {
+        "date": "2026-10-15",
+        "value": 108.64173049827325
+      },
+      {
+        "date": "2026-10-16",
+        "value": 110.4408520576809
+      },
+      {
+        "date": "2026-10-19",
+        "value": 108.02262000967298
+      },
+      {
+        "date": "2026-10-21",
+        "value": 108.18182319838678
+      },
+      {
+        "date": "2026-10-22",
+        "value": 106.77520504613463
+      },
+      {
+        "date": "2026-10-23",
+        "value": 104.69957709413676
+      },
+      {
+        "date": "2026-10-26",
+        "value": 106.16448470587572
+      },
+      {
+        "date": "2026-10-27",
+        "value": 105.42354065308679
+      },
+      {
+        "date": "2026-10-28",
+        "value": 104.61724711677351
+      },
+      {
+        "date": "2026-10-29",
+        "value": 105.04836836173817
+      },
+      {
+        "date": "2026-10-30",
+        "value": 104.00229354088009
+      },
+      {
+        "date": "2026-11-02",
+        "value": 104.2409483530631
+      },
+      {
+        "date": "2026-11-03",
+        "value": 103.8706847258784
+      },
+      {
+        "date": "2026-11-04",
+        "value": 103.53681760274547
+      },
+      {
+        "date": "2026-11-05",
+        "value": 105.71522071010146
+      },
+      {
+        "date": "2026-11-06",
+        "value": 103.85424559000697
+      },
+      {
+        "date": "2026-11-09",
+        "value": 103.62275539215989
+      },
+      {
+        "date": "2026-11-11",
+        "value": 104.20905425928298
+      },
+      {
+        "date": "2026-11-12",
+        "value": 104.9029272678452
+      },
+      {
+        "date": "2026-11-13",
+        "value": 104.69558277673458
+      },
+      {
+        "date": "2026-11-16",
+        "value": 103.33722978413476
+      },
+      {
+        "date": "2026-11-17",
+        "value": 102.1855657886718
+      },
+      {
+        "date": "2026-11-18",
+        "value": 101.53725254541567
+      },
+      {
+        "date": "2026-11-19",
+        "value": 101.42866187157041
+      },
+      {
+        "date": "2026-11-20",
+        "value": 102.3898081358499
       }
     ],
     "launchDate": "02 Jul 2026",
     "latestRebalanceDetail": [],
-    "lastFetched": "02 Oct 2026 12:55 UTC"
+    "lastFetched": "21 Nov 2026 07:34 UTC"
   },
   "caprize_earnings_momentum": {
     "key": "caprize_earnings_momentum",
@@ -18090,16 +18601,9 @@
       },
       {
         "name": "Supriya Lifescience Limited",
-        "weight": 6.0,
+        "weight": 4.0,
         "nseCode": "SUPRIYA",
         "sector": "Pharma",
-        "capSegment": null
-      },
-      {
-        "name": "P N Gadgil Jewellers Ltd",
-        "weight": 4.0,
-        "nseCode": "PNGJL",
-        "sector": "Fashion retail",
         "capSegment": null
       },
       {
@@ -18110,10 +18614,17 @@
         "capSegment": null
       },
       {
-        "name": "Venus Pipes & Tubes Ltd",
+        "name": "Tega Industries Ltd",
+        "weight": 4.0,
+        "nseCode": "TEGA",
+        "sector": "Industrial goods",
+        "capSegment": null
+      },
+      {
+        "name": "Transformers and Rectifiers (India) Ltd",
         "weight": 6.0,
-        "nseCode": "VENUSPIPES",
-        "sector": "Pipes",
+        "nseCode": "TARIL",
+        "sector": "Industrial goods",
         "capSegment": null
       },
       {
@@ -18124,9 +18635,23 @@
         "capSegment": null
       },
       {
-        "name": "Divgi TorqTransfer Systems Ltd",
-        "weight": 5.0,
-        "nseCode": "DIVGIITTS",
+        "name": "Venus Pipes & Tubes Ltd",
+        "weight": 6.0,
+        "nseCode": "VENUSPIPES",
+        "sector": "Pipes",
+        "capSegment": null
+      },
+      {
+        "name": "Nazara Technologies Limited",
+        "weight": 4.0,
+        "nseCode": "NAZARA",
+        "sector": "IT",
+        "capSegment": null
+      },
+      {
+        "name": "Varroc Engineering Ltd",
+        "weight": 6.0,
+        "nseCode": "VARROC",
         "sector": "Auto Anc",
         "capSegment": null
       },
@@ -18145,52 +18670,10 @@
         "capSegment": null
       },
       {
-        "name": "Nazara Technologies Limited",
-        "weight": 4.0,
-        "nseCode": "NAZARA",
-        "sector": "IT",
-        "capSegment": null
-      },
-      {
-        "name": "Vishnu Chemicals Ltd",
-        "weight": 4.0,
-        "nseCode": "VISHNU",
-        "sector": "CHEMICALS",
-        "capSegment": null
-      },
-      {
-        "name": "Universal Cables Ltd",
-        "weight": 4.0,
-        "nseCode": "UNIVCABLES",
-        "sector": "Wires & Cables",
-        "capSegment": null
-      },
-      {
-        "name": "Diamond Power Infrastructure Ltd",
-        "weight": 5.0,
-        "nseCode": "DIACABS",
-        "sector": "Wires & Cables",
-        "capSegment": null
-      },
-      {
         "name": "Tirupati Forge Ltd",
         "weight": 6.0,
         "nseCode": "TIRUPATIFL",
         "sector": "Metals",
-        "capSegment": null
-      },
-      {
-        "name": "Sterlite Technologies Ltd",
-        "weight": 4.0,
-        "nseCode": "STLTECH",
-        "sector": "Data Centre",
-        "capSegment": null
-      },
-      {
-        "name": "HFCL Ltd",
-        "weight": 4.0,
-        "nseCode": "HFCL",
-        "sector": "Data Centre",
         "capSegment": null
       },
       {
@@ -18201,46 +18684,244 @@
         "capSegment": null
       },
       {
+        "name": "Parag Milk Foods Ltd",
+        "weight": 5.0,
+        "nseCode": "PARAGMILK",
+        "sector": "FMCG",
+        "capSegment": null
+      },
+      {
         "name": "E2E Networks Ltd",
         "weight": 6.0,
         "nseCode": "E2E",
         "sector": "AI & Data Centre",
         "capSegment": null
+      },
+      {
+        "name": "Diamond Power Infrastructure Ltd",
+        "weight": 6.0,
+        "nseCode": "DIACABS",
+        "sector": "Wires & Cables",
+        "capSegment": null
       }
     ],
-    "cagr": 24.38,
+    "cagr": 20.87,
     "rebalanceTimeline": [
       {
         "date": "8 Apr, 2024",
         "type": "launch"
       },
       {
-        "date": "21 Jul, 2026",
+        "date": "8 Oct, 2026",
         "type": "summary",
         "rangeStart": "24 Apr, 2024",
-        "rangeEnd": "21 Jul, 2026",
-        "rebalanceCount": 24
+        "rangeEnd": "8 Oct, 2026",
+        "rebalanceCount": 28
       },
       {
-        "date": "3 Aug, 2026",
-        "assetsAdded": 5,
-        "assetsRemoved": 6,
+        "date": "14 Oct, 2026",
+        "assetsAdded": 1,
+        "assetsRemoved": 1,
         "type": "rebalance"
       },
       {
-        "date": "7 Aug, 2026",
+        "date": "15 Oct, 2026",
         "assetsAdded": 1,
         "assetsRemoved": null,
         "type": "rebalance"
       },
       {
-        "date": "31 Aug, 2026",
-        "assetsAdded": 3,
-        "assetsRemoved": 5,
+        "date": "6 Nov, 2026",
+        "assetsAdded": 2,
+        "assetsRemoved": 7,
         "type": "rebalance"
       }
     ],
     "fullRebalanceHistory": [
+      {
+        "date": "2026-11-06",
+        "counts": {
+          "new": 2,
+          "increased": 3,
+          "decreased": 0,
+          "removed": 7
+        },
+        "changes": [
+          {
+            "name": "Zerodha Nifty 1D Rate Liquid ETF",
+            "oldWeight": 2.0,
+            "newWeight": 17.0,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Transformers and Rectifiers (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 6.0,
+            "status": "new",
+            "nseCode": "TARIL"
+          },
+          {
+            "name": "Varroc Engineering Ltd",
+            "oldWeight": null,
+            "newWeight": 6.0,
+            "status": "new",
+            "nseCode": "VARROC"
+          },
+          {
+            "name": "Parag Milk Foods Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 5.0,
+            "status": "increased",
+            "nseCode": "PARAGMILK"
+          },
+          {
+            "name": "Diamond Power Infrastructure Ltd",
+            "oldWeight": 5.0,
+            "newWeight": 6.0,
+            "status": "increased",
+            "nseCode": "DIACABS"
+          },
+          {
+            "name": "Wockhardt Limited",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "WOCKPHARMA"
+          },
+          {
+            "name": "P N Gadgil Jewellers Limited",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "PNGJL"
+          },
+          {
+            "name": "Divgi TorqTransfer Systems Ltd",
+            "oldWeight": 5.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "DIVGIITTS"
+          },
+          {
+            "name": "Universal Cables Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "UNIVCABLES"
+          },
+          {
+            "name": "Polycab India Limited",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "POLYCAB"
+          },
+          {
+            "name": "Sterlite Technologies Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "STLTECH"
+          },
+          {
+            "name": "HFCL Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HFCL"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-15",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 2,
+          "removed": 0
+        },
+        "changes": [
+          {
+            "name": "Supriya Lifescience Limited",
+            "oldWeight": 6.0,
+            "newWeight": 4.0,
+            "status": "decreased",
+            "nseCode": "SUPRIYA"
+          },
+          {
+            "name": "Zerodha Nifty 1D Rate Liquid ETF",
+            "oldWeight": 4.0,
+            "newWeight": 2.0,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Polycab India Limited",
+            "oldWeight": null,
+            "newWeight": 4.0,
+            "status": "new",
+            "nseCode": "POLYCAB"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-14",
+        "counts": {
+          "new": 1,
+          "increased": 0,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Tega Industries Ltd",
+            "oldWeight": null,
+            "newWeight": 4.0,
+            "status": "new",
+            "nseCode": "TEGA"
+          },
+          {
+            "name": "Vishnu Chemicals Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "VISHNU"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-08",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 1,
+          "removed": 0
+        },
+        "changes": [
+          {
+            "name": "Wockhardt Limited",
+            "oldWeight": null,
+            "newWeight": 4.0,
+            "status": "new",
+            "nseCode": "WOCKPHARMA"
+          },
+          {
+            "name": "Zerodha Nifty 1D Rate Liquid ETF",
+            "oldWeight": 12.0,
+            "newWeight": 4.0,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Parag Milk Foods Ltd",
+            "oldWeight": null,
+            "newWeight": 4.0,
+            "status": "new",
+            "nseCode": "PARAGMILK"
+          }
+        ]
+      },
       {
         "date": "2026-08-31",
         "counts": {
@@ -18491,7 +19172,7 @@
             "nseCode": null
           },
           {
-            "name": "P N Gadgil Jewellers Ltd",
+            "name": "P N Gadgil Jewellers Limited",
             "oldWeight": null,
             "newWeight": 4.0,
             "status": "new",
@@ -19499,8 +20180,8 @@
       }
     ],
     "marketCapMix": {
-      "Midcap": 8.0,
-      "Smallcap": 80.0
+      "Midcap": 4.0,
+      "Smallcap": 79.0
     },
     "performanceSeries": [
       {
@@ -19780,13 +20461,194 @@
         "value": 171.5712966908214
       },
       {
-        "date": "2026-10-01",
-        "value": 170.16525756163412
+        "date": "2026-10-14",
+        "value": 169.4207878476183
+      },
+      {
+        "date": "2026-10-28",
+        "value": 156.83393296131368
+      },
+      {
+        "date": "2026-11-11",
+        "value": 158.79556322372673
+      },
+      {
+        "date": "2026-11-20",
+        "value": 156.2655476496922
       }
     ],
     "launchDate": "08 Apr 2024",
-    "latestRebalanceDetail": [],
-    "lastFetched": "02 Oct 2026 12:55 UTC"
+    "latestRebalanceDetail": [
+      {
+        "section": "addition",
+        "companyName": "Transformers and Rectifiers (India) Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 6.0,
+        "delta": 6.0
+      },
+      {
+        "section": "addition",
+        "companyName": "Varroc Engineering Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 6.0,
+        "delta": 6.0
+      },
+      {
+        "section": "increase",
+        "companyName": "Diamond Power Infrastructure Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 6.0,
+        "delta": 1.0
+      },
+      {
+        "section": "increase",
+        "companyName": "Parag Milk Foods Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 5.0,
+        "delta": 1.0
+      },
+      {
+        "section": "removal",
+        "companyName": "Divgi TorqTransfer Systems Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 5.0
+      },
+      {
+        "section": "removal",
+        "companyName": "HFCL Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 4.0
+      },
+      {
+        "section": "removal",
+        "companyName": "P N Gadgil Jewellers Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 4.0
+      },
+      {
+        "section": "removal",
+        "companyName": "Polycab India Limited",
+        "holdingType": "Largecap",
+        "newWeight": 0.0,
+        "delta": 4.0
+      },
+      {
+        "section": "removal",
+        "companyName": "Sterlite Technologies Ltd",
+        "holdingType": "Midcap",
+        "newWeight": 0.0,
+        "delta": 4.0
+      },
+      {
+        "section": "removal",
+        "companyName": "Universal Cables Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 4.0
+      },
+      {
+        "section": "removal",
+        "companyName": "Wockhardt Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 4.0
+      },
+      {
+        "section": "no_change",
+        "companyName": "E2E Networks Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 6.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Shadowfax Technologies Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 6.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Tirupati Forge Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 6.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Venus Pipes & Tubes Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 6.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Balkrishna Industries Ltd",
+        "holdingType": "Midcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Jyoti CNC Automation Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Menon Bearings Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Nazara Technologies Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Sakar Healthcare Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Senores Pharmaceuticals Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Supriya Lifescience Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Syrma SGS Technology Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Tega Industries Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      }
+    ],
+    "lastFetched": "21 Nov 2026 07:34 UTC"
   },
   "caprize_midcap_smallcap": {
     "key": "caprize_midcap_smallcap",
@@ -19801,22 +20663,15 @@
         "capSegment": null
       },
       {
-        "name": "Belrise Industries Ltd",
-        "weight": 4.0,
-        "nseCode": "BELRISE",
-        "sector": "Auto Anc",
-        "capSegment": null
-      },
-      {
-        "name": "Divgi TorqTransfer Systems Ltd",
-        "weight": 4.0,
-        "nseCode": "DIVGIITTS",
-        "sector": "Auto Anc",
+        "name": "Onesource Specialty Pharma Ltd",
+        "weight": 6.0,
+        "nseCode": "ONESOURCE",
+        "sector": "Pharma",
         "capSegment": null
       },
       {
         "name": "Senores Pharmaceuticals Ltd",
-        "weight": 4.0,
+        "weight": 6.0,
         "nseCode": "SENORES",
         "sector": "Pharma",
         "capSegment": null
@@ -19850,16 +20705,16 @@
         "capSegment": null
       },
       {
-        "name": "DEE Development Engineers Ltd",
-        "weight": 4.0,
-        "nseCode": "DEEDEV",
-        "sector": "Heavy Industrials",
+        "name": "Transformers and Rectifiers (India) Ltd",
+        "weight": 6.0,
+        "nseCode": "TARIL",
+        "sector": "Industrial Goods",
         "capSegment": null
       },
       {
-        "name": "JNK India Ltd",
+        "name": "DEE Development Engineers Ltd",
         "weight": 4.0,
-        "nseCode": "JNKINDIA",
+        "nseCode": "DEEDEV",
         "sector": "Heavy Industrials",
         "capSegment": null
       },
@@ -19885,20 +20740,6 @@
         "capSegment": null
       },
       {
-        "name": "Sterlite Technologies Ltd",
-        "weight": 4.0,
-        "nseCode": "STLTECH",
-        "sector": "IT",
-        "capSegment": null
-      },
-      {
-        "name": "HFCL Ltd",
-        "weight": 4.0,
-        "nseCode": "HFCL",
-        "sector": "IT",
-        "capSegment": null
-      },
-      {
         "name": "E2E Networks Ltd",
         "weight": 6.0,
         "nseCode": "E2E",
@@ -19906,10 +20747,10 @@
         "capSegment": null
       },
       {
-        "name": "Sky Gold and Diamonds Ltd",
+        "name": "Varroc Engineering Ltd",
         "weight": 5.0,
-        "nseCode": "SKYGOLD",
-        "sector": "Retail",
+        "nseCode": "VARROC",
+        "sector": "Auto Anc",
         "capSegment": null
       },
       {
@@ -19920,31 +20761,10 @@
         "capSegment": null
       },
       {
-        "name": "TIL Ltd",
-        "weight": 4.0,
-        "nseCode": "TIL",
-        "sector": "EPC",
-        "capSegment": null
-      },
-      {
         "name": "Tirupati Forge Ltd",
         "weight": 5.0,
         "nseCode": "TIRUPATIFL",
         "sector": "Metals",
-        "capSegment": null
-      },
-      {
-        "name": "Universal Cables Ltd",
-        "weight": 4.0,
-        "nseCode": "UNIVCABLES",
-        "sector": "Wires & Cables",
-        "capSegment": null
-      },
-      {
-        "name": "Diamond Power Infrastructure Ltd",
-        "weight": 4.0,
-        "nseCode": "DIACABS",
-        "sector": "Wires & Cables",
         "capSegment": null
       },
       {
@@ -19953,41 +20773,232 @@
         "nseCode": "GUFICBIO",
         "sector": "CDMO",
         "capSegment": null
+      },
+      {
+        "name": "Diamond Power Infrastructure Ltd",
+        "weight": 6.0,
+        "nseCode": "DIACABS",
+        "sector": "Wires & Cables",
+        "capSegment": null
+      },
+      {
+        "name": "Privi Speciality Chemicals Ltd",
+        "weight": 5.0,
+        "nseCode": "PRIVISCL",
+        "sector": "Speciality Chemicals",
+        "capSegment": null
       }
     ],
-    "cagr": 24.98,
+    "cagr": 20.62,
     "rebalanceTimeline": [
       {
         "date": "13 Jun, 2024",
         "type": "launch"
       },
       {
-        "date": "14 Jul, 2026",
+        "date": "8 Oct, 2026",
         "type": "summary",
         "rangeStart": "3 Jul, 2024",
-        "rangeEnd": "14 Jul, 2026",
-        "rebalanceCount": 24
+        "rangeEnd": "8 Oct, 2026",
+        "rebalanceCount": 28
       },
       {
-        "date": "3 Aug, 2026",
-        "assetsAdded": 5,
-        "assetsRemoved": 5,
-        "type": "rebalance"
-      },
-      {
-        "date": "7 Aug, 2026",
-        "assetsAdded": 1,
+        "date": "15 Oct, 2026",
+        "assetsAdded": null,
         "assetsRemoved": null,
         "type": "rebalance"
       },
       {
-        "date": "31 Aug, 2026",
-        "assetsAdded": 5,
+        "date": "27 Oct, 2026",
+        "assetsAdded": 2,
+        "assetsRemoved": 2,
+        "type": "rebalance"
+      },
+      {
+        "date": "6 Nov, 2026",
+        "assetsAdded": 2,
         "assetsRemoved": 4,
         "type": "rebalance"
       }
     ],
     "fullRebalanceHistory": [
+      {
+        "date": "2026-11-06",
+        "counts": {
+          "new": 2,
+          "increased": 2,
+          "decreased": 0,
+          "removed": 4
+        },
+        "changes": [
+          {
+            "name": "Onesource Specialty Pharma Ltd",
+            "oldWeight": null,
+            "newWeight": 6.0,
+            "status": "new",
+            "nseCode": "ONESOURCE"
+          },
+          {
+            "name": "Senores Pharmaceuticals Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 6.0,
+            "status": "increased",
+            "nseCode": "SENORES"
+          },
+          {
+            "name": "Transformers and Rectifiers (India) Ltd",
+            "oldWeight": null,
+            "newWeight": 6.0,
+            "status": "new",
+            "nseCode": "TARIL"
+          },
+          {
+            "name": "Diamond Power Infrastructure Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 6.0,
+            "status": "increased",
+            "nseCode": "DIACABS"
+          },
+          {
+            "name": "Shivalik Bimetal Controls Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SBCL"
+          },
+          {
+            "name": "Divgi TorqTransfer Systems Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "DIVGIITTS"
+          },
+          {
+            "name": "Sterlite Technologies Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "STLTECH"
+          },
+          {
+            "name": "Universal Cables Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "UNIVCABLES"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-27",
+        "counts": {
+          "new": 2,
+          "increased": 0,
+          "decreased": 1,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Zerodha Nifty 1D Rate Liquid ETF",
+            "oldWeight": 13.0,
+            "newWeight": 11.0,
+            "status": "decreased",
+            "nseCode": null
+          },
+          {
+            "name": "Varroc Engineering Ltd",
+            "oldWeight": null,
+            "newWeight": 5.0,
+            "status": "new",
+            "nseCode": "VARROC"
+          },
+          {
+            "name": "Privi Speciality Chemicals Ltd",
+            "oldWeight": null,
+            "newWeight": 5.0,
+            "status": "new",
+            "nseCode": "PRIVISCL"
+          },
+          {
+            "name": "Belrise Industries Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "BELRISE"
+          },
+          {
+            "name": "HFCL Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "HFCL"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-15",
+        "counts": {
+          "new": 0,
+          "increased": 1,
+          "decreased": 0,
+          "removed": 1
+        },
+        "changes": [
+          {
+            "name": "Zerodha Nifty 1D Rate Liquid ETF",
+            "oldWeight": 8.0,
+            "newWeight": 13.0,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "Sky Gold and Diamonds Ltd",
+            "oldWeight": 5.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "SKYGOLD"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-08",
+        "counts": {
+          "new": 1,
+          "increased": 1,
+          "decreased": 0,
+          "removed": 2
+        },
+        "changes": [
+          {
+            "name": "Shivalik Bimetal Controls Ltd",
+            "oldWeight": null,
+            "newWeight": 4.0,
+            "status": "new",
+            "nseCode": "SBCL"
+          },
+          {
+            "name": "Zerodha Nifty 1D Rate Liquid ETF",
+            "oldWeight": 4.0,
+            "newWeight": 8.0,
+            "status": "increased",
+            "nseCode": null
+          },
+          {
+            "name": "JNK India Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "JNKINDIA"
+          },
+          {
+            "name": "TIL Ltd",
+            "oldWeight": 4.0,
+            "newWeight": 0,
+            "status": "removed",
+            "nseCode": "TIL"
+          }
+        ]
+      },
       {
         "date": "2026-08-31",
         "counts": {
@@ -20957,14 +21968,14 @@
             "oldWeight": 6.0,
             "newWeight": 0,
             "status": "removed",
-            "nseCode": null
+            "nseCode": "SHRIPISTON"
           },
           {
             "name": "Jain Irrigation Systems Ltd",
             "oldWeight": 6.0,
             "newWeight": 0,
             "status": "removed",
-            "nseCode": "JISLDVREQS"
+            "nseCode": null
           },
           {
             "name": "Allied Blenders and Distillers Ltd",
@@ -21209,7 +22220,7 @@
             "oldWeight": null,
             "newWeight": 6.0,
             "status": "new",
-            "nseCode": null
+            "nseCode": "SHRIPISTON"
           },
           {
             "name": "Nippon India ETF Nifty 1D Rate Liquid BeES",
@@ -21223,7 +22234,7 @@
             "oldWeight": null,
             "newWeight": 6.0,
             "status": "new",
-            "nseCode": "JISLDVREQS"
+            "nseCode": null
           },
           {
             "name": "Indo Tech Transformers Ltd",
@@ -21250,8 +22261,7 @@
       }
     ],
     "marketCapMix": {
-      "Midcap": 4.0,
-      "Smallcap": 92.0
+      "Smallcap": 89.0
     },
     "performanceSeries": [
       {
@@ -21543,13 +22553,191 @@
         "value": 166.7472807381617
       },
       {
-        "date": "2026-10-01",
-        "value": 165.59796058912926
+        "date": "2026-10-13",
+        "value": 166.4751329608189
+      },
+      {
+        "date": "2026-10-26",
+        "value": 152.27618562975888
+      },
+      {
+        "date": "2026-11-05",
+        "value": 155.44590246386235
+      },
+      {
+        "date": "2026-11-18",
+        "value": 151.43851678280856
+      },
+      {
+        "date": "2026-11-20",
+        "value": 149.62736088271214
       }
     ],
     "launchDate": "13 Jun 2024",
-    "latestRebalanceDetail": [],
-    "lastFetched": "02 Oct 2026 12:55 UTC"
+    "latestRebalanceDetail": [
+      {
+        "section": "addition",
+        "companyName": "Onesource Specialty Pharma Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 6.0,
+        "delta": 6.0
+      },
+      {
+        "section": "addition",
+        "companyName": "Transformers and Rectifiers (India) Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 6.0,
+        "delta": 6.0
+      },
+      {
+        "section": "increase",
+        "companyName": "Diamond Power Infrastructure Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 6.0,
+        "delta": 2.0
+      },
+      {
+        "section": "increase",
+        "companyName": "Senores Pharmaceuticals Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 6.0,
+        "delta": 2.0
+      },
+      {
+        "section": "removal",
+        "companyName": "Divgi TorqTransfer Systems Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 4.0
+      },
+      {
+        "section": "removal",
+        "companyName": "Shivalik Bimetal Controls Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 4.0
+      },
+      {
+        "section": "removal",
+        "companyName": "Sterlite Technologies Ltd",
+        "holdingType": "Midcap",
+        "newWeight": 0.0,
+        "delta": 4.0
+      },
+      {
+        "section": "removal",
+        "companyName": "Universal Cables Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 0.0,
+        "delta": 4.0
+      },
+      {
+        "section": "no_change",
+        "companyName": "E2E Networks Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 6.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Privi Speciality Chemicals Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 5.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Tirupati Forge Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 5.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Varroc Engineering Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 5.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Vishnu Chemicals Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 5.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Blue Jet Healthcare Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "DEE Development Engineers Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Gufic Biosciences Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Innova Captab Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Jyoti CNC Automation Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Nazara Technologies Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Shadowfax Technologies Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Supriya Lifescience Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Venus Pipes & Tubes Ltd",
+        "holdingType": "Smallcap",
+        "newWeight": 4.0,
+        "delta": null
+      },
+      {
+        "section": "no_change",
+        "companyName": "Syrma SGS Technology Limited",
+        "holdingType": "Smallcap",
+        "newWeight": 3.0,
+        "delta": null
+      }
+    ],
+    "lastFetched": "21 Nov 2026 07:34 UTC"
   },
   "consumer_durables_stars": {
     "key": "consumer_durables_stars",
